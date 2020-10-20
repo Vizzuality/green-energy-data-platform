@@ -7,19 +7,15 @@
     },
     "extends": [
       "airbnb",
-      "airbnb/hooks"
+      "airbnb/hooks",
+      "plugin:jest/recommended"
     ],
     "rules": {
       "import/no-unresolved": "off",
       "react/jsx-filename-extension": "warn",
       "react/jsx-props-no-spreading": "off",
       "react-hooks/exhaustive-deps": "warn",
-      "react-hooks/rules-of-hooks": "error",
-      "jest/no-disabled-tests": "warn",
-      "jest/no-focused-tests": "error",
-      "jest/no-identical-title": "error",
-      "jest/prefer-to-have-length": "warn",
-      "jest/valid-expect": "error"
+      "react-hooks/rules-of-hooks": "error"
     },
     "parser": "babel-eslint",
     "parserOptions": {
