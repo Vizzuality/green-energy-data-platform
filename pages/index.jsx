@@ -1,9 +1,12 @@
 import React from 'react';
+import StaticPage from 'layout/static-page';
+import Head from 'components/head';
 
 const HomePage = () => (
-  <section className="p-home">
+  <StaticPage className="p-home">
+    <Head />
     <p>Home</p>
-  </section>
+  </StaticPage>
 );
 
 export default HomePage;
