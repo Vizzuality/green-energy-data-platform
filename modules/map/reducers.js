@@ -6,18 +6,14 @@ import { setBasemap, setLocation } from './actions';
 
 const reducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(setBasemap, (state, { payload }) => {
-      return {
-        ...state,
-        selectedBasemap: payload
-      }
-    })
-    .addCase(setLocation, (state, { payload }) => {
-      return {
-        ...state,
-        lonLat: payload
-      }
-    })
+    .addCase(setBasemap, (state, { payload }) => ({
+      ...state,
+      selectedBasemap: payload,
+    }))
+    .addCase(setLocation, (state, { payload }) => ({
+      ...state,
+      lonLat: payload,
+    }));
 });
 
 export default reducer;

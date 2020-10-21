@@ -5,7 +5,7 @@ import reducer from 'modules';
 
 const makeStore = () => configureStore({
   reducer,
-  devTools: process.env.NODE_ENV !== 'production'
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
-export const wrapper = createWrapper(makeStore);
+export default createWrapper(makeStore);

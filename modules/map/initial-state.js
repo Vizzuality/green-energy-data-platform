@@ -1,4 +1,4 @@
 export default {
   selectedBasemap: 'light',
-  lonLat: null
+  lonLat: null,
 };
