@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 const StaticPage = ({ className, children }) => (
   <div className={classNames('l-simple-page', className)}>
-    {children}q
+    {children}
   </div>
 );
 
