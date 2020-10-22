@@ -36,10 +36,25 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "autoprefixer": "^10.0.1",
     "husky": "^4.3.0",
     "lint-staged": "^9.2.5",
     "stylelint-config-recommended": "^3.0.0",
-    "typescript": "^4.1.2"
+    "typescript": "^4.1.2",
+    "@zeit/next-sass": "^1.0.1",
+    "add": "^2.0.6",
+    "axios": "^0.20.0",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "d3-ease": "^2.0.0",
+    "deck.gl": "7.3.6",
+    "layer-manager": "^3.0.8",
+    "luma.gl": "7.3.2",
+    "react-map-gl": "^5.2.9",
+    "redux-devtools-extension": "^2.13.8",
+    "sass": "^1.27.0",
+    "viewport-mercator-project": "6.1.1",
+    "yarn": "^1.22.10"
   },
   "lint-staged": {
     "*.{js,jsx}": [
