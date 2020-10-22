@@ -2,6 +2,8 @@ import React from 'react';
 import StaticPage from 'layout/static-page';
 import Head from 'components/head';
 
+import 'css/index.scss';
+
 const HomePage = () => (
   <StaticPage className="p-home">
     <Head />
