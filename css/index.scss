@@ -1,3 +1,7 @@
 @import 'settings';
 @import 'base';
 @import 'mixins';
+
+@import "~tailwindcss/base";
+@import "~tailwindcss/components";
+@import "~tailwindcss/utilities";

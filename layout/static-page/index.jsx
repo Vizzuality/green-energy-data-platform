@@ -4,7 +4,9 @@ import classNames from 'classnames';
 
 const StaticPage = ({ className, children }) => (
   <div className={classNames('l-simple-page', className)}>
-    {children}
+    <div className="container mx-auto">
+      {children}
+    </div>
   </div>
 );
 
