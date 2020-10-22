@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
-<<<<<<< HEAD
     "autoprefixer": "^10.1.0",
     "classnames": "^2.2.6",
     "next": "^10.0.3",
@@ -37,42 +36,19 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "autoprefixer": "^10.0.1",
     "husky": "^4.3.0",
     "lint-staged": "^9.2.5",
     "stylelint-config-recommended": "^3.0.0",
     "typescript": "^4.1.2",
-=======
->>>>>>> map migrated to function
-    "@zeit/next-sass": "^1.0.1",
-    "axios": "^0.20.0",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-module-resolver": "^4.0.0",
-    "classnames": "^2.2.6",
-    "d3-ease": "^2.0.0",
     "deck.gl": "7.3.6",
     "layer-manager": "^3.0.8",
-    "lodash": "^4.17.20",
     "luma.gl": "7.3.2",
-<<<<<<< HEAD
-=======
-    "mapbox-gl": "^1.12.0",
-    "next": "^9.5.3",
-    "next-redux-wrapper": "^6.0.2",
     "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
->>>>>>> map migrated to function
     "react-map-gl": "^5.2.9",
-<<<<<<< HEAD
-    "redux-devtools-extension": "^2.13.8",
-=======
-    "react-redux": "^7.2.1",
-    "redux": "^4.0.5",
->>>>>>> package.json dependencies removed, eslintrc.json rules modified
-    "sass": "^1.27.0",
-    "use-debounce": "^5.0.1",
-    "viewport-mercator-project": "6.1.1"
+    "viewport-mercator-project": "6.1.1",
+    "yarn": "^1.22.10",
+    "lodash": "^4.17.20",
+    "use-debounce": "^5.0.1"
   },
   "lint-staged": {
     "*.{js,jsx}": [
