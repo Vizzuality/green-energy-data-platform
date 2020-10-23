@@ -11,9 +11,15 @@
     "url": "https://vizzuality.com"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.4.0",
+    "classnames": "^2.2.6",
     "next": "^9.5.3",
+    "next-redux-wrapper": "^6.0.2",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.1",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
