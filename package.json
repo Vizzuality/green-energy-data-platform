@@ -14,14 +14,31 @@
     "@reduxjs/toolkit": "^1.4.0",
     "autoprefixer": "^10.1.0",
     "classnames": "^2.2.6",
+<<<<<<< HEAD
     "next": "^10.0.3",
+=======
+    "@zeit/next-sass": "^1.0.1",
+    "axios": "^0.20.0",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "d3-ease": "^2.0.0",
+    "deck.gl": "7.3.6",
+    "layer-manager": "^3.0.8",
+    "luma.gl": "7.3.2",
+    "next": "^9.5.3",
+>>>>>>> package.json dependencies removed, eslintrc.json rules modified
     "next-redux-wrapper": "^6.0.2",
     "postcss": "^8.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
+<<<<<<< HEAD
     "tailwindcss": "^2.0.2"
+=======
+    "sass": "^1.27.0",
+    "viewport-mercator-project": "6.1.1"
+>>>>>>> package.json dependencies removed, eslintrc.json rules modified
   },
   "devDependencies": {
     "@types/node": "^14.14.10",
