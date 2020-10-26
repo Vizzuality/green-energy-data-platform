@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 
 import './styles.scss';
 
@@ -15,7 +14,13 @@ function getValue(item, value) {
   return `${preffix}${val}${suffix}`;
 }
 
-function Tooltip({ payload, settings, style, hideZeros, title, type }) {
+function Tooltip({
+  payload,
+  settings,
+  style,
+  hideZeros,
+  title,
+}) {
   const values = payload && payload.length > 0 && payload[0].payload;
 
   return (
@@ -24,12 +29,10 @@ function Tooltip({ payload, settings, style, hideZeros, title, type }) {
         <div className="chart_tooltip" style={style}>
           {title && (<h3 className="data_title">{title}</h3>)}
           {settings.map(
-            d => (hideZeros && values[d.key] ? null : (
+            (d) => (hideZeros && values[d.key] ? null : (
               <div
                 key={d.key}
-                className={classnames('data_line', {
-                  '-column': type === 'column'
-                })}
+                className="data_line"
               >
 
                 {/* LABEL */}
@@ -50,15 +53,13 @@ function Tooltip({ payload, settings, style, hideZeros, title, type }) {
                         </>
                       )}
                     </div>
-                    <div className={classnames('data_value', {
-                      '-column': type === 'column'
-                    })}>
+                    <div className="data_value">
                       {values && d.key && getValue(d, values[d.key])}
                     </div>
                   </>
                 )}
               </div>
-            ))
+            )),
           )}
         </div>
       )}
@@ -67,16 +68,20 @@ function Tooltip({ payload, settings, style, hideZeros, title, type }) {
 }
 
 Tooltip.propTypes = {
-  payload: PropTypes.arrayOf(PropTypes.shape({})),
+  payload: PropTypes.arrayOf(PropTypes.shape({
+    payload: PropTypes.shape({}),
+  })),
   settings: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   style: PropTypes.shape({}),
-  hideZeros: PropTypes.bool
+  hideZeros: PropTypes.bool,
+  title: PropTypes.string,
 };
 
 Tooltip.defaultProps = {
   payload: [],
   style: {},
-  hideZeros: false
+  hideZeros: false,
+  title: '',
 };
 
 export default Tooltip;

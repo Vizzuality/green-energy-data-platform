@@ -1,0 +1,8 @@
+[
+  {
+    "slug": "widget1",
+    "page": "energy-balance",
+    "category": "power",
+    "chart-type": "bars"
+  }
+]

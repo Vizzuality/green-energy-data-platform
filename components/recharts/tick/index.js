@@ -1,3 +1,1 @@
-import TickComponent from './component';
-
-export default TickComponent;
+export { default } from './component';

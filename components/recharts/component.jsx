@@ -17,7 +17,7 @@ import {
   ResponsiveContainer,
   ComposedChart,
   PieChart,
-  Label
+  Label,
 } from 'recharts';
 
 import ChartTick from './tick';
@@ -26,26 +26,10 @@ import './styles.scss';
 
 const rechartCharts = new Map([
   ['pie', PieChart],
-  ['composed', ComposedChart]
+  ['composed', ComposedChart],
 ]);
 
 class Chart extends PureComponent {
-  static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-    config: PropTypes.shape({}).isRequired,
-    className: PropTypes.string,
-    handleMouseMove: PropTypes.func,
-    handleMouseLeave: PropTypes.func,
-    onReady: PropTypes.func
-  };
-
-  static defaultProps = {
-    className: '',
-    handleMouseMove: null,
-    handleMouseLeave: null,
-    onReady: null
-  }
-
   componentDidMount() {
     const { onReady } = this.props;
 
@@ -58,7 +42,7 @@ class Chart extends PureComponent {
 
     Object.keys(yKeys).forEach((key) => {
       Object.keys(yKeys[key]).forEach((subKey) => {
-        if (data.some(d => d.key)) {
+        if (data.some((d) => d.key)) {
           maxValues.push(maxBy(data, subKey)[subKey]);
         }
       });
@@ -72,12 +56,22 @@ class Chart extends PureComponent {
       data,
       config,
       handleMouseMove,
-      handleMouseLeave
+      handleMouseLeave,
     } = this.props;
 
     const {
-      margin = { top: 20, right: 0, left: 50, bottom: 0 },
-      padding = { top: 0, right: 0, left: 0, bottom: 0 },
+      margin = {
+        top: 20,
+        right: 0,
+        left: 50,
+        bottom: 0,
+      },
+      padding = {
+        top: 0,
+        right: 0,
+        left: 0,
+        bottom: 0,
+      },
       type = 'composed',
       height,
       width,
@@ -100,10 +94,16 @@ class Chart extends PureComponent {
       tooltip,
       legend,
       unit,
-      unitFormat
+      unitFormat,
     } = content;
 
-    const { lines, bars, areas, pies } = yKeys;
+    const {
+      lines,
+      bars,
+      areas,
+      pies,
+    } = yKeys;
+
     const maxYValue = this.findMaxValue(data, config);
 
     const RechartChart = rechartCharts.get(type);
@@ -125,23 +125,21 @@ class Chart extends PureComponent {
             {...chartProps}
           >
             <defs>
-              {gradients && Object.keys(gradients).map(key => (
+              {gradients && Object.keys(gradients).map((key) => (
                 <linearGradient
                   key={`lg_${key}`}
                   {...gradients[key].attributes}
                 >
-                  {gradients[key].stops && Object.keys(gradients[key].stops).map(sKey => (
+                  {gradients[key].stops && Object.keys(gradients[key].stops).map((sKey) => (
                     <stop
                       key={`st_${sKey}`}
                       {...gradients[key].stops[sKey]}
                     />
-                  ))
-                  }
+                  ))}
                 </linearGradient>
-              ))
-              }
+              ))}
 
-              {patterns && Object.keys(patterns).map(key => (
+              {patterns && Object.keys(patterns).map((key) => (
                 <pattern
                   key={`pattern_${key}`}
                   {...patterns[key].attributes}
@@ -153,14 +151,12 @@ class Chart extends PureComponent {
                       tag,
                       {
                         key: iKey,
-                        ...patterns[key].children[iKey]
-                      }
+                        ...patterns[key].children[iKey],
+                      },
                     );
-                  })
-                  }
+                  })}
                 </pattern>
-              ))
-              }
+              ))}
             </defs>
 
             {cartesianGrid && (
@@ -181,15 +177,18 @@ class Chart extends PureComponent {
                 axisLine={false}
                 tickLine={false}
                 tickCount={8}
-                tick={{ dy: 8, fontSize: '12px', fill: 'rgba(0,0,0,0.54)', textShadow: '0 2 4 0 rgba(0,0,0,0.5)' }}
+                tick={{
+                  dy: 8,
+                  fontSize: '12px',
+                  fill: 'rgba(0,0,0,0.54)',
+                  textShadow: '0 2 4 0 rgba(0,0,0,0.5)',
+                }}
                 {...xAxis}
               />
             )}
             {yAxis && (
               <YAxis
                 axisLine={false}
-                // tickSize={-50}
-                // mirror
                 orientation={yAxis.orientation || 'left'}
                 tickMargin={0}
                 tickLine={false}
@@ -197,7 +196,7 @@ class Chart extends PureComponent {
                   <ChartTick
                     dataMax={maxYValue}
                     unit={unit || ''}
-                    unitFormat={unitFormat || (value => value)}
+                    unitFormat={unitFormat || ((value) => value)}
                     fill="#AAA"
                   />
                 )}
@@ -205,15 +204,15 @@ class Chart extends PureComponent {
               />
             )}
 
-            {areas && Object.keys(areas).map(key => (
+            {areas && Object.keys(areas).map((key) => (
               <Area key={key} dataKey={key} dot={false} {...areas[key]} />
             ))}
 
-            {bars && Object.keys(bars).map(key => (
+            {bars && Object.keys(bars).map((key) => (
               <Bar key={key} dataKey={key} dot={false} {...bars[key]}>
                 {!!bars[key].label && <Label {...bars[key].label} />}
 
-                {bars[key].itemColor && data.map(item => (
+                {bars[key].itemColor && data.map((item) => (
                   <Cell
                     key={`c_${item.color}`}
                     fill={item.color}
@@ -222,7 +221,7 @@ class Chart extends PureComponent {
               </Bar>
             ))}
 
-            {lines && Object.keys(lines).map(key => (
+            {lines && Object.keys(lines).map((key) => (
               <Line
                 key={key}
                 dataKey={key}
@@ -233,14 +232,14 @@ class Chart extends PureComponent {
             ))}
 
             {pies && (
-              Object.keys(pies).map(key => (
+              Object.keys(pies).map((key) => (
                 <Pie
                   key={key}
                   data={data}
                   dataKey={key}
                   {...pies[key]}
                 >
-                  {data.map(item => (
+                  {data.map((item) => (
                     <Cell
                       key={`c_${item.color}`}
                       fill={item.color}
@@ -264,7 +263,7 @@ class Chart extends PureComponent {
               <Tooltip
                 wrapperStyle={{
                   position: 'absolute',
-                  top: 0
+                  top: 0,
                 }}
                 isAnimationActive={false}
                 {...tooltip}
@@ -284,5 +283,46 @@ class Chart extends PureComponent {
     );
   }
 }
+
+Chart.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  config: PropTypes.shape({
+    xKey: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.shape({}),
+    ]),
+    yKeys: PropTypes.shape({}),
+    xAxis: PropTypes.shape({}),
+    yAxis: PropTypes.shape({}),
+    cartesianGrid: PropTypes.shape({}),
+    cartesianAxis: PropTypes.shape({}),
+    tooltip: PropTypes.shape({}),
+    legend: PropTypes.shape({}),
+    unit: PropTypes.string,
+    unitFormat: PropTypes.shape({}),
+    margin: PropTypes.shape({}),
+    padding: PropTypes.shape({}),
+    type: PropTypes.string,
+    height: PropTypes.number,
+    width: PropTypes.number,
+    viewBox: PropTypes.shape({}),
+    layout: PropTypes.string,
+    gradients: PropTypes.shape({}),
+    patterns: PropTypes.shape({}),
+    stackOffset: PropTypes.string,
+    chartProps: PropTypes.shape({}),
+  }).isRequired,
+  className: PropTypes.string,
+  handleMouseMove: PropTypes.func,
+  handleMouseLeave: PropTypes.func,
+  onReady: PropTypes.func,
+};
+
+Chart.defaultProps = {
+  className: '',
+  handleMouseMove: null,
+  handleMouseLeave: null,
+  onReady: null,
+};
 
 export default Chart;
