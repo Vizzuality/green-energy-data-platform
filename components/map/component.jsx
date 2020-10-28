@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, {
   useEffect,
   useState,
@@ -6,6 +7,12 @@ import React, {
 } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
+=======
+import React, { useEffect, useState, useRef } from 'react';
+import classnames from 'classnames';
+import PropTypes from 'prop-types';
+
+>>>>>>> map migrated to function
 import isEmpty from 'lodash/isEmpty';
 
 import ReactMapGL, { FlyToInterpolator, TRANSITION_EVENTS } from 'react-map-gl';
@@ -13,6 +20,10 @@ import { fitBounds } from 'viewport-mercator-project';
 
 import { easeCubic } from 'd3-ease';
 
+<<<<<<< HEAD
+=======
+// import 'mapbox-gl/dist/mapbox-gl.css';
+>>>>>>> map migrated to function
 import './style.scss';
 
 const DEFAULT_VIEWPORT = {
@@ -40,6 +51,10 @@ const Map = ({
   ...mapboxProps
 }) => {
   // Refs
+<<<<<<< HEAD
+=======
+  const mounted = useRef(null);
+>>>>>>> map migrated to function
   const mapRef = useRef(null);
   const mapContainerRef = useRef(null);
 
@@ -51,12 +66,21 @@ const Map = ({
   const [flying, setFlight] = useState(false);
   const [loaded, setLoader] = useState(false);
 
+<<<<<<< HEAD
   const onfitMapBounds = useCallback((transitionDuration = 2500) => {
     const { bbox, options } = bounds;
 
     const { longitude, latitude, zoom } = fitBounds({
       width: mapContainerRef.current.offsetWidth,
       height: mapContainerRef.current.offsetHeight,
+=======
+  const onfitMapBounds = (transitionDuration = 2500) => {
+    const { bbox, options } = bounds;
+
+    const { longitude, latitude, zoom } = fitBounds({
+      width: mapContainerRef.offsetWidth,
+      height: mapContainerRef.offsetHeight,
+>>>>>>> map migrated to function
       bounds: [
         [bbox[0], bbox[1]],
         [bbox[2], bbox[3]],
@@ -65,6 +89,10 @@ const Map = ({
     });
 
     const newViewport = {
+<<<<<<< HEAD
+=======
+      ...mapViewport,
+>>>>>>> map migrated to function
       longitude,
       latitude,
       zoom,
@@ -73,15 +101,20 @@ const Map = ({
     };
 
     setFlight(true);
+<<<<<<< HEAD
     setViewport((prevViewport) => ({
       ...prevViewport,
       ...newViewport,
     }));
+=======
+    setViewport(newViewport);
+>>>>>>> map migrated to function
     onViewportChange(newViewport);
 
     setTimeout(() => {
       setFlight(false);
     }, transitionDuration);
+<<<<<<< HEAD
   }, [bounds, onViewportChange]);
 
   useEffect(() => {
@@ -90,12 +123,25 @@ const Map = ({
 
   useEffect(() => {
     if (
+=======
+  };
+
+  useEffect(() => {
+    if (!mounted.current) {
+      if (!isEmpty(bounds) && !!bounds.bbox && bounds.bbox.every((b) => !!b)) {
+        onfitMapBounds(0);
+      }
+      onReady({ map: mapRef, mapContainer: mapContainerRef });
+      mounted.current = true;
+    } else if (
+>>>>>>> map migrated to function
       !isEmpty(bounds)
       && !!bounds.bbox
       && bounds.bbox.every((b) => !!b)
     ) {
       onfitMapBounds();
     }
+<<<<<<< HEAD
   }, [bounds, onfitMapBounds]);
 
   useEffect(() => {
@@ -104,6 +150,9 @@ const Map = ({
       ...viewport,
     }));
   }, [viewport]);
+=======
+  });
+>>>>>>> map migrated to function
 
   const onMapLoad = () => {
     setLoader(true);
@@ -211,9 +260,13 @@ Map.propTypes = {
 
   /** An object that defines the bounds */
   bounds: PropTypes.shape({
+<<<<<<< HEAD
     bbox: PropTypes.arrayOf(
       PropTypes.number,
     ),
+=======
+    bbox: PropTypes.arrayOf,
+>>>>>>> map migrated to function
     options: PropTypes.shape({}),
   }),
 

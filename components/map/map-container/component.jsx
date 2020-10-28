@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+<<<<<<< HEAD
 import { useDebouncedCallback } from 'use-debounce';
+=======
+>>>>>>> map migrated to function
 
 import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
@@ -21,6 +24,7 @@ export const MapContainer = ({
   mapStyle,
   scrollZoom = false,
 }) => {
+<<<<<<< HEAD
   const [viewport, setViewport] = useState({
     zoom: 2,
     latitude: 0,
@@ -44,18 +48,37 @@ export const MapContainer = ({
     }));
   }, 250);
 
+=======
+  const [viewport, setViewport] = useState({ zoom: 1, latitude: 0, longitude: 0 });
+  const onZoomChange = (zoom) => {
+    setViewport({
+      zoom,
+      transitionDuration: 250,
+    });
+  };
+
+>>>>>>> map migrated to function
   return (
     <div className="c-map-container">
       <Map
         viewport={viewport}
         scrollZoom={scrollZoom}
         bounds={bounds}
+<<<<<<< HEAD
         mapStyle={mapStyle}
         onViewportChange={handleViewportChange.callback}
         doubleClickZoom
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
       >
         {(map) => (
+=======
+        mapStyle={mapStyle || 'mapbox://css/mapbox/light-v9'}
+        mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
+      >
+
+        {(map) => (
+
+>>>>>>> map migrated to function
           <LayerManager
             map={map}
             plugin={PluginMapboxGl}
@@ -90,8 +113,14 @@ MapContainer.propTypes = {
     zoom: PropTypes.number,
   }),
   setViewport: PropTypes.func,
+<<<<<<< HEAD
   mapStyle: PropTypes.string,
   bounds: PropTypes.shape({}),
+=======
+  mapboxApiAccessToken: PropTypes.string.isRequired,
+  mapStyle: PropTypes.shape({}).isRequired,
+  bounds: PropTypes.shape({}).isRequired,
+>>>>>>> map migrated to function
   scrollZoom: PropTypes.bool,
 };
 
@@ -106,10 +135,16 @@ MapContainer.defaultProps = {
     bearing: 0,
     pitch: 0,
   },
+<<<<<<< HEAD
   bounds: null,
   setViewport: () => { },
   scrollZoom: false,
   mapStyle: 'mapbox://css/mapbox/light-v9',
+=======
+
+  setViewport: () => { },
+  scrollZoom: false,
+>>>>>>> map migrated to function
 };
 
 export default MapContainer;
