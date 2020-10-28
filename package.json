@@ -71,6 +71,7 @@
     "redux": "^4.0.5",
 >>>>>>> package.json dependencies removed, eslintrc.json rules modified
     "sass": "^1.27.0",
+    "use-debounce": "^5.0.1",
     "viewport-mercator-project": "6.1.1"
   },
   "lint-staged": {
