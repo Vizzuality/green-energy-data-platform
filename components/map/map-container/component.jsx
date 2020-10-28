@@ -17,10 +17,10 @@ import './style.scss';
 
 export const MapContainer = ({
   bounds,
+  mapStyle,
   scrollZoom = false,
 }) => {
   const [viewport, setViewport] = useState({ zoom: 1, latitude: 0, longitude: 0 });
-
   const onZoomChange = (zoom) => {
     setViewport({
       zoom,
@@ -34,11 +34,12 @@ export const MapContainer = ({
         viewport={viewport}
         scrollZoom={scrollZoom}
         bounds={bounds}
-        mapStyle="mapbox://css/mapbox/light-v9"
+        mapStyle={mapStyle || 'mapbox://css/mapbox/light-v9'}
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
       >
 
         {(map) => (
+
           <LayerManager
             map={map}
             plugin={PluginMapboxGl}
@@ -73,7 +74,6 @@ MapContainer.propTypes = {
     zoom: PropTypes.number,
   }),
   setViewport: PropTypes.func,
-  isCollapse: PropTypes.bool.isRequired,
   mapboxApiAccessToken: PropTypes.string.isRequired,
   mapStyle: PropTypes.shape({}).isRequired,
   bounds: PropTypes.shape({}).isRequired,
