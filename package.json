@@ -13,29 +13,27 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
-    "next": "^9.5.3",
+    "next": "^10.0.3",
     "next-redux-wrapper": "^6.0.2",
-    "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-module-resolver": "^4.0.0",
-    "eslint": "5.16.0",
-    "eslint-config-airbnb": "^18.2.0",
-    "eslint-import-resolver-babel-module": "^5.1.2",
-    "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest": "^24.1.0",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-react": "^7.21.1",
-    "eslint-plugin-react-hooks": "3.0.0",
+    "@types/node": "^14.14.10",
+    "@types/react": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "eslint": "7.2.0",
+    "eslint-config-airbnb-typescript": "^12.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^4.3.0",
-    "jest": "^26.5.3",
-    "lint-staged": "^9.2.5"
+    "lint-staged": "^9.2.5",
+    "typescript": "^4.1.2"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -51,7 +49,6 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "test": "jest"
+    "start": "next start"
   }
 }
