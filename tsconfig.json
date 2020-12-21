@@ -22,7 +22,7 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "**/__test__.js"
+    "**/*__test__.js"
   ],
   "exclude": [
     "node_modules"
