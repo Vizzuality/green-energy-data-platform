@@ -18,7 +18,9 @@ module.exports = {
     'airbnb-typescript',
     'airbnb/hooks',
     'plugin:react/recommended',
+    'plugin:cypress/recommended',
   ],
+  plugins: ['cypress'],
   rules: {
     'no-console': [1, { allow: ['warn', 'error'] }],
     'react/jsx-props-no-spreading': [0, {}],

@@ -5,7 +5,6 @@
 /.pnp
 .pnp.js
 
-
 # next.js
 /.next/
 /out/
@@ -17,6 +16,10 @@
 .DS_Store
 .env
 .vscode/
+
+# cypress
+/cypress/screenshots
+/cypress/videos
 
 # debug
 npm-debug.log*
