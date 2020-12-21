@@ -12,7 +12,7 @@ type HomePageProps = {
 const HomePage: FC<HomePageProps> = () => (
   <StaticPage className="static-custom">
     <Head title="Welcome to Green Energy Data Platform" />
-    <p>Home</p>
+    <p className="text-green-600">Home</p>
   </StaticPage>
 );
 
