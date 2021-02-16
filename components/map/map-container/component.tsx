@@ -37,9 +37,9 @@ const MapContainer: FC<MapProps> = ({
   );
 
   const onMapReady = ({ map, mapContainer }) => {
-    console.info('onMapReady: ', map, mapContainer) ;
+    console.info('onMapReady: ', map, mapContainer)};
   const onMapLoad = ({ map, mapContainer }) => {
-    console.info('onMapLoad: ', map, mapContainer) };
+    console.info('onMapLoad: ', map, mapContainer)};
 
   return (
     <div className="relative w-screen h-96">

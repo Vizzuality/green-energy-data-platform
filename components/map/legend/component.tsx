@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
-import classnames from 'classnames';
+import React, { FC, useState } from 'react';
+import cx from 'classnames';
 
-const Legend = () => {
+interface LegendProps {
+  className?: string,
+}
+
+const Legend: FC<LegendProps> = ({
+  className,
+}: LegendProps) => {
   const [isCollapse, toggleCollapse] = useState(true);
 
   const handleClick = () => {
@@ -9,25 +15,23 @@ const Legend = () => {
   };
 
   return (
-    <div className="c-map-legend">
-      <div className={classnames('map-legend-wrapper',
-        { '-collapse': isCollapse })}
+    <div className={cx('absolute bottom-10 left-2',
+      {
+        '-collapse': isCollapse,
+        [className]: !!className,
+      })}
+    >
+
+      <button
+        aria-label="expand/collapse"
+        type="button"
+        onClick={handleClick}
+        className={cx('focus:outline-none',
+          { 'text-white': isCollapse },
+          { 'text-color1': !isCollapse })}
       >
-        <div className="legend-header">
-          <div className="legend-controls">
-            <h4>Leyenda</h4>
-            <button
-              aria-label="expand/collapse"
-              type="button"
-              onClick={handleClick}
-              className={classnames(
-                { '-collapse': isCollapse },
-                { '-expand': !isCollapse },
-              )}
-            />
-          </div>
-        </div>
-      </div>
+        Legend
+      </button>
     </div>
   );
 };

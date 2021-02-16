@@ -10,8 +10,8 @@ import MapContainer from 'components/map/map-container';
 const MapPage: FC = () => (
   <StaticPage className="map-page">
     <Head title="Green Energy Data Platform Map" />
-    <section className="p-map">
-      <p>Map</p>
+    <section>
+      <p className='text-color1'>Map</p>
       <MapContainer />
     </section>
   </StaticPage>

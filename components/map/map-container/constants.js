@@ -1,4 +1,4 @@
-const activeLayers = [
+const ACTIVE_LAYERS = [
 
   // GEOJSON DATA LAYER
   {
@@ -62,4 +62,4 @@ const activeLayers = [
     },
   },
 ];
-export default activeLayers;
+export default ACTIVE_LAYERS;

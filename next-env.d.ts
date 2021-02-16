@@ -1,3 +1,3 @@
-/// <reference types="next" />
-/// <reference types="next/types/global" />
-/// <reference types="cypress" />
+// <reference types="next" />
+// <reference types="next/types/global" />
+// <reference types="cypress" />

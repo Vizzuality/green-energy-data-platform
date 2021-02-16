@@ -61,11 +61,6 @@ const DEFAULT_VIEWPORT = {
   longitude: 104,
 };
 
-const onReady=({ map, mapContainer }) => {
-  console.info('onMapReady: ', map, mapContainer)}
-  const onMapLoad=({ map, mapContainer }) => {
-  console.info('onMapLoad: ', map, mapContainer)}
-
 
 export const Map = ({
   children,
@@ -188,7 +183,6 @@ export const Map = ({
    */
   useEffect(() => {
     setReady(true);
-    console.log(onMapReady, mapRef.current, mapContainerRef.current)
     onMapReady({ map: mapRef.current, mapContainer: mapContainerRef.current });
   }, [onMapReady]);
 
@@ -204,7 +198,6 @@ export const Map = ({
       ...viewport,
     }));
   }, [viewport]);
-console.log(process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN, 'process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN')
   return (
     <div
       ref={mapContainerRef}
