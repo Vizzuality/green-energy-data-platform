@@ -11,7 +11,9 @@
     "url": "https://vizzuality.com"
   },
   "dependencies": {
+    "@math.gl/web-mercator": "^3.4.2",
     "@reduxjs/toolkit": "^1.4.0",
+    "@types/react-map-gl": "^5.2.9",
     "autoprefixer": "^10.1.0",
     "axios": "^0.20.0",
     "babel-eslint": "^10.1.0",
@@ -28,14 +30,13 @@
     "postcss": "^8.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-map-gl": "^6.1.8",
+    "react-map-gl": "6.0.1",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "tailwindcss": "^2.0.2",
     "use-debounce": "^5.2.0"
   },
   "devDependencies": {
-    "@math.gl/web-mercator": "^3.3.2",
     "@types/node": "^14.14.10",
     "@types/react": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.9.0",

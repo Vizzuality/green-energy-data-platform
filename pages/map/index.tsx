@@ -1,7 +1,7 @@
 import React, {
   FC,
   useState,
-  useCallback
+  useCallback,
 } from 'react';
 
 // Layer manager
@@ -22,7 +22,6 @@ import Head from 'components/head';
 import Map from 'components/map';
 
 const MapPage: FC = () => {
-
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
@@ -32,7 +31,7 @@ const MapPage: FC = () => {
     (zoom) => {
       setViewport({
         ...viewport,
-        zoom
+        zoom,
       });
     },
     [viewport],
@@ -40,37 +39,34 @@ const MapPage: FC = () => {
 
   return (
     <StaticPage className="map-page">
-    <Head title="Green Energy Data Platform Map" />
-    <section>
-      <p className='text-color1'>Map</p>
-      <div className="relative w-screen h-96">
-        <Map
-          // bounds={bounds}
-          viewport={viewport}
-          onMapViewportChange={handleViewportChange}
-        >
-          {(map) => {
-            return (
+      <Head title="Green Energy Data Platform Map" />
+      <section>
+        <p className="text-color1">Map</p>
+        <div className="relative w-screen h-96">
+          <Map
+            // bounds={bounds}
+            viewport={viewport}
+            onMapViewportChange={handleViewportChange}
+          >
+            {(map) => (
               <LayerManager map={map} plugin={PluginMapboxGl}>
                 {ACTIVE_LAYERS.map((l) => (
                   <Layer key={l.id} {...l} />
                 ))}
               </LayerManager>
-            );
-          }}
-        </Map>
+            )}
+          </Map>
 
-        <ZoomControl
-          className="absolute bottom-4 left-2 w-4 h-10"
-          viewport={viewport}
-          onZoomChange={handleZoomChange}
-        />
-        <Legend />
-      </div>
-    </section>
-  </StaticPage>
-);
-}
-
+          <ZoomControl
+            className="absolute bottom-4 left-2 w-4 h-10"
+            viewport={viewport}
+            onZoomChange={handleZoomChange}
+          />
+          <Legend />
+        </div>
+      </section>
+    </StaticPage>
+  );
+};
 
 export default MapPage;

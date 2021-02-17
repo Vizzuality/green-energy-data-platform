@@ -11,7 +11,7 @@ import ReactMapGL, {
   FlyToInterpolator,
   TRANSITION_EVENTS,
   ViewportProps,
-  InteractiveMapProps
+  InteractiveMapProps,
 } from 'react-map-gl';
 import { fitBounds } from '@math.gl/web-mercator';
 
@@ -27,7 +27,7 @@ export interface MapProps extends InteractiveMapProps {
   className?: string;
 
   /** An object that defines the viewport
-   * @see https://uber.github.io/react-map-gl/#/Documentation/api-reference/interactive-map?section=initialization
+   * @see https://visgl.github.io/react-map-gl/docs/api-reference/interactive-map#initialization
    */
   viewport?: Partial<ViewportProps>;
 
@@ -48,13 +48,6 @@ export interface MapProps extends InteractiveMapProps {
 
   /** A function that exposes the viewport */
   onMapViewportChange?: (viewport: Partial<ViewportProps>) => void;
-
-  dragPan?: () => void;
-  dragRotate?: () => void;
-  scrollZoom?: () => void;
-  touchZoom?: () => void;
-  touchRotate?: () => void;
-  doubleClickZoom?: () => void;
 }
 
 export const Map = ({
@@ -95,7 +88,7 @@ export const Map = ({
    */
   const handleLoad = useCallback(() => {
     setLoaded(true);
-    if (onMapLoad) { onMapLoad({ map: mapRef.current, mapContainer: mapContainerRef.current }); };
+    if (onMapLoad) { onMapLoad({ map: mapRef.current, mapContainer: mapContainerRef.current }); }
   }, [onMapLoad]);
 
   const debouncedOnMapViewportChange = useDebouncedCallback((v) => {
@@ -178,7 +171,7 @@ export const Map = ({
    */
   useEffect(() => {
     setReady(true);
-    if (onMapReady) { onMapReady({ map: mapRef.current, mapContainer: mapContainerRef.current }); };
+    if (onMapReady) { onMapReady({ map: mapRef.current, mapContainer: mapContainerRef.current }); }
   }, [onMapReady]);
 
   useEffect(() => {
