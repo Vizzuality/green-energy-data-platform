@@ -1,4 +1,4 @@
-const ACTIVE_LAYERS = [
+export const ACTIVE_LAYERS = [
 
   // GEOJSON DATA LAYER
   {
@@ -62,4 +62,12 @@ const ACTIVE_LAYERS = [
     },
   },
 ];
-export default ACTIVE_LAYERS;
+
+export const DEFAULT_VIEWPORT = {
+  zoom: 6,
+  minZoom: 2,
+  maxZoom: 12,
+  latitude: 35,
+  longitude: 104,
+  transitionDuration: 500,
+};

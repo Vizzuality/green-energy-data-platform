@@ -1,20 +1,76 @@
 import React, {
   FC,
+  useState,
+  useCallback
 } from 'react';
+
+// Layer manager
+import { LayerManager, Layer } from 'layer-manager/dist/components';
+import { PluginMapboxGl } from 'layer-manager';
+
+// Controls
+import ZoomControl from 'components/map/zoom';
+import Legend from 'components/map/legend';
+
+// Map
+
+import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from 'components/map/constants';
 
 // components
 import StaticPage from 'layout/static-page';
 import Head from 'components/head';
-import MapContainer from 'components/map/map-container';
+import Map from 'components/map';
 
-const MapPage: FC = () => (
-  <StaticPage className="map-page">
+const MapPage: FC = () => {
+
+  const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
+  const handleViewportChange = useCallback((v) => {
+    setViewport(v);
+  }, []);
+
+  const handleZoomChange = useCallback(
+    (zoom) => {
+      setViewport({
+        ...viewport,
+        zoom
+      });
+    },
+    [viewport],
+  );
+
+  return (
+    <StaticPage className="map-page">
     <Head title="Green Energy Data Platform Map" />
     <section>
       <p className='text-color1'>Map</p>
-      <MapContainer />
+      <div className="relative w-screen h-96">
+        <Map
+          // bounds={bounds}
+          viewport={viewport}
+          onMapViewportChange={handleViewportChange}
+        >
+          {(map) => {
+            return (
+              <LayerManager map={map} plugin={PluginMapboxGl}>
+                {ACTIVE_LAYERS.map((l) => (
+                  <Layer key={l.id} {...l} />
+                ))}
+              </LayerManager>
+            );
+          }}
+        </Map>
+
+        <ZoomControl
+          className="absolute bottom-4 left-2 w-4 h-10"
+          viewport={viewport}
+          onZoomChange={handleZoomChange}
+        />
+        <Legend />
+      </div>
     </section>
   </StaticPage>
 );
+}
+
 
 export default MapPage;

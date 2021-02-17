@@ -11,11 +11,13 @@ import ReactMapGL, {
   FlyToInterpolator,
   TRANSITION_EVENTS,
   ViewportProps,
-  InteractiveMapProps,
+  InteractiveMapProps
 } from 'react-map-gl';
 import { fitBounds } from '@math.gl/web-mercator';
 
 import { easeCubic } from 'd3-ease';
+
+import { DEFAULT_VIEWPORT } from 'components/map/constants';
 
 export interface MapProps extends InteractiveMapProps {
   /** A function that returns the map instance */
@@ -55,13 +57,6 @@ export interface MapProps extends InteractiveMapProps {
   doubleClickZoom?: () => void;
 }
 
-const DEFAULT_VIEWPORT = {
-  zoom: 2,
-  latitude: 35,
-  longitude: 104,
-};
-
-
 export const Map = ({
   children,
   className,
@@ -100,7 +95,7 @@ export const Map = ({
    */
   const handleLoad = useCallback(() => {
     setLoaded(true);
-    onMapLoad({ map: mapRef.current, mapContainer: mapContainerRef.current });
+    if (onMapLoad) { onMapLoad({ map: mapRef.current, mapContainer: mapContainerRef.current }); };
   }, [onMapLoad]);
 
   const debouncedOnMapViewportChange = useDebouncedCallback((v) => {
@@ -183,7 +178,7 @@ export const Map = ({
    */
   useEffect(() => {
     setReady(true);
-    onMapReady({ map: mapRef.current, mapContainer: mapContainerRef.current });
+    if (onMapReady) { onMapReady({ map: mapRef.current, mapContainer: mapContainerRef.current }); };
   }, [onMapReady]);
 
   useEffect(() => {
@@ -214,6 +209,7 @@ export const Map = ({
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
         // CUSTOM PROPS FROM REACT MAPBOX API
         {...mapboxProps}
+        mapStyle="mapbox://styles/mapbox/dark-v9"
         // VIEWPORT
         {...mapViewport}
         width="100%"
