@@ -44,7 +44,8 @@ const MapPage: FC = () => {
         <p className="text-color1">Map</p>
         <div className="relative w-screen h-96">
           <Map
-            // bounds={bounds}
+            width="100%"
+            height="100%"
             viewport={viewport}
             onMapViewportChange={handleViewportChange}
           >
