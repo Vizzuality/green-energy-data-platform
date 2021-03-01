@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
+import { QueryClientProvider, QueryClient } from 'react-query';
 
 import wrapper from 'config/store';
 
@@ -18,11 +19,15 @@ declare global {
   }
 }
 
-const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => (
-  <>
-    <TransifexScript />
-    <Component {...pageProps} />
-  </>
-);
+const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => {
+  const queryClient = new QueryClient();
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TransifexScript />
+      <Component {...pageProps} />
+    </QueryClientProvider>
+  );
+};
 
 export default wrapper.withRedux(GreenEnergyDataApp);
