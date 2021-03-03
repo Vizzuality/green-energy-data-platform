@@ -590,6 +590,11 @@
   dependencies:
     any-observable "^0.3.0"
 
+"@transifex/react@^0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@transifex/react/-/react-0.9.2.tgz#4e3ea6f091166959fadbbf695a45de43dc7d7e49"
+  integrity sha512-hf7iladwDIgYValBZcyqC2qWF3Ms6g24p+8E8EdQ95r+YskZb/x4U9RxpZO35ktXY8KQihE+Pe4WwnW7V1HNxQ==
+
 "@types/geojson@*":
   version "7946.0.7"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.7.tgz#c8fa532b60a0042219cdf173ca21a975ef0666ad"
