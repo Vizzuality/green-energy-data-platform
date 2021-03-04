@@ -9,7 +9,7 @@ import StaticPage from 'layout/static-page';
 import Head from 'components/head';
 import Nav from 'components/nav';
 import VisualizationsNav from 'components/visualizations-nav';
-import Dropdown from 'components/select';
+import Dropdown from 'components/select/component';
 
 const Group: FC = () => {
   const router = useRouter();

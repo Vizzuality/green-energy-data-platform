@@ -13,6 +13,6 @@ Description of the PR
 
 What to test? How to do it?
 
-## Pivotal Tracker
+## Jira
 
 Link to the task(s), if any
