@@ -17,7 +17,7 @@ const VisualizationsOptions = [
   },
   {
     icon: 'columns',
-    label: 'Columns',
+    label: 'Table',
   },
 ];
 
