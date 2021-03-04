@@ -7,7 +7,7 @@ type DataItem = Object; // TO DO - change when we have clear de type of data
 
 interface WidgetProps {
   widgetData: DataItem[],
-  widgetConfig: Object
+  widgetConfig?: Object
 }
 
 const Widget: FC<WidgetProps> = () => (
