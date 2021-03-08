@@ -13,7 +13,6 @@
   "dependencies": {
     "@math.gl/web-mercator": "^3.4.2",
     "@reduxjs/toolkit": "^1.4.0",
-    "@transifex/react": "^0.9.2",
     "@types/react-map-gl": "^5.2.9",
     "autoprefixer": "^10.1.0",
     "axios": "^0.20.0",
@@ -22,6 +21,7 @@
     "classnames": "^2.2.6",
     "d3-ease": "^2.0.0",
     "deck.gl": "7.3.6",
+    "downshift": "^6.1.0",
     "layer-manager": "^3.0.8",
     "lodash": "^4.17.20",
     "luma.gl": "7.3.2",

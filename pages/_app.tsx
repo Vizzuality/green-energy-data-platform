@@ -15,8 +15,19 @@ declare global {
       picker: string,
       api_key: string,
     }
+    Transifex: {
+      live: {
+        onReady: (ms: number) => number,
+        onError: (err) => void;
+        onFetchLanguages: (languages) => void,
+        getAllLanguages: () => void,
+        getSourceLanguage: () => { code: string },
+        translateTo: (code: string) => string,
+        detectLanguage: () => void,
+      }
+    }
   }
-};
+}
 
 typeof window !== 'undefined' && (window.liveSettings = window.liveSettings);
 
@@ -28,7 +39,7 @@ const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => (
           {window.liveSettings = {
             detectlang: true,
             dynamic: true,
-            picker: '#transifex-picker',
+            picker: '#transifexSelectorHidden',
             api_key: process.env.NEXT_PUBLIC_TRANSIFEX_API_TOKEN,
           }}
         </script>
