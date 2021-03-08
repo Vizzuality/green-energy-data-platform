@@ -39,6 +39,7 @@
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "tailwindcss": "^2.0.2",
+    "tailwindcss-border-gradients": "^2.0.3",
     "use-debounce": "^5.2.0"
   },
   "devDependencies": {
