@@ -4,19 +4,19 @@ import Providers from 'next-auth/providers';
 
 import { fetchUsers } from '../../../services/user';
 
-interface PagesProps {
-  signIn: string
-}
+// interface ProviderCredentialsOptions {
+//   name: string,
+//   credentials: {},
+//   id: string,
+//   authorize: unknown
+// }
 
-interface ProviderCredentialsOptions {
-  id: string,
-  authorize: (credentials?: Record<'email' | 'password', string>) => Promise<any>
-}
-
-interface OptionsProps {
-  pages: PagesProps,
-  providers: any // TO - DO change type any once it's finished
-}
+type OptionsProps = {
+  pages: {
+    signIn: string;
+  };
+  providers: unknown[]; // TO - DO change type once it's finished
+};
 
 const options: OptionsProps = {
   pages: {
@@ -25,13 +25,19 @@ const options: OptionsProps = {
   // Configure one or more authentication providers
   providers: [
     // We will expect credentials as argument
-    Providers.Credentials <ProviderCredentialsOptions>({
+
+    Providers.Credentials({
       id: 'credentials',
+      credentials: {
+      },
+      name: 'credentials',
       async authorize() {
         const user = await fetchUsers(); // TO - DO add credentials as argument
 
         // Any object returned will be saved in `user` property of the JWT
-        if (user) return user;
+        if (user) {
+          return user;
+        }
 
         return null;
       },
