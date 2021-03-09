@@ -13,7 +13,7 @@ const VisualizationsOptions = [
   },
   {
     icon: 'bar',
-    label: 'Bars',
+    label: 'Regions',
   },
   {
     icon: 'columns',
