@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 
-import { fetchUsers } from '../../../services/user';
+import { fetchUsers } from 'services/user';
 
 // interface ProviderCredentialsOptions {
 //   name: string,
@@ -15,7 +15,7 @@ type OptionsProps = {
   pages: {
     signIn: string;
   };
-  providers: unknown[]; // TO - DO change type once it's finished
+  providers: any; // TO - DO change type once it's finished
 };
 
 const options: OptionsProps = {
