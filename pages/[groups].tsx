@@ -8,12 +8,11 @@ import { useRouter } from 'next/router';
 import StaticPage from 'layout/static-page';
 import Head from 'components/head';
 import Nav from 'components/nav';
-import VisualizationsNav from 'components/visualizations-nav';
-import Dropdown from 'components/select/component';
+import Card from 'components/card';
 
 const Group: FC = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { groups } = router.query;
 
   const items = [
     {
@@ -34,18 +33,13 @@ const Group: FC = () => {
   ];
 
   return (
-    <StaticPage className="static-custom">
-      <Head title={`${id} analysis`} />
-      <p className="text-green-600">{id}</p>
+    <StaticPage className={`static-custom bg-color-${groups} text-white`}>
+      <Head title={`${groups} analysis`} />
+      <p className="text-white">{groups}</p>
       <Nav items={items} />
       <h1>Energy balance</h1>
       <p>Metadata lorem ipsgum</p>
-      <section>
-        <VisualizationsNav selected={'Line'} />
-        {/* Subgroup title, dynamic*/}
-        <h2>Overall energy balance</h2>
-        <Dropdown />
-      </section>
+      <Card />
     </StaticPage>
   );
 };

@@ -4,10 +4,11 @@ import { useSelect } from 'downshift';
 
 
 export interface DropdownSelectProps {
-
+  label?: string
 };
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
+  label = '',
   items = ['indicator1', 'indicator2']
 }: DropdownSelectProps) => {
   const {
@@ -23,7 +24,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
   } = useSelect({ items })
   return (
     <div>
-      <label {...getLabelProps()}>Choose an element:</label>
+      <label {...getLabelProps()}>{label}</label>
       <button
         type="button"
         {...getToggleButtonProps({

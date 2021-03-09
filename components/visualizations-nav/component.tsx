@@ -17,7 +17,7 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
 
   return (
     <nav>
-      <ul className="flex justify-between flex-grow py-3 font-heading">
+      <ul className="flex justify-between flex-grow py-3 font-heading border-b-gray">
         <p>Select Visualization:</p>
         {VisualizationsOptions.map(({ icon, label }) => (
           <li
@@ -32,7 +32,6 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
           </li>
         ))}
       </ul>
-
     </nav>
   );
 };
