@@ -13,6 +13,9 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    'import/core-modules': [
+      'modules',
+    ],
   },
   extends: [
     'airbnb-typescript',
