@@ -23,10 +23,12 @@ const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <TransifexScript />
-      <Component {...pageProps} />
-    </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
+    </>
   );
 };
 
