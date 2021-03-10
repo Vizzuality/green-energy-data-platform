@@ -5,7 +5,7 @@ const LanguageSelect = () => {
   const [languages, setLanguages] = useState([]);
   const items = languages;
 
-  const { Transifex } = window;
+  const { Transifex } = (window as any);
 
   const getAllLanguages = useCallback(() => new Promise((resolve, reject) => {
     Transifex.live.onError((err) => reject(err));
@@ -42,8 +42,14 @@ const LanguageSelect = () => {
 
   return (
     <div>
-      <label {...getLabelProps()}>Select language</label>
-      <button type="button" {...getToggleButtonProps()}>
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+      <label {...getLabelProps()}>
+        Select language
+      </label>
+      <button
+        type="button"
+        {...getToggleButtonProps()}
+      >
         {(selectedItem && selectedItem.name) || ''}
       </button>
       <ul {...getMenuProps()}>
@@ -56,7 +62,7 @@ const LanguageSelect = () => {
                   ? { backgroundColor: '#bde4ff' }
                   : {}
               }
-              key={`${item.code}${index}`}
+              key={`${item.code}`}
               {...getItemProps({ item: item.name, index })}
             >
               {item.name}
