@@ -3,6 +3,8 @@ import Document, {
   Html, Main, NextScript, Head,
 } from 'next/document';
 
+import Icons from 'components/icons';
+
 export default class MyDocument extends Document {
   render() {
     return (
@@ -16,6 +18,7 @@ export default class MyDocument extends Document {
         <body id="root">
           <Main />
           <NextScript />
+          <Icons />
         </body>
       </Html>
     );
