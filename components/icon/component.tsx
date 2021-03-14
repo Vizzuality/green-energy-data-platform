@@ -2,10 +2,11 @@ import React, { FC } from 'react';
 import cx from 'classnames';
 
 interface IconProps {
+  ariaLabel: string,
   name: string,
   className?: string,
   size?: 'sm' | 'md' | 'lg',
-  style?: object,
+  group?: number,
 }
 
 const SIZE = {
@@ -15,10 +16,11 @@ const SIZE = {
 };
 
 const Icon: FC<IconProps> = ({
-  name,
-  size,
+  ariaLabel,
+  name = '',
+  size = 'md',
+  group = 1,
   className,
-  style,
 }: IconProps) => {
   const classNames = cx(
     SIZE[size],
@@ -26,16 +28,13 @@ const Icon: FC<IconProps> = ({
   );
 
   return (
-    <svg className={`flex-shrink-0 ${classNames}`} style={style}>
+    <svg
+      aria-label={ariaLabel}
+      className={cx(`flex-shrink-0 ${classNames}`, { [`fill-color${group}`]: !!group })}
+    >
       <use xlinkHref={`#icon-${name}`} />
     </svg>
   );
-};
-
-Icon.defaultProps = {
-  className: '',
-  size: 'md',
-  style: {},
 };
 
 export default Icon;

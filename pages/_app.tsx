@@ -8,6 +8,9 @@ import wrapper from 'config/store';
 // types
 import { LiveSettings } from 'types/transifex';
 
+// components
+import Icons from 'components/icons';
+
 // styles
 import 'styles/index.css';
 
@@ -28,6 +31,8 @@ const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => {
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
       </QueryClientProvider>
+      <Icons />
+
     </>
   );
 };
