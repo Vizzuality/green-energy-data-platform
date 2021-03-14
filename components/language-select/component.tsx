@@ -1,5 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelect } from 'downshift';
+import cx from 'classnames';
+
+// components
+import Icon from 'components/icon';
 
 const LanguageSelect = () => {
   const [languages, setLanguages] = useState([]);
@@ -41,18 +45,36 @@ const LanguageSelect = () => {
   } = useSelect({ items, onSelectedItemChange });
 
   return (
-    <div>
+    <div className="flex items-center relative">
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      <label {...getLabelProps()}>
-        Select language
-      </label>
+      {/* <label {...getLabelProps()} className="flex items-center">
+        <Icon className="text-white" ariaLabel="world ball" name="world" size="lg" />
+        <p className="px-3">Select language</p>
+        <Icon
+          className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
+          ariaLabel="arrow"
+          name="filled_triangle"
+          size="sm"
+        />
+      </label> */}
       <button
         type="button"
+        className="flex items-center"
         {...getToggleButtonProps()}
       >
-        {(selectedItem && selectedItem.name) || ''}
+        <Icon className="text-white" ariaLabel="world ball" name="world" size="lg" />
+        <p className="px-3">Select language</p>
+        <Icon
+          className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
+          ariaLabel="arrow"
+          name="filled_triangle"
+          size="sm"
+        />
       </button>
-      <ul {...getMenuProps()}>
+      <ul
+        className="flex-col bg-gray2 absolute bottom-7 w-full pl-8"
+        {...getMenuProps()}
+      >
         {isOpen && (
           items.map((item, index) => (
             <li
