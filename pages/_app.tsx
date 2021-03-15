@@ -32,7 +32,6 @@ const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => {
         <Component {...pageProps} />
       </QueryClientProvider>
       <Icons />
-
     </>
   );
 };

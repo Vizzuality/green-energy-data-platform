@@ -6,12 +6,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode,
   className?: string,
   size?: 'sm' | 'md' | 'lg',
-  theme?: 'border' | 'background' | 'info',
+  theme?: 'primary' | 'secondary' | 'tertiary' | 'info',
 }
 
 const THEME = {
-  border: 'border-white bg-transparent text-white hover:opacity-50 active:bg-white active:text-black',
-  background: 'border-gray2 bg-white hover:bg-gray2 hover:text-white',
+  primary: 'border-white bg-transparent text-white hover:opacity-50 hover:bg-white active:bg-white active:text-black',
+  secondary: 'border-gray2 bg-white hover:bg-gray2 hover:text-white',
+  tertiary: 'bg-white border-white',
   info: 'bg-color2 border-color2 text-white',
 };
 
@@ -25,8 +26,8 @@ const Button: FC<ButtonProps> = ({
   buttonType = 'button',
   children = Button,
   className,
-  theme = 'border',
-  size = 'sm',
+  theme = 'primary',
+  size = 'md',
   disabled,
 }: ButtonProps) => (
   <button
@@ -34,7 +35,7 @@ const Button: FC<ButtonProps> = ({
     className={cx(`flex items-center justify-center text-center border-2 rounded-full bold focus:outline-none
     ${THEME[theme]}
     ${SIZE[size]}`,
-    { 'font-bold': size === 'sm' && theme === 'border' },
+    { 'font-bold': size === 'sm' && theme === 'primary' },
     { 'border-opacity-50 text-opacity-50': disabled },
     { [className]: className })}
   >

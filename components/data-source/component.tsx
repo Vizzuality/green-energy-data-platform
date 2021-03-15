@@ -24,7 +24,7 @@ const Card: FC<DataProps> = ({
     { [className]: className })}
   >
     <Item className="rounded-t-2xl" icon="download" name="Download" links={downloadLinks} />
-    <Item className="rounded-b-2xl" icon="download" name="Download" links={dataSourceLinks} />
+    <Item className="rounded-b-2xl" icon="arrow" name="Data Source" links={dataSourceLinks} />
   </div>
 );
 

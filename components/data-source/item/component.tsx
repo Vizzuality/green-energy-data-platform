@@ -26,7 +26,7 @@ const Item: FC<ItemProps> = ({
       className={cx('flex w-full s-start justify-start p-5',
         { [className]: className })}
     >
-      <Icon name={icon} size="lg" className="mr-5" />
+      <Icon ariaLabel={icon} name={icon} size="lg" className="mr-5" />
       <div className="flex flex-col">
         <p className="inline-flex text-base">{name}</p>
         <ul className="flex">
