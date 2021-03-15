@@ -42,6 +42,8 @@ module.exports = {
       spacing: {
         3.75: '0.938rem',
         6.5: '1.563rem',
+        7.5: '1.875rem',
+        13: '3.125rem',
       },
       width: {
         7.5: '1.875rem',
@@ -50,7 +52,12 @@ module.exports = {
         7.5: '1.875rem',
       },
       borderRadius: {
-        'rounded-2lg': '0.625rem',
+        '2lg': '0.625rem',
+        '2.5xl': '1.25rem',
+      },
+      fontSize: {
+        '3.5xl': '2rem',
+        '5.25xl': '3.25rem',
       },
     },
   },

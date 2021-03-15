@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import cx from 'classnames';
+
+// components
+import Icon from 'components/icon';
+
 import VisualizationsOptions from './constants';
 
 export interface VisualizationsNavProps {
   selected: string;
+  color: string;
   className?: string;
 }
 
 export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
-  selected = 'Line'
+  className,
+  color,
+  selected = 'Line',
 }: VisualizationsNavProps) => {
   const [active, setSelected] = useState(selected);
   const handleVisualization = (label) => {
@@ -17,17 +24,22 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
 
   return (
     <nav>
-      <ul className="flex justify-between flex-grow py-3 font-heading border-b-gray">
-        <p>Select Visualization:</p>
+      <ul
+        role="menu"
+        className={cx('flex justify-between flex-grow font-heading border-b-gray',
+          { [className]: !!className })}
+      >
+        <p className="pt-4">Select Visualization:</p>
         {VisualizationsOptions.map(({ icon, label }) => (
           <li
+            role="menuitem"
             key={label}
             onClick={() => handleVisualization(label)}
-            className={cx(
-              { 'underline': active === label }
-          )}
+            onKeyPress={() => handleVisualization(label)}
+            className={cx(`flex items-center p-4 text-${color} text-opacity-50`,
+              { 'border-b-4 border-current text-opacity-100': active === label })}
           >
-            {/* <Icon /> */}
+            <Icon ariaLabel={`${label}-visualization`} name={icon} size="lg" className={`mr-3 text-${color}`} />
             {label}
           </li>
         ))}

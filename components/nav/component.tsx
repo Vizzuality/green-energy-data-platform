@@ -13,22 +13,23 @@ export interface NavProps {
 }
 
 export const Nav: React.FC<NavProps> = ({
-  items
+  items,
 }: NavProps) => {
   const router = useRouter();
   const { groups: selected } = router.query;
 
   return (
     <nav>
-      <ul className="flex justify-between flex-grow py-3 font-heading">
-        {items.map(({ id, name }) => (
-          <li key={id} className={cx('relative focus:outline-none text-opacity-50 text-sm',
-            {
-              'underline': id === selected,
-            },
-          )}>
+      <ul className="flex flex-grow py-3 text-white divide-x">
+        {items.map(({ id, name }, index) => (
+          <li
+            key={id}
+            className={cx('relative px-4 focus:outline-none text-opacity-50 text-sm',
+              { underline: id === selected },
+              { 'pl-0': index === 0 })}
+          >
             <Link
-              href={'/[groups]'}
+              href="/[groups]"
               as={`/${id}`}
             >
               {name}
@@ -36,7 +37,6 @@ export const Nav: React.FC<NavProps> = ({
           </li>
         ))}
       </ul>
-
     </nav>
   );
 };

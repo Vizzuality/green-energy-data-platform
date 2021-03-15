@@ -2,17 +2,19 @@ import React, { ButtonHTMLAttributes, FC, ReactNode } from 'react';
 import cx from 'classnames';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  buttonType?: 'button' | 'submit' | 'reset',
   children?: ReactNode,
   className?: string,
   size?: 'sm' | 'md' | 'lg',
-  theme?: 'primary' | 'secondary' | 'tertiary' | 'info',
+  theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background' | 'info'
 }
 
 const THEME = {
-  primary: 'border-white bg-transparent text-white hover:opacity-50 hover:bg-white active:bg-white active:text-black',
-  secondary: 'border-gray2 bg-white hover:bg-gray2 hover:text-white',
-  tertiary: 'bg-white border-white',
+  primary:
+    'border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
+  'primary-background': 'bg-white border-white',
+  secondary:
+    'border-gray2 bg-white hover:bg-gray2 hover:text-white',
+  'secondary-background': 'bg-gray2 border-gray2 text-white',
   info: 'bg-color2 border-color2 text-white',
 };
 
@@ -23,15 +25,14 @@ const SIZE = {
 };
 
 const Button: FC<ButtonProps> = ({
-  buttonType = 'button',
   children = Button,
   className,
-  theme = 'primary',
+  theme = 'primary-background',
   size = 'md',
   disabled,
 }: ButtonProps) => (
   <button
-    type={buttonType}
+    type="button"
     className={cx(`flex items-center justify-center text-center border-2 rounded-full bold focus:outline-none
     ${THEME[theme]}
     ${SIZE[size]}`,
