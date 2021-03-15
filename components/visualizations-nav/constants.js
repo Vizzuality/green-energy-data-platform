@@ -5,7 +5,7 @@ const VisualizationsOptions = [
   },
   {
     icon: 'pie',
-    label: 'PieChart',
+    label: 'Distribution',
   },
   {
     icon: 'map',
