@@ -36,9 +36,7 @@ const LanguageSelect = () => {
 
   const {
     isOpen,
-    selectedItem,
     getToggleButtonProps,
-    getLabelProps,
     getMenuProps,
     highlightedIndex,
     getItemProps,
@@ -46,17 +44,6 @@ const LanguageSelect = () => {
 
   return (
     <div className="flex items-center relative">
-      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      {/* <label {...getLabelProps()} className="flex items-center">
-        <Icon className="text-white" ariaLabel="world ball" name="world" size="lg" />
-        <p className="px-3">Select language</p>
-        <Icon
-          className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
-          ariaLabel="arrow"
-          name="filled_triangle"
-          size="sm"
-        />
-      </label> */}
       <button
         type="button"
         className="flex items-center"
