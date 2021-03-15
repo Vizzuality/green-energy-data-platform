@@ -14,6 +14,8 @@ import {
 // components
 import StaticPage from 'layout/static-page';
 import Head from 'components/head';
+import Button from 'components/button';
+import Icon from 'components/icon';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> { }
 
@@ -38,68 +40,78 @@ const SigninPage: FC<LoginProps> = ({
   };
 
   return (
-    <StaticPage className="h-screen static-custom p-10 bg-sign-up">
+    <StaticPage className="h-screen static-custom p-10 bg-sign-in bg-cover">
       <Head title="Welcome to Green Energy Data Platform" />
-      <div className="inline-flex">
-        <section className="text-white">
-          <h1>Sign in</h1>
-          <p>Create an account to explore more about GEDP data insights</p>
-          <div className="w-full h-0.2 bg-gradient-to-r from-white to-white-50" />
-          <p>Don&apos;t have an account?</p>
-          <Link href={{ pathname: '/sign-up' }}>
-            <a href="/sign-up" className="border rounded-lg border-white">Sign up</a>
-          </Link>
-        </section>
-        <section className="bg-white rounded px-5 py-8">
-          <form method="post" className="inline-flex flex-col p4">
-            <input
-              name="csrfToken"
-              type="hidden"
-              defaultValue={csrfToken}
-              className="placeholder-gray-300 placeholder-opacity-50 border-gradient-to-r from-white to-white-50 focus:border-b-2"
-            />
-            <label htmlFor="email">
-              Your email is:
+      <div className="flex flex-col h-full">
+        <div>GEDP LOGO</div>
+        <div className="flex p-1 justify-center m-auto items-center">
+          <section className="flex flex-col text-white bold py-24 mr-20 justify-start h-full max-w-xs">
+            <h1 className="text-5xl bold  py-7">Sign in</h1>
+            <p className="text-lg pb-40">Create an account to explore more about GEDP data insights</p>
+            <div className="w-full h-0.2 bg-gradient-to-r from-white to-white-50" />
+            <p className="mt-10">Don&apos;t have an account?</p>
+            <div className="py-10">
+              <Link href={{ pathname: '/sign-up' }}>
+                <Button theme="primary">Sign up</Button>
+              </Link>
+            </div>
+          </section>
+          <section className="bg-white rounded-2.5xl p-10 md:p-24 min-w-70">
+            <form method="post" className="inline-flex flex-col min-w-64">
               <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Write your email account"
-                className="border-b-2"
-                value={credentials.email}
-                onChange={(e) => handleChange('email', e)}
-                required
+                name="csrfToken"
+                type="hidden"
+                defaultValue={csrfToken}
+                className="border-b-gradient-to-r from-white to-white-50 focus:border-b-2"
               />
-            </label>
-            <label htmlFor="password">
-              Enter your password:
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Write the associated password"
-                className="w-full placeholder-transparent border-b-2"
-                value={credentials.password}
-                onChange={(e) => handleChange('password', e)}
-                required
-              />
-            </label>
-            <a href="" className="underline">I don't remember my password</a>
-            <div>
-              <button
+              <label htmlFor="email" className="text-2.5xl py-10">
+                Your email is:
+                <div className="relative">
+                  <Icon ariaLabel="email-input" name="email" size="lg" className="absolute -left-44 transform -translate-y-1/2 top-1/2 bold" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Write your email account"
+                    className="w-full border-b-2 placeholder-gray-300 placeholder-opacity-50 "
+                    value={credentials.email}
+                    onChange={(e) => handleChange('email', e)}
+                    required
+                  />
+                </div>
+              </label>
+              <label htmlFor="password" className="text-2.5xl py-10">
+                Enter your password:
+                <div className="relative">
+                  <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-44 transform -translate-y-1/2 top-1/2 bold" />
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Write the associated password"
+                    className="w-full border-b-2 placeholder-gray-300 placeholder-opacity-50 "
+                    value={credentials.password}
+                    onChange={(e) => handleChange('password', e)}
+                    required
+                  />
+                </div>
+              </label>
+              <a href="" className="underline pb-10">I don&apos;t remember my password</a>
+              <Button
                 type="submit"
                 aria-label="Sign in"
-                className="text-white border rounded-lg bg-black"
+                theme="secondary-background"
+                className="w-full py-20 bg-gray2 border-gray2 text-white"
                 onClick={(evt) => {
                   evt.preventDefault();
                   signIn('credentials');
                 }}
               >
                 Access with this account
-              </button>
-            </div>
-          </form>
-        </section>
+              </Button>
+            </form>
+          </section>
+        </div>
       </div>
     </StaticPage>
   );
