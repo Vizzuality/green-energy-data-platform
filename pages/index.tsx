@@ -12,7 +12,7 @@ const LanguageSelect = dynamic(() => import('../components/language-select'), { 
 const HomePage: FC = () => (
   <StaticPage className="static-custom">
     <Head title="Welcome to Green Energy Data Platform" />
-    <p className="text-green-600">Home</p>
+    <p className="text-5xl bold">Green energy data platform</p>
     <LanguageSelect />
   </StaticPage>
 );

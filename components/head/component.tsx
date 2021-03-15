@@ -9,8 +9,8 @@ interface HeadProps {
 }
 
 const HeadApp: FC<HeadProps> = ({
-  title,
-  description,
+  title = null,
+  description = 'description TBD',
 }: HeadProps) => (
   <Head>
     <meta name="viewport" content="width=1024, initial-scale=1, shrink-to-fit=no" />
@@ -18,10 +18,5 @@ const HeadApp: FC<HeadProps> = ({
     <meta key="description" name="description" content={description} />
   </Head>
 );
-
-HeadApp.defaultProps = {
-  title: null,
-  description: 'description TBD',
-};
 
 export default HeadApp;

@@ -27,5 +27,6 @@ module.exports = {
   rules: {
     'no-console': [1, { allow: ['warn', 'error'] }],
     'react/jsx-props-no-spreading': [0, {}],
+    'react/require-default-props': 0,
   },
 };

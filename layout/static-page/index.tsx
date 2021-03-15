@@ -10,7 +10,7 @@ interface StaticPageProps {
 }
 
 const StaticPage: FC<StaticPageProps> = ({
-  className,
+  className = 'test',
   children,
 }: StaticPageProps) => (
   <div className={classnames({
@@ -21,7 +21,5 @@ const StaticPage: FC<StaticPageProps> = ({
     {children}
   </div>
 );
-
-StaticPage.defaultProps = { className: 'test' };
 
 export default StaticPage;
