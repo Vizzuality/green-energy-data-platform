@@ -12,7 +12,7 @@ const VisualizationsOptions = [
     label: 'Map',
   },
   {
-    icon: 'bars',
+    icon: 'bar',
     label: 'Bars',
   },
   {

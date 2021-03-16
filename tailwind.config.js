@@ -55,6 +55,9 @@ module.exports = {
         '2lg': '0.625rem',
         '2.5xl': '1.25rem',
       },
+      boxShadow: {
+        sm: ' 0px 14px 20px rgba(14, 48, 114, 0.1)',
+      },
       fontSize: {
         '3.5xl': '2rem',
         '5.25xl': '3.25rem',

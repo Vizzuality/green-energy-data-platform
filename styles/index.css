@@ -9,6 +9,12 @@
     font-weight: bold;
   }
 
+  img,
+  svg {
+    display: block;
+    vertical-align: middle;
+  }
+
   /* Basier Circle */
   @font-face {
     font-family: 'Basier Circle';

@@ -1,16 +1,16 @@
 import React, {
   FC,
 } from 'react';
-import cx from 'classnames';
 
 import { useRouter } from 'next/router';
 
 // components
 import StaticPage from 'layout/static-page';
-import Header from 'components/header';
 import Head from 'components/head';
-import Nav from 'components/nav';
-import WidgetDataLayout from 'components/widget-data-layout';
+import Header from 'components/header';
+import Hero from 'components/hero';
+import IndicatorsData from 'components/indicator-data';
+import RelatedIndicators from 'components/related-indicators';
 
 const Group: FC = () => {
   const router = useRouter();
@@ -39,19 +39,15 @@ const Group: FC = () => {
   const active = items.find((i) => i.id === groups);
   if (!active) return null;
 
+  const relatedWidgets = ['widget', 'widget', 'widget', 'widget', 'widget', 'widget'];
+
   return (
-    <StaticPage className={`text-white bg-${active.color}`}>
+    <StaticPage className="text-white">
       <Head title={`${groups} analysis`} />
-      <Header />
-      <div className="mb-44">
-        <div className="px-44">
-          <Nav items={items} />
-          <h1 className="text-5.25xl">Energy balance</h1>
-          <p className="text-lg py-7.5">Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
-            auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.</p>
-        </div>
-        <WidgetDataLayout color={active.color} />
-      </div>
+      <Header color={active.color} />
+      <Hero color={active.color} items={items} />
+      <IndicatorsData color={active.color} />
+      <RelatedIndicators info={relatedWidgets} />
     </StaticPage>
   );
 };

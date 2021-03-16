@@ -5,12 +5,16 @@ import React, {
 // components
 import Button from 'components/button';
 
-const Header: FC = () => (
-  <div className="flex justify-between items-center  px-12 py-8">
+interface HeaderProps {
+  color: string
+}
+
+const Header: FC<HeaderProps> = ({ color }: HeaderProps) => (
+  <div className={`flex justify-between items-center px-12 py-8 bg-${color}`}>
     <div>GEDP LOGO</div>
     <div className="flex items-center">
-      <div>Welcome, Henry Mendoza</div>
-      <Button theme="background" size="xlg" className="text-gray2">Browse all data</Button>
+      <div>Welcome,<br/> Henry Mendoza</div>
+      <Button theme="primary-background" size="lg" className="text-gray2">Browse all data</Button>
     </div>
   </div>
 );
