@@ -4,7 +4,7 @@ import cx from 'classnames';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode,
   className?: string,
-  size?: 'sm' | 'md' | 'lg',
+  size?: 'sm' | 'md' | 'lg' | 'xlg',
   theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background' | 'info'
 }
 
@@ -22,6 +22,7 @@ const SIZE = {
   sm: 'w-7.5 h-7.5 px-0 text-sm',
   md: 'py-0.5 px-4',
   lg: 'py-0.5 px-6',
+  xlg: 'py-2 px-5 text-sm md:text-base',
 };
 
 const Button: FC<ButtonProps> = ({

@@ -14,6 +14,7 @@ import {
 // components
 import StaticPage from 'layout/static-page';
 import Head from 'components/head';
+import Header from 'layout/static-page/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
 
@@ -40,15 +41,15 @@ const SigninPage: FC<LoginProps> = ({
   };
 
   return (
-    <StaticPage className="h-screen static-custom p-10 bg-sign-in bg-cover">
+    <StaticPage className="h-screen bg-sign-in bg-cover">
       <Head title="Welcome to Green Energy Data Platform" />
-      <div className="flex flex-col h-full">
-        <div>GEDP LOGO</div>
-        <div className="flex p-1 justify-center m-auto items-center">
-          <section className="flex flex-col text-white bold py-24 mr-20 justify-start h-full max-w-xs">
-            <h1 className="text-5xl bold  py-7">Sign in</h1>
+      <main className="flex flex-col w-full h-full container">
+        <Header />
+        <div className="flex items-center justify-center h-full p-12">
+          <section className="flex flex-col flex-grow justify-start h-full max-w-xs text-white mx-20 md:mx-36 ">
+            <h1 className="text-5xl font-bold py-7">Sign in</h1>
             <p className="text-lg pb-40">Create an account to explore more about GEDP data insights</p>
-            <div className="w-full h-0.2 bg-gradient-to-r from-white to-white-50" />
+            <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="mt-10">Don&apos;t have an account?</p>
             <div className="py-10">
               <Link href={{ pathname: '/sign-up' }}>
@@ -56,7 +57,7 @@ const SigninPage: FC<LoginProps> = ({
               </Link>
             </div>
           </section>
-          <section className="bg-white rounded-2.5xl p-10 md:p-24 min-w-70">
+          <section className="flex flex-col flex-grow bg-white rounded-2.5xl p-12 md:p-24 min-w-70 h-full">
             <form method="post" className="inline-flex flex-col min-w-64">
               <input
                 name="csrfToken"
@@ -67,7 +68,7 @@ const SigninPage: FC<LoginProps> = ({
               <label htmlFor="email" className="text-2.5xl py-10">
                 Your email is:
                 <div className="relative">
-                  <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute -left-44 transform -translate-y-1/2 top-1/2 bold" />
+                  <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute -left-44 transform -translate-y-1/2 top-1/2 font-bold" />
                   <input
                     id="email"
                     name="email"
@@ -83,7 +84,7 @@ const SigninPage: FC<LoginProps> = ({
               <label htmlFor="password" className="text-2.5xl py-10">
                 Enter your password:
                 <div className="relative">
-                  <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-44 transform -translate-y-1/2 top-1/2 bold" />
+                  <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-44 transform -translate-y-1/2 top-1/2 font-bold" />
                   <input
                     id="password"
                     name="password"
@@ -112,7 +113,7 @@ const SigninPage: FC<LoginProps> = ({
             </form>
           </section>
         </div>
-      </div>
+         </main>
     </StaticPage>
   );
 };
