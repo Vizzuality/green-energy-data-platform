@@ -10,6 +10,7 @@ import {
   signIn,
   getSession,
 } from 'next-auth/client';
+import cx from 'classnames';
 
 // components
 import StaticPage from 'layout/static-page';
@@ -46,9 +47,9 @@ const SigninPage: FC<LoginProps> = ({
       <main className="flex flex-col w-full h-full container">
         <Header />
         <div className="flex items-center justify-center h-full p-12">
-          <section className="flex flex-col flex-grow justify-start h-full max-w-xs text-white mx-20 md:mx-36 ">
+          <section className="flex flex-col flex-grow h-full justify-start py-20 max-w-xs text-white mx-20 md:mx-36">
             <h1 className="text-5xl font-bold py-7">Sign in</h1>
-            <p className="text-lg pb-40">Create an account to explore more about GEDP data insights</p>
+            <p className="text-lg pb-44">Create an account to explore more about GEDP data insights</p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="mt-10">Don&apos;t have an account?</p>
             <div className="py-10">
@@ -57,7 +58,7 @@ const SigninPage: FC<LoginProps> = ({
               </Link>
             </div>
           </section>
-          <section className="flex flex-col flex-grow bg-white rounded-2.5xl p-12 md:p-24 min-w-70 h-full">
+          <section className="flex flex-col flex-grow bg-white rounded-2.5xl py-44 px-14 md:px-28 min-w-70shadow-sm">
             <form method="post" className="inline-flex flex-col min-w-64">
               <input
                 name="csrfToken"
@@ -74,10 +75,14 @@ const SigninPage: FC<LoginProps> = ({
                     name="email"
                     type="email"
                     placeholder="Write your email account"
-                    className="w-full border-b-2 placeholder-gray-300 placeholder-opacity-50 "
+                    className={cx('w-full placeholder-gray2 placeholder-opacity-20',
+                      { 'placeholder-opacity-100 font-bold': credentials.email.length })}
                     value={credentials.email}
                     onChange={(e) => handleChange('email', e)}
                     required
+                  />
+                  <div className={cx('w-full h-0.7 rounded-sm bg-gray2 bg-opacity-20',
+                    { 'bg-sign-in-gradient': credentials.password.length })}
                   />
                 </div>
               </label>
@@ -90,30 +95,36 @@ const SigninPage: FC<LoginProps> = ({
                     name="password"
                     type="password"
                     placeholder="Write the associated password"
-                    className="w-full border-b-2 placeholder-gray-300 placeholder-opacity-50 "
+                    className={cx('w-full placeholder-gray2 placeholder-opacity-20',
+                      { 'placeholder-opacity-100 font-bold': credentials.password.length })}
                     value={credentials.password}
                     onChange={(e) => handleChange('password', e)}
                     required
                   />
+                  <div className={cx('w-full h-0.7 rounded-sm bg-gray2 bg-opacity-20',
+                    { 'bg-sign-in-gradient': credentials.password.length })}
+                  />
                 </div>
               </label>
               <a href="" className="underline pb-10">I don&apos;t remember my password</a>
-              <Button
-                type="submit"
-                aria-label="Sign in"
-                theme="secondary-background"
-                className="w-full py-20 bg-gray2 border-gray2 text-white"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  signIn('credentials');
-                }}
-              >
-                Access with this account
-              </Button>
+              {credentials.email && credentials.password && (
+                <Button
+                  type="submit"
+                  aria-label="Sign in"
+                  theme="secondary-background"
+                  className="w-full py-20 bg-gray2 border-gray2 text-white"
+                  onClick={(evt) => {
+                    evt.preventDefault();
+                    signIn('credentials');
+                  }}
+                >
+                  Access with this account
+                </Button>
+              )}
             </form>
           </section>
         </div>
-         </main>
+      </main>
     </StaticPage>
   );
 };

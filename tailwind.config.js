@@ -59,17 +59,25 @@ module.exports = {
       },
       height: {
         0.2: '0.0625rem',
+        0.7: '0.188rem',
         7.5: '1.875rem',
+      },
+      borderWidth: {
+        3: '0.188rem',
       },
       borderRadius: {
         '2lg': '0.625rem',
         '2.5xl': '1.25rem',
+      },
+      borderColor: {
+        'sign-in-gradient': 'linear-gradient(90deg, #DA2584 0%, #A42AD9 47.92%, #1A82FD 100%);',
       },
       boxShadow: {
         sm: ' 0px 14px 20px rgba(14, 48, 114, 0.1)',
       },
       backgroundImage: {
         'sign-in': "url('/images/sign-in-bg.jpg')",
+        'sign-in-gradient': 'linear-gradient(90deg, #DA2584 0%, #A42AD9 47.92%, #1A82FD 100%);',
         'gradient-color1': 'linear-gradient(103.52deg, #6905E8 0%, #A880FF 100.23%)',
         'gradient-color2': 'linear-gradient(103.52deg, #FD101F 0%, #DE259D 100.23%)',
         'gradient-color3': 'linear-gradient(103.52deg, #3510AB 0%, #00A3FE 100.23%)',
