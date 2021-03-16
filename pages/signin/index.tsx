@@ -58,7 +58,11 @@ const SigninPage: FC<LoginProps> = ({
               </Link>
             </div>
           </section>
+<<<<<<< HEAD
           <section className="flex flex-col flex-grow bg-white rounded-2.5xl py-44 px-14 md:px-28 min-w-70shadow-sm max-w-2xl">
+=======
+          <section className="flex flex-col flex-grow bg-white rounded-2.5xl py-44 px-14 md:px-28 min-w-70shadow-sm">
+>>>>>>> bottom gradient in sign in
             <form method="post" className="inline-flex flex-col min-w-64">
               <input
                 name="csrfToken"

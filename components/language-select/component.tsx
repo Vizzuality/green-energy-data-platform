@@ -5,6 +5,8 @@ import cx from 'classnames';
 // components
 import Icon from 'components/icon';
 
+import Icon from 'components/icon';
+
 const LanguageSelect = () => {
   const [languages, setLanguages] = useState([]);
   const items = languages;

@@ -6,15 +6,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       id: 2,
       email: 'henrique.mendoza@test.com',
     },
-    // [
-    // {
-    //   id: 1,
-    //   email: 'test@test.com',
-    // },
-    // {
-    //   id: 2,
-    //   email: 'henrique.mendoza@test.com',
-    // },
-    // ]
   );
 };
