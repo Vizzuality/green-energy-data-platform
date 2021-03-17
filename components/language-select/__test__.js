@@ -1,6 +1,9 @@
 describe('Translations toggle successfylly', () => {
   it('Translate from EN to ZH CH', () => {
-    cy.visit('http://localhost:3000');
+    cy.intercept({
+      url: '/',
+    });
+    cy.visit('/');
     cy.get('#downshift-0-toggle-button').click()
       .invoke('text')
       .then((text) => {
