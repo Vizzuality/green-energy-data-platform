@@ -1,15 +1,19 @@
 import React, { FC } from 'react';
 import { useSelect } from 'downshift';
+import cx from 'classnames';
 
-
+import Icon from 'components/icon';
 
 export interface DropdownSelectProps {
-  label?: string
-};
+  items: string[]
+  label?: string,
+  icon?: string
+}
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
+  items,
   label = '',
-  items = ['indicator1', 'indicator2']
+  icon = '',
 }: DropdownSelectProps) => {
   const {
     isOpen,
@@ -21,33 +25,28 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
     getItemProps,
     openMenu,
     selectItem,
-  } = useSelect({ items })
+  } = useSelect({ items });
   return (
-    <div>
-      <label {...getLabelProps()}>{label}</label>
+    <div className="realtive">
       <button
         type="button"
+        className="inline-flex items-center justify-items-center text-sm border-gray2 border-opacity-20 border-2 rounded-2xl px-4 py-1 border-box"
         {...getToggleButtonProps({
           onMouseEnter: () => {
-            openMenu()
+            openMenu();
           },
         })}
       >
-        {selectedItem}
+        {label}
+        <Icon
+          ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
+          name={icon}
+          size="sm"
+          className={cx('ml-3', { 'transform -rotate-180': isOpen })}
+        />
       </button>
-      {isOpen && (
-        <button
-          type="button"
-          tabindex={-1}
-          onClick={() => {
-            selectItem(null)
-          }}
-          aria-label="clear selection"
-        >
-          &#215;
-        </button>)}
-      <ul {...getMenuProps()} >
-        {isOpen &&
+      <ul className="absolute l-0 r-0" {...getMenuProps()}>
+        {isOpen && (
           items.map((item, index) => (
             <li
               style={
@@ -55,15 +54,15 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
                   ? { backgroundColor: '#bde4ff' }
                   : {}
               }
-              key={`${item}${index}`}
+              key={item}
               {...getItemProps({ item, index })}
             >
               {item}
             </li>
-          ))}
+          )))}
       </ul>
-    </div >
-  )
+    </div>
+  );
 };
 
 export default DropdownSelect;
