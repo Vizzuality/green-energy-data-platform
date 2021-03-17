@@ -5,7 +5,7 @@ import React, {
 import { useRouter } from 'next/router';
 
 // components
-import StaticPage from 'layout/static-page';
+import StaticPage from 'layout';
 import Head from 'components/head';
 import Hero from 'layout/hero';
 import IndicatorsData from 'layout/indicator-data';

@@ -2,13 +2,13 @@ import React, {
   FC,
   useState,
   InputHTMLAttributes,
-  FormEvent
+  FormEvent,
 } from 'react';
 
 import Link from 'next/link';
 
 // components
-import StaticPage from 'layout/static-page';
+import StaticPage from 'layout';
 import Head from 'components/head';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -20,24 +20,21 @@ type LoginProps = {
 };
 
 const LoginPage: FC<LoginProps> = () => {
-
   const [credentials, setCredentials] = useState({
-    email: "",
-    password: ""
-  })
+    email: '',
+    password: '',
+  }),
 
   const handleSubmit = (credentials): void => {
-    console.log(credentials)
+    console.log(credentials);
   };
 
   const handleChange = (type: string, e: FormEvent<HTMLInputElement>): void => {
-    console.log(type, credentials, 'onch')
     setCredentials({
       ...credentials,
-      [type]: e.currentTarget.value
+      [type]: e.currentTarget.value,
     });
   };
-
 
   return (
     <StaticPage className="static-custom">
