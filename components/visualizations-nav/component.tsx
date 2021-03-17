@@ -39,7 +39,12 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
             className={cx(`flex items-center p-4 text-${color} text-opacity-50`,
               { 'border-b-4 border-current text-opacity-100': active === label })}
           >
-            <Icon ariaLabel={`${label}-visualization`} name={icon} size="lg" className={`mr-3 text-${color}`} />
+            <Icon
+              ariaLabel={`${label}-visualization`}
+              name={icon}
+              size="lg"
+              className="mr-3 text-current"
+            />
             {label}
           </li>
         ))}
