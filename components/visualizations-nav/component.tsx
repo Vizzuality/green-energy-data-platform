@@ -26,7 +26,7 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
     <nav>
       <ul
         role="menu"
-        className={cx('flex justify-between flex-grow font-heading border-b-gray',
+        className={cx('flex justify-between flex-grow border-b-gray',
           { [className]: !!className })}
       >
         <p className="pt-4">Select Visualization:</p>

@@ -5,6 +5,7 @@ import Item from './item';
 
 interface DataProps {
   className?: string,
+  color?: string,
 }
 
 const downloadLinks = [
@@ -19,12 +20,13 @@ const dataSourceLinks = [
 
 const Card: FC<DataProps> = ({
   className = '',
+  color = '',
 }: DataProps) => (
-  <div className={cx('inline-flex flex-col s-center justify-center text-center bg-gray1 divide-y divide-gray4 divide-opacity-90 hover:opacity-90',
+  <div className={cx('inline-flex flex-col s-center justify-center text-center bg-gray1 hover:opacity-90 rounded-2xl',
     { [className]: className })}
   >
-    <Item className="rounded-t-2xl" icon="download" name="Download" links={downloadLinks} />
-    <Item className="rounded-b-2xl" icon="data" name="Data Source" links={dataSourceLinks} />
+    <Item ariaLabel="download" color={color} className="rounded-t-2xl border-b border-gray4 border-opacity-90" icon="download" name="Download" links={downloadLinks} />
+    <Item ariaLabel="data-source" color={color} className=" rounded-b-2xl" icon="data" name="Data Source" links={dataSourceLinks} />
   </div>
 );
 

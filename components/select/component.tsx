@@ -1,63 +1,80 @@
-import React, { FC } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelect } from 'downshift';
 import cx from 'classnames';
 
+// components
 import Icon from 'components/icon';
 
-export interface DropdownSelectProps {
-  items: string[]
-  label?: string,
-  icon?: string
-}
+const LanguageSelect = () => {
+  const [languages, setLanguages] = useState([]);
+  const items = languages;
 
-export const DropdownSelect: FC<DropdownSelectProps> = ({
-  items,
-  label = '',
-  icon = '',
-}: DropdownSelectProps) => {
+  const { Transifex } = (window as any);
+
+  const getAllLanguages = useCallback(() => new Promise((resolve, reject) => {
+    Transifex.live.onError((err) => reject(err));
+    Transifex.live.onFetchLanguages((lan) => resolve(lan));
+  }), [Transifex]);
+
+  useEffect(() => {
+    if (Transifex && typeof Transifex !== 'undefined') {
+      Transifex.live.onReady(() => {
+        const langCode = Transifex.live.detectLanguage();
+        const { code } = Transifex.live.getSourceLanguage();
+        Transifex.live.translateTo(langCode);
+        Transifex.live.translateTo(code);
+      });
+      getAllLanguages()
+        .then((lan: object[]) => setLanguages(lan))
+        .catch((err) => err);
+    }
+  }, [Transifex, getAllLanguages]);
+
+  const onSelectedItemChange = (item) => {
+    Transifex.live.translateTo(item.selectedItem.code);
+  };
+
   const {
     isOpen,
-    selectedItem,
     getToggleButtonProps,
-    getLabelProps,
     getMenuProps,
     highlightedIndex,
     getItemProps,
-    openMenu,
-    selectItem,
-  } = useSelect({ items });
+  } = useSelect({ items, onSelectedItemChange });
+
   return (
-    <div className="realtive">
+    <div className="flex items-center relative">
       <button
         type="button"
-        className="inline-flex items-center justify-items-center text-sm border-gray2 border-opacity-20 border-2 rounded-2xl px-4 py-1 border-box"
-        {...getToggleButtonProps({
-          onMouseEnter: () => {
-            openMenu();
-          },
-        })}
+        className="flex items-center"
+        {...getToggleButtonProps()}
       >
-        {label}
+        <Icon className="text-white" ariaLabel="world ball" name="world" size="lg" />
+        <span className="px-3">Select language</span>
         <Icon
-          ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
-          name={icon}
+          className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
+          ariaLabel="arrow"
+          name="filled_triangle"
           size="sm"
-          className={cx('ml-3', { 'transform -rotate-180': isOpen })}
         />
       </button>
-      <ul className="absolute l-0 r-0" {...getMenuProps()}>
+      <ul
+        className="flex-col bg-gray2 absolute bottom-7 w-full pl-8"
+        {...getMenuProps()}
+      >
         {isOpen && (
           items.map((item, index) => (
             <li
+              data-code={item.code}
               style={
                 highlightedIndex === index
                   ? { backgroundColor: '#bde4ff' }
                   : {}
               }
-              key={item}
-              {...getItemProps({ item, index })}
+              key={`${item.code}`}
+              {...getItemProps({ item: item.name, index })}
             >
-              {item}
+              {item.name}
             </li>
           )))}
       </ul>
@@ -65,4 +82,4 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
   );
 };
 
-export default DropdownSelect;
+export default LanguageSelect;

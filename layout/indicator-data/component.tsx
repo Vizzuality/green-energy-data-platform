@@ -37,7 +37,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         <div>
           <Filters className="mb-4" color={color} />
         </div>
-        <DataSource />
+        <DataSource color={color} />
       </section>
     </div>
 
