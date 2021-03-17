@@ -1,80 +1,62 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { FC } from 'react';
 import { useSelect } from 'downshift';
 import cx from 'classnames';
 
-// components
 import Icon from 'components/icon';
 
-const LanguageSelect = () => {
-  const [languages, setLanguages] = useState([]);
-  const items = languages;
+export interface DropdownSelectProps {
+  items: string[]
+  label?: string,
+  icon?: string
+}
 
-  const { Transifex } = (window as any);
-
-  const getAllLanguages = useCallback(() => new Promise((resolve, reject) => {
-    Transifex.live.onError((err) => reject(err));
-    Transifex.live.onFetchLanguages((lan) => resolve(lan));
-  }), [Transifex]);
-
-  useEffect(() => {
-    if (Transifex && typeof Transifex !== 'undefined') {
-      Transifex.live.onReady(() => {
-        const langCode = Transifex.live.detectLanguage();
-        const { code } = Transifex.live.getSourceLanguage();
-        Transifex.live.translateTo(langCode);
-        Transifex.live.translateTo(code);
-      });
-      getAllLanguages()
-        .then((lan: object[]) => setLanguages(lan))
-        .catch((err) => err);
-    }
-  }, [Transifex, getAllLanguages]);
-
-  const onSelectedItemChange = (item) => {
-    Transifex.live.translateTo(item.selectedItem.code);
-  };
-
+export const DropdownSelect: FC<DropdownSelectProps> = ({
+  items,
+  label = '',
+  icon = '',
+}: DropdownSelectProps) => {
   const {
     isOpen,
     getToggleButtonProps,
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({ items, onSelectedItemChange });
-
+    openMenu,
+    selectItem,
+  } = useSelect({ items });
   return (
-    <div className="flex items-center relative">
+    <div className="realtive">
       <button
         type="button"
-        className="flex items-center"
-        {...getToggleButtonProps()}
+        className="inline-flex items-center justify-items-center text-sm border-gray2 border-opacity-20 border-2 rounded-2xl px-4 py-1 border-box"
+        {...getToggleButtonProps({
+          onMouseEnter: () => {
+            openMenu();
+          },
+        })}
       >
-        <Icon className="text-white" ariaLabel="world ball" name="world" size="lg" />
-        <span className="px-3">Select language</span>
+        {label}
         <Icon
-          className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
-          ariaLabel="arrow"
-          name="filled_triangle"
+          ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
+          name={icon}
           size="sm"
+          className={cx('ml-3', { 'transform -rotate-180': isOpen })}
         />
       </button>
-      <ul
-        className="flex-col bg-gray2 absolute bottom-7 w-full pl-8"
-        {...getMenuProps()}
-      >
+      <ul className="absolute l-0 r-0" {...getMenuProps()}>
         {isOpen && (
           items.map((item, index) => (
             <li
-              data-code={item.code}
+              data-code={item}
               style={
                 highlightedIndex === index
                   ? { backgroundColor: '#bde4ff' }
                   : {}
               }
-              key={`${item.code}`}
-              {...getItemProps({ item: item.name, index })}
+              key={item}
+              {...getItemProps({ item, index })}
             >
-              {item.name}
+              {item}
             </li>
           )))}
       </ul>
@@ -82,4 +64,4 @@ const LanguageSelect = () => {
   );
 };
 
-export default LanguageSelect;
+export default DropdownSelect;
