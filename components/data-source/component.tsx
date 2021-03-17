@@ -25,8 +25,8 @@ const Card: FC<DataProps> = ({
   <div className={cx('inline-flex flex-col s-center justify-center text-center bg-gray1 hover:opacity-90 rounded-2xl',
     { [className]: className })}
   >
-    <Item ariaLabel="download" color={color} className="rounded-t-2xl border-b border-gray4 border-opacity-90" icon="download" name="Download" links={downloadLinks} />
-    <Item ariaLabel="data-source" color={color} className=" rounded-b-2xl" icon="data" name="Data Source" links={dataSourceLinks} />
+    <Item color={color} className="rounded-t-2xl border-b border-gray4 border-opacity-90" icon="download" name="Download" links={downloadLinks} />
+    <Item color={color} className=" rounded-b-2xl" icon="data" name="Data Source" links={dataSourceLinks} />
   </div>
 );
 
