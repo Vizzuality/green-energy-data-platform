@@ -17,13 +17,13 @@ const Footer: FC<FooterProps> = ({
 
   >
     <div className="text-xl flex w-full justify-center">
-      <Link href="/energy">
+      <Link href="/energy" passHref>
         <a className="p-12" href="/energy">Energy</a>
       </Link>
-      <Link href="/socio-economic">
+      <Link href="/socio-economic" passHref>
         <a className="p-12" href="/socio-economic">Socio-economic</a>
       </Link>
-      <Link href="/coal-power-plants">
+      <Link href="/coal-power-plants" passHref>
         <a className="p-12" href="/coal-power-plants">Coal Power Plants</a>
       </Link>
     </div>
