@@ -7,13 +7,15 @@ import Icon from 'components/icon';
 export interface DropdownSelectProps {
   items: string[]
   label?: string,
-  icon?: string
+  icon?: string,
+  className?: string,
 }
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
   items,
   label = '',
   icon = '',
+  className = '',
 }: DropdownSelectProps) => {
   const {
     isOpen,
@@ -43,7 +45,11 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
           className={cx('ml-3', { 'transform -rotate-180': isOpen })}
         />
       </button>
-      <ul className="absolute l-0 r-0" {...getMenuProps()}>
+      <ul
+        className={cx('absolute l-0 r-0',
+          { [className]: !!className })}
+        {...getMenuProps()}
+      >
         {isOpen && (
           items.map((item, index) => (
             <li

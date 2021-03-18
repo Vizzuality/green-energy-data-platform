@@ -31,6 +31,7 @@ const Button: FC<ButtonProps> = ({
   theme = 'primary-background',
   size = 'md',
   disabled,
+  onClick,
 }: ButtonProps) => (
   <button
     type="button"
@@ -40,6 +41,7 @@ const Button: FC<ButtonProps> = ({
     { 'font-bold': size === 'sm' && theme === 'primary' },
     { 'border-opacity-50 text-opacity-50': disabled },
     { [className]: className })}
+    onClick={onClick}
   >
     {children}
   </button>
