@@ -23,7 +23,7 @@ const LoginPage: FC<LoginProps> = () => {
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
-  }),
+  });
 
   const handleSubmit = (credentials): void => {
     console.log(credentials);
@@ -77,7 +77,7 @@ const LoginPage: FC<LoginProps> = () => {
         </section>
       </div>
     </StaticPage>
-  )
+  );
 };
 
 export default LoginPage;
