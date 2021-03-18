@@ -17,7 +17,7 @@ import Legend from 'components/map/legend';
 import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from 'components/map/constants';
 
 // components
-import StaticPage from 'layout/static-page';
+import StaticPage from 'layout';
 import Head from 'components/head';
 import Map from 'components/map';
 

@@ -9,9 +9,9 @@ module.exports = {
     },
     extend: {
       colors: {
-        color1: '#6905E8',
-        color2: '#006BFE',
-        color3: '#FD1A2F',
+        color1: '#006BFE',
+        color2: '#FD1A2F',
+        color3: '#6905E8',
         gray1: '#EAEFF3',
         gray2: '#3A3F59',
         gray3: '#2F3031',
@@ -42,6 +42,8 @@ module.exports = {
       spacing: {
         3.75: '0.938rem',
         6.5: '1.563rem',
+        7.5: '1.875rem',
+        13: '3.125rem',
       },
       width: {
         7.5: '1.875rem',
@@ -50,7 +52,21 @@ module.exports = {
         7.5: '1.875rem',
       },
       borderRadius: {
-        'rounded-2lg': '0.625rem',
+        '2lg': '0.625rem',
+        '2.5xl': '1.25rem',
+      },
+      boxShadow: {
+        sm: ' 0px 14px 20px rgba(14, 48, 114, 0.1)',
+      },
+      fontSize: {
+        '3.5xl': '2rem',
+        '5.25xl': '3.25rem',
+      },
+      backgroundImage: {
+        'gradient-color1': 'linear-gradient(103.52deg, #6905E8 0%, #A880FF 100.23%)',
+        'gradient-color2': 'linear-gradient(103.52deg, #FD101F 0%, #DE259D 100.23%)',
+        'gradient-color3': 'linear-gradient(103.52deg, #3510AB 0%, #00A3FE 100.23%)',
+        'gradient-gray1': 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
       },
     },
   },

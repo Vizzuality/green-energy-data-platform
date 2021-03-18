@@ -4,15 +4,15 @@ import React, {
 } from 'react';
 import classnames from 'classnames';
 
-interface StaticPageProps {
+interface LayoutPageProps {
   className?: string,
   children: ReactNode,
 }
 
-const StaticPage: FC<StaticPageProps> = ({
+const LayoutPage: FC<LayoutPageProps> = ({
   className = 'test',
   children,
-}: StaticPageProps) => (
+}: LayoutPageProps) => (
   <div className={classnames({
     'l-simple-page': true,
     [className]: !!className,
@@ -22,4 +22,4 @@ const StaticPage: FC<StaticPageProps> = ({
   </div>
 );
 
-export default StaticPage;
+export default LayoutPage;

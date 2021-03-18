@@ -5,21 +5,22 @@ interface IconProps {
   ariaLabel: string,
   name: string,
   className?: string,
-  size?: 'sm' | 'md' | 'lg',
-  group?: number,
+  size?: 'sm' | 'md' | 'lg' | 'xlg',
+  color?: string,
 }
 
 const SIZE = {
   sm: 'w-2\.5 h-2\.5',
-  md: 'w-3\.5 h-2\.5',
-  lg: 'w-6 h-6',
+  md: 'w-3.5 h-3.5',
+  lg: 'w-5 h-5',
+  xlg: 'w-6 h-6',
 };
 
 const Icon: FC<IconProps> = ({
   ariaLabel,
   name = '',
   size = 'md',
-  group = 1,
+  color,
   className,
 }: IconProps) => {
   const classNames = cx(
@@ -30,7 +31,7 @@ const Icon: FC<IconProps> = ({
   return (
     <svg
       aria-label={ariaLabel}
-      className={cx(`flex-shrink-0 ${classNames}`, { [`fill-color${group}`]: !!group })}
+      className={cx(`${classNames} fill-current`, { [`text-${color}`]: color && !!color.length })}
     >
       <use xlinkHref={`#icon-${name}`} />
     </svg>

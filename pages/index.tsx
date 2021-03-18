@@ -4,7 +4,7 @@ import React, {
 import dynamic from 'next/dynamic';
 
 // components
-import StaticPage from 'layout/static-page';
+import StaticPage from 'layout';
 import Head from 'components/head';
 
 const LanguageSelect = dynamic(() => import('../components/language-select'), { ssr: false });
