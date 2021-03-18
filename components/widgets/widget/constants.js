@@ -100,6 +100,143 @@ const widgetsData = [
     },
   },
   {
+    type: 'bar',
+    title: {
+      main: 'Energy Balance of energy Type',
+      subtitle2: 'energy balance by type (btu,quadrillons)',
+    },
+    data: [
+      {
+        province: 'Anhui',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Fujian',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Gansu',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Guangdong',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Guizhou',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Hebei',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Heilongjiang',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Henan',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Hubei',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Hunan',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Jiangsu',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Jiangxi',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Jilin',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Liaoning',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Qinghai',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Shaanxi',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Shandong',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Shanxi',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Sichuan',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Yunnan',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Zhejiang',
+        value1: 327,
+        value2: 35,
+      },
+    ],
+    config: {
+      margin: {
+        top: 20, right: 0, left: 0, bottom: 0,
+      },
+      cartesianGrid: {
+        vertical: false,
+      },
+      bars: [
+        {
+          dataKey: 'value1',
+          fill: '#8884d8',
+          stackId: 'a',
+        },
+        {
+          dataKey: 'value2',
+          fill: 'red',
+          stackId: 'a',
+        },
+      ],
+      xAxis: {
+        dataKey: 'province',
+      },
+    },
+  },
+  {
     type: 'pie',
     title: {
       main: 'Cost&Benefits',

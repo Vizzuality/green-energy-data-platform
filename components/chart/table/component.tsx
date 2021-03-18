@@ -1,8 +1,8 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
 interface TableHeaderItem {
   item: string | number
-};
+}
 
 interface TableItem {
   label: string | number,
@@ -18,9 +18,9 @@ interface TableProps {
   headers: TableHeaderItem[]
   items: TableItems[]
 };
-const Table: FC<TableProps> = ({ data }) => {
-
-  const { headers, items } = data;
+const Table: FC<TableProps> = ({ widgetData }) => {
+console.log(widgetData)
+  const { headers, items } = widgetData;
   return (
     <table>
       <thead>

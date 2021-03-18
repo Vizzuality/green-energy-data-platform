@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from "react";
+import React, { FC } from 'react';
 import dynamic from 'next/dynamic';
 
 import widgetsData from './constants';
@@ -11,7 +11,7 @@ interface WidgetProps {
 }
 
 const Widget: FC<WidgetProps> = () => (
-  <Fragment>
+  <>
     {widgetsData.map(widget => {
       const {
         type,
@@ -40,6 +40,6 @@ const Widget: FC<WidgetProps> = () => (
         </div>
       )
     })}
-  </ Fragment>);
+  </ >);
 
 export default Widget;

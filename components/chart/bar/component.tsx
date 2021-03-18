@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -6,8 +6,8 @@ import {
   CartesianGrid,
   CartesianAxis,
   XAxis,
-  YAxis
-} from "recharts";
+  YAxis,
+} from 'recharts';
 
 type DataItem = Object;
 
@@ -17,14 +17,14 @@ type ConfigObject = {
   xAxis: Object,
   yAxis: Object,
   bars: Object,
-}
+};
 
 interface ChartProps {
   widgetData: DataItem[],
   widgetConfig: ConfigObject
-};
+}
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
+const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   const {
     cartesianGrid,
     cartesianAxis,
@@ -49,5 +49,3 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
 };
 
 export default Chart;
-
-
