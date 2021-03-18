@@ -1,5 +1,5 @@
-describe('Translations toggle successfylly', () => {
-  it('Translate from EN to ZH CH', () => {
+describe('Translations toggle successfully', () => {
+  it('Translates from EN to ZH CH', () => {
     cy.intercept({
       url: '/',
     });
@@ -10,7 +10,9 @@ describe('Translations toggle successfylly', () => {
         expect(text).to.equal('Select language');
         cy.get('[data-code="zh_CN"]').click();
       });
+  });
 
+  it('Translates from ZH CH yo EN', () => {
     cy.get('#downshift-0-toggle-button').click()
       .invoke('text')
       .then((text) => {
