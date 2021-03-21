@@ -49,7 +49,7 @@ const LanguageSelect = () => {
         className="flex items-center"
         {...getToggleButtonProps()}
       >
-        <Icon className="text-white" ariaLabel="world ball" name="world" size="lg" />
+        <Icon className="text-white" ariaLabel="world ball" name="language" size="lg" />
         <span className="px-3">Select language</span>
         <Icon
           className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
