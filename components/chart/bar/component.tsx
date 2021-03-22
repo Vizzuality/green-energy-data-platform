@@ -11,11 +11,16 @@ import {
 
 type DataItem = Object;
 
+type YAxisProps = {
+  type?: string,
+  ticksCount?: number,
+};
+
 type ConfigObject = {
   cartesianGrid: Object,
   cartesianAxis: Object,
   xAxis: Object,
-  yAxis: Object,
+  yAxis?: YAxisProps,
   bars: Object,
 };
 
@@ -32,7 +37,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     yAxis,
     bars,
   } = widgetConfig;
-
+console.log(yAxis, typeof yAxis)
   return (
     <div>
       <ResponsiveContainer width={500} height={500}>

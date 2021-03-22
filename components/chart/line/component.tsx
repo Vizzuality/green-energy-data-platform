@@ -11,20 +11,25 @@ import {
 
 type DataItem = Object;
 
+type YAxisProps = {
+  type?: string,
+  ticksCount?: number,
+};
+
 type ConfigObject = {
   cartesianGrid: Object,
   cartesianAxis: Object,
   xAxis: Object,
-  yAxis: Object,
+  yAxis?: YAxisProps,
   lines: Object,
-}
+};
 
 interface ChartProps {
   widgetData: DataItem[],
   widgetConfig: ConfigObject
-};
+}
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
+const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   const {
     cartesianGrid,
     cartesianAxis,
@@ -32,7 +37,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
     yAxis,
     lines,
   } = widgetConfig;
-
+console.log(yAxis)
   return (
     <div>
       <ResponsiveContainer width={500} height={500}>
@@ -41,7 +46,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
           {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
           {xAxis && (<XAxis {...xAxis} />)}
           {yAxis && (<YAxis {...yAxis} />)}
-          {lines && Object.keys(lines).map(line => (<Line {...lines[line]} />))}
+          {lines && Object.keys(lines).map((line) => (<Line key={line} {...lines[line]} />))}
         </LineChart>
       </ResponsiveContainer>
     </div>

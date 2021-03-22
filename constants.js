@@ -54,6 +54,57 @@ export const layers = [
 ];
 
 export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
+export const selectedIndicator = {
+  id: 1,
+  type: 'line',
+  title: 'Energy Balance of China',
+  categories: ['Total energy consumption', 'Total energy available for consumption'],
+  startDate: 1980,
+  endDate: 2015,
+  data: [
+    {
+      value: 0,
+      label: 1995,
+    },
+    {
+      value: 50,
+      label: 2000,
+    },
+    {
+      value: 100,
+      label: 2005,
+    },
+    {
+      value: 150,
+      label: 2010,
+    },
+    {
+      value: 250,
+      label: 2015,
+    },
+  ],
+  config: {
+    margin: {
+      top: 20, right: 0, left: 0, bottom: 0,
+    },
+    cartesianGrid: {
+      vertical: false,
+    },
+    lines: [
+      {
+        type: 'monotone',
+        dataKey: 'value',
+        stroke: '#8884d8',
+      },
+    ],
+    xAxis: {
+      dataKey: 'date',
+    },
+    yAxis: {
+      tickCount: 0,
+    },
+  },
+};
 
 export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
 export const datesList = ['1990', '2000', '2010', '2020'];
@@ -66,4 +117,5 @@ export default {
   datesList,
   layers,
   colors,
+  selectedIndicator,
 };
