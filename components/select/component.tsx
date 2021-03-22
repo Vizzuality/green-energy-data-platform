@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { useSelect } from 'downshift';
 import cx from 'classnames';
 
@@ -9,6 +9,8 @@ export interface DropdownSelectProps {
   label?: string,
   icon?: string,
   className?: string,
+  children?: ReactNode,
+  handleSelectedItemChange?: () => void
 }
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
@@ -16,6 +18,8 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
   label = '',
   icon = '',
   className = '',
+  children = {},
+  handleSelectedItemChange,
 }: DropdownSelectProps) => {
   const {
     isOpen,
@@ -25,25 +29,33 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
     getItemProps,
     openMenu,
     selectItem,
+
   } = useSelect({ items });
+
   return (
-    <div className="realtive">
+    <div className={cx('realtive', { [className]: !!className })}>
       <button
         type="button"
         className="inline-flex items-center justify-items-center text-sm border-gray2 border-opacity-20 border-2 rounded-2xl px-4 py-1 border-box"
         {...getToggleButtonProps({
+          onClick: () => { handleSelectedItemChange(); },
           onMouseEnter: () => {
             openMenu();
           },
         })}
       >
-        {label}
-        <Icon
-          ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
-          name={icon}
-          size="sm"
-          className={cx('ml-3', { 'transform -rotate-180': isOpen })}
-        />
+        {!!children && children}
+        {!children && (
+          <>
+            {label}
+            <Icon
+              ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
+              name={icon}
+              size="sm"
+              className={cx('ml-3', { 'transform -rotate-180': isOpen })}
+            />
+          </>
+        )}
       </button>
       <ul
         className={cx('absolute l-0 r-0',
