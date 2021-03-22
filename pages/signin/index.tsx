@@ -69,7 +69,7 @@ const SigninPage: FC<LoginProps> = ({
               <label htmlFor="email" className="text-2.5xl py-10">
                 Your email is:
                 <div className="relative">
-                  <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute -left-44 transform -translate-y-1/2 top-1/2 font-bold" />
+                  <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
                   <input
                     id="email"
                     name="email"
@@ -89,7 +89,7 @@ const SigninPage: FC<LoginProps> = ({
               <label htmlFor="password" className="text-2.5xl py-10">
                 Enter your password:
                 <div className="relative">
-                  <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-44 transform -translate-y-1/2 top-1/2 font-bold" />
+                  <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
                   <input
                     id="password"
                     name="password"
