@@ -13,7 +13,7 @@ const Card: FC<FiltersProps> = ({
   color,
   className = '',
 }: FiltersProps) => (
-  <div className={cx('flex flex-col justify-center text-center bg-gray1 p-5',
+  <div className={cx('inline-flex flex-col s-center justify-center text-center rounded-2lg bg-gray1 divide-y divide-gray4 divide-opacity-90 hover:opacity-90',
     { [className]: className })}
   >
     <div className="flex items-center justify-between">
