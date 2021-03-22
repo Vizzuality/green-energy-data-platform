@@ -5,22 +5,31 @@ import cx from 'classnames';
 import Icon from 'components/icon';
 
 export interface DropdownSelectProps {
-  items: string[]
+  menuElements: string[],
+  border?: boolean,
   label?: string,
   icon?: string,
+  iconSize?: string,
+  iconRotable?: boolean,
   className?: string,
-  children?: ReactNode,
-  handleSelectedItemChange?: () => void
+  classNameMenu?: string,
+  children?: ReactNode | boolean,
+  handleSelectedItemChange?: () => void | boolean,
 }
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
-  items,
+  menuElements,
+  border = false,
   label = '',
   icon = '',
+  iconSize,
+  iconRotable = true,
   className = '',
-  children = {},
+  classNameMenu = '',
+  children = false,
   handleSelectedItemChange,
 }: DropdownSelectProps) => {
+  const items = menuElements;
   const {
     isOpen,
     getToggleButtonProps,
@@ -28,49 +37,45 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
     highlightedIndex,
     getItemProps,
     openMenu,
-    selectItem,
-
+    selectedItem,
   } = useSelect({ items });
 
   return (
-    <div className={cx('realtive', { [className]: !!className })}>
+    <div className={cx('relative z-50 w-max', { [className]: !!className })}>
       <button
         type="button"
-        className="inline-flex items-center justify-items-center text-sm border-gray2 border-opacity-20 border-2 rounded-2xl px-4 py-1 border-box"
+        className={cx('w-max inline-flex items-center text-sm border-gray2 border-box',
+          { 'border-opacity-20 border-2 rounded-2xl px-4 py-1': border })}
         {...getToggleButtonProps({
-          onClick: () => { handleSelectedItemChange(); },
           onMouseEnter: () => {
             openMenu();
           },
+          onClick: () => handleSelectedItemChange(),
         })}
       >
-        {!!children && children}
+        {children}
         {!children && (
           <>
-            {label}
+            {selectedItem || label}
             <Icon
               ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
               name={icon}
-              size="sm"
-              className={cx('ml-3', { 'transform -rotate-180': isOpen })}
+              size={iconSize}
+              className={cx('ml-3', { 'transform -rotate-180': isOpen && iconRotable })}
             />
           </>
         )}
       </button>
       <ul
-        className={cx('absolute l-0 r-0',
-          { [className]: !!className })}
+        className={cx('absolute left-0 right-0 top-8 flex flex-col w-full z-50 bg-white rounded-xl',
+          { [classNameMenu]: !!classNameMenu })}
         {...getMenuProps()}
       >
         {isOpen && (
           items.map((item, index) => (
             <li
               data-code={item}
-              style={
-                highlightedIndex === index
-                  ? { backgroundColor: '#bde4ff' }
-                  : {}
-              }
+              className={cx('px-4 py-2 first:rounded-t-xl last:rounded-b-xl', { 'bg-white text-gray3': highlightedIndex === index })}
               key={item}
               {...getItemProps({ item, index })}
             >

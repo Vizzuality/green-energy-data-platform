@@ -19,9 +19,14 @@ export const groups = [
   },
 ];
 
-export const relatedIndicators = ['widget', 'widget', 'widget', 'widget', 'widget'];
+export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
 
 export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
 export const datesList = ['1990', '2000', '2010', '2020'];
 
-export default { groups, relatedIndicators, indicatorsList };
+export default {
+  groups,
+  relatedIndicators,
+  indicatorsList,
+  datesList,
+};

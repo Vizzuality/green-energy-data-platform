@@ -25,7 +25,7 @@ const HomePage: FC = () => {
   return (
     <LayoutPage className="static-custom">
       <Head title="Welcome to Green Energy Data Platform" />
-      <p className="text-green-600">Landing Page</p>
+      <p>Landing Page</p>
 
       {(session) && (
         <button
