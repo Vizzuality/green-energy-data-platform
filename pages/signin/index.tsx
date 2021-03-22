@@ -13,9 +13,9 @@ import {
 import cx from 'classnames';
 
 // components
-import StaticPage from 'layout/static-page';
+import LayoutPage from 'layout';
 import Head from 'components/head';
-import Header from 'layout/static-page/header';
+import Header from 'layout/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
 
@@ -42,7 +42,7 @@ const SigninPage: FC<LoginProps> = ({
   };
 
   return (
-    <StaticPage className="h-screen bg-sign-in bg-cover">
+    <LayoutPage className="h-screen bg-sign-in bg-cover">
       <Head title="Welcome to Green Energy Data Platform" />
       <main className="flex flex-col w-full h-full container m-auto">
         <Header />
@@ -125,7 +125,7 @@ const SigninPage: FC<LoginProps> = ({
           </section>
         </div>
       </main>
-    </StaticPage>
+    </LayoutPage>
   );
 };
 

@@ -10,7 +10,7 @@ import {
 } from 'next-auth/client';
 
 // components
-import StaticPage from 'layout';
+import LayoutPage from 'layout';
 import Head from 'components/head';
 import Footer from 'components/footer';
 
@@ -18,7 +18,7 @@ const HomePage: FC = () => {
   const [session] = useSession();
 
   return (
-    <StaticPage className="static-custom">
+    <LayoutPage className="static-custom">
       <Head title="Welcome to Green Energy Data Platform" />
       <p className="text-green-600">Home</p>
 
@@ -44,7 +44,7 @@ const HomePage: FC = () => {
         </button>
       )}
       <Footer />
-    </StaticPage>
+    </LayoutPage>
   );
 };
 

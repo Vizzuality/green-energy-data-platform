@@ -5,7 +5,7 @@ import React, {
 import { useRouter } from 'next/router';
 
 // components
-import StaticPage from 'layout';
+import LayoutPage from 'layout';
 import Head from 'components/head';
 import Hero from 'layout/hero';
 import IndicatorsData from 'layout/indicator-data';
@@ -21,7 +21,7 @@ const Group: FC = () => {
   if (!active) return null;
 
   return (
-    <StaticPage className="text-white bg-gradient-gray1">
+    <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${group} analysis`} />
       <Hero color={active.color} items={groups} />
       <div className="container m-auto">
@@ -30,7 +30,7 @@ const Group: FC = () => {
           <WidgetsGrid items={relatedIndicators} />
         </section>
       </div>
-    </StaticPage>
+    </LayoutPage>
   );
 };
 

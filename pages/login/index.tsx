@@ -8,7 +8,7 @@ import React, {
 import Link from 'next/link';
 
 // components
-import StaticPage from 'layout';
+import LayoutPage from 'layout';
 import Head from 'components/head';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -37,7 +37,7 @@ const LoginPage: FC<LoginProps> = () => {
   };
 
   return (
-    <StaticPage className="static-custom">
+    <LayoutPage className="static-custom">
       <Head title="Welcome to Green Energy Data Platform" />
       <div className="inline-flex">
         <section>
@@ -76,7 +76,7 @@ const LoginPage: FC<LoginProps> = () => {
           </form>
         </section>
       </div>
-    </StaticPage>
+    </LayoutPage>
   );
 };
 
