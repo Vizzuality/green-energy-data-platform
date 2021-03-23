@@ -647,15 +647,15 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
   integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
 
-"@types/next-auth@^3.1.25":
-  version "3.1.25"
-  resolved "https://registry.yarnpkg.com/@types/next-auth/-/next-auth-3.1.25.tgz#238d568a0adc93a2da4d76440b53f9e11906feaf"
-  integrity sha512-jzvthiA3jmBR1Z/snoQLI1ssJ1hb8GnzSAKGDlDSK217uQ+ZfhYGMi1PEFxEaT1pe4lXrSRUsQ3TThIhVLPiig==
+"@types/next-auth@^3.7.2":
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/@types/next-auth/-/next-auth-3.7.2.tgz#d8c6a99fd7882fe6b25144f334d10af838b3298b"
+  integrity sha512-04NTYd/eM/pr0YDqXQnaLcFFcmzWgah3oNsEftzbKWzRZ4GjJ1ul4fjOglxvH0bllCKqFhx5fEIorNymD1CPWQ==
   dependencies:
     "@types/node" "*"
     "@types/react" "*"
     jose "^1.28.0"
-    typeorm "^0.2.24"
+    typeorm "^0.2.31"
 
 "@types/node@*":
   version "14.11.11"
@@ -6164,7 +6164,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typeorm@^0.2.24, typeorm@^0.2.30:
+typeorm@^0.2.30, typeorm@^0.2.31:
   version "0.2.31"
   resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.31.tgz#82b8a1b233224f81c738f53b0380386ccf360917"
   integrity sha512-dVvCEVHH48DG0QPXAKfo0l6ecQrl3A8ucGP4Yw4myz4YEDMProebTQo8as83uyES+nrwCbu3qdkL4ncC2+qcMA==

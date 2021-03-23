@@ -6,8 +6,13 @@ import {
   signIn,
   signOut,
   useSession,
-  getSession,
 } from 'next-auth/client';
+
+// authentication
+import {
+  withAuthentication,
+  withUser,
+} from 'hoc/auth';
 
 // components
 import LayoutPage from 'layout';
@@ -26,7 +31,7 @@ const HomePage: FC = () => {
         <button
           type="button"
           onClick={() => {
-            signOut();
+            signOut({ callbackUrl: 'http://localhost:3000/signin' });
           }}
         >
           Sign Out
@@ -48,21 +53,6 @@ const HomePage: FC = () => {
   );
 };
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/signin',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-}
+export const getServerSideProps = withAuthentication(withUser());
 
 export default HomePage;

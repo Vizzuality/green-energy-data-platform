@@ -1,10 +1,4 @@
-import axios from 'axios';
-
-// move externally
-const API = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_FAKE_API_URL}`,
-  headers: { 'Content-Type': 'application/json' },
-});
+import { API } from 'lib/api';
 
 export const fetchUsers = () => API.get('/users')
   .then(({ data }) => data);
@@ -12,4 +6,20 @@ export const fetchUsers = () => API.get('/users')
   //     console.log(e, 'error');
   // });
 
-export default fetchUsers;
+export const fetchUserMe = (
+  userToken: string,
+  params = {},
+  headers = {},
+) => API.get('/users/me', {
+  headers: {
+    Authorization: userToken,
+    ...headers,
+  },
+  params,
+})
+  .then(({ data }) => data);
+
+export default {
+  fetchUsers,
+  fetchUserMe,
+};

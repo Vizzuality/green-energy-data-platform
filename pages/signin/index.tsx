@@ -108,20 +108,18 @@ const SigninPage: FC<LoginProps> = ({
                 </div>
               </label>
               <a href="" className="underline pb-10">I don&apos;t remember my password</a>
-              {credentials.email && credentials.password && (
-                <Button
-                  type="submit"
-                  aria-label="Sign in"
-                  theme="secondary-background"
-                  className="w-full py-20 bg-gray2 border-gray2 text-white"
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    signIn('credentials');
-                  }}
-                >
-                  Access with this account
-                </Button>
-              )}
+              <Button
+                type="submit"
+                aria-label="Sign in"
+                theme="secondary-background"
+                className="w-full py-20 bg-gray2 border-gray2 text-white"
+                onClick={(evt) => {
+                  evt.preventDefault();
+                  signIn('credentials');
+                }}
+              >
+                Access with this account
+              </Button>
             </form>
           </section>
         </div>
@@ -136,7 +134,7 @@ export const getServerSideProps = async (context) => {
   if (session) {
     return {
       redirect: {
-        destination: '/',
+        destination: context.query.callbackUrl || '/',
         permanent: false,
       },
     };
