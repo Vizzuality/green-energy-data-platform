@@ -17,9 +17,10 @@ interface HeroProps {
 const Hero: FC<HeroProps> = ({ color, children, className }: HeroProps) => (
   <div className={`pb-44 bg-gradient-${color} text-white`}>
     <Header />
-    <div className="container m-auto px-32">
-      <Nav items={items} />
-      <h1 className="text-5.25xl font-bold">Energy balance</h1>
+    <div className={cx('container m-auto px-32',
+      { [className]: !!className })}
+    >
+      {children}
     </div>
   </div>
 );

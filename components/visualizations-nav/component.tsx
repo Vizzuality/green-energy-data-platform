@@ -37,7 +37,7 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
             onClick={() => handleVisualization(label)}
             onKeyPress={() => handleVisualization(label)}
             className={cx(`flex items-center p-4 text-${color} text-opacity-50`,
-              { 'border-b-4 border-current text-opacity-100': active === label })}
+              { 'border-b-4 border-current border-full text-opacity-100': active === label })}
           >
             <Icon
               ariaLabel={`${label}-visualization`}

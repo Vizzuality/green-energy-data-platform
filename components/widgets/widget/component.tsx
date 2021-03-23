@@ -12,7 +12,7 @@ interface WidgetProps {
 
 const Widget: FC<WidgetProps> = () => (
   <>
-    {widgetsData.map(widget => {
+    {widgetsData.map((widget) => {
       const {
         type,
         title,
@@ -24,7 +24,8 @@ const Widget: FC<WidgetProps> = () => (
 
       const DynamicChart = dynamic(
         () => import(`components/chart/${type}`),
-        { loading: () => <p>loading...</p> });
+        { loading: () => <p>loading...</p> }
+      );
 
       return (
         <div key={main} className="bg-white">

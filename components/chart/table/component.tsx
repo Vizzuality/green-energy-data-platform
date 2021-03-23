@@ -12,25 +12,27 @@ interface TableItem {
 interface TableItems {
   label: string | number
   value: TableItem[]
-};
+}
 
 interface TableProps {
-  headers: TableHeaderItem[]
-  items: TableItems[]
-};
-const Table: FC<TableProps> = ({ widgetData }) => {
-console.log(widgetData)
+  widgetData: {
+    headers: TableHeaderItem[]
+    items: TableItems[]
+  }
+}
+
+const Table: FC<TableProps> = ({ widgetData }: TableProps) => {
   const { headers, items } = widgetData;
   return (
     <table>
       <thead>
-        <tr>{headers.map(h => (<th>{h}</th>))}</tr>
+        <tr>{headers.map((h) => (<th>{h}</th>))}</tr>
       </thead>
       <tbody>
-        {items.map(item => (
+        {items.map((item) => (
           <tr>
             <td>{item.label}</td>
-            {item.value.map(i => (<td>{i.value}</td>))}
+            {item.value.map((i) => (<td>{i.value}</td>))}
           </tr>
         ))}
 

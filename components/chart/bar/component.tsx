@@ -37,7 +37,6 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     yAxis,
     bars,
   } = widgetConfig;
-console.log(yAxis, typeof yAxis)
   return (
     <div>
       <ResponsiveContainer width={500} height={500}>

@@ -32,7 +32,6 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
     yAxis,
     pies,
   } = widgetConfig;
-  console.log(pies, widgetData)
   const RADIAN = Math.PI / 180;
 
   const renderCustomizedLabel = ({

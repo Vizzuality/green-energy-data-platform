@@ -1,7 +1,7 @@
 const VisualizationsOptions = [
   {
     icon: 'line',
-    label: 'Line',
+    label: 'Trend',
   },
   {
     icon: 'pie',
@@ -13,7 +13,7 @@ const VisualizationsOptions = [
   },
   {
     icon: 'bar',
-    label: 'Regions',
+    label: 'Provinces',
   },
   {
     icon: 'columns',

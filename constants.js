@@ -56,7 +56,7 @@ export const layers = [
 export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
 export const selectedIndicator = {
   id: 1,
-  type: 'line',
+  type: 'area',
   title: 'Energy Balance of China',
   categories: ['Total energy consumption', 'Total energy available for consumption'],
   startDate: 1980,
@@ -89,19 +89,37 @@ export const selectedIndicator = {
     },
     cartesianGrid: {
       vertical: false,
+      height: '1px',
+      strokeDasharray: '10 5',
     },
-    lines: [
+    areas: [
       {
         type: 'monotone',
         dataKey: 'value',
         stroke: '#8884d8',
       },
     ],
+    gradients: [
+      {
+        offset: '7.05%',
+        stopColor: 'rgba(0, 107, 254, 0.64)',
+        stopOpacity: 1,
+      },
+      {
+        offset: '100%',
+        stopColor: 'rgba(0, 107, 254, 0.1)',
+        stopOpacity: 1,
+      },
+      {
+        offset: '100%',
+        stopColor: 'rgba(0, 107, 254, 0)',
+        stopOpacity: 1,
+      },
+    ],
     xAxis: {
-      dataKey: 'date',
+      dataKey: 'label',
     },
     yAxis: {
-      tickCount: 0,
     },
   },
 };
@@ -110,6 +128,7 @@ export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indica
 export const datesList = ['1990', '2000', '2010', '2020'];
 export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
 
+export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
   groups,
   relatedIndicators,
@@ -118,4 +137,5 @@ export default {
   layers,
   colors,
   selectedIndicator,
+  filtersList,
 };

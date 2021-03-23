@@ -7,26 +7,33 @@ import {
   YAxis,
   LineChart,
   Line,
-} from "recharts";
+} from 'recharts';
 
-type DataItem = Object;
-
-type YAxisProps = {
-  type?: string,
-  ticksCount?: number,
+type DataObjectProps = {
+  label: string | number,
+  value: string | number,
 };
 
-type ConfigObject = {
-  cartesianGrid: Object,
+type CartesianProps = {
+  vertical?: boolean
+};
+
+type AxisProps = {
+  type?: 'number' | 'category',
+  ticksCount?: string,
+};
+
+type ConfigObjectProps = {
+  cartesianGrid: CartesianProps,
   cartesianAxis: Object,
-  xAxis: Object,
-  yAxis?: YAxisProps,
+  xAxis: AxisProps,
+  yAxis?: AxisProps,
   lines: Object,
 };
 
 interface ChartProps {
-  widgetData: DataItem[],
-  widgetConfig: ConfigObject
+  widgetData: DataObjectProps[],
+  widgetConfig: ConfigObjectProps
 }
 
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
@@ -37,7 +44,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     yAxis,
     lines,
   } = widgetConfig;
-console.log(yAxis)
+
   return (
     <div>
       <ResponsiveContainer width={500} height={500}>
