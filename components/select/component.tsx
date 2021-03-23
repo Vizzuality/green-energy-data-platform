@@ -9,7 +9,7 @@ export interface DropdownSelectProps {
   border?: boolean,
   label?: string,
   icon?: string,
-  iconSize?: string,
+  iconSize?: 'sm' | 'md' | 'lg' | 'xlg',
   iconRotable?: boolean,
   className?: string,
   classNameMenu?: string,
