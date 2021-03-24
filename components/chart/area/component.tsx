@@ -7,6 +7,13 @@ import {
   YAxis,
   AreaChart,
   Area,
+  Tooltip,
+  AreaProps,
+  CartesianAxisProps,
+  CartesianGridProps,
+  XAxisProps,
+  YAxisProps,
+  TooltipProps,
 } from 'recharts';
 
 type DataObjectProps = {
@@ -14,37 +21,30 @@ type DataObjectProps = {
   value: string | number,
 };
 
-type GradientsObjectProps = {
+type GradientProps = {
   offset: string,
   stopColor: string,
   stopOpacity: number,
 };
 
-type CartesianProps = {
-  vertical?: boolean
-};
-
-type AxisProps = {
-  type?: 'number' | 'category',
-  ticksCount?: string,
-};
-
-type ConfigObjectProps = {
-  gradients?: GradientsObjectProps[];
-  cartesianGrid: CartesianProps,
-  cartesianAxis: Object,
-  xAxis: AxisProps,
-  yAxis?: AxisProps,
-  areas: Object,
-};
+interface ConfigProps {
+  gradients?: GradientProps;
+  cartesianGrid?: CartesianGridProps,
+  cartesianAxis?: CartesianAxisProps,
+  xAxis?: XAxisProps,
+  yAxis?: YAxisProps,
+  areas: AreaProps,
+  tooltip: TooltipProps<string, string>,
+}
 
 interface ChartProps {
   widgetData: DataObjectProps[],
-  widgetConfig: ConfigObjectProps,
+  widgetConfig: ConfigProps,
   color?: string,
+  indicatorId: string
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
+const Chart: FC<ChartProps> = ({ indicatorId, widgetData, widgetConfig }: ChartProps) => {
   const {
     gradients,
     cartesianGrid,
@@ -52,11 +52,14 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     xAxis,
     yAxis,
     areas,
+    tooltip,
   } = widgetConfig;
+
   return (
     <div>
       <ResponsiveContainer width={500} height={500}>
         <AreaChart width={400} height={200} data={widgetData}>
+          {tooltip && <Tooltip {...tooltip} />}
           {gradients && (
             <defs>
               <linearGradient id="area-color" x1="0" y1="0" x2="0" y2="1">
@@ -70,7 +73,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
           {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
           {xAxis && (<XAxis {...xAxis} />)}
           {yAxis && (<YAxis {...yAxis} />)}
-          {areas && Object.keys(areas).map((area) => (<Area key={area} {...areas[area]} strokeWidth="3px" fill="url(#area-color)" />))}
+          {areas && Object.keys(areas).map((area) => (<Area key={area} {...areas[area]} id={indicatorId} strokeWidth="3px" fill="url(#area-color)" />))}
         </AreaChart>
       </ResponsiveContainer>
     </div>

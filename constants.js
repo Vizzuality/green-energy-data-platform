@@ -120,6 +120,10 @@ export const selectedIndicator = {
       dataKey: 'label',
     },
     yAxis: {
+
+    },
+    tooltip: {
+
     },
   },
 };

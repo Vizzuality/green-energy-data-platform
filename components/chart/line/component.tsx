@@ -14,9 +14,7 @@ type DataObjectProps = {
   value: string | number,
 };
 
-type CartesianProps = {
-  vertical?: boolean
-};
+
 
 type AxisProps = {
   type?: 'number' | 'category',

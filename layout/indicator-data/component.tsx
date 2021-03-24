@@ -88,7 +88,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   iconRotable={false}
                 />
               </div>
-              <DynamicChart widgetData={data} widgetConfig={config} />
+              <DynamicChart
+                color={color}
+                widgetData={data}
+                widgetConfig={config}
+              />
             </div>
           </section>
           <section className="flex flex-col justify-between">
