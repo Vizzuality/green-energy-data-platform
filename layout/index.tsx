@@ -2,7 +2,9 @@ import React, {
   FC,
   ReactNode,
 } from 'react';
-import classnames from 'classnames';
+import cx from 'classnames';
+
+import Footer from 'components/footer';
 
 interface LayoutPageProps {
   className?: string,
@@ -13,12 +15,12 @@ const LayoutPage: FC<LayoutPageProps> = ({
   className = 'test',
   children,
 }: LayoutPageProps) => (
-  <div className={classnames({
-    'l-simple-page': true,
+  <div className={cx('min-h-screen relative', {
     [className]: !!className,
   })}
   >
     {children}
+    <Footer className="absolute bottom-0 left-0 right-0" />
   </div>
 );
 

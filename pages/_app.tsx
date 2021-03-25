@@ -2,6 +2,8 @@ import React from 'react';
 import { AppProps } from 'next/app';
 import dynamic from 'next/dynamic';
 import { QueryClientProvider, QueryClient } from 'react-query';
+import { Hydrate } from 'react-query/hydration';
+import { Provider } from 'next-auth/client';
 
 import wrapper from 'config/store';
 
@@ -29,7 +31,11 @@ const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => {
     <>
       <TransifexScript />
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <Hydrate state={pageProps.dehydratedState}>
+          <Provider session={pageProps.session}>
+            <Component {...pageProps} />
+          </Provider>
+        </Hydrate>
       </QueryClientProvider>
       <Icons />
     </>

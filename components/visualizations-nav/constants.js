@@ -5,7 +5,7 @@ const VisualizationsOptions = [
   },
   {
     icon: 'pie',
-    label: 'PieChart',
+    label: 'Distribution',
   },
   {
     icon: 'map',
@@ -13,11 +13,11 @@ const VisualizationsOptions = [
   },
   {
     icon: 'bar',
-    label: 'Bars',
+    label: 'Regions',
   },
   {
     icon: 'columns',
-    label: 'Columns',
+    label: 'Table',
   },
 ];
 

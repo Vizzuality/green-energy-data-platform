@@ -8,16 +8,18 @@ import React, {
 import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
 
+// authentication
+import { withAuthentication } from 'hoc/auth';
+
 // Controls
 import ZoomControl from 'components/map/zoom';
 import Legend from 'components/map/legend';
 
 // Map
-
 import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from 'components/map/constants';
 
 // components
-import StaticPage from 'layout';
+import LayoutPage from 'layout';
 import Head from 'components/head';
 import Map from 'components/map';
 
@@ -38,7 +40,7 @@ const MapPage: FC = () => {
   );
 
   return (
-    <StaticPage className="map-page">
+    <LayoutPage className="map-page">
       <Head title="Green Energy Data Platform Map" />
       <section>
         <p className="text-color1">Map</p>
@@ -66,8 +68,10 @@ const MapPage: FC = () => {
           <Legend />
         </div>
       </section>
-    </StaticPage>
+    </LayoutPage>
   );
 };
+
+export const getServerSideProps = withAuthentication();
 
 export default MapPage;
