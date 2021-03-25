@@ -83,6 +83,9 @@ module.exports = {
         'gradient-color3': 'linear-gradient(103.52deg, #3510AB 0%, #00A3FE 100.23%)',
         'gradient-gray1': 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
       },
+      inset: {
+        17: '4.75rem',
+      },
     },
   },
   variants: {

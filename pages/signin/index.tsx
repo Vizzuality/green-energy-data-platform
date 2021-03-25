@@ -42,12 +42,12 @@ const SigninPage: FC<LoginProps> = ({
   };
 
   return (
-    <LayoutPage className="h-screen bg-sign-in bg-cover">
+    <LayoutPage className="bg-sign-in bg-cover">
       <Head title="Welcome to Green Energy Data Platform" />
       <main className="flex flex-col w-full h-full container m-auto">
         <Header />
         <div className="flex items-center justify-center h-full p-12">
-          <section className="flex flex-col flex-grow h-full justify-start py-20 max-w-xs text-white mx-20">
+          <section className="flex flex-col flex-grow justify-start py-20 max-w-xs text-white mx-20">
             <h1 className="text-5xl font-bold py-7">Sign in</h1>
             <p className="text-lg pb-44">Create an account to explore more about GEDP data insights</p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
@@ -58,8 +58,7 @@ const SigninPage: FC<LoginProps> = ({
               </Link>
             </div>
           </section>
-
-          <section className="flex flex-col flex-grow bg-white rounded-2.5xl py-44 px-14 md:px-28 min-w-70shadow-sm max-w-2xl">
+          <section className="lex flex-col flex-grow justify-start py-20 bg-white rounded-2.5xl px-14 md:px-28 min-w-70shadow-sm max-w-2xl">
             <form method="post" className="inline-flex flex-col min-w-64">
               <input
                 name="csrfToken"

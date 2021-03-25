@@ -17,7 +17,7 @@ import {
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
-import Footer from 'components/footer';
+import PreFooter from 'components/pre-footer';
 
 const HomePage: FC = () => {
   const [session] = useSession();
@@ -25,7 +25,7 @@ const HomePage: FC = () => {
   return (
     <LayoutPage className="static-custom">
       <Head title="Welcome to Green Energy Data Platform" />
-      <p className="text-green-600">Home</p>
+      <p className="text-green-600">Landing Page</p>
 
       {(session) && (
         <button
@@ -48,7 +48,7 @@ const HomePage: FC = () => {
           Sign In
         </button>
       )}
-      <Footer />
+      <PreFooter className="absolute bottom-17 left-0 right-0" />
     </LayoutPage>
   );
 };
