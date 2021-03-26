@@ -58,6 +58,7 @@ export const selectedIndicator = {
   id: 1,
   type: 'area',
   title: 'Energy Balance of China',
+  visualizationTypes: ['line', 'table'],
   categories: ['Total energy consumption', 'Total energy available for consumption'],
   startDate: 1980,
   endDate: 2015,

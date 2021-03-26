@@ -18,6 +18,7 @@ type DataItem = Object; // TO DO - change when we have clear de type of data
 interface IndicatorProps {
   title: string,
   type: string,
+  visualizationTypes: string[],
   data: DataItem[],
   config?: Object
 }
@@ -36,6 +37,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const {
     title,
     type,
+    visualizationTypes,
     data,
     config,
   } = indicator;
@@ -49,8 +51,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     <div className={cx('bg-white rounded-2.5xl text-black divide-y divide-gray shadow-sm',
       { [className]: className })}
     >
-      <VisualizationsNav className="px-32 w-full" selected={type} color={color} />
-
+      <VisualizationsNav
+        className="px-32 w-full"
+        selected={type}
+        color={color}
+        visualizationTypes={visualizationTypes}
+      />
       <div className="flex flex-col px-32 py-11 w-full">
         <div className="flex items-center w-full justify-between">
           <h2 className="text-3.5xl max-w-sm font-bold">
