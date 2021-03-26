@@ -26,7 +26,8 @@ const Table: FC<TableProps> = ({ widgetData }: TableProps) => {
   return (
     <table>
       <thead>
-        <tr>{headers.map((h) => (<th>{h}</th>))}</tr>
+        <tr>{headers.map((h) => (
+          <th>{h}</th>))}</tr>
       </thead>
       <tbody>
         {items.map((item) => (
@@ -42,5 +43,3 @@ const Table: FC<TableProps> = ({ widgetData }: TableProps) => {
 };
 
 export default Table;
-
-

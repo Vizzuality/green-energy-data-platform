@@ -5,8 +5,14 @@ import {
   CartesianAxis,
   XAxis,
   YAxis,
+  Tooltip,
+  LineProps,
   LineChart,
-  Line,
+  CartesianAxisProps,
+  CartesianGridProps,
+  XAxisProps,
+  YAxisProps,
+  TooltipProps,
 } from 'recharts';
 
 type DataObjectProps = {
@@ -14,24 +20,20 @@ type DataObjectProps = {
   value: string | number,
 };
 
-
-
-type AxisProps = {
-  type?: 'number' | 'category',
-  ticksCount?: string,
-};
-
-type ConfigObjectProps = {
-  cartesianGrid: CartesianProps,
-  cartesianAxis: Object,
-  xAxis: AxisProps,
-  yAxis?: AxisProps,
-  lines: Object,
-};
+interface ConfigProps {
+  lines: LineProps,
+  cartesianAxis?: CartesianAxisProps,
+  cartesianGrid?: CartesianGridProps,
+  xAxis?: XAxisProps,
+  yAxis?: YAxisProps,
+  tooltip: TooltipProps<string, string>,
+}
 
 interface ChartProps {
   widgetData: DataObjectProps[],
-  widgetConfig: ConfigObjectProps
+  widgetConfig: ConfigProps,
+  color?: string,
+  indicatorId: string
 }
 
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
@@ -41,6 +43,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     xAxis,
     yAxis,
     lines,
+    tooltip,
   } = widgetConfig;
 
   return (
@@ -52,6 +55,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
           {xAxis && (<XAxis {...xAxis} />)}
           {yAxis && (<YAxis {...yAxis} />)}
           {lines && Object.keys(lines).map((line) => (<Line key={line} {...lines[line]} />))}
+          {tooltip && (<Tooltip />)}
         </LineChart>
       </ResponsiveContainer>
     </div>

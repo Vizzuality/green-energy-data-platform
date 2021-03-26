@@ -7,26 +7,34 @@ import {
   CartesianAxis,
   XAxis,
   YAxis,
+  Tooltip,
+  BarProps,
+  CartesianAxisProps,
+  CartesianGridProps,
+  XAxisProps,
+  YAxisProps,
+  TooltipProps,
 } from 'recharts';
 
-type DataItem = Object;
-
-type YAxisProps = {
-  type?: string,
-  ticksCount?: number,
+type DataObjectProps = {
+  label: string | number,
+  value: string | number,
 };
 
-type ConfigObject = {
-  cartesianGrid: Object,
-  cartesianAxis: Object,
-  xAxis: Object,
+interface ConfigProps {
+  bars: BarProps,
+  cartesianAxis?: CartesianAxisProps,
+  cartesianGrid?: CartesianGridProps,
+  xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  bars: Object,
-};
+  tooltip: TooltipProps<string, string>,
+}
 
 interface ChartProps {
-  widgetData: DataItem[],
-  widgetConfig: ConfigObject
+  widgetData: DataObjectProps[],
+  widgetConfig: ConfigProps,
+  color?: string,
+  indicatorId: string
 }
 
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
@@ -36,6 +44,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     xAxis,
     yAxis,
     bars,
+    tooltip,
   } = widgetConfig;
   return (
     <div>
@@ -45,7 +54,8 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
           {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
           {xAxis && (<XAxis  {...xAxis} />)}
           {yAxis && (<YAxis {...yAxis} />)}
-          {bars && Object.keys(bars).map(bar => (<Bar {...bars[bar]} />))}
+          {bars && Object.keys(bars).map((bar) => (<Bar key={bar} {...bars[bar]} />))}
+          {tooltip && (<Tooltip />)}
         </BarChart>
       </ResponsiveContainer>
     </div>

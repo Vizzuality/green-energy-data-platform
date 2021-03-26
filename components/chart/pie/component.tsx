@@ -6,24 +6,36 @@ import {
   CartesianGrid,
   CartesianAxis,
   XAxis,
-  YAxis
-} from "recharts";
+  YAxis,
+  Tooltip,
+  PieProps,
+  CartesianAxisProps,
+  CartesianGridProps,
+  XAxisProps,
+  YAxisProps,
+  TooltipProps,
+} from 'recharts';
 
-type DataItem = Object;
+type DataObjectProps = {
+  label: string | number,
+  value: string | number,
+};
 
-type ConfigObject = {
-  cartesianGrid: Object,
-  cartesianAxis: Object,
-  xAxis: Object,
-  yAxis: Object,
-  pies: Object,
+interface ConfigProps {
+  pies: PieProps,
+  cartesianAxis?: CartesianAxisProps,
+  cartesianGrid?: CartesianGridProps,
+  xAxis?: XAxisProps,
+  yAxis?: YAxisProps,
+  tooltip: TooltipProps<string, string>,
 }
 
 interface ChartProps {
-  widgetData: DataItem[],
-  widgetConfig: ConfigObject
-};
-
+  widgetData: DataObjectProps[],
+  widgetConfig: ConfigProps,
+  color?: string,
+  indicatorId: string
+}
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
   const {
     cartesianGrid,
@@ -31,6 +43,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
     xAxis,
     yAxis,
     pies,
+    tooltip
   } = widgetConfig;
   const RADIAN = Math.PI / 180;
 
@@ -67,6 +80,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }) => {
               {...pies[pie]}
             />
           ))}
+          {tooltip && (<Tooltip />)}
         </PieChart>
       </ResponsiveContainer>
     </div>

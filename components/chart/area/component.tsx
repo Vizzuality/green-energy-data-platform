@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import {
   ResponsiveContainer,
-  CartesianGrid,
   CartesianAxis,
+  CartesianGrid,
   XAxis,
   YAxis,
   AreaChart,
@@ -29,11 +29,11 @@ type GradientProps = {
 
 interface ConfigProps {
   gradients?: GradientProps;
-  cartesianGrid?: CartesianGridProps,
+  areas: AreaProps,
   cartesianAxis?: CartesianAxisProps,
+  cartesianGrid?: CartesianGridProps,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  areas: AreaProps,
   tooltip: TooltipProps<string, string>,
 }
 
