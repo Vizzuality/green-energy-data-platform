@@ -28,7 +28,7 @@ type GradientProps = {
 };
 
 interface ConfigProps {
-  gradients?: GradientProps;
+  gradients?: GradientProps[];
   areas: AreaProps,
   cartesianAxis?: CartesianAxisProps,
   cartesianGrid?: CartesianGridProps,
