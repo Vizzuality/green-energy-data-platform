@@ -1,4 +1,9 @@
-import React, { FC, useRef, HTMLAttributes, ReactNode } from 'react';
+import React, {
+  FC,
+  useRef,
+  HTMLAttributes,
+  ReactNode,
+} from 'react';
 
 import { mergeProps } from '@react-aria/utils';
 import { useTreeState } from '@react-stately/tree';
@@ -21,7 +26,9 @@ const MenuPopup: FC<MenuPopupProps> = (props: MenuPopupProps) => {
   // Get props for the menu element
   const ref = useRef();
   const { menuProps } = useMenu(props, state, ref);
-  const { onClose, domProps, onAction, } = props;
+  console.log(props)
+
+  const { onClose, domProps, onAction, children } = props;
 
 
   // Handle events that should cause the menu to close,
@@ -48,7 +55,7 @@ const MenuPopup: FC<MenuPopupProps> = (props: MenuPopupProps) => {
         <ul
           {...mergeProps(menuProps, domProps)}
           ref={ref}
-          className="absolute left-0 right-0 top-10 flex flex-col w-full z-50 rounded-xl mt-4 bg-gray3 divide-y divide-white divide-opacity-10"
+          className="absolute left-0 right-0 top-10 flex flex-col w-full z-10 rounded-xl mt-4 bg-gray3 divide-y divide-white divide-opacity-10"
         >
           {[...state.collection].map((item) => (
             <MenuItem

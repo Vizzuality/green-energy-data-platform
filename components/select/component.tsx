@@ -41,7 +41,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
   } = useSelect({ items });
 
   return (
-    <div className={cx('relative z-50 w-max', { [className]: !!className })}>
+    <div className={cx('relative w-max', { [className]: !!className })}>
       <button
         type="button"
         className={cx('w-max inline-flex items-center text-sm border-gray2 border-box',

@@ -25,8 +25,8 @@ const LogIn: FC<LogInProps> = ({ user }: LogInProps) => {
           </a>
         </Link>
       </Item>
-      <Item key="action">
-        <button key="log-out-btn" className="flex" type="button" onClick={handleClick}>
+      <Item key="Log out">
+        <button className="flex" type="button" onClick={handleClick}>
           Log out
           <Icon ariaLabel="Log out" className="ml-3" name="logout" size="lg" />
         </button>

@@ -43,7 +43,7 @@ const MenuItem: FC<MenuItemProps> = (
     state,
     ref,
   );
-  console.log(ref, state)
+console.log(state, 'state*******')
   const [isFocused, setFocused] = useState(false);
   const { focusProps } = useFocus({ onFocusChange: setFocused });
 
@@ -51,7 +51,7 @@ const MenuItem: FC<MenuItemProps> = (
     <li
       {...mergeProps(menuItemProps, focusProps)}
       ref={ref}
-      className={cx('p-2 flex items-center justify-center w-full cursor-pointer hover:bg-white hover:text-gray3',
+      className={cx('pointer-events-auto p-2 flex items-center justify-center w-full cursor-pointer hover:bg-white hover:text-gray3',
         { 'bg-white text-gray3': isFocused })}
     >
       {rendered}
