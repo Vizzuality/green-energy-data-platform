@@ -13,7 +13,7 @@ const SIZE = {
   sm: 'w-2\.5 h-2\.5',
   md: 'w-3.5 h-3.5',
   lg: 'w-5 h-5',
-  xlg: 'w-6 h-6',
+  xlg: 'w-8 h-8',
 };
 
 const Icon: FC<IconProps> = ({

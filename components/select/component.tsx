@@ -67,7 +67,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
         )}
       </button>
       <ul
-        className={cx('absolute left-0 right-0 top-8 flex flex-col w-full z-50 bg-white rounded-xl',
+        className={cx('absolute left-0 right-0 top-0 flex flex-col w-full z-50 bg-white rounded-xl',
           { [classNameMenu]: !!classNameMenu })}
         {...getMenuProps()}
       >
