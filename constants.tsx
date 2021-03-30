@@ -1,111 +1,61 @@
-const widgetsData = [
+import React from 'react';
+
+export const groups = [
   {
-    type: 'line',
-    title: {
-      main: 'Energy Balance of China',
-      subtitle1: '(Physical Quantity) - 2017',
-      subtitle2: 'Electricity consumption (exajoules)',
-    },
-    data: [
-      {
-        value: 0,
-        label: 1995,
-      },
-      {
-        value: 50,
-        label: 2000,
-      },
-      {
-        value: 100,
-        label: 2005,
-      },
-      {
-        value: 150,
-        label: 2010,
-      },
-      {
-        value: 250,
-        label: 2015,
-      },
-    ],
-    config: {
-      margin: {
-        top: 20, right: 0, left: 0, bottom: 0,
-      },
-      cartesianGrid: {
-        vertical: false,
-      },
-      lines: [
-        {
-          type: 'monotone',
-          dataKey: 'value',
-          stroke: '#8884d8',
-        },
-      ],
-      xAxis: {
-        dataKey: 'date',
-      },
-    },
+    id: 'energy',
+    name: 'Energy',
+    status: 'active',
   },
   {
-    type: 'bar',
-    title: {
-      main: 'Energy Balance of energy Type',
-      subtitle2: 'energy balance by type (btu,quadrillons)',
-    },
-    data: [
-      {
-        date: 1995,
-        value1: 199,
-        value2: 123,
-      },
-      {
-        date: 2000,
-        value1: 20,
-        value2: 34,
-      },
-      {
-        date: 2005,
-        value1: 505,
-        value2: 355,
-      },
-      {
-        date: 2010,
-        value1: 327,
-        value2: 35,
-      },
-    ],
-    config: {
-      margin: {
-        top: 20, right: 0, left: 0, bottom: 0,
-      },
-      cartesianGrid: {
-        vertical: false,
-      },
-      bars: [
-        {
-          dataKey: 'value1',
-          fill: '#8884d8',
-          stackId: 'a',
-        },
-        {
-          dataKey: 'value2',
-          fill: '#0094d8',
-          stackId: 'a',
-        },
-      ],
-      xAxis: {
-        dataKey: 'date',
-      },
-    },
+    id: 'socio-economic',
+    name: 'Socio-economic',
+    status: 'disabled',
   },
   {
-    type: 'bar',
-    title: {
-      main: 'Energy Balance of energy Type',
-      subtitle2: 'energy balance by type (btu,quadrillons)',
-    },
-    data: [
+    id: 'coal-power-plant',
+    name: 'Coal power plant',
+    status: 'disabled',
+  },
+  {
+    id: 'lorem ipsum',
+    name: 'lorem ipsum',
+    status: 'disabled',
+  },
+  {
+    id: 'lorem ipsum2',
+    name: 'lorem ipsum',
+    status: 'disabled',
+  },
+];
+
+export const selectedIndicator = {
+  id: 1,
+  type: 'pie',
+  title: 'Energy Balance',
+  visualizationTypes: ['line', 'table', 'pie', 'bar'],
+  categories: ['Coal', 'Coke', 'Crude Oil', 'Diesel Oil', 'Fuel Oil', 'Kerosene', 'LPG'],
+  startDate: 1980,
+  endDate: 2015,
+  data: {
+    pie: [
+      {
+        label: 'General system charges',
+        value: 8.0,
+      },
+      {
+        label: 'Taxes',
+        value: 14.2,
+      },
+      {
+        label: 'Network and size costs',
+        value: 15.4,
+      },
+      {
+        label: 'Supplying costs',
+        value: 62.4,
+      },
+    ],
+    bar: [
       {
         province: 'Anhui',
         value1: 199,
@@ -212,77 +162,91 @@ const widgetsData = [
         value2: 35,
       },
     ],
-    config: {
+    line: [
+      {
+        value: 0,
+        value2: 67,
+        value3: 78,
+        label: 1995,
+      },
+      {
+        value: 50,
+        value2: 45,
+        value3: 89,
+        label: 2000,
+      },
+      {
+        value: 100,
+        value2: 67,
+        value3: 98,
+        label: 2005,
+      },
+      {
+        value: 150,
+        value2: 67,
+        value3: 127,
+        label: 2010,
+      },
+      {
+        value: 250,
+        value2: 677,
+        value3: 798,
+        label: 2015,
+      },
+    ],
+  },
+  config: {
+    line: {
       margin: {
         top: 20, right: 0, left: 0, bottom: 0,
       },
       cartesianGrid: {
         vertical: false,
+        height: '1px',
+        strokeDasharray: '10 5',
       },
-      bars: [
+      lines: [
         {
-          dataKey: 'value1',
-          stackId: 'a',
+          type: 'monotone',
+          dataKey: 'value',
         },
         {
+          type: 'monotone',
           dataKey: 'value2',
-          stackId: 'a',
+        },
+        {
+          type: 'monotone',
+          dataKey: 'value3',
+        },
+      ],
+      gradients: [
+        {
+          offset: '7.05%',
+          stopColor: 'rgba(0, 107, 254, 0.64)',
+          stopOpacity: 1,
+        },
+        {
+          offset: '100%',
+          stopColor: 'rgba(0, 107, 254, 0.1)',
+          stopOpacity: 1,
+        },
+        {
+          offset: '100%',
+          stopColor: 'rgba(0, 107, 254, 0)',
+          stopOpacity: 1,
         },
       ],
       xAxis: {
-        dataKey: 'province',
+        dataKey: 'label',
+      },
+      yAxis: {
+
+      },
+      tooltip: {
+
       },
     },
-  },
-  {
-    type: 'pie',
-    title: {
-      main: 'Cost&Benefits',
-      subtitle2: 'cost-benefit analysis of coal-fired power plant regulations',
-    },
-    data: [
-      {
-        label: 'General system charges',
-        value: 8.0,
-      },
-      {
-        label: 'Taxes',
-        value: 14.2,
-      },
-      {
-        label: 'Network and size costs',
-        value: 15.4,
-      },
-      {
-        label: 'Supplying costs',
-        value: 62.4,
-      },
-    ],
-    config: {
-      margin: {
-        top: 20, right: 0, left: 0, bottom: 0,
-      },
-      cartesianGrid: {
-        vertical: false,
-      },
-      pies: [
-        {
-          dataKey: 'value',
-          cx: '50%',
-          cy: '50%',
-          outerRadius: 90,
-          innerRadius: 70,
-        },
-      ],
-    },
-  },
-  {
-    type: 'table',
-    title: {
-      main: 'Cost&Energy balance table by region',
-      subtitle2: 'electricity consumption (exajoules)',
-    },
-    data: {
+    table: {
       headers: ['Region name', 1995, 2000, 2005, 2010, 2015],
       items: [
         {
@@ -437,7 +401,94 @@ const widgetsData = [
         },
       ],
     },
+    bar: {
+      margin: {
+        top: 20, right: 0, left: 0, bottom: 100,
+      },
+      cartesianGrid: {
+        vertical: false,
+      },
+      bars: [
+        {
+          dataKey: 'value1',
+          stackId: 'a',
+        },
+        {
+          dataKey: 'value2',
+          stackId: 'a',
+        },
+      ],
+      yAxis: {
+        domain: [0, 1000],
+        tick: {
+          fill: '#C4C4C4',
+          fontSize: '14px',
+        },
+      },
+      xAxis: {
+        type: 'category',
+        dataKey: 'province',
+        interval: 0,
+        tick: ((props) => {
+          const { x, y, payload } = props;
+          const { value } = payload;
+          return (
+            <g transform={`translate(${x},${y})`}>
+              <text
+                x={0}
+                y={-10}
+                dy={14}
+                textAnchor="end"
+                fill="#C4C4C4"
+                transform="rotate(270)"
+                fontSize="14px"
+              >
+                {value}
+              </text>
+            </g>
+          );
+        }),
+        label: {
+          content: ({ viewBox }) => {
+            const { x, y } = viewBox;
+            return (
+              <g>
+                <text x="50%" y={480} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
+                  Region
+                </text>
+              </g>
+            );
+          },
+        },
+      },
+    },
+    pie: {
+      margin: {
+        top: 20, right: 0, left: 0, bottom: 0,
+      },
+      pies: [
+        {
+          dataKey: 'value',
+          cx: '50%',
+          cy: '50%',
+          outerRadius: 80,
+        },
+      ],
+    },
   },
-];
+};
 
-export default widgetsData;
+export const relatedIndicators = ['widget', 'widget', 'widget', 'widget', 'widget'];
+
+export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
+export const datesList = ['1990', '2000', '2010', '2020'];
+export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
+export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
+export default {
+  groups,
+  relatedIndicators,
+  indicatorsList,
+  selectedIndicator,
+  filtersList,
+  colors,
+};

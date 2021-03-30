@@ -27,7 +27,7 @@ const HomePage: FC = () => {
   return (
     <LayoutPage className="h-full">
       <Head title="Welcome to Green Energy Data Platform" />
-      <Hero color="color1" className="flex flex-col text-center">
+      <Hero className="flex flex-col text-center">
         <h1 className="text-5.5xl py-7.5">Discover data insights for a sustainable future.</h1>
         <h3 className="text-lg">Longer description about the site and benefits, lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.</h3>
       </Hero>

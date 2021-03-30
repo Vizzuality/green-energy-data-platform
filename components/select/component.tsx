@@ -44,8 +44,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
     <div className={cx('relative w-max', { [className]: !!className })}>
       <button
         type="button"
-        className={cx('w-max inline-flex items-center text-sm border-gray2 border-box',
-          { 'border-opacity-20 border-2 rounded-2xl px-4 py-1': border })}
+        className="inline-flex items-center justify-items-center text-sm text-color1 border-gray2 border-opacity-20 border rounded-2xl px-4 py-1 border-box"
         {...getToggleButtonProps({
           onMouseEnter: () => {
             openMenu();

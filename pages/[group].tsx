@@ -18,13 +18,10 @@ const Group: FC = () => {
   const router = useRouter();
   const { group } = router.query;
 
-  const active = groups.find((i) => i.id === group);
-  if (!active) return null;
-
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${group} analysis`} />
-      <Hero color={active.color}>
+      <Hero>
         <Nav items={groups} />
         <h1 className="text-5.5xl py-7.5">Energy balance</h1>
         <p className="text-lg ">
@@ -36,7 +33,7 @@ const Group: FC = () => {
       </Hero>
       <div className="container m-auto">
         <section className="-mt-40">
-          <IndicatorsData color={active.color} />
+          <IndicatorsData />
           <WidgetsGrid items={relatedIndicators} />
         </section>
       </div>

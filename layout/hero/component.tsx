@@ -9,13 +9,12 @@ import cx from 'classnames';
 import Header from 'layout/header';
 
 interface HeroProps {
-  color: string,
   children: ReactElement[] | ReactElement,
   className?: string,
 }
 
-const Hero: FC<HeroProps> = ({ color, children, className }: HeroProps) => (
-  <div className={`pb-44 bg-gradient-${color} text-white`}>
+const Hero: FC<HeroProps> = ({ children, className }: HeroProps) => (
+  <div className="pb-44 bg-gradient-color1 text-white">
     <Header />
     <div className={cx('container m-auto px-32',
       { [className]: !!className })}

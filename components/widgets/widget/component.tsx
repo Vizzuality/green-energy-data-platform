@@ -29,13 +29,12 @@ const Widget: FC<WidgetProps> = () => (
 
       return (
         <div key={main} className="bg-white">
-          <div className="w-full inline-flex justify-between">
+          <div className="w-full flex flex-grow inline-flex justify-between">
             <div>
               <h3 className="capitalize">{main}</h3>
               <h4>{subtitle1}</h4>
               <h5 className="uppercase">{subtitle2}</h5>
             </div>
-            <button className="h-5 w-5 border rounded-full">i</button>
           </div>
           <DynamicChart widgetData={data} widgetConfig={config} />
         </div>

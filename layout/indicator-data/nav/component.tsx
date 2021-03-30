@@ -24,9 +24,9 @@ export const Nav: React.FC<NavProps> = ({
         {items.map(({ id, name }, index) => (
           <li
             key={id}
-            className={cx('relative px-4 focus:outline-none text-opacity-50 text-sm box-content',
-              { 'border-b-4 pb-1 font-bold': id === selected },
-              { 'pl-0': index === 0 })}
+            className={cx('relative px-4 mb-4 focus:outline-none text-opacity-50 text-sm box-content',
+              { 'pl-0': index === 0 },
+              { 'font-bold': id === selected })}
           >
             <Link
               href="/[groups]"
@@ -34,6 +34,12 @@ export const Nav: React.FC<NavProps> = ({
             >
               {name}
             </Link>
+            <div className={cx(
+              { 'absolute right-4 -bottom-4 rounded-2xl h-1 bg-current': id === selected },
+              { 'left-0': id === selected && index === 0 },
+              { 'left-4 ': id === selected && index !== 0 },
+            )}
+            />
           </li>
         ))}
       </ul>

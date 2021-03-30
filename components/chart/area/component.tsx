@@ -27,20 +27,23 @@ type GradientProps = {
   stopOpacity: number,
 };
 
+interface CustomCartesianGridProps extends CartesianGridProps {
+  strokeDasharray?: string
+}
+
 interface ConfigProps {
   gradients?: GradientProps[];
   areas: AreaProps,
   cartesianAxis?: CartesianAxisProps,
-  cartesianGrid?: CartesianGridProps,
+  cartesianGrid?: CustomCartesianGridProps,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  tooltip: TooltipProps<string, string>,
+  tooltip: TooltipProps,
 }
 
 interface ChartProps {
   widgetData: DataObjectProps[],
   widgetConfig: ConfigProps,
-  color?: string,
   indicatorId: string
 }
 
@@ -56,11 +59,11 @@ const Chart: FC<ChartProps> = ({ indicatorId, widgetData, widgetConfig }: ChartP
   } = widgetConfig;
 
   return (
-    <div>
-      <ResponsiveContainer width={500} height={500}>
+    <div className="py-10">
+      <ResponsiveContainer width="100%" height={500}>
         <AreaChart width={400} height={200} data={widgetData}>
           {tooltip && <Tooltip {...tooltip} />}
-          {gradients && (
+          {gradients && gradients.length && (
             <defs>
               <linearGradient id="area-color" x1="0" y1="0" x2="0" y2="1">
                 {gradients.map(({ offset, stopColor, stopOpacity }) => (
