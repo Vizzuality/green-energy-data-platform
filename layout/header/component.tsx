@@ -4,7 +4,7 @@ import React, {
 import { useMe } from 'hooks/auth';
 
 // components
-import LogIn from 'components/log-in';
+import UserDropdown from 'components/log-in';
 import Button from 'components/button';
 
 const Header: FC = () => {
@@ -15,7 +15,7 @@ const Header: FC = () => {
       <img alt="GEDP" src="images/logo_GEDP.svg" className="w-36" />
       {user && user.id && (
         <div className="flex items-center">
-          <LogIn />
+          <UserDropdown />
           <Button className="text-gray2 text-sm ml-3" theme="primary-background" size="xlg">Browse all data</Button>
         </div>
       )}

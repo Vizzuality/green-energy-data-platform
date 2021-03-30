@@ -47,7 +47,7 @@ const MenuButton: FC<MenuButtonProps> = ({
           size="xlg"
           className={cx('ml-3 p-2 border-2 border-white border-opacity-50 text-white rounded-full',
             { 'rotate-180': !!state.isOpen },
-            { 'transform -rotate-180': state.isOpen })}
+            { 'transform -rotate-180 text-gray3': state.isOpen })}
         />
       </button>
       {state.isOpen && (

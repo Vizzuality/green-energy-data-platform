@@ -23,7 +23,7 @@ const Hero: FC<HeroProps> = ({ color, items }: HeroProps) => (
     <Header />
     <div className="container m-auto px-32 py-4">
       <Nav items={items} />
-      <h1 className="text-5.5xl font-bold">Green Energy Data Platform</h1>
+      <h1 className="text-5.5xl font-bold">Energy balance</h1>
       <p className="text-lg py-7.5">Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
       auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.</p>
     </div>

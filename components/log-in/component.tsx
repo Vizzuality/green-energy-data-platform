@@ -8,7 +8,7 @@ import Icon from 'components/icon';
 import MenuButton from './button';
 import { MenuButtonProps } from './button/types';
 
-const LogIn: FC<MenuButtonProps> = (props: MenuButtonProps) => {
+const UserDropdown: FC<MenuButtonProps> = (props: MenuButtonProps) => {
   const handleClick = () => {
     console.log('log out');
   };
@@ -27,13 +27,13 @@ const LogIn: FC<MenuButtonProps> = (props: MenuButtonProps) => {
         </Link>
       </Item>
       <Item key="Log out">
-        <button className="flex" type="button" onClick={handleClick}>
+        <button className="flex relative" type="button" onClick={handleClick}>
           Log out
-          <Icon ariaLabel="Log out" className="ml-3" name="logout" size="lg" />
+          <Icon ariaLabel="Log out" className="ml-3 absolute right-3" name="logout" size="lg" />
         </button>
       </Item>
     </MenuButton>
   );
 };
 
-export default LogIn;
+export default UserDropdown;

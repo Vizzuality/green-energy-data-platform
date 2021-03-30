@@ -37,7 +37,7 @@ const MenuItem: FC<MenuItemProps> = ({
     <li
       {...mergeProps(menuItemProps, focusProps)}
       ref={ref}
-      className={cx('pointer-events-auto p-2 flex items-center justify-center w-full cursor-pointer hover:bg-white hover:text-gray3',
+      className={cx('flex justify-center pointer-events-auto p-2  w-full cursor-pointer hover:bg-white hover:text-gray3',
         { 'bg-white text-gray3 first:rounded-t-2xl last:rounded-b-2xl': isFocused })}
     >
       {item.rendered}

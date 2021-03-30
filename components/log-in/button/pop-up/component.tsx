@@ -49,7 +49,7 @@ const MenuPopup: FC<MenuPopupProps> = ({
         <ul
           {...mergeProps(menuProps, domProps)}
           ref={ref}
-          className="absolute left-0 right-0 top-10 flex flex-col w-full z-10 rounded-xl mt-4 bg-gray3 divide-y divide-white divide-opacity-10"
+          className="absolute justify-center left-0 right-0 top-10 flex flex-col w-full z-10 rounded-xl mt-4 bg-gray3 divide-y divide-white divide-opacity-10"
         >
           {Array.from(state.collection).map((item) => (
             <MenuItem

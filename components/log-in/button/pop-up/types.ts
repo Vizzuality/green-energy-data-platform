@@ -2,7 +2,7 @@ import { HTMLAttributes } from 'react';
 
 import { FocusStrategy, CollectionChildren } from '@react-types/shared';
 
-import { ItemProps } from '../item/types';
+import ItemProps from '../item/types';
 
 export interface MenuPopupProps {
   /** Props for the popup's container */
