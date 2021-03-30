@@ -1,23 +1,29 @@
 import React, { FC, useRef } from 'react';
 import cx from 'classnames';
 
+import { useMe } from 'hooks/auth';
 import { useMenuTriggerState } from '@react-stately/menu';
 import { useMenuTrigger } from '@react-aria/menu';
 import { useButton } from '@react-aria/button';
 
 import Icon from 'components/icon';
-import MenuPopup from '../pop-up';
 
-interface MenuButtonProps {
-  label: string
-}
+import MenuPopup from './pop-up';
 
-const MenuButton: FC<MenuButtonProps> = ({ label, ...props }: MenuButtonProps) => {
+import { MenuButtonProps } from './types';
+
+const MenuButton: FC<MenuButtonProps> = ({
+  children,
+  onAction,
+  ...props
+}: MenuButtonProps) => {
+  const { user } = useMe();
+
   // Create state based on the incoming props
   const state = useMenuTriggerState(props);
 
   // Get props for the menu trigger and menu elements
-  const ref = useRef();
+  const ref = useRef(null);
   const { menuTriggerProps, menuProps } = useMenuTrigger({}, state, ref);
 
   // Get props for the button based on the trigger props from useMenuTrigger
@@ -29,11 +35,11 @@ const MenuButton: FC<MenuButtonProps> = ({ label, ...props }: MenuButtonProps) =
         type="button"
         {...buttonProps}
         ref={ref}
-        className="w-max inline-flex items-center text-sm border-box"
+        className="w-max inline-flex items-center text-sm border-box z-index-10"
       >
         <div className="flex flex-col items-start text-base">
           <span>Welcome,</span>
-          <span className="font-bold">{label}</span>
+          <span className="font-bold">{user.name}</span>
         </div>
         <Icon
           ariaLabel={state.isOpen ? 'collapse dropdown' : 'expand dropdown'}
@@ -43,15 +49,16 @@ const MenuButton: FC<MenuButtonProps> = ({ label, ...props }: MenuButtonProps) =
             { 'rotate-180': !!state.isOpen },
             { 'transform -rotate-180': state.isOpen })}
         />
-
       </button>
       {state.isOpen && (
         <MenuPopup
-          {...props}
           domProps={menuProps}
           autoFocus={state.focusStrategy}
           onClose={() => state.close()}
-        />
+          onAction={onAction}
+        >
+          {children}
+        </MenuPopup>
       )}
     </div>
   );

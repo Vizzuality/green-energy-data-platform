@@ -1,8 +1,6 @@
 import React, {
   FC,
   useRef,
-  HTMLAttributes,
-  ReactNode,
 } from 'react';
 
 import { mergeProps } from '@react-aria/utils';
@@ -13,23 +11,19 @@ import { useMenu } from '@react-aria/menu';
 
 import MenuItem from '../item';
 
-interface MenuPopupProps {
-  onClose: () => void,
-  domProps: HTMLAttributes<HTMLElement>,
-  onAction: () => void,
-  children?: ReactNode,
-}
+import { MenuPopupProps } from './types';
 
-const MenuPopup: FC<MenuPopupProps> = (props: MenuPopupProps) => {
+const MenuPopup: FC<MenuPopupProps> = ({
+  autoFocus,
+  domProps,
+  children,
+  onClose,
+  onAction,
+}: MenuPopupProps) => {
   // Create menu state based on the incoming props
-  const state = useTreeState({...props, selectionMode: 'none'});
-  // Get props for the menu element
+  const state = useTreeState({ children, selectionMode: 'none' });  // Get props for the menu element
   const ref = useRef();
-  const { menuProps } = useMenu(props, state, ref);
-  console.log(props)
-
-  const { onClose, domProps, onAction, children } = props;
-
+  const { menuProps } = useMenu({ autoFocus, children }, state, ref);
 
   // Handle events that should cause the menu to close,
   // e.g. blur, clicking outside, or pressing the escape key.
@@ -57,7 +51,7 @@ const MenuPopup: FC<MenuPopupProps> = (props: MenuPopupProps) => {
           ref={ref}
           className="absolute left-0 right-0 top-10 flex flex-col w-full z-10 rounded-xl mt-4 bg-gray3 divide-y divide-white divide-opacity-10"
         >
-          {[...state.collection].map((item) => (
+          {Array.from(state.collection).map((item) => (
             <MenuItem
               key={item.key}
               item={item}

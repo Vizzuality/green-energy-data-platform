@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, forwardRef } from 'react';
 import Link from 'next/link';
 
 import { Item } from '@react-stately/collections';
@@ -6,23 +6,24 @@ import { Item } from '@react-stately/collections';
 import Icon from 'components/icon';
 
 import MenuButton from './button';
+import { MenuButtonProps } from './button/types';
 
-interface LogInProps {
-  user: string
-}
-
-const LogIn: FC<LogInProps> = ({ user }: LogInProps) => {
+const LogIn: FC<MenuButtonProps> = (props: MenuButtonProps) => {
   const handleClick = () => {
     console.log('log out');
   };
 
+  const ProfileButton = forwardRef(({ href }) => (
+    <a href={href}>
+      Profile
+    </a>
+  ));
+
   return (
-    <MenuButton label={user}>
+    <MenuButton {...props} onAction="onAction">
       <Item key="profile">
-        <Link key="profile-link" href="/profile" passHref>
-          <a href="/profile">
-            Profile
-          </a>
+        <Link key="profile-link" href="/profile">
+          <ProfileButton href='/profile' />
         </Link>
       </Item>
       <Item key="Log out">

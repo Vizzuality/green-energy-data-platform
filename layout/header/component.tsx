@@ -7,22 +7,15 @@ import { useMe } from 'hooks/auth';
 import LogIn from 'components/log-in';
 import Button from 'components/button';
 
-interface HeaderProps {
-  color?: string,
-}
-
-const Header: FC<HeaderProps> = ({
-  color,
-}: HeaderProps) => {
+const Header: FC = () => {
   const { user } = useMe();
 
   return (
-    <div className={`container m-auto flex justify-between items-center px-12 py-8 bg-${color}`}>
-      <div className="text-white text-xl font-bold">GEDP LOGO</div>
+    <div className="flex justify-between items-center px-12 py-2 border-b border-white border-opacity-30">
+      <img alt="GEDP" src="images/logo_GEDP.svg" className="w-36" />
       {user && user.id && (
         <div className="flex items-center">
-          {/* <LogIn /> */}
-          <LogIn user={user.name} />
+          <LogIn />
           <Button className="text-gray2 text-sm ml-3" theme="primary-background" size="xlg">Browse all data</Button>
         </div>
       )}
