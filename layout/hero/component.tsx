@@ -21,7 +21,7 @@ interface HeroProps {
 const Hero: FC<HeroProps> = ({ color, items }: HeroProps) => (
   <div className={`pb-44 bg-gradient-${color}`}>
     <Header />
-    <div className="container m-auto px-32">
+    <div className="container m-auto px-32 py-4">
       <Nav items={items} />
       <h1 className="text-5.5xl font-bold">Energy balance</h1>
       <p className="text-lg py-7.5">Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus

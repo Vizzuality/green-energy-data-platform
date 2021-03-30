@@ -28,9 +28,23 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       <section className="flex-1 mr-8">
         <div className="flex items-center w-full justify-between">
           <h2 className="text-3.5xl max-w-sm font-bold">Overall energy balance</h2>
-          <Dropdown items={indicatorsList} label="Change indicator" icon="triangle_border" />
+          <Dropdown
+            menuElements={indicatorsList}
+            border
+            label="Change indicator"
+            icon="triangle_border"
+          />
         </div>
-        <Dropdown items={datesList} icon="calendar" />
+        <Dropdown
+          menuElements={datesList}
+          border
+          className="bg-white"
+          label="Select dates"
+          icon="calendar"
+          iconSize="lg"
+          iconRotable={false}
+        />
+
         <p>Widget</p>
       </section>
       <section className="flex flex-col justify-between">

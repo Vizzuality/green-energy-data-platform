@@ -15,12 +15,16 @@ export function useMe() {
       enabled: !!session && !loading,
     });
 
-  const { data } = query;
+  const {
+    data, status, error, isLoading,
+  } = query;
 
   return useMemo(() => ({
-    ...query,
+    status,
+    error,
+    isLoading,
     user: data,
-  }), [query, data]);
+  }), [status, error, isLoading, data]);
 }
 
 export default {
