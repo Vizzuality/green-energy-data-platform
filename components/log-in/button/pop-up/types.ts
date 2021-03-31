@@ -1,4 +1,4 @@
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, ReactText } from 'react';
 
 import { FocusStrategy, CollectionChildren } from '@react-types/shared';
 
@@ -14,5 +14,5 @@ export interface MenuPopupProps {
   /** Callback executed when the popup is closed */
   onClose: ItemProps['onClose'];
   /** Callback executed when the user clicks on a menu's item */
-  onAction: unknown;
+  onAction: (key: ReactText) => void;
 }
