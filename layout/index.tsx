@@ -19,8 +19,10 @@ const LayoutPage: FC<LayoutPageProps> = ({
     [className]: !!className,
   })}
   >
-    {children}
-    <Footer className="absolute bottom-0 left-0 right-0" />
+    <div className="relative h-full">
+      {children}
+    </div>
+    <Footer className="absolute -bottom-18" />
   </div>
 );
 

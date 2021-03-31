@@ -9,7 +9,7 @@ interface PreFooterProps {
 const PreFooter: FC<PreFooterProps> = ({
   className = '',
 }: PreFooterProps) => (
-  <section className={cx('bg-gray2 text-white border-b border-white border-opacity-10',
+  <div className={cx('bg-gray2 text-white border-b border-white border-opacity-10',
     { [className]: className })}
   >
     <div className="text-xl flex w-full justify-center">
@@ -23,7 +23,7 @@ const PreFooter: FC<PreFooterProps> = ({
         <a className="p-12" href="/coal-power-plants">Coal Power Plants</a>
       </Link>
     </div>
-  </section>
+  </div>
 );
 
 export default PreFooter;

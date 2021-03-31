@@ -15,7 +15,7 @@ const THEME = {
   'primary-background': 'bg-white border-white',
   secondary:
     'border-gray2 bg-white hover:bg-gray2 hover:text-white',
-  'secondary-background': 'bg-gray2 border-gray2 text-white',
+  'secondary-background': 'bg-button border-gray2 text-white',
   info: 'bg-color2 border-color2 text-white',
 };
 
@@ -23,7 +23,7 @@ const SIZE = {
   sm: 'w-7.5 h-7.5 px-0 text-sm',
   md: 'py-0.5 px-4',
   lg: 'py-0.5 px-6',
-  xlg: 'py-2 px-5 text-sm',
+  xlg: 'py-2.5 px-6 text-sm',
 };
 
 const Button: FC<ButtonProps> = ({

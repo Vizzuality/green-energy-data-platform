@@ -9,7 +9,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        color1: '#006BFE',
+        color1: '#009DCD',
         color2: '#FD1A2F',
         color3: '#6905E8',
         gray1: '#EAEFF3',
@@ -68,16 +68,19 @@ module.exports = {
       borderRadius: {
         '2lg': '0.625rem',
         '2.5xl': '1.25rem',
+        '4xl': '4.5rem',
       },
       borderColor: {
-        'sign-in-gradient': 'linear-gradient(90deg, #DA2584 0%, #A42AD9 47.92%, #1A82FD 100%);',
+        'sign-in-gradient': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%);',
       },
       boxShadow: {
         sm: ' 0px 14px 20px rgba(14, 48, 114, 0.1)',
+        md: 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
       },
       backgroundImage: {
         'sign-in': "url('/images/sign-in-bg.jpg')",
-        'sign-in-gradient': 'linear-gradient(90deg, #DA2584 0%, #A42AD9 47.92%, #1A82FD 100%);',
+        'sign-in-gradient': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%);',
+        button: 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',
         'gradient-color1': 'linear-gradient(103.52deg, #6905E8 0%, #A880FF 100.23%)',
         'gradient-color2': 'linear-gradient(103.52deg, #FD101F 0%, #DE259D 100.23%)',
         'gradient-color3': 'linear-gradient(103.52deg, #3510AB 0%, #00A3FE 100.23%)',
@@ -85,6 +88,7 @@ module.exports = {
       },
       inset: {
         17: '4.75rem',
+        18: '5.143rem',
       },
     },
   },

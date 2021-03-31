@@ -2,9 +2,10 @@ import React, {
   FC,
 } from 'react';
 
+import cx from 'classnames';
+
 // components
 import Header from 'layout/header';
-import Nav from './nav';
 
 interface NavigationItem {
   id: string,
@@ -15,17 +16,15 @@ interface NavigationItem {
 
 interface HeroProps {
   color: string,
-  items: NavigationItem[]
+  children: NavigationItem[],
+  className?: string,
 }
 
-const Hero: FC<HeroProps> = ({ color, items }: HeroProps) => (
-  <div className={`pb-44 bg-gradient-${color}`}>
+const Hero: FC<HeroProps> = ({ color, children, className }: HeroProps) => (
+  <div className={`pb-44 bg-gradient-${color} text-white`}>
     <Header />
-    <div className="container m-auto px-32 py-4">
-      <Nav items={items} />
-      <h1 className="text-5.5xl font-bold">Energy balance</h1>
-      <p className="text-lg py-7.5">Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
-      auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.</p>
+    <div className={cx('container m-auto px-32 py-8', { [className]: !!className })}>
+      {children}
     </div>
   </div>
 );

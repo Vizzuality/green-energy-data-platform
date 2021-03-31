@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import LayoutPage from 'layout';
 import Head from 'components/head';
 import Hero from 'layout/hero';
+import Nav from 'layout/indicator-data/nav';
 import IndicatorsData from 'layout/indicator-data';
 import WidgetsGrid from 'layout/widgets-grid';
 
@@ -23,7 +24,12 @@ const Group: FC = () => {
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${group} analysis`} />
-      <Hero color={active.color} items={groups} />
+      <Hero color={active.color}>
+        <Nav items={groups} />
+        <h1 className="text-5.5xl py-7.5">Energy balance</h1>
+        <p className="text-lg ">Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
+      auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.</p>
+      </Hero>
       <div className="container m-auto">
         <section className="-mt-40">
           <IndicatorsData color={active.color} />

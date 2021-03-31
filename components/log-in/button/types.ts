@@ -6,7 +6,7 @@ export type MenuButtonProps = MenuTriggerProps & {
   /** Menu's items */
   children: MenuPopupProps['children'];
   /** Callback executed when the user clicks on a menu's item */
-  onAction: MenuPopupProps['onAction'];
+  onAction: unknown;
 };
 
 export default MenuButtonProps;

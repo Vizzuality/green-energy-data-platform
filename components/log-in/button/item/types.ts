@@ -9,7 +9,7 @@ export interface MenuItemProps {
   /** Callback executed when the popup is closed */
   onClose: () => void;
   /** Callback executed when the user clicks on a menu's item */
-  onAction: (key: string | number) => void;
+  onAction: unknown;
 }
 
 export default MenuItemProps;

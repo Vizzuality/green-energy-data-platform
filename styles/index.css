@@ -39,4 +39,14 @@
   }
 }
 
+@layer utilities {
+  .bg-shadow {
+    @apply shadow-sm;
+  }
 
+  @supports (filter: drop-shadow(10px 10px 30px rgba(22, 26, 47, 0.24))) {
+    .bg-shadow {
+      filter: drop-shadow(10px 10px 30px rgba(22, 26, 47, 0.24));
+    }
+  }
+}

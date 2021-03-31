@@ -14,5 +14,5 @@ export interface MenuPopupProps {
   /** Callback executed when the popup is closed */
   onClose: ItemProps['onClose'];
   /** Callback executed when the user clicks on a menu's item */
-  onAction: ItemProps['onAction'];
+  onAction: unknown;
 }
