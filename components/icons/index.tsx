@@ -15,7 +15,7 @@ const Icons: FC = () => (
         <path fill="#fff" d="M21.267 32c9.6 0 17.067-8.267 20.267-13.067 1.333-1.867 1.333-4.267 0-6.133-3.2-4.533-10.667-12.8-20.267-12.8s-17.067 8.267-20.267 13.067c-1.333 1.867-1.333 4.267 0 5.867 3.2 4.8 10.667 13.067 20.267 13.067zM21.267 8c4.533 0 8 3.467 8 8s-3.467 8-8 8c-4.533 0-8-3.467-8-8s3.467-8 8-8z" />
       </symbol>
       <symbol id="icon-icn_settings" viewBox="0 0 32 32">
-        <path fill="none" stroke="#3a3f59" strokeLinejoin="miter" strokeLinecap="butt" stroke-miterlimit="4" stroke-width="3.2" d="M23.2 1.6v0zM16 1.6v0zM8.8 1.6v0zM1.6 30.4h28.8v-28.8h-28.8v28.8z" />
+        <path fill="none" stroke="#3a3f59" strokeLinejoin="miter" strokeLinecap="butt" strokeMiterlimit="4" strokeWidth="3.2" d="M23.2 1.6v0zM16 1.6v0zM8.8 1.6v0zM1.6 30.4h28.8v-28.8h-28.8v28.8z" />
       </symbol>
       <symbol id="icon-checkmark" viewBox="0 0 32 32">
         <path d="M27 4l-15 15-7-7-5 5 12 12 20-20z" />
