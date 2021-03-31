@@ -57,6 +57,7 @@ export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'w
 
 export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
 export const datesList = ['1990', '2000', '2010', '2020'];
+export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
 
 export default {
   groups,
@@ -64,4 +65,5 @@ export default {
   indicatorsList,
   datesList,
   layers,
+  colors,
 };

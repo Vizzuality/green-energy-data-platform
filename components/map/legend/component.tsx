@@ -3,7 +3,7 @@ import cx from 'classnames';
 
 import Icon from 'components/icon';
 
-import { layers } from '../../../constants';
+import { layers, colors } from '../../../constants';
 
 interface LegendProps {
   className?: string
@@ -52,9 +52,9 @@ const Legend: FC<LegendProps> = ({
         </div>
         <ul>
           {layers.map(({ id, label }, index) => (
-            <li key={id} className="flex">
-              <span className="w-3.75 h-3.75" />
-              <span className="pb-3">{label}</span>
+            <li key={id} className="flex items-center pb-3">
+              <span className="w-3.75 h-3.75 rounded-full mr-3" style={{ backgroundColor: colors[index] }} />
+              <span>{label}</span>
             </li>
           ))}
         </ul>
