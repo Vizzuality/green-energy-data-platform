@@ -13,9 +13,14 @@ const Legend: FC<LegendProps> = ({
   className,
 }: LegendProps) => {
   const [isCollapse, toggleCollapse] = useState(true);
+  const [visibility, setVisibility] = useState(true);
 
   const handleClick = () => {
     toggleCollapse(!isCollapse);
+  };
+
+  const handleVisibility = () => {
+    setVisibility(!visibility);
   };
 
   return (
@@ -46,8 +51,8 @@ const Legend: FC<LegendProps> = ({
         <div className="flex justify-between py-2">
           <p className="font-bold">Title</p>
           <div className="flex">
-            <Icon ariaLabel="view layer" name="view" className="mr-3.75" />
-            <Icon ariaLabel="view layer" name="view" />
+            <Icon ariaLabel="view layer" name={visibility ? 'view' : 'hide'} className="mr-3.75 text-white" onClick={handleVisibility} />
+            <Icon ariaLabel="layer opacity" name="opacity" className="text-white" />
           </div>
         </div>
         <ul>

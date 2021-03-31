@@ -7,6 +7,7 @@ interface IconProps {
   className?: string,
   size?: 'sm' | 'md' | 'lg' | 'xlg',
   color?: string,
+  onClick?: (evt:any) => void,
 }
 
 const SIZE = {
@@ -22,6 +23,7 @@ const Icon: FC<IconProps> = ({
   size = 'md',
   color,
   className,
+  onClick,
 }: IconProps) => {
   const classNames = cx(
     SIZE[size],
@@ -32,6 +34,7 @@ const Icon: FC<IconProps> = ({
     <svg
       aria-label={ariaLabel}
       className={cx(`flex-shrink-0 ${classNames} fill-current`, { [`text-${color}`]: color && !!color.length })}
+      onClick={onClick}
     >
       <use xlinkHref={`#icon-${name}`} />
     </svg>
