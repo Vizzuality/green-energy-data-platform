@@ -202,7 +202,7 @@ export const Map = ({
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
         // CUSTOM PROPS FROM REACT MAPBOX API
         {...mapboxProps}
-        mapStyle="mapbox://styles/mapbox/dark-v9"
+        mapStyle="mapbox://styles/arimariza/citmopo1w002u2hmse48yrwf9"
         // VIEWPORT
         {...mapViewport}
         width="100%"

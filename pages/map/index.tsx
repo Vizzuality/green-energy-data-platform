@@ -43,7 +43,6 @@ const MapPage: FC = () => {
     <LayoutPage className="map-page">
       <Head title="Green Energy Data Platform Map" />
       <section>
-        <p className="text-color1">Map</p>
         <div className="relative w-screen h-96">
           <Map
             width="100%"
