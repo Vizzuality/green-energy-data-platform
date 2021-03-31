@@ -46,6 +46,13 @@ export const groupsLanding = [
   },
 ];
 
+export const layers = [
+  { id: 'layer1', label: 'layer1' },
+  { id: 'layer2', label: 'layer2' },
+  { id: 'layer3', label: 'layer3' },
+  { id: 'layer4', label: 'layer4' },
+];
+
 export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
 
 export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
@@ -56,4 +63,5 @@ export default {
   relatedIndicators,
   indicatorsList,
   datesList,
+  layers,
 };
