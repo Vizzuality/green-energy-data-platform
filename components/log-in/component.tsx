@@ -1,4 +1,4 @@
-import React, { FC, forwardRef } from 'react';
+import React, { FC } from 'react';
 import Link from 'next/link';
 
 import { Item } from '@react-stately/collections';
@@ -15,17 +15,13 @@ const UserDropdown: FC<MenuButtonProps> = (props: MenuButtonProps) => {
     signOut({ callbackUrl: 'http://localhost:3000/signin' });
   };
 
-  const ProfileLink = forwardRef(({ href }) => (
-    <a href={href}>
-      Profile
-    </a>
-  ));
-
   return (
     <MenuButton {...props} onAction="onClick">
       <Item key="profile">
         <Link key="profile-link" href="/profile">
-          <ProfileLink href='/profile' />
+          <a href="/profile">
+            Profile
+          </a>
         </Link>
       </Item>
       <Item key="Log out">
