@@ -10,12 +10,14 @@ module.exports = {
     extend: {
       colors: {
         color1: '#009DCD',
-        color2: '#FD1A2F',
+        color2: '#3A3F59',
         color3: '#6905E8',
         gray1: '#EAEFF3',
         gray2: '#3A3F59',
         gray3: '#2F3031',
         gray4: '#C4C4C4',
+        grayProfile: '#35373E', // TO DO - change name when adapting colors
+        'color-red': '#FF472E',
         // chart colors
         color4: '#A880FF',
         color5: '#29C2DA',
