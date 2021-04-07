@@ -46,9 +46,6 @@ module.exports = {
         7.5: '1.875rem',
         13: '3.125rem',
       },
-      width: {
-        7.5: '1.875rem',
-      },
       maxWidth: {
         xs: '15.5rem',
       },
