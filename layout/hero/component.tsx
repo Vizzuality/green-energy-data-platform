@@ -1,5 +1,6 @@
 import React, {
-  FC, ReactElement,
+  FC,
+  ReactElement,
 } from 'react';
 
 import cx from 'classnames';
@@ -9,7 +10,7 @@ import Header from 'layout/header';
 
 interface HeroProps {
   color: string,
-  children: ReactElement,
+  children: ReactElement[] | ReactElement,
   className?: string,
 }
 
