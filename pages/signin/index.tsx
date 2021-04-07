@@ -42,11 +42,11 @@ const SigninPage: FC<LoginProps> = ({
   };
 
   return (
-    <LayoutPage className="bg-sign-in bg-cover">
+    <LayoutPage className="bg-sign-in-gradient h-screen">
       <Head title="Welcome to Green Energy Data Platform" />
-      <main className="flex flex-col w-full h-full container m-auto">
+      <main className="flex flex-col w-full m-auto">
         <Header />
-        <div className="flex items-center justify-center h-full p-12">
+        <div className="flex items-center h-full flex-grow justify-center p-12">
           <section className="flex flex-col flex-grow justify-start py-20 max-w-xs text-white mx-20">
             <h1 className="text-5xl font-bold py-7">Sign in</h1>
             <p className="text-lg pb-44">Create an account to explore more about GEDP data insights</p>
@@ -106,7 +106,7 @@ const SigninPage: FC<LoginProps> = ({
                   />
                 </div>
               </label>
-              <a href="" className="underline pb-10">I don&apos;t remember my password</a>
+              <a href="/" className="underline pb-10">I don&apos;t remember my password</a>
               <Button
                 type="submit"
                 aria-label="Sign in"

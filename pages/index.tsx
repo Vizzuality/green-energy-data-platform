@@ -18,25 +18,21 @@ import {
 import LayoutPage from 'layout';
 import Head from 'components/head';
 import PreFooter from 'components/pre-footer';
+import Hero from 'layout/hero';
+import GroupCard from 'components/group-cards';
 
 const HomePage: FC = () => {
   const [session] = useSession();
 
   return (
-    <LayoutPage className="static-custom">
+    <LayoutPage className="h-full">
       <Head title="Welcome to Green Energy Data Platform" />
-      <p>Landing Page</p>
-
-      {(session) && (
-        <button
-          type="button"
-          onClick={() => {
-            signOut({ callbackUrl: 'http://localhost:3000/signin' });
-          }}
-        >
-          Sign Out
-        </button>
-      )}
+      <Hero color="color1" className="flex flex-col text-center">
+        <h1 className="text-5.5xl py-7.5">Discover data insights for a sustainable future.</h1>
+        <h3 className="text-lg">Longer description about the site and benefits, lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.</h3>
+      </Hero>
+      <GroupCard className="container m-auto" />
+      <PreFooter />
 
       {(!session) && (
         <button
@@ -48,7 +44,6 @@ const HomePage: FC = () => {
           Sign In
         </button>
       )}
-      <PreFooter className="absolute bottom-17 left-0 right-0" />
     </LayoutPage>
   );
 };

@@ -20,7 +20,7 @@ export const Nav: React.FC<NavProps> = ({
 
   return (
     <nav>
-      <ul className="flex flex-grow py-3 text-white divide-x">
+      <ul className="flex flex-grow text-white divide-x">
         {items.map(({ id, name }, index) => (
           <li
             key={id}
