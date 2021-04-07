@@ -1,5 +1,5 @@
 import React, {
-  FC,
+  FC, ReactElement,
 } from 'react';
 
 import cx from 'classnames';
@@ -7,16 +7,9 @@ import cx from 'classnames';
 // components
 import Header from 'layout/header';
 
-interface NavigationItem {
-  id: string,
-  name: string,
-  status: string,
-  color: string,
-}
-
 interface HeroProps {
   color: string,
-  children: NavigationItem[],
+  children: ReactElement,
   className?: string,
 }
 

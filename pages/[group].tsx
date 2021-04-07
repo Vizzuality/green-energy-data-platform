@@ -28,7 +28,7 @@ const Group: FC = () => {
         <Nav items={groups} />
         <h1 className="text-5.5xl py-7.5">Energy balance</h1>
         <p className="text-lg ">Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
-      auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.</p>
+        auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.</p>
       </Hero>
       <div className="container m-auto">
         <section className="-mt-40">
