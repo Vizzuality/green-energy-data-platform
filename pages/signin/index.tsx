@@ -106,7 +106,7 @@ const SigninPage: FC<LoginProps> = ({
                   />
                 </div>
               </label>
-              <a href="" className="underline pb-10">I don&apos;t remember my password</a>
+              <a href="/" className="underline pb-10">I don&apos;t remember my password</a>
               <Button
                 type="submit"
                 aria-label="Sign in"
