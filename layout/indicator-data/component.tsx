@@ -41,7 +41,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     config,
   } = indicator;
 
-  const [active, setActive] = useState(type || visualizationTypes[0])
+  const [active, setActive] = useState(type || visualizationTypes[0]);
 
   const DynamicChart = dynamic(
     () => import(`components/chart/${active}`),

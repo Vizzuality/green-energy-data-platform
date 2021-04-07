@@ -10,11 +10,8 @@ import {
   Tooltip,
   PieProps,
   Cell,
-  CartesianAxisProps,
-  CartesianGridProps,
   XAxisProps,
   YAxisProps,
-  TooltipProps,
 } from 'recharts';
 
 import { colors } from '../../../constants';
@@ -26,11 +23,11 @@ type DataObjectProps = {
 
 interface ConfigProps {
   pies: PieProps,
-  cartesianAxis?: CartesianAxisProps,
-  cartesianGrid?: CartesianGridProps,
+  cartesianAxis?: Object,
+  cartesianGrid?: Object,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  tooltip: TooltipProps<string, string>,
+  tooltip: Object,
 }
 
 interface ChartProps {

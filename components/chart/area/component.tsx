@@ -9,8 +9,6 @@ import {
   Area,
   Tooltip,
   AreaProps,
-  CartesianAxisProps,
-  CartesianGridProps,
   XAxisProps,
   YAxisProps,
   TooltipProps,
@@ -27,18 +25,14 @@ type GradientProps = {
   stopOpacity: number,
 };
 
-interface CustomCartesianGridProps extends CartesianGridProps {
-  strokeDasharray?: string
-}
-
 interface ConfigProps {
   gradients?: GradientProps[];
   areas: AreaProps,
-  cartesianAxis?: CartesianAxisProps,
-  cartesianGrid?: CustomCartesianGridProps,
+  cartesianAxis?: Object,
+  cartesianGrid?: Object,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  tooltip: TooltipProps,
+  tooltip?: TooltipProps<any, any>,
 }
 
 interface ChartProps {
