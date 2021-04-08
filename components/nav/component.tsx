@@ -14,13 +14,16 @@ export interface NavProps {
 
 export const Nav: React.FC<NavProps> = ({
   items,
+  className,
 }: NavProps) => {
   const router = useRouter();
   const { group: selected } = router.query;
 
   return (
     <nav>
-      <ul className="flex flex-grow text-white divide-x">
+      <ul className={cx('flex flex-grow text-white divide-x',
+        { [className]: !!className })}
+      >
         {items.map(({ id, name }, index) => (
           <li
             key={id}

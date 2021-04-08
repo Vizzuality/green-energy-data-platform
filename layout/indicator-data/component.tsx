@@ -14,19 +14,26 @@ import DataSource from 'components/data-source';
 
 import { indicatorsList, datesList, selectedIndicator } from '../../constants';
 
-type DataItem = Object; // TO DO - change when we have clear de type of data
+type CategoriesObject = {
+  [key: string]: string[]
+};
 
 interface IndicatorProps {
+  id: string | number,
   title: string,
   type: string,
   visualizationTypes: string[],
-  data: DataItem[],
+  categories: string[],
+  categories_filters: CategoriesObject,
+  startDate: string | number,
+  endDate: string | number,
+  data: Object, // TO DO - change when we have clear de type of data
   config?: Object
 }
 
 interface IndicatorDataProps {
   className?: string;
-  indicator: IndicatorProps;
+  indicator?: IndicatorProps;
 }
 
 const IndicatorData: FC<IndicatorDataProps> = ({
@@ -43,9 +50,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
+  const Loading = () => <p>loading...</p>;
   const DynamicChart = dynamic(
     () => import(`components/chart/${active}`),
-    { loading: () => <p>loading...</p> },
+    { loading: Loading },
   );
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray2 divide-y divide-gray shadow-sm',
@@ -76,18 +84,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           <p className="text-sm py-7.5">
             Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
             auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla.
-            Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.
+            Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non
+            metus auctor fringilla.
           </p>
         </div>
         <div className="flex">
           <section className="flex-1 flex-col mr-8">
             <div>
-              <div className="flex">
+              <div className="flex items-center">
                 Showing for:
                 <Dropdown
                   menuElements={datesList}
                   border
-                  className="bg-white"
+                  className="bg-white ml-3"
                   label="Select dates"
                   icon="calendar"
                   iconSize="lg"

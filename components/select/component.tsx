@@ -19,7 +19,6 @@ export interface DropdownSelectProps {
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
   menuElements,
-  border = false,
   label = '',
   icon = '',
   iconSize,

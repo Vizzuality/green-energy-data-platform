@@ -26,7 +26,7 @@ const GroupCard: FC<GroupCardProps> = ({
           <h4 className="text-2.5xl text-color1 pb-2 text-bold leading-loose">{subtitle}</h4>
           <p className="text-sm leading-7 my-9">{description}</p>
           <Link href={href} passHref>
-            <a href={href} className="py-3 px-6  text-sm text-white rounded-full bg-button">Discover</a>
+            <a href={href} className="py-3 px-6 text-sm text-white rounded-full bg-button">Discover</a>
           </Link>
         </div>
         <img src={src} alt={id} className="rounded-4xl bg-shadow max-w-md m-16" />

@@ -42,6 +42,7 @@ interface ChartProps {
 }
 
 const Chart: FC<ChartProps> = ({ indicatorId, widgetData, widgetConfig }: ChartProps) => {
+  if (!widgetConfig || !widgetData) return null;
   const {
     gradients,
     cartesianGrid,
@@ -51,7 +52,6 @@ const Chart: FC<ChartProps> = ({ indicatorId, widgetData, widgetConfig }: ChartP
     areas,
     tooltip,
   } = widgetConfig;
-
   return (
     <div className="py-10">
       <ResponsiveContainer width="100%" height={500}>

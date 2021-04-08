@@ -76,7 +76,8 @@ module.exports = {
       },
       backgroundImage: {
         'sign-in': "url('/images/sign-in-bg.jpg')",
-        'sign-in-gradient': 'linear-gradient(90deg, #DA2584 0%, #A42AD9 47.92%, #1A82FD 100%);',
+        'sign-in-gradient': 'linear-gradient(90deg, #DA2584 0%, #A42AD9 47.92%, #1A82FD 100%)',
+        button: 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',
         'gradient-color1': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%)',
         'gradient-color2': 'linear-gradient(103.52deg, #FD101F 0%, #DE259D 100.23%)',
         'gradient-color3': 'linear-gradient(103.52deg, #3510AB 0%, #00A3FE 100.23%)',

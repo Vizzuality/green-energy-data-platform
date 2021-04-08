@@ -4,7 +4,6 @@ import React, {
 
 import {
   signIn,
-  signOut,
   useSession,
 } from 'next-auth/client';
 

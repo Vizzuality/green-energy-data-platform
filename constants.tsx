@@ -1,39 +1,125 @@
-import React from 'react';
+import React, { FC } from 'react';
+
+type PayloadObject = {
+  value: number,
+};
+
+interface TickProps {
+  x: number,
+  y: number,
+  payload: PayloadObject
+}
+
+const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
+  const { value } = payload;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={-10}
+        dy={14}
+        textAnchor="end"
+        fill="#C4C4C4"
+        transform="rotate(270)"
+        fontSize="14px"
+      >
+        {value}
+      </text>
+    </g>
+  );
+});
+
+const LabelContent = () => (
+  <g>
+    <text x="50%" y={480} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
+      Region
+    </text>
+  </g>
+);
 
 export const groups = [
   {
     id: 'energy',
     name: 'Energy',
     status: 'active',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
   },
   {
     id: 'socio-economic',
     name: 'Socio-economic',
     status: 'disabled',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
   },
   {
     id: 'coal-power-plant',
     name: 'Coal power plant',
     status: 'disabled',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
   },
   {
     id: 'lorem ipsum',
     name: 'lorem ipsum',
     status: 'disabled',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
   },
   {
     id: 'lorem ipsum2',
     name: 'lorem ipsum',
     status: 'disabled',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
   },
 ];
 
+export const groupsLanding = [
+  {
+    id: 'energy',
+    title: 'Energy',
+    subtitle: 'Global Energy Investment.',
+    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+    href: '/energy',
+    src: 'images/landing/energy.png',
+  },
+  {
+    id: 'socio-economic',
+    title: 'Socio economic',
+    subtitle: 'Agriculture.',
+    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+    href: '/socio-economic',
+    src: 'images/landing/socio-economic.png',
+  },
+  {
+    id: 'coal-power-plant',
+    title: 'Coal power plants',
+    subtitle: 'Capacity power plants in China.',
+    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+    href: '/coal-power-plants',
+    src: 'images/landing/coal-power-plants.png',
+  },
+];
+
+export const layers = [
+  { id: 'layer1', label: 'layer1' },
+  { id: 'layer2', label: 'layer2' },
+  { id: 'layer3', label: 'layer3' },
+  { id: 'layer4', label: 'layer4' },
+];
+
+export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
 export const selectedIndicator = {
   id: 1,
   type: 'pie',
-  title: 'Energy Balance',
+  title: 'Balance',
   visualizationTypes: ['line', 'table', 'pie', 'bar'],
   categories: ['Coal', 'Coke', 'Crude Oil', 'Diesel Oil', 'Fuel Oil', 'Kerosene', 'LPG'],
+  categories_filters: {
+    coal: ['coal1', 'coal2'],
+    Coke: ['coke1', 'coke2'],
+    'Crude Oil': ['crude1', 'crude2'],
+    'Diesel Oil': ['diesel1', 'disel2'],
+    'Fuel Oil': ['fuel1', 'fuel1'],
+    Kerosene: ['kerosene1', 'kerosene2'],
+    LPG: ['lgp1', 'lgp2'],
+  },
   startDate: 1980,
   endDate: 2015,
   data: {
@@ -429,36 +515,9 @@ export const selectedIndicator = {
         type: 'category',
         dataKey: 'province',
         interval: 0,
-        tick: ((props) => {
-          const { x, y, payload } = props;
-          const { value } = payload;
-          return (
-            <g transform={`translate(${x},${y})`}>
-              <text
-                x={0}
-                y={-10}
-                dy={14}
-                textAnchor="end"
-                fill="#C4C4C4"
-                transform="rotate(270)"
-                fontSize="14px"
-              >
-                {value}
-              </text>
-            </g>
-          );
-        }),
+        tick: Tick,
         label: {
-          content: ({ viewBox }) => {
-            const { x, y } = viewBox;
-            return (
-              <g>
-                <text x="50%" y={480} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
-                  Region
-                </text>
-              </g>
-            );
-          },
+          content: LabelContent,
         },
       },
     },
@@ -478,17 +537,18 @@ export const selectedIndicator = {
   },
 };
 
-export const relatedIndicators = ['widget', 'widget', 'widget', 'widget', 'widget'];
-
 export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
 export const datesList = ['1990', '2000', '2010', '2020'];
-export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
+
+export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
   groups,
   relatedIndicators,
   indicatorsList,
+  datesList,
+  layers,
+  colors,
   selectedIndicator,
   filtersList,
-  colors,
 };
