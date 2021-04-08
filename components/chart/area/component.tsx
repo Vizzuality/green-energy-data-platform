@@ -14,7 +14,7 @@ import {
   TooltipProps,
 } from 'recharts';
 
-type DataObjectProps = {
+type Object = {
   label: string | number,
   value: string | number,
 };
@@ -35,8 +35,12 @@ interface ConfigProps {
   tooltip?: TooltipProps<any, any>,
 }
 
+type ObjectData = {
+  [key: string]: Object[]
+};
+
 interface ChartProps {
-  widgetData: DataObjectProps[],
+  widgetData: ObjectData[],
   widgetConfig: ConfigProps,
   indicatorId: string
 }

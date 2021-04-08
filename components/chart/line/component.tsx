@@ -15,7 +15,7 @@ import {
 
 import { colors } from '../../../constants';
 
-type DataObjectProps = {
+type Object = {
   label: string | number,
   value: string | number,
 };
@@ -30,7 +30,7 @@ interface ConfigProps {
 }
 
 interface ChartProps {
-  widgetData: DataObjectProps[],
+  widgetData: Object,
   widgetConfig: ConfigProps,
   color?: string,
   indicatorId: string

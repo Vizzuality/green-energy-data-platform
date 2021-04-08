@@ -18,6 +18,10 @@ type CategoriesObject = {
   [key: string]: string[]
 };
 
+type ObjectData = {
+  [key: string]: Object[]
+};
+
 interface IndicatorProps {
   id: string | number,
   title: string,
@@ -27,7 +31,7 @@ interface IndicatorProps {
   categories_filters: CategoriesObject,
   startDate: string | number,
   endDate: string | number,
-  data: Object, // TO DO - change when we have clear de type of data
+  data: ObjectData, // TO DO - change when we have clear de type of data
   config?: Object
 }
 
@@ -76,6 +80,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               border
               label="Change indicator"
               icon="triangle_border"
+              className="mr-4"
             />
             <Button size="md" className="border text-color1 border-gray2 border-opacity-20 hover:bg-color1 hover:text-white">Compare</Button>
           </div>
@@ -103,6 +108,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   iconRotable={false}
                 />
               </div>
+
               <DynamicChart
                 widgetData={data[active]}
                 widgetConfig={config[active]}

@@ -20,6 +20,8 @@ const Group: FC = () => {
   const { group } = router.query;
   const selected = groups.find((g) => g.id === group);
 
+  if (!selected) return null;
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${group} analysis`} />

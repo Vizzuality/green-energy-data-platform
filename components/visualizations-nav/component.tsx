@@ -37,7 +37,7 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
             key={id}
             onClick={() => handleVisualization(id)}
             onKeyPress={() => handleVisualization(id)}
-            className={cx('relative flex flex-col p-4 text-color1',
+            className={cx('relative flex flex-col p-4 text-color1 cursor-pointer',
               { 'font-bold text-opacity-100': active === id },
               { 'pointer-events-none text-opacity-20': !visualizationTypes.includes(id) })}
           >

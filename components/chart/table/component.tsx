@@ -1,13 +1,6 @@
 import React, { FC } from 'react';
 import cx from 'classnames';
 
-type Key = string | number;
-
-interface TableHeaderItem {
-  key?: Key | null,
-  item: string | number
-}
-
 interface TableItem {
   label: string | number;
   value: string | number;
@@ -20,7 +13,7 @@ interface TableItems {
 
 interface TableProps {
   widgetConfig: {
-    headers: TableHeaderItem[]
+    headers: string[] | number [],
     items: TableItems[]
   }
 }
@@ -28,18 +21,18 @@ interface TableProps {
 const Table: FC<TableProps> = ({ widgetConfig }: TableProps) => {
   const { headers, items } = widgetConfig;
   return (
-    <table className="table-auto">
+    <table className="table-auto my-10">
       <thead>
         <tr>
           {headers.map(
-            (h, index) => (
+            (header, index) => (
               <th
-                key={h}
+                key={header}
                 className={cx(
                   { 'bg-gray2 text-white rounded-md px-2': index === 0 },
                 )}
               >
-                {h}
+                {header}
               </th>
             ),
           )}
