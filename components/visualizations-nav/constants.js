@@ -1,21 +1,26 @@
 const VisualizationsOptions = [
   {
+    id: 'line',
     icon: 'line',
-    label: 'Line',
+    label: 'Trend',
   },
   {
+    id: 'pie',
     icon: 'pie',
     label: 'Distribution',
   },
   {
+    id: 'map',
     icon: 'map',
     label: 'Map',
   },
   {
+    id: 'bar',
     icon: 'bar',
-    label: 'Regions',
+    label: 'Provinces',
   },
   {
+    id: 'table',
     icon: 'columns',
     label: 'Table',
   },

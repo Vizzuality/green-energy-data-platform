@@ -26,6 +26,8 @@ const UserDropdown: FC<UserDropdownProps> = ({
     signOut({ callbackUrl: 'http://localhost:3000/signin' });
   };
 
+  if (!user) return null;
+
   return (
     <Tooltip
       visible={visible}

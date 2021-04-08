@@ -1,0 +1,554 @@
+import React, { FC } from 'react';
+
+type PayloadObject = {
+  value: number,
+};
+
+interface TickProps {
+  x: number,
+  y: number,
+  payload: PayloadObject
+}
+
+const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
+  const { value } = payload;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={-10}
+        dy={14}
+        textAnchor="end"
+        fill="#C4C4C4"
+        transform="rotate(270)"
+        fontSize="14px"
+      >
+        {value}
+      </text>
+    </g>
+  );
+});
+
+const LabelContent = () => (
+  <g>
+    <text x="50%" y={480} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
+      Region
+    </text>
+  </g>
+);
+
+export const groups = [
+  {
+    id: 'energy',
+    name: 'Energy',
+    status: 'active',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
+  },
+  {
+    id: 'socio-economic',
+    name: 'Socio-economic',
+    status: 'disabled',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
+  },
+  {
+    id: 'coal-power-plant',
+    name: 'Coal power plant',
+    status: 'disabled',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
+  },
+  {
+    id: 'lorem ipsum',
+    name: 'lorem ipsum',
+    status: 'disabled',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
+  },
+  {
+    id: 'lorem ipsum2',
+    name: 'lorem ipsum',
+    status: 'disabled',
+    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
+  },
+];
+
+export const groupsLanding = [
+  {
+    id: 'energy',
+    title: 'Energy',
+    subtitle: 'Global Energy Investment.',
+    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+    href: '/energy',
+    src: 'images/landing/energy.png',
+  },
+  {
+    id: 'socio-economic',
+    title: 'Socio economic',
+    subtitle: 'Agriculture.',
+    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+    href: '/socio-economic',
+    src: 'images/landing/socio-economic.png',
+  },
+  {
+    id: 'coal-power-plant',
+    title: 'Coal power plants',
+    subtitle: 'Capacity power plants in China.',
+    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+    href: '/coal-power-plants',
+    src: 'images/landing/coal-power-plants.png',
+  },
+];
+
+export const layers = [
+  { id: 'layer1', label: 'layer1' },
+  { id: 'layer2', label: 'layer2' },
+  { id: 'layer3', label: 'layer3' },
+  { id: 'layer4', label: 'layer4' },
+];
+
+export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
+export const selectedIndicator = {
+  id: 1,
+  type: 'pie',
+  title: 'Balance',
+  visualizationTypes: ['line', 'table', 'pie', 'bar'],
+  categories: ['Coal', 'Coke', 'Crude Oil', 'Diesel Oil', 'Fuel Oil', 'Kerosene', 'LPG'],
+  categories_filters: {
+    coal: ['coal1', 'coal2'],
+    Coke: ['coke1', 'coke2'],
+    'Crude Oil': ['crude1', 'crude2'],
+    'Diesel Oil': ['diesel1', 'disel2'],
+    'Fuel Oil': ['fuel1', 'fuel1'],
+    Kerosene: ['kerosene1', 'kerosene2'],
+    LPG: ['lgp1', 'lgp2'],
+  },
+  startDate: 1980,
+  endDate: 2015,
+  data: {
+    pie: [
+      {
+        label: 'General system charges',
+        value: 8.0,
+      },
+      {
+        label: 'Taxes',
+        value: 14.2,
+      },
+      {
+        label: 'Network and size costs',
+        value: 15.4,
+      },
+      {
+        label: 'Supplying costs',
+        value: 62.4,
+      },
+    ],
+    bar: [
+      {
+        province: 'Anhui',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Fujian',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Gansu',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Guangdong',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Guizhou',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Hebei',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Heilongjiang',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Henan',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Hubei',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Hunan',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Jiangsu',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Jiangxi',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Jilin',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Liaoning',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Qinghai',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Shaanxi',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Shandong',
+        value1: 327,
+        value2: 35,
+      },
+      {
+        province: 'Shanxi',
+        value1: 199,
+        value2: 123,
+      },
+      {
+        province: 'Sichuan',
+        value1: 20,
+        value2: 34,
+      },
+      {
+        province: 'Yunnan',
+        value1: 505,
+        value2: 355,
+      },
+      {
+        province: 'Zhejiang',
+        value1: 327,
+        value2: 35,
+      },
+    ],
+    line: [
+      {
+        value: 0,
+        value2: 67,
+        value3: 78,
+        label: 1995,
+      },
+      {
+        value: 50,
+        value2: 45,
+        value3: 89,
+        label: 2000,
+      },
+      {
+        value: 100,
+        value2: 67,
+        value3: 98,
+        label: 2005,
+      },
+      {
+        value: 150,
+        value2: 67,
+        value3: 127,
+        label: 2010,
+      },
+      {
+        value: 250,
+        value2: 677,
+        value3: 798,
+        label: 2015,
+      },
+    ],
+  },
+  config: {
+    line: {
+      margin: {
+        top: 20, right: 0, left: 0, bottom: 0,
+      },
+      cartesianGrid: {
+        vertical: false,
+        height: '1px',
+        strokeDasharray: '10 5',
+      },
+      lines: [
+        {
+          type: 'monotone',
+          dataKey: 'value',
+        },
+        {
+          type: 'monotone',
+          dataKey: 'value2',
+        },
+        {
+          type: 'monotone',
+          dataKey: 'value3',
+        },
+      ],
+      gradients: [
+        {
+          offset: '7.05%',
+          stopColor: 'rgba(0, 107, 254, 0.64)',
+          stopOpacity: 1,
+        },
+        {
+          offset: '100%',
+          stopColor: 'rgba(0, 107, 254, 0.1)',
+          stopOpacity: 1,
+        },
+        {
+          offset: '100%',
+          stopColor: 'rgba(0, 107, 254, 0)',
+          stopOpacity: 1,
+        },
+      ],
+      xAxis: {
+        dataKey: 'label',
+      },
+      yAxis: {
+
+      },
+      tooltip: {
+
+      },
+    },
+    table: {
+      headers: ['Region name', 1995, 2000, 2005, 2010, 2015],
+      items: [
+        {
+          label: 'Beijing',
+          value: [
+            {
+              label: 1995,
+              value: 50,
+            },
+            {
+              label: 2000,
+              value: 70,
+            },
+            {
+              label: 2005,
+              value: 84,
+            },
+            {
+              label: 2010,
+              value: 88,
+            },
+            {
+              label: 2015,
+              value: 90,
+            },
+          ],
+        },
+        {
+          label: 'Chengdu',
+          value: [
+            {
+              label: 1995,
+              value: 60,
+            },
+            {
+              label: 2000,
+              value: 64,
+            },
+            {
+              label: 2005,
+              value: 60,
+            },
+            {
+              label: 2010,
+              value: 72,
+            },
+            {
+              label: 2015,
+              value: 84,
+            },
+          ],
+        },
+        {
+          label: 'Guizhou',
+          value: [
+            {
+              label: 1995,
+              value: 70,
+            },
+            {
+              label: 2000,
+              value: 74,
+            },
+            {
+              label: 2005,
+              value: 60,
+            },
+            {
+              label: 2010,
+              value: 82,
+            },
+            {
+              label: 2015,
+              value: 20,
+            },
+          ],
+        },
+        {
+          label: 'Shanghai',
+          value: [
+            {
+              label: 1995,
+              value: 60,
+            },
+            {
+              label: 2000,
+              value: 65,
+            },
+            {
+              label: 2005,
+              value: 72,
+            },
+            {
+              label: 2010,
+              value: 90,
+            },
+            {
+              label: 2015,
+              value: 50,
+            },
+          ],
+        },
+        {
+          label: 'Shenyang',
+          value: [
+            {
+              label: 1995,
+              value: 54,
+            },
+            {
+              label: 2000,
+              value: 64,
+            },
+            {
+              label: 2005,
+              value: 74,
+            },
+            {
+              label: 2010,
+              value: 84,
+            },
+            {
+              label: 2015,
+              value: 94,
+            },
+          ],
+        },
+        {
+          label: 'Wuhan',
+          value: [
+            {
+              label: 1995,
+              value: 54,
+            },
+            {
+              label: 2000,
+              value: 59,
+            },
+            {
+              label: 2005,
+              value: 54,
+            },
+            {
+              label: 2010,
+              value: 60,
+            },
+            {
+              label: 2015,
+              value: 63,
+            },
+          ],
+        },
+      ],
+    },
+    bar: {
+      margin: {
+        top: 20, right: 0, left: 0, bottom: 100,
+      },
+      cartesianGrid: {
+        vertical: false,
+      },
+      bars: [
+        {
+          dataKey: 'value1',
+          stackId: 'a',
+        },
+        {
+          dataKey: 'value2',
+          stackId: 'a',
+        },
+      ],
+      yAxis: {
+        domain: [0, 1000],
+        tick: {
+          fill: '#C4C4C4',
+          fontSize: '14px',
+        },
+      },
+      xAxis: {
+        type: 'category',
+        dataKey: 'province',
+        interval: 0,
+        tick: Tick,
+        label: {
+          content: LabelContent,
+        },
+      },
+    },
+    pie: {
+      margin: {
+        top: 20, right: 0, left: 0, bottom: 0,
+      },
+      pies: [
+        {
+          dataKey: 'value',
+          cx: '50%',
+          cy: '50%',
+          outerRadius: 80,
+        },
+      ],
+    },
+  },
+};
+
+export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
+export const datesList = ['1990', '2000', '2010', '2020'];
+export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
+
+export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
+export default {
+  groups,
+  relatedIndicators,
+  indicatorsList,
+  datesList,
+  layers,
+  colors,
+  selectedIndicator,
+  filtersList,
+};
