@@ -29,7 +29,7 @@ const Table: FC<TableProps> = ({ widgetConfig }: TableProps) => {
               <th
                 key={header}
                 className={cx(
-                  { 'bg-gray2 text-white rounded-md px-2': index === 0 },
+                  { 'bg-gray1 text-white rounded-md px-2': index === 0 },
                 )}
               >
                 {header}

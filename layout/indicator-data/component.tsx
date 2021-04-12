@@ -60,7 +60,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     { loading: Loading },
   );
   return (
-    <div className={cx('bg-white rounded-2.5xl text-gray2 divide-y divide-gray shadow-sm',
+    <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
       { [className]: className })}
     >
       <VisualizationsNav
@@ -82,7 +82,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               icon="triangle_border"
               className="mr-4"
             />
-            <Button size="md" className="border text-color1 border-gray2 border-opacity-20 hover:bg-color1 hover:text-white">Compare</Button>
+            <Button size="md" className="border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white">Compare</Button>
           </div>
         </div>
         <div>
@@ -108,7 +108,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   iconRotable={false}
                 />
               </div>
-
               <DynamicChart
                 widgetData={data[active]}
                 widgetConfig={config[active]}

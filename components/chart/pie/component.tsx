@@ -31,7 +31,7 @@ interface ConfigProps {
 }
 
 interface ChartProps {
-  widgetData: Object,
+  widgetData: Object[],
   widgetConfig: ConfigProps,
   color?: string,
   indicatorId: string
@@ -60,7 +60,9 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   //   const x = cx + radius * 1.5 * Math.cos(-midAngle * RADIAN);
   //   const y = cy + radius * 1.5 * Math.sin(-midAngle * RADIAN);
   //   return (
-  //     <text x={x} y={y} fill="red" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+  //     <text
+  //       x={x}
+  //       y={y} fill="red" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
   //       {label} - {`${(value * 100).toFixed(0)}%`}
   //     </text>
   //   );

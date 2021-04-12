@@ -16,7 +16,7 @@ const Header: FC = () => {
       {user && user.id && (
         <div className="flex items-center">
           <UserDropdown className="mr-4" />
-          <Button className="text-gray2 text-sm ml-3" theme="primary-background" size="xlg">Browse all data</Button>
+          <Button className="text-gray1 text-sm ml-3" theme="primary-background" size="xlg">Browse all data</Button>
         </div>
       )}
     </div>

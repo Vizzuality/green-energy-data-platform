@@ -17,6 +17,10 @@ import Button from 'components/button';
 
 const ProfilePage: FC = () => {
   const { user } = useMe();
+  const [passwordView, setPasswordVisibility] = useState({
+    new: false,
+    confirmation: false,
+  });
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
@@ -29,6 +33,15 @@ const ProfilePage: FC = () => {
     });
   };
 
+  const handlePasswordView = (e) => {
+    setPasswordVisibility({
+      ...passwordView,
+      [e]: !passwordView[e],
+    });
+  };
+
+  if (user) return null;
+console.log(user)
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
@@ -53,7 +66,7 @@ const ProfilePage: FC = () => {
                     className="ml-10"
                     onChange={(e) => handleChange('name', e)}
                   />
-                  <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold" />
+                  <Icon ariaLabel="mail-input" name="profile" size="lg" className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold" />
 
                 </div>
               </label>
@@ -76,7 +89,7 @@ const ProfilePage: FC = () => {
               <Button
                 type="submit"
                 aria-label="Sign in"
-                className="py-20 bg-gray2 border-gray2 text-white"
+                className="py-20 bg-gray1 border-gray1 text-white"
                 onClick={(evt) => {
                   evt.preventDefault();
                   console.log('saving changes');
@@ -131,10 +144,16 @@ const ProfilePage: FC = () => {
                     <input
                       id="new-password"
                       name="new-password"
-                      type="password"
-                      onChange={(e) => handleChange('email', e)}
+                      type={passwordView ? 'text' : 'password'}
+                      onChange={(e) => handleChange('password', e)}
                     />
-                    <Icon ariaLabel="new password" name="mail" size="lg" className="absolute right-4 transform -translate-y-1/2 top-1/2 font-bold" />
+                    <Icon
+                      ariaLabel="new password"
+                      name={passwordView ? 'view' : 'hide'}
+                      onClick={handlePasswordView}
+                      size="lg"
+                      className="absolute right-4 transform -translate-y-1/2 top-1/2 font-bold"
+                    />
                   </div>
                 </label>
                 <label htmlFor="confirm-password" className="w-full text-sm py-10 tracking-tight text-opacity-95">
@@ -143,17 +162,23 @@ const ProfilePage: FC = () => {
                     <input
                       id="confirm-password"
                       name="password"
-                      type="password"
-                      onChange={(e) => handleChange('email', e)}
+                      type={passwordView ? 'text' : 'password'}
+                      onChange={(e) => handleChange('password', e)}
                     />
-                    <Icon ariaLabel="confirm password" name="mail" size="lg" className="absolute right-4 transform -translate-y-1/2 top-1/2 font-bold" />
+                    <Icon
+                      ariaLabel="confirm password"
+                      name={passwordView ? 'view' : 'hide'}
+                      onClick={handlePasswordView}
+                      size="lg"
+                      className="absolute right-4 transform -translate-y-1/2 top-1/2 font-bold"
+                    />
                   </div>
                 </label>
               </fieldset>
               <Button
                 type="submit"
                 aria-label="Sign in"
-                className="py-20 bg-gray2 border-gray2 text-white"
+                className="py-20 bg-gray1 border-gray1 text-white"
                 onClick={(evt) => {
                   evt.preventDefault();
                   console.log('Changing password');

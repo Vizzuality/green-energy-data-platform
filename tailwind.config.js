@@ -10,10 +10,7 @@ module.exports = {
     extend: {
       colors: {
         color1: '#009DCD',
-        color2: '#3A3F59',
-        color3: '#6905E8',
-        gray1: '#EAEFF3',
-        gray2: '#3A3F59',
+        gray1: '#3A3F59',
         gray3: '#2F3031',
         gray4: '#C4C4C4',
         grayProfile: '#35373E', // TO DO - change name when adapting colors
@@ -70,19 +67,15 @@ module.exports = {
         '4xl': '4.5rem',
       },
       borderColor: {
-        'sign-in-gradient': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%);',
+        'gradient-color1': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%);',
       },
       boxShadow: {
         sm: ' 0px 14px 20px rgba(14, 48, 114, 0.1)',
         md: 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
       },
       backgroundImage: {
-        'sign-in': "url('/images/sign-in-bg.jpg')",
-        'sign-in-gradient': 'linear-gradient(90deg, #DA2584 0%, #A42AD9 47.92%, #1A82FD 100%)',
-        button: 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',
-        'gradient-color1': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%)',
-        'gradient-color2': 'linear-gradient(103.52deg, #FD101F 0%, #DE259D 100.23%)',
-        'gradient-color3': 'linear-gradient(103.52deg, #3510AB 0%, #00A3FE 100.23%)',
+        'gradient-color1': 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',
+        'gradient-color2': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%)',
         'gradient-gray1': 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
       },
       inset: {

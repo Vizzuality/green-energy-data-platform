@@ -11,7 +11,7 @@ const LanguageSelect = dynamic(() => import('components/language-select'), { ssr
 const Footer: FC<FooterProps> = ({
   className = '',
 }: FooterProps) => (
-  <section className={cx('w-full bg-gray2 text-white',
+  <section className={cx('w-full bg-gray1 text-white absolute bottom-0',
     { [className]: className })}
 
   >

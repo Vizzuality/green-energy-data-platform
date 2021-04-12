@@ -59,7 +59,7 @@ const LanguageSelect = () => {
         />
       </button>
       <ul
-        className="flex-col bg-gray2 absolute bottom-7 w-full pl-8"
+        className="flex-col bg-gray1 absolute bottom-7 w-full pl-8"
         {...getMenuProps()}
       >
         {isOpen && (
