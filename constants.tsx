@@ -37,39 +37,6 @@ const LabelContent = () => (
   </g>
 );
 
-export const groups = [
-  {
-    id: 'energy',
-    name: 'Energy',
-    status: 'active',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-  {
-    id: 'socio-economic',
-    name: 'Socio-economic',
-    status: 'disabled',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-  {
-    id: 'coal-power-plant',
-    name: 'Coal power plant',
-    status: 'disabled',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-  {
-    id: 'lorem ipsum',
-    name: 'lorem ipsum',
-    status: 'disabled',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-  {
-    id: 'lorem ipsum2',
-    name: 'lorem ipsum',
-    status: 'disabled',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-];
-
 export const groupsLanding = [
   {
     id: 'energy',
@@ -543,7 +510,6 @@ export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#
 
 export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
-  groups,
   relatedIndicators,
   indicatorsList,
   datesList,

@@ -41,7 +41,7 @@ const ProfilePage: FC = () => {
   };
 
   if (user) return null;
-console.log(user)
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />

@@ -6,16 +6,31 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       id: 'energy',
       name: 'Energy',
       status: 'active',
+      subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
     },
     {
       id: 'socio-economic',
       name: 'Socio-economic',
       status: 'disabled',
+      subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
     },
     {
       id: 'coal-power-plant',
       name: 'Coal power plant',
       status: 'disabled',
+      subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
+    },
+    {
+      id: 'lorem ipsum',
+      name: 'lorem ipsum',
+      status: 'disabled',
+      subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
+    },
+    {
+      id: 'lorem ipsum2',
+      name: 'lorem ipsum',
+      status: 'disabled',
+      subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
     },
   ]);
 };

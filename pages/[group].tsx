@@ -1,6 +1,9 @@
 import React, {
   FC,
+  useEffect,
 } from 'react';
+
+import { useQuery } from 'react-query';
 
 import { useRouter } from 'next/router';
 
@@ -13,11 +16,18 @@ import Dropdown from 'components/select';
 import IndicatorsData from 'layout/indicator-data';
 import WidgetsGrid from 'layout/widgets-grid';
 
-import { groups, relatedIndicators } from '../constants';
+import { fetchGroups } from 'services/groups';
+
+import { relatedIndicators } from '../constants';
 
 const Group: FC = () => {
   const router = useRouter();
   const { group } = router.query;
+
+  const { isLoading, error, data } = useQuery('groups', () => fetchGroups().then((res) => res));
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>There is an error</p>;
+  const groups = data;
   const selected = groups.find((g) => g.id === group);
 
   if (!selected) return null;
