@@ -59,7 +59,7 @@ export const groupsLanding = [
     title: 'Coal power plants',
     subtitle: 'Capacity power plants in China.',
     description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
-    href: '/coal-power-plants',
+    href: '/coal-power-plant',
     src: 'images/landing/coal-power-plants.png',
   },
 ];

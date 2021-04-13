@@ -36,16 +36,20 @@ const Group: FC = () => {
           <h1 className="text-5.5xl py-6">{selected.subgroups[0].name || ''}</h1>
           <Dropdown
             menuElements={selected.subgroups}
-            border
-            className="ml-3"
+            border="border-2"
+            className="ml-3 h-full"
             icon="triangle_border"
-            iconSize="lg"
+            iconSize="md"
+            theme="light"
+            label={false}
           />
         </div>
       </Hero>
       <div className="container m-auto">
         <section className="-mt-40">
-          <IndicatorsData />
+          <IndicatorsData
+            groups={groups}
+          />
           <WidgetsGrid items={relatedIndicators} />
         </section>
       </div>

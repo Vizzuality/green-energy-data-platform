@@ -20,7 +20,7 @@ const dataSourceLinks = [
 const Card: FC<DataProps> = ({
   className = '',
 }: DataProps) => (
-  <div className={cx('inline-flex flex-col s-center justify-center text-center bg-gray1 hover:opacity-90 rounded-2xl',
+  <div className={cx('inline-flex flex-col s-center justify-center text-center bg-gray5 hover:opacity-90 rounded-2xl',
     { [className]: className })}
   >
     <Item className="rounded-t-2xl border-b border-gray4 border-opacity-90" icon="download" name="Download" links={downloadLinks} />

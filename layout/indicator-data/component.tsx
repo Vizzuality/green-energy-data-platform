@@ -5,10 +5,13 @@ import React, {
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
 
+import Link from 'next/link';
+
 // components
 import VisualizationsNav from 'components/visualizations-nav';
 import Dropdown from 'components/select/component';
-import Button from 'components/button';
+import Tooltip from 'components/tooltip';
+import Icon from 'components/icon';
 import Filters from 'components/filters';
 import DataSource from 'components/data-source';
 
@@ -27,6 +30,13 @@ type ObjectData = {
   [key: string]: Object[]
 };
 
+type GroupItemProps = {
+  id: string,
+  name: string,
+  status: string,
+  subgroups: string[]
+};
+
 interface IndicatorProps {
   id: string | number,
   title: string,
@@ -41,11 +51,13 @@ interface IndicatorProps {
 }
 
 interface IndicatorDataProps {
+  groups: GroupItemProps[],
   className?: string;
   indicator?: IndicatorProps;
 }
 
 const IndicatorData: FC<IndicatorDataProps> = ({
+  groups,
   className,
   indicator = selectedIndicator,
 }: IndicatorDataProps) => {
@@ -53,17 +65,23 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     title,
     type,
     visualizationTypes,
+    categories,
     data,
     config,
   } = indicator;
-
   const [active, setActive] = useState(type || visualizationTypes[0]);
+  const [visible, setVisibility] = useState(false);
 
   const Loading = () => <p>loading...</p>;
   const DynamicChart = dynamic<ChartProps>(
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },
   );
+
+  const toggleVisibility = () => {
+    setVisibility(!visible);
+  };
+
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
       { [className]: className })}
@@ -84,9 +102,42 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               menuElements={indicatorsList}
               label="Change indicator"
               icon="triangle_border"
-              className="mr-4"
+              iconColor="text-gray2"
+              className="mr-4 text-white"
             />
-            <Button size="md" className="border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white">Compare</Button>
+            <Tooltip
+              visible={visible}
+              placement="bottom-start"
+              content={(
+                <div className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3">
+                  <ul>
+                    {groups.map(
+                      ({ name, status }) => (
+                        status === 'disabled' && (
+                          <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
+                            <Link key="group1" href="/compare" passHref>
+                              <a className="flex items-center py-2 w-full last:border-b-0" href="/compare">
+                                <span>{name}</span>
+                                {' '}
+                                <Icon ariaLabel="arrow" name="arrow" className="ml-2" />
+                              </a>
+                            </Link>
+                          </li>
+                        )
+                      ),
+                    )}
+                  </ul>
+                </div>
+              )}
+            >
+              <button
+                type="button"
+                className="flex items-center justify-center text-center px-4 py-1 border rounded-full bold focus:outline-none text-sm"
+                onClick={toggleVisibility}
+              >
+                Compare
+              </button>
+            </Tooltip>
           </div>
         </div>
         <div>
@@ -99,18 +150,20 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         </div>
         <div className="flex">
           <section className="flex-1 flex-col mr-8">
-            <div className="flex items-center">
-              Showing for:
-              <Dropdown
-                menuElements={datesList}
-                className="bg-white ml-3"
-                label="Select dates"
-                icon="calendar"
-                iconSize="lg"
-                iconRotable={false}
-              />
-            </div>
-            <div className="flex-1 py-10 h-full">
+            <div>
+              <div className="flex items-center">
+                Showing for:
+                <Dropdown
+                  menuElements={datesList}
+                  className="ml-3 text-white"
+                  label="Select dates"
+                  icon="calendar"
+                  iconColor="text-gray2"
+                  iconSize="lg"
+                  iconRotable={false}
+                />
+              </div>
+
               <DynamicChart
                 widgetData={data[active]}
                 widgetConfig={config[active]}
@@ -118,7 +171,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             </div>
           </section>
           <section className="flex flex-col justify-between">
-            <Filters className="mb-4" />
+            <Filters categories={categories} className="mb-4" />
             <DataSource />
           </section>
         </div>

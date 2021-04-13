@@ -1,4 +1,7 @@
-import React, { FC } from 'react';
+import React, {
+  FC,
+  ReactNode,
+} from 'react';
 
 import cx from 'classnames';
 
@@ -10,7 +13,7 @@ import Button from 'components/button';
 import Header from 'layout/header';
 
 interface HeroProps {
-  children: any, // TO DO - review children: ReactChildren | ReactElement<any, string> & ReactNode,
+  children: ReactNode,
   className?: string,
 }
 

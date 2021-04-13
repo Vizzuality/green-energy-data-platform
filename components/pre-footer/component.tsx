@@ -19,8 +19,8 @@ const PreFooter: FC<PreFooterProps> = ({
       <Link href="/socio-economic" passHref>
         <a className="p-12" href="/socio-economic">Socio-economic</a>
       </Link>
-      <Link href="/coal-power-plants" passHref>
-        <a className="p-12" href="/coal-power-plants">Coal Power Plants</a>
+      <Link href="/coal-power-plant" passHref>
+        <a className="p-12" href="/coal-power-plant">Coal Power Plants</a>
       </Link>
     </div>
   </div>
