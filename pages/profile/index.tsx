@@ -110,7 +110,9 @@ const ProfilePage: FC = () => {
             </form>
             <div>
               <p className="text-grayProfile text-opacity-50 pb-10 text-sm">
-                If you delete your account, please keep the following in mind: Your profile will be permenantly deleted, Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                If you delete your account, please
+                keep the following in mind: Your profile will be permenantly
+                deleted, Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               </p>
               <Button
                 type="button"
