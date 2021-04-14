@@ -1,8 +1,7 @@
 import React, {
   FC,
   useState,
-  InputHTMLAttributes,
-  FormEvent,
+  ChangeEvent,
 } from 'react';
 import cx from 'classnames';
 
@@ -22,11 +21,14 @@ const ProfilePage: FC = () => {
     confirmation: false,
   });
   const [credentials, setCredentials] = useState({
+    name: '',
     email: '',
     password: '',
+    new: '',
+    confirmation: '',
   });
 
-  const handleChange = (type: string, e: FormEvent<InputHTMLAttributes<string>>): void => {
+  const handleChange = (type: string, e: ChangeEvent<HTMLInputElement>): void => {
     setCredentials({
       ...credentials,
       [type]: e.currentTarget.value,
@@ -40,7 +42,7 @@ const ProfilePage: FC = () => {
     });
   };
 
-  if (user) return null;
+  if (!user) return null;
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
@@ -54,33 +56,41 @@ const ProfilePage: FC = () => {
             <form method="post" className="flex flex-col items-start">
               <label
                 htmlFor="name"
-                className="w-full text-sm pb-10 tracking-tight text-opacity-95"
+                className="w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
               >
                 NAME
-                <div className="relative mb-8 border border-grayProfile rounded-sm p-2">
+                <div className="relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                   <input
                     id="name"
                     name="name"
                     type="text"
-                    defaultValue={'user.name'}
-                    className="ml-10"
+                    defaultValue={user.name}
+                    className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
+                      { 'text-grayProfile text-opacity-100': credentials.name.length })}
                     onChange={(e) => handleChange('name', e)}
                   />
-                  <Icon ariaLabel="mail-input" name="profile" size="lg" className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold" />
-
+                  <Icon
+                    ariaLabel="mail-input"
+                    name="profile"
+                    size="lg"
+                    className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold"
+                  />
                 </div>
               </label>
-              <label htmlFor="email" className="w-full text-sm pb-2 tracking-tight text-opacity-95">
+              <label htmlFor="email" className="w-full text-xs pb-2 tracking-tight text-grayProfile text-opacity-50">
                 YOUR EMAIL IS
-                <div className="relative mb-8 border border-grayProfile rounded-sm p-2">
+                <div className={cx('relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50',
+                  { 'text-grayProfile text-opacity-100': credentials.email.length })}
+                >
                   <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold" />
                   <input
                     id="email"
                     name="email"
                     type="email"
                     placeholder="Write your email account"
-                    defaultValue={'user.email'}
-                    className="ml-10 "
+                    defaultValue={user.email}
+                    className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
+                      { 'text-grayProfile text-opacity-100': credentials.email.length })}
                     onChange={(e) => handleChange('email', e)}
                   />
 
@@ -89,7 +99,7 @@ const ProfilePage: FC = () => {
               <Button
                 type="submit"
                 aria-label="Sign in"
-                className="py-20 bg-gray1 border-gray1 text-white"
+                className="py-20 bg-gray1 border-gray1 text-white text-sm"
                 onClick={(evt) => {
                   evt.preventDefault();
                   console.log('saving changes');
@@ -99,13 +109,13 @@ const ProfilePage: FC = () => {
               </Button>
             </form>
             <div>
-              <p className="text-opacity-50 pb-10">
+              <p className="text-grayProfile text-opacity-50 pb-10 text-sm">
                 If you delete your account, please keep the following in mind: Your profile will be permenantly deleted, Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               </p>
               <Button
                 type="button"
                 aria-label="delete account"
-                className="py-20 border-color-red text-color-red"
+                className="border-color-red text-color-red text-sm"
                 onClick={(evt) => {
                   evt.preventDefault();
                   console.log('deleting account');
@@ -121,56 +131,64 @@ const ProfilePage: FC = () => {
             <form method="post" className="flex flex-col items-start">
               <h2 className="text-3.5xl font-bold">Change password</h2>
               <label
-                htmlFor="email"
-                className="w-full text-sm pt-10 tracking-tight text-opacity-5"
+                htmlFor="password"
+                className="w-full pt-10 tracking-tight text-grayProfile text-xs"
               >
                 ENTER YOUR PASSWORD
-                <div className="relative mb-4 border border-grayProfile rounded-sm p-2">
+                <div className="relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                   <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="Write your email account"
-                    onChange={(e) => handleChange('name', e)}
+                    id="password"
+                    name="password"
+                    type="password"
+                    className={cx('w-full overflow-ellipsis text-sm',
+                      { 'text-grayProfile text-opacity-100': credentials.password.length })}
+                    onChange={(e) => handleChange('password', e)}
                   />
 
                 </div>
               </label>
-              <a href="" className="underline pb-10">I don&apos;t remember my password</a>
-              <fieldset className="w-full">
-                <label htmlFor="new-password" className="text-sm pb-10 tracking-tight text-opacity-95">
+              {/* TO - DO change href when it0s ready */}
+              <a href="/" className="underline pb-10 text-xs">I don&apos;t remember my password</a>
+              <fieldset className="w-full text-xs">
+                <label htmlFor="new-password" className="pb-10 tracking-tight text-grayProfile">
                   NEW PASSWORD
-                  <div className="relative mb-8 border border-grayProfile rounded-sm p-2">
+                  <div className="relative mb-8 my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                     <input
                       id="new-password"
                       name="new-password"
-                      type={passwordView ? 'text' : 'password'}
-                      onChange={(e) => handleChange('password', e)}
+                      type={passwordView.new ? 'text' : 'password'}
+                      className={cx('w-full overflow-ellipsis text-sm',
+                        { 'text-grayProfile text-opacity-50': !credentials.new.length })}
+                      onChange={(e) => handleChange('new', e)}
                     />
                     <Icon
                       ariaLabel="new password"
-                      name={passwordView ? 'view' : 'hide'}
-                      onClick={handlePasswordView}
+                      name={passwordView.new ? 'view' : 'hide'}
+                      onClick={() => handlePasswordView('new')}
                       size="lg"
-                      className="absolute right-4 transform -translate-y-1/2 top-1/2 font-bold"
+                      className={cx('absolute right-4 transform -translate-y-1/2 top-1/2 font-bold',
+                        { 'text-grayProfile text-opacity-50': !credentials.new.length })}
                     />
                   </div>
                 </label>
-                <label htmlFor="confirm-password" className="w-full text-sm py-10 tracking-tight text-opacity-95">
+                <label htmlFor="confirm-password" className="w-full text-xs py-10 tracking-tight text-grayProfile">
                   CONFIRM NEW PASSWORD
-                  <div className="relative mb-8 border border-grayProfile rounded-sm p-2">
+                  <div className="relative mb-8 my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                     <input
                       id="confirm-password"
                       name="password"
-                      type={passwordView ? 'text' : 'password'}
+                      type={passwordView.confirmation ? 'text' : 'password'}
+                      className={cx('w-full overflow-ellipsis text-sm text-opacity-0',
+                        { 'text-grayProfile text-opacity-50': !credentials.confirmation.length })}
                       onChange={(e) => handleChange('password', e)}
                     />
                     <Icon
                       ariaLabel="confirm password"
-                      name={passwordView ? 'view' : 'hide'}
-                      onClick={handlePasswordView}
+                      name={passwordView.confirmation ? 'view' : 'hide'}
+                      onClick={() => handlePasswordView('confirmation')}
                       size="lg"
-                      className="absolute right-4 transform -translate-y-1/2 top-1/2 font-bold"
+                      className={cx('absolute right-4 transform -translate-y-1/2 top-1/2 font-bold',
+                        { 'text-grayProfile text-opacity-50': !credentials.confirmation.length })}
                     />
                   </div>
                 </label>
@@ -178,7 +196,7 @@ const ProfilePage: FC = () => {
               <Button
                 type="submit"
                 aria-label="Sign in"
-                className="py-20 bg-gray1 border-gray1 text-white"
+                className="py-20 bg-gray1 border-gray1 text-white text-sm"
                 onClick={(evt) => {
                   evt.preventDefault();
                   console.log('Changing password');

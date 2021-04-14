@@ -1,6 +1,5 @@
 import React, {
   FC,
-  useEffect,
 } from 'react';
 
 import { useQuery } from 'react-query';

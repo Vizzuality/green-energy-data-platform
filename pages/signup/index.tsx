@@ -18,12 +18,12 @@ import Header from 'layout/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
 
-type SigninProps = {
+type SignupProps = {
   onChange: (type: string, e: string) => void;
   csrfToken?: string,
 };
 
-const SigninPage: FC<SigninProps> = ({
+const SignupPage: FC<SignupProps> = ({
   csrfToken,
 }) => {
   const [credentials, setCredentials] = useState({
@@ -44,20 +44,20 @@ const SigninPage: FC<SigninProps> = ({
       <Head title="Welcome to Green Energy Data Platform" />
       <main className="flex flex-col h-full w-full m-auto">
         <Header />
-        <div className="flex items-center h-full flex-1 justify-center p-12 md:p-4 max-w-5xl m-auto">
-          <section className="flex flex-col flex-1 h-full justify-between py-20 md:py-10 max-w-xs text-white mx-20">
-            <h1 className="text-5.5xl font-bold py-7 tracking-tight">Sign in</h1>
-            <img alt="Sign-up" src="images/signup.svg" className="py-7" />
+        <div className="flex items-center h-full flex-grow justify-center p-12 md:p-4 max-w-5xl m-auto">
+          <section className="flex flex-col justify-start py-20 md:py-10 max-w-xs text-white mx-20">
+            <h1 className="text-5.5xl font-bold py-7 tracking-tight">Sign up</h1>
+            <p className="text-lg pb-44">Create an account to explore more about GEDP data insights</p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
-            <p className="mt-10">Don&apos;t have an account?</p>
-            <div className="py-4">
-              <Link href={{ pathname: '/signup' }}>
-                <Button theme="primary">Sign up</Button>
+            <p className="py-4">Already registered?</p>
+            <div>
+              <Link href={{ pathname: '/signin' }}>
+                <Button theme="primary">Sign in</Button>
               </Link>
             </div>
           </section>
-          <section className="flex flex-col flex-1 justify-start py-20 md:py-10 bg-white rounded-2.5xl px-24 sm:px-16 min-w-70 shadow-sm max-w-2xl">
-            <form method="post" className="inline-flex flex-col flex-1 w-full">
+          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
+            <form method="post" className="inline-flex flex-col flex-grow w-full">
               <input
                 name="csrfToken"
                 type="hidden"
@@ -65,6 +65,26 @@ const SigninPage: FC<SigninProps> = ({
                 className="border-b-gradient-to-r from-white to-white-50 focus:border-b-2"
               />
               <div className="pb-6">
+                <label htmlFor="name" className="text-2.5xl font-bold">
+                  Your name is:
+                  <div className="relative mb-10 sm:mb-4 font-normal">
+                    <Icon ariaLabel="profile" name="profile" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
+                    <input
+                      id="name"
+                      name="name"
+                      type="name"
+                      placeholder="Write your name account"
+                      className={cx('w-full placeholder-gray1 placeholder-opacity-20',
+                        { 'placeholder-opacity-100': credentials.name.length })}
+                      value={credentials.name}
+                      onChange={(e) => handleChange('name', e)}
+                      required
+                    />
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',
+                      { 'bg-gradient-color1': credentials.password.length })}
+                    />
+                  </div>
+                </label>
                 <label htmlFor="email" className="text-2.5xl font-bold">
                   Your email is:
                   <div className="relative mb-10 sm:mb-4 font-normal">
@@ -74,7 +94,7 @@ const SigninPage: FC<SigninProps> = ({
                       name="email"
                       type="email"
                       placeholder="Write your email account"
-                      className={cx('w-full bg-white placeholder-transparent placeholder-gray1 placeholder-opacity-20 overflow-ellipsis',
+                      className={cx('w-full placeholder-gray1 placeholder-opacity-20',
                         { 'placeholder-opacity-100': credentials.email.length })}
                       value={credentials.email}
                       onChange={(e) => handleChange('email', e)}
@@ -94,13 +114,13 @@ const SigninPage: FC<SigninProps> = ({
                       name="password"
                       type="password"
                       placeholder="Write the associated password"
-                      className={cx('w-full placeholder-gray1 placeholder-opacity-20',
+                      className={cx('w-full placeholder-gray1 placeholder-opacity-20 mb-10',
                         { 'placeholder-opacity-100': credentials.password.length })}
                       value={credentials.password}
                       onChange={(e) => handleChange('password', e)}
                       required
                     />
-                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
                       { 'bg-gradient-color1': credentials.password.length })}
                     />
                   </div>
@@ -108,7 +128,7 @@ const SigninPage: FC<SigninProps> = ({
               </div>
               <Button
                 type="submit"
-                aria-label="Log in"
+                aria-label="Sign in"
                 theme="secondary-background"
                 size="xlg"
                 onClick={(evt) => {
@@ -116,7 +136,7 @@ const SigninPage: FC<SigninProps> = ({
                   signIn('credentials');
                 }}
               >
-                Access with this account
+                Create account
               </Button>
             </form>
           </section>
@@ -145,4 +165,4 @@ export const getServerSideProps = async (context) => {
   });
 };
 
-export default SigninPage;
+export default SignupPage;

@@ -1,6 +1,8 @@
 import React, {
   FC,
+  ReactElement,
   ReactChildren,
+  ReactNode,
 } from 'react';
 
 import cx from 'classnames';
@@ -9,7 +11,7 @@ import cx from 'classnames';
 import Header from 'layout/header';
 
 interface HeroProps {
-  children: ReactChildren,
+  children: ReactChildren | ReactElement<any, string> & ReactNode,
   className?: string,
 }
 

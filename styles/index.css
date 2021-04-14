@@ -14,12 +14,30 @@
     vertical-align: middle;
   }
 
-  input::-webkit-search-decoration,
-  input::-webkit-search-cancel-button,
-  input::-webkit-search-results-button,
-  input::-webkit-search-results-decoration {
-  -webkit-appearance: none;
-}
+  input::-webkit-decoration,
+  input::-webkit-cancel-button,
+  input::-webkit-results-button,
+  input::-webkit-results-decoration {
+    -webkit-appearance: none;
+  }
+
+ {
+    background-color: none !important;
+  }
+  input::-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active
+  input::-webkit-autofill-selected {
+    background-color: none !important;
+  }
+
+  /* input:-internal-autofill-selected {
+    appearance: menulist-button;
+    background-color: white !important;
+    background-image: none !important;
+    color: -internal-light-dark(black, white) !important;
+} */
 
   /* News Gothic MT */
   @font-face {
