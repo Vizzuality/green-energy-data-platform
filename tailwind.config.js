@@ -26,18 +26,8 @@ module.exports = {
         color10: '#FF7629',
         color11: '#CC1771',
         color12: '#8E9195',
-        color13: '#FF61CA',
-        color14: '#7898E1',
-        color15: '#C5C6C8',
-        color16: '#B9EBD7',
-        color17: '#75BBF5',
-        color18: '#E580B5',
-        color19: '#FFD675',
-        color20: '#FFAC8C',
-        color21: '#0C3CC4',
-        color22: '#041F5A',
-        color23: '#5AB015',
-        color24: '#A97500',
+        'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
+
       },
       spacing: {
         3.75: '0.938rem',
@@ -69,6 +59,7 @@ module.exports = {
       },
       borderColor: {
         'gradient-color1': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%);',
+        'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
       },
       boxShadow: {
         sm: ' 0px 14px 20px rgba(14, 48, 114, 0.1)',
@@ -78,6 +69,8 @@ module.exports = {
         'gradient-color1': 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',
         'gradient-color2': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%)',
         'gradient-gray1': 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
+        'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
+
       },
       inset: {
         17: '4.75rem',
