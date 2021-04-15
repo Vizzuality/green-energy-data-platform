@@ -9,10 +9,15 @@ import dynamic from 'next/dynamic';
 import VisualizationsNav from 'components/visualizations-nav';
 import Dropdown from 'components/select/component';
 import Button from 'components/button';
-import Filters from 'components/filters';
+// import Filters from 'components/filters';
 import DataSource from 'components/data-source';
 
 import { indicatorsList, datesList, selectedIndicator } from '../../constants';
+
+type ChartProps = {
+  widgetData: any,
+  widgetConfig: any
+};
 
 type CategoriesObject = {
   [key: string]: string[]
@@ -55,7 +60,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
   const Loading = () => <p>loading...</p>;
-  const DynamicChart = dynamic(
+  const DynamicChart = dynamic<ChartProps>(
     () => import(`components/chart/${active}`),
     { loading: Loading },
   );
@@ -77,7 +82,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           <div className="flex">
             <Dropdown
               menuElements={indicatorsList}
-              border
               label="Change indicator"
               icon="triangle_border"
               className="mr-4"
@@ -100,7 +104,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 Showing for:
                 <Dropdown
                   menuElements={datesList}
-                  border
                   className="bg-white ml-3"
                   label="Select dates"
                   icon="calendar"
@@ -115,7 +118,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             </div>
           </section>
           <section className="flex flex-col justify-between">
-            <Filters className="mb-4" />
+            {/* <Filters className="mb-4" /> */}
             <DataSource />
           </section>
         </div>

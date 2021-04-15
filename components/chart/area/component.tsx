@@ -35,12 +35,8 @@ interface ConfigProps {
   tooltip?: TooltipProps<any, any>,
 }
 
-type ObjectData = {
-  [key: string]: Object[]
-};
-
 interface ChartProps {
-  widgetData: ObjectData[],
+  widgetData: any[],
   widgetConfig: ConfigProps,
   indicatorId: string
 }

@@ -30,7 +30,7 @@ interface ConfigProps {
 }
 
 interface ChartProps {
-  widgetData: Object[],
+  widgetData: any[],
   widgetConfig: ConfigProps,
   color?: string,
   indicatorId: string
