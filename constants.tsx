@@ -77,7 +77,37 @@ export const selectedIndicator = {
   type: 'pie',
   title: 'Balance',
   visualizationTypes: ['line', 'table', 'pie', 'bar'],
-  categories: ['Coal', 'Coke', 'Crude Oil', 'Diesel Oil', 'Fuel Oil', 'Kerosene', 'LPG'],
+  categories: [
+    {
+      id: 1,
+      name: 'Coal',
+    },
+    {
+      id: 2,
+      name: 'Coke',
+    },
+    {
+      id: 3,
+      name: 'Crude Oil',
+      default: true,
+    },
+    {
+      id: 4,
+      name: 'Diesel Oil',
+    },
+    {
+      id: 5,
+      name: 'Fuel Oil',
+    },
+    {
+      id: 6,
+      name: 'Kerosene',
+    },
+    {
+      id: 7,
+      name: 'LPG',
+    },
+  ],
   categories_filters: {
     coal: ['coal1', 'coal2'],
     Coke: ['coke1', 'coke2'],

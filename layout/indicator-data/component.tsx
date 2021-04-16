@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import VisualizationsNav from 'components/visualizations-nav';
 import Dropdown from 'components/select/component';
 import Button from 'components/button';
-// import Filters from 'components/filters';
+import Filters from 'components/filters';
 import DataSource from 'components/data-source';
 
 import { indicatorsList, datesList, selectedIndicator } from '../../constants';
@@ -32,7 +32,7 @@ interface IndicatorProps {
   title: string,
   type: string,
   visualizationTypes: string[],
-  categories: string[],
+  categories: { id: number, name: string }[],
   categories_filters: CategoriesObject,
   startDate: string | number,
   endDate: string | number,
@@ -118,7 +118,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             </div>
           </section>
           <section className="flex flex-col justify-between">
-            {/* <Filters className="mb-4" /> */}
+            <Filters className="mb-4" />
             <DataSource />
           </section>
         </div>
