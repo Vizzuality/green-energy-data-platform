@@ -13,6 +13,7 @@ import Dropdown from 'components/select/component';
 import Tooltip from 'components/tooltip';
 import Icon from 'components/icon';
 import Filters from 'components/filters';
+import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 
 import { indicatorsList, datesList, selectedIndicator } from '../../constants';
@@ -69,6 +70,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     data,
     config,
   } = indicator;
+
   const [active, setActive] = useState(type || visualizationTypes[0]);
   const [visible, setVisibility] = useState(false);
 
@@ -172,6 +174,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           </section>
           <section className="flex flex-col justify-between">
             <Filters categories={categories} className="mb-4" />
+            <Legend categories={categories} className="mb-4" />
             <DataSource />
           </section>
         </div>

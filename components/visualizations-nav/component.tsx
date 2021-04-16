@@ -41,14 +41,14 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
               { 'font-bold text-opacity-100': active === id },
               { 'pointer-events-none text-opacity-20': !visualizationTypes.includes(id) })}
           >
-            <div className="flex items-center" >
+            <div className="flex items-center">
               <Icon
                 ariaLabel={`${label}-visualization`}
                 name={icon}
                 size="lg"
                 className="mr-3 text-current"
               />
-              <span className={cx({ 'text-gray1': active === id })}>
+              <span className={cx('hidden sm:block', { 'text-gray2': active === id })}>
                 {label}
               </span>
             </div>

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import cx from 'classnames';
 
 // components
@@ -13,14 +13,17 @@ const Filters: FC<FiltersProps> = ({
   categories,
   className = '',
 }: FiltersProps) => {
+  const active = categories.map((c) => (
+    {
+      ...c,
+      active: c.default,
+    }));
   const handleClick = () => {
     console.log('click scroll');
   };
-
   const handleFilter = (id: number) => {
     console.log(id, 'filters');
   };
-
   return (
     <div className={cx('inline-flex flex-col justify-center text-center rounded-md bg-gray5 hover:opacity-90 px-1.5',
       { [className]: className })}
