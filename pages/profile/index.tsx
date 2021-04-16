@@ -149,7 +149,7 @@ const ProfilePage: FC = () => {
 
                 </div>
               </label>
-              {/* TO - DO change href when it0s ready */}
+              {/* TO - DO change href when it's ready */}
               <a href="/" className="underline pb-10 text-xs">I don&apos;t remember my password</a>
               <fieldset className="w-full text-xs">
                 <label htmlFor="new-password" className="pb-10 tracking-tight text-grayProfile">

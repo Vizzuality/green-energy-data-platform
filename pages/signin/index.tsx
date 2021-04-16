@@ -19,13 +19,12 @@ import Button from 'components/button';
 import Icon from 'components/icon';
 
 type SigninProps = {
-  onChange: (type: string, e: string) => void;
   csrfToken?: string,
 };
 
 const SigninPage: FC<SigninProps> = ({
   csrfToken,
-}) => {
+}: SigninProps) => {
   const [credentials, setCredentials] = useState({
     name: '',
     email: '',
@@ -105,6 +104,7 @@ const SigninPage: FC<SigninProps> = ({
                     />
                   </div>
                 </label>
+                <a href="/" className="underline pb-10 text-xs">I don&apos;t remember my password</a>
               </div>
               <Button
                 type="submit"

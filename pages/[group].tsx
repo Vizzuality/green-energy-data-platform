@@ -32,7 +32,7 @@ const Group: FC = () => {
   if (!selected) return null;
 
   return (
-    <LayoutPage className="text-white bg-gradient-gray1">
+    <LayoutPage className="text-white bg-gradient-gray1 pb-20">
       <Head title={`${group} analysis`} />
       <Hero>
         <Nav items={groups} className="py-7.5" />

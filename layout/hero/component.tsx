@@ -12,7 +12,7 @@ interface HeroProps {
 
 const Hero: FC<HeroProps> = ({ children, className }: HeroProps) => (
   <div className="pb-44 bg-gradient-color2 text-white">
-    <Header />
+    <Header className="border-b border-white border-opacity-30" />
     <div className={cx('container m-auto px-32',
       { [className]: !!className })}
     >

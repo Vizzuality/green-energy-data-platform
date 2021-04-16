@@ -19,13 +19,12 @@ import Button from 'components/button';
 import Icon from 'components/icon';
 
 type SignupProps = {
-  onChange: (type: string, e: string) => void;
   csrfToken?: string,
 };
 
 const SignupPage: FC<SignupProps> = ({
   csrfToken,
-}) => {
+}: SignupProps) => {
   const [credentials, setCredentials] = useState({
     name: '',
     email: '',
@@ -45,9 +44,9 @@ const SignupPage: FC<SignupProps> = ({
       <main className="flex flex-col h-full w-full m-auto">
         <Header />
         <div className="flex items-center h-full flex-grow justify-center p-12 md:p-4 max-w-5xl m-auto">
-          <section className="flex flex-col justify-start py-20 md:py-10 max-w-xs text-white mx-20">
+          <section className="flex flex-col justify-start max-w-xs text-white mx-20">
             <h1 className="text-5.5xl font-bold py-7 tracking-tight">Sign up</h1>
-            <p className="text-lg pb-44">Create an account to explore more about GEDP data insights</p>
+            <p className="text-lg pb-20">Create an account to explore more about GEDP data insights</p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="py-4">Already registered?</p>
             <div>
@@ -56,7 +55,7 @@ const SignupPage: FC<SignupProps> = ({
               </Link>
             </div>
           </section>
-          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
+          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-20 md:px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
             <form method="post" className="inline-flex flex-col flex-grow w-full">
               <input
                 name="csrfToken"
@@ -74,7 +73,7 @@ const SignupPage: FC<SignupProps> = ({
                       name="name"
                       type="name"
                       placeholder="Write your name account"
-                      className={cx('w-full placeholder-gray1 placeholder-opacity-20',
+                      className={cx('w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
                         { 'placeholder-opacity-100': credentials.name.length })}
                       value={credentials.name}
                       onChange={(e) => handleChange('name', e)}
@@ -94,7 +93,7 @@ const SignupPage: FC<SignupProps> = ({
                       name="email"
                       type="email"
                       placeholder="Write your email account"
-                      className={cx('w-full placeholder-gray1 placeholder-opacity-20',
+                      className={cx('w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
                         { 'placeholder-opacity-100': credentials.email.length })}
                       value={credentials.email}
                       onChange={(e) => handleChange('email', e)}
@@ -114,7 +113,7 @@ const SignupPage: FC<SignupProps> = ({
                       name="password"
                       type="password"
                       placeholder="Write the associated password"
-                      className={cx('w-full placeholder-gray1 placeholder-opacity-20 mb-10',
+                      className={cx('w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
                         { 'placeholder-opacity-100': credentials.password.length })}
                       value={credentials.password}
                       onChange={(e) => handleChange('password', e)}
@@ -124,6 +123,34 @@ const SignupPage: FC<SignupProps> = ({
                       { 'bg-gradient-color1': credentials.password.length })}
                     />
                   </div>
+                </label>
+                <label htmlFor="terms&conditions" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
+                  <span>
+                    I agree with the
+                    <a href="/terms&conditions"> Terms and Conditions</a>
+                  </span>
+                  <input
+                    id="terms&conditions"
+                    name="conditions"
+                    type="radio"
+                    className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1"
+                    value={credentials.password}
+                    required
+                  />
+                </label>
+                <label htmlFor="privacy-policy" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
+                  <span>
+                    I agree with the
+                    <a href="/privacy-policy"> Privacy Policy</a>
+                  </span>
+                  <input
+                    id="privacy-policy"
+                    name="conditions"
+                    type="radio"
+                    className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1"
+                    value={credentials.password}
+                    required
+                  />
                 </label>
               </div>
               <Button
