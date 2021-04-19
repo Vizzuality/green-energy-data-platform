@@ -29,10 +29,10 @@
     background-color: white !important;
   }
 
-  input[type=radio]:checked {
+  /* input[type=checkbox]:checked {
     background-color: #3A3F59;
     color: white;
-  }
+  } */
 
   /* News Gothic MT */
   @font-face {

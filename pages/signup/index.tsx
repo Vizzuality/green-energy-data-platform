@@ -131,11 +131,9 @@ const SignupPage: FC<SignupProps> = ({
                   </span>
                   <input
                     id="terms&conditions"
-                    name="conditions"
-                    type="radio"
+                    name="terms&conditions"
+                    type="checkbox"
                     className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1"
-                    value={credentials.password}
-                    required
                   />
                 </label>
                 <label htmlFor="privacy-policy" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
@@ -145,11 +143,9 @@ const SignupPage: FC<SignupProps> = ({
                   </span>
                   <input
                     id="privacy-policy"
-                    name="conditions"
-                    type="radio"
+                    name="privacy-policy"
+                    type="checkbox"
                     className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1"
-                    value={credentials.password}
-                    required
                   />
                 </label>
               </div>

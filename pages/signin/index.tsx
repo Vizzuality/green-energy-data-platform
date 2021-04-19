@@ -55,7 +55,7 @@ const SigninPage: FC<SigninProps> = ({
               </Link>
             </div>
           </section>
-          <section className="flex flex-col flex-1 justify-start py-20 md:py-10 bg-white rounded-2.5xl px-24 sm:px-16 min-w-70 shadow-sm max-w-2xl">
+          <section className="flex flex-col flex-1 w-full justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 sm:px-16 min-w-70 shadow-sm">
             <form method="post" className="inline-flex flex-col flex-1 w-full">
               <input
                 name="csrfToken"
@@ -84,7 +84,7 @@ const SigninPage: FC<SigninProps> = ({
                     />
                   </div>
                 </label>
-                <label htmlFor="password" className="text-2.5xl pb-10 font-bold">
+                <label htmlFor="password" className="text-2.5xl font-bold">
                   Enter your password:
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
@@ -99,12 +99,14 @@ const SigninPage: FC<SigninProps> = ({
                       onChange={(e) => handleChange('password', e)}
                       required
                     />
-                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-4',
                       { 'bg-gradient-color1': credentials.password.length })}
                     />
                   </div>
                 </label>
-                <a href="/" className="underline pb-10 text-xs">I don&apos;t remember my password</a>
+                <div className="">
+                  <a href="/" className="w-full flex justify-end underline text-xs">I don&apos;t remember my password</a>
+                </div>
               </div>
               <Button
                 type="submit"
