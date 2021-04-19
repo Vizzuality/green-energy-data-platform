@@ -43,8 +43,8 @@ const SigninPage: FC<SigninProps> = ({
       <Head title="Welcome to Green Energy Data Platform" />
       <main className="flex flex-col h-full w-full m-auto">
         <Header />
-        <div className="flex items-center h-full flex-1 justify-center p-12 md:p-4 max-w-5xl m-auto">
-          <section className="flex flex-col flex-1 h-full justify-between py-20 md:py-10 max-w-xs text-white mx-20">
+        <div className="flex items-center h-full flex-1 justify-center p-12 md:p-4 m-auto">
+          <section className="flex flex-col flex-1 w-full h-full justify-between py-20 md:py-10 max-w-xs text-white mx-20">
             <h1 className="text-5.5xl font-bold py-7 tracking-tight">Sign in</h1>
             <img alt="Sign-up" src="images/signup.svg" className="py-7" />
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
