@@ -12,7 +12,7 @@ import { PluginMapboxGl } from 'layer-manager';
 import { withAuthentication } from 'hoc/auth';
 
 // Controls
-import ZoomControl from './zoom';
+// import ZoomControl from './zoom';
 import Legend from './legend';
 
 // Map
@@ -39,7 +39,7 @@ const MapContainer: FC = () => {
   );
 
   return (
-    <div className="h-full border-4 border-gray5 rounded">
+    <div className="relative h-full border-4 border-gray5 rounded">
       <Map
         width="100%"
         height="100%"
@@ -55,11 +55,11 @@ const MapContainer: FC = () => {
         )}
       </Map>
 
-      <ZoomControl
+      {/* <ZoomControl
         className="absolute bottom-4 left-2 w-4 h-10"
         viewport={viewport}
         onZoomChange={handleZoomChange}
-      />
+      /> */}
       <Legend />
     </div>
   );
