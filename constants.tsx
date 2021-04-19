@@ -76,7 +76,7 @@ export const selectedIndicator = {
   id: 1,
   type: 'pie',
   title: 'Balance',
-  visualizationTypes: ['line', 'table', 'pie', 'bar'],
+  visualizationTypes: ['line', 'table', 'pie', 'bar', 'map'],
   categories: [
     {
       id: 1,

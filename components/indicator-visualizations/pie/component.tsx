@@ -68,30 +68,28 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   //   );
   // }; - TO DO - remove when it's clear label has disappearded forever
   return (
-    <div className="py-10">
-      <ResponsiveContainer width="100%" height={500}>
-        <PieChart width={400} height={200}>
-          {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
-          {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
-          {xAxis && (<XAxis {...xAxis} />)}
-          {yAxis && (<YAxis {...yAxis} />)}
-          {pies && Object.keys(pies).map((pie, index) => (
-            <Pie
-              key={pie}
-              {...pies[pie]}
-              data={widgetData}
-              // label={renderCustomizedLabel}
-              fill={colors[index]}
-            >
-              {widgetData.map((d, i) => (
-                <Cell key={`cell-${d}`} fill={colors[i % colors.length]} />
-              ))}
-            </Pie>
-          ))}
-          {tooltip && (<Tooltip />)}
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={500}>
+      <PieChart width={400} height={200}>
+        {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
+        {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
+        {xAxis && (<XAxis {...xAxis} />)}
+        {yAxis && (<YAxis {...yAxis} />)}
+        {pies && Object.keys(pies).map((pie, index) => (
+          <Pie
+            key={pie}
+            {...pies[pie]}
+            data={widgetData}
+            // label={renderCustomizedLabel}
+            fill={colors[index]}
+          >
+            {widgetData.map((d, i) => (
+              <Cell key={`cell-${d}`} fill={colors[i % colors.length]} />
+            ))}
+          </Pie>
+        ))}
+        {tooltip && (<Tooltip />)}
+      </PieChart>
+    </ResponsiveContainer>
   );
 };
 

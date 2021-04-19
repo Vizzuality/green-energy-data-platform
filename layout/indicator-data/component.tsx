@@ -61,7 +61,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const Loading = () => <p>loading...</p>;
   const DynamicChart = dynamic<ChartProps>(
-    () => import(`components/chart/${active}`),
+    () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },
   );
   return (
@@ -99,18 +99,18 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         </div>
         <div className="flex">
           <section className="flex-1 flex-col mr-8">
-            <div>
-              <div className="flex items-center">
-                Showing for:
-                <Dropdown
-                  menuElements={datesList}
-                  className="bg-white ml-3"
-                  label="Select dates"
-                  icon="calendar"
-                  iconSize="lg"
-                  iconRotable={false}
-                />
-              </div>
+            <div className="flex items-center">
+              Showing for:
+              <Dropdown
+                menuElements={datesList}
+                className="bg-white ml-3"
+                label="Select dates"
+                icon="calendar"
+                iconSize="lg"
+                iconRotable={false}
+              />
+            </div>
+            <div className="flex-1 py-10 h-full">
               <DynamicChart
                 widgetData={data[active]}
                 widgetConfig={config[active]}

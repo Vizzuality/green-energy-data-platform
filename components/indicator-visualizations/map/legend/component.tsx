@@ -3,7 +3,7 @@ import cx from 'classnames';
 
 import Icon from 'components/icon';
 
-import { layers, colors } from '../../../constants';
+import { layers, colors } from '../../../../constants';
 
 interface LegendProps {
   className?: string

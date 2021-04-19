@@ -412,9 +412,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
             type: 'category',
             dataKey: 'province',
             interval: 0,
-            tick: Tick,
+            tick: 'Tick',
             label: {
-              content: LabelContent,
+              content: 'LabelContent',
             },
           },
         },

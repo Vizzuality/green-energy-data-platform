@@ -17,7 +17,7 @@ import { fitBounds } from '@math.gl/web-mercator';
 
 import { easeCubic } from 'd3-ease';
 
-import { DEFAULT_VIEWPORT } from 'components/map/constants';
+import { DEFAULT_VIEWPORT } from 'components/indicator-visualizations/map/constants';
 
 export interface MapProps extends InteractiveMapProps {
   /** A function that returns the map instance */
@@ -50,7 +50,7 @@ export interface MapProps extends InteractiveMapProps {
   onMapViewportChange?: (viewport: Partial<ViewportProps>) => void;
 }
 
-export const Map = ({
+const Map = ({
   children,
   className,
   viewport,
