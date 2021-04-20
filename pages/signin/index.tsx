@@ -50,8 +50,13 @@ const SigninPage: FC<SigninProps> = ({
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="mt-10">Don&apos;t have an account?</p>
             <div className="py-4">
-              <Link href={{ pathname: '/signup' }}>
-                <Button theme="primary">Sign up</Button>
+              <Link href={{ pathname: '/signup' }} passHref>
+                <a
+                  href="/signup"
+                  className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black py-0.5 px-4 text-center rounded-full focus:outline-none"
+                >
+                  Signup
+                </a>
               </Link>
             </div>
           </section>
