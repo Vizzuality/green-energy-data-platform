@@ -1,6 +1,7 @@
 import React, {
   FC,
   useState,
+  useCallback,
 } from 'react';
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
@@ -9,6 +10,7 @@ import dynamic from 'next/dynamic';
 import VisualizationsNav from 'components/visualizations-nav';
 import Dropdown from 'components/select/component';
 import Button from 'components/button';
+import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import DataSource from 'components/data-source';
 
@@ -58,6 +60,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   } = indicator;
 
   const [active, setActive] = useState(type || visualizationTypes[0]);
+  const [visible, setVisibility] = useState(false);
+
+  const toggleVisibility = useCallback(() => {
+    setVisibility(!visible);
+  }, [visible]);
 
   const Loading = () => <p>loading...</p>;
   const DynamicChart = dynamic<ChartProps>(
@@ -86,7 +93,24 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               icon="triangle_border"
               className="mr-4"
             />
-            <Button size="md" className="border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white">Compare</Button>
+            <Tooltip
+              visible={visible}
+              placement="bottom-start"
+              content={(
+                <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
+                  <li>indicator 1</li>
+                  <li>indicator 2</li>
+                </ul>
+              )}
+            >
+              <Button
+                size="md"
+                className="border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white"
+                onClick={toggleVisibility}
+              >
+                Compare
+              </Button>
+            </Tooltip>
           </div>
         </div>
         <div>
