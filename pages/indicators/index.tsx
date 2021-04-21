@@ -37,7 +37,6 @@ const Indicators: FC = () => {
           <div key={group_id} className="flex flex-col">
             <h2 className="text-3.5xl pt-2">{name}</h2>
             <div className="flex flex-col text-lg py-10">
-              {console.log(subgroups)}
               {subgroups.map(({ id, subgroup }) => (
                 <Link key={id} href={`/${group_id}:${id}`}>{subgroup}</Link>
               ))}
