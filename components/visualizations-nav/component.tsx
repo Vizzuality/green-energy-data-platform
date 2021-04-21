@@ -48,7 +48,7 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
                 size="lg"
                 className="mr-3 text-current"
               />
-              <span className={cx({ 'text-gray2': active === id })}>
+              <span className={cx({ 'text-gray1': active === id })}>
                 {label}
               </span>
             </div>

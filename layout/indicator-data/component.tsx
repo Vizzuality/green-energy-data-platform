@@ -14,6 +14,11 @@ import DataSource from 'components/data-source';
 
 import { indicatorsList, datesList, selectedIndicator } from '../../constants';
 
+type ChartProps = {
+  widgetData: any,
+  widgetConfig: any
+};
+
 type CategoriesObject = {
   [key: string]: string[]
 };
@@ -27,7 +32,7 @@ interface IndicatorProps {
   title: string,
   type: string,
   visualizationTypes: string[],
-  categories: string[],
+  categories: { id: number, name: string }[],
   categories_filters: CategoriesObject,
   startDate: string | number,
   endDate: string | number,
@@ -55,12 +60,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
   const Loading = () => <p>loading...</p>;
-  const DynamicChart = dynamic(
-    () => import(`components/chart/${active}`),
+  const DynamicChart = dynamic<ChartProps>(
+    () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },
   );
   return (
-    <div className={cx('bg-white rounded-2.5xl text-gray2 divide-y divide-gray shadow-sm',
+    <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
       { [className]: className })}
     >
       <VisualizationsNav
@@ -77,12 +82,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           <div className="flex">
             <Dropdown
               menuElements={indicatorsList}
-              border
               label="Change indicator"
               icon="triangle_border"
               className="mr-4"
             />
-            <Button size="md" className="border text-color1 border-gray2 border-opacity-20 hover:bg-color1 hover:text-white">Compare</Button>
+            <Button size="md" className="border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white">Compare</Button>
           </div>
         </div>
         <div>
@@ -95,20 +99,18 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         </div>
         <div className="flex">
           <section className="flex-1 flex-col mr-8">
-            <div>
-              <div className="flex items-center">
-                Showing for:
-                <Dropdown
-                  menuElements={datesList}
-                  border
-                  className="bg-white ml-3"
-                  label="Select dates"
-                  icon="calendar"
-                  iconSize="lg"
-                  iconRotable={false}
-                />
-              </div>
-
+            <div className="flex items-center">
+              Showing for:
+              <Dropdown
+                menuElements={datesList}
+                className="bg-white ml-3"
+                label="Select dates"
+                icon="calendar"
+                iconSize="lg"
+                iconRotable={false}
+              />
+            </div>
+            <div className="flex-1 py-10 h-full">
               <DynamicChart
                 widgetData={data[active]}
                 widgetConfig={config[active]}

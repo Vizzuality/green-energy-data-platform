@@ -13,7 +13,7 @@ const HeadApp: FC<HeadProps> = ({
   description = 'description TBD',
 }: HeadProps) => (
   <Head>
-    <meta name="viewport" content="width=1024, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title key="title">{`${title ? `${title} | ` : ''}Green Energy Data Platform`}</title>
     <meta key="description" name="description" content={description} />
   </Head>

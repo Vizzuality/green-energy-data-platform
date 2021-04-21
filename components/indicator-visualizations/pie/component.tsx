@@ -31,7 +31,7 @@ interface ConfigProps {
 }
 
 interface ChartProps {
-  widgetData: Object,
+  widgetData: any[],
   widgetConfig: ConfigProps,
   color?: string,
   indicatorId: string
@@ -60,36 +60,36 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   //   const x = cx + radius * 1.5 * Math.cos(-midAngle * RADIAN);
   //   const y = cy + radius * 1.5 * Math.sin(-midAngle * RADIAN);
   //   return (
-  //     <text x={x} y={y} fill="red" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+  //     <text
+  //       x={x}
+  //       y={y} fill="red" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
   //       {label} - {`${(value * 100).toFixed(0)}%`}
   //     </text>
   //   );
   // }; - TO DO - remove when it's clear label has disappearded forever
   return (
-    <div className="py-10">
-      <ResponsiveContainer width="100%" height={500}>
-        <PieChart width={400} height={200}>
-          {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
-          {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
-          {xAxis && (<XAxis {...xAxis} />)}
-          {yAxis && (<YAxis {...yAxis} />)}
-          {pies && Object.keys(pies).map((pie, index) => (
-            <Pie
-              key={pie}
-              {...pies[pie]}
-              data={widgetData}
-              // label={renderCustomizedLabel}
-              fill={colors[index]}
-            >
-              {widgetData.map((d, i) => (
-                <Cell key={`cell-${d}`} fill={colors[i % colors.length]} />
-              ))}
-            </Pie>
-          ))}
-          {tooltip && (<Tooltip />)}
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+    <ResponsiveContainer width="100%" height={500}>
+      <PieChart width={400} height={200}>
+        {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
+        {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
+        {xAxis && (<XAxis {...xAxis} />)}
+        {yAxis && (<YAxis {...yAxis} />)}
+        {pies && Object.keys(pies).map((pie, index) => (
+          <Pie
+            key={pie}
+            {...pies[pie]}
+            data={widgetData}
+            // label={renderCustomizedLabel}
+            fill={colors[index]}
+          >
+            {widgetData.map((d, i) => (
+              <Cell key={`cell-${d}`} fill={colors[i % colors.length]} />
+            ))}
+          </Pie>
+        ))}
+        {tooltip && (<Tooltip />)}
+      </PieChart>
+    </ResponsiveContainer>
   );
 };
 

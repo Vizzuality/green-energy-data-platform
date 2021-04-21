@@ -37,39 +37,6 @@ const LabelContent = () => (
   </g>
 );
 
-export const groups = [
-  {
-    id: 'energy',
-    name: 'Energy',
-    status: 'active',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-  {
-    id: 'socio-economic',
-    name: 'Socio-economic',
-    status: 'disabled',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-  {
-    id: 'coal-power-plant',
-    name: 'Coal power plant',
-    status: 'disabled',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-  {
-    id: 'lorem ipsum',
-    name: 'lorem ipsum',
-    status: 'disabled',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-  {
-    id: 'lorem ipsum2',
-    name: 'lorem ipsum',
-    status: 'disabled',
-    subgroups: ['subgroup1', 'subgroup3', 'subgroup3'],
-  },
-];
-
 export const groupsLanding = [
   {
     id: 'energy',
@@ -109,8 +76,38 @@ export const selectedIndicator = {
   id: 1,
   type: 'pie',
   title: 'Balance',
-  visualizationTypes: ['line', 'table', 'pie', 'bar'],
-  categories: ['Coal', 'Coke', 'Crude Oil', 'Diesel Oil', 'Fuel Oil', 'Kerosene', 'LPG'],
+  visualizationTypes: ['line', 'table', 'pie', 'bar', 'map'],
+  categories: [
+    {
+      id: 1,
+      name: 'Coal',
+    },
+    {
+      id: 2,
+      name: 'Coke',
+    },
+    {
+      id: 3,
+      name: 'Crude Oil',
+      default: true,
+    },
+    {
+      id: 4,
+      name: 'Diesel Oil',
+    },
+    {
+      id: 5,
+      name: 'Fuel Oil',
+    },
+    {
+      id: 6,
+      name: 'Kerosene',
+    },
+    {
+      id: 7,
+      name: 'LPG',
+    },
+  ],
   categories_filters: {
     coal: ['coal1', 'coal2'],
     Coke: ['coke1', 'coke2'],
@@ -537,13 +534,23 @@ export const selectedIndicator = {
   },
 };
 
-export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
-export const datesList = ['1990', '2000', '2010', '2020'];
+export const indicatorsList = [
+  { id: 1, name: 'indicator1' },
+  { id: 2, name: 'indicator2' },
+  { id: 3, name: 'indicator3' },
+  { id: 4, name: 'indicator4' },
+];
+export const datesList = [
+  { id: 1, name: '1990' },
+  { id: 2, name: '2000' },
+  { id: 3, name: '2010' },
+  { id: 4, name: '2020' },
+];
+
 export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
 
 export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
-  groups,
   relatedIndicators,
   indicatorsList,
   datesList,

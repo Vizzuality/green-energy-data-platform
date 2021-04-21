@@ -24,7 +24,7 @@ const HomePage: FC = () => {
   const [session] = useSession();
 
   return (
-    <LayoutPage className="h-full">
+    <LayoutPage className="h-full pb-20">
       <Head title="Welcome to Green Energy Data Platform" />
       <Hero className="flex flex-col text-center">
         <h1 className="text-5.5xl py-7.5">Discover data insights for a sustainable future.</h1>

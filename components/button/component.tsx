@@ -11,11 +11,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const THEME = {
   primary:
-    'border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
-  'primary-background': 'bg-white border-white',
+    'border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
+  'primary-background': 'border-2 bg-white border-white',
   secondary:
-    'border-gray2 bg-white hover:bg-gray2 hover:text-white',
-  'secondary-background': 'bg-button border-gray2 text-white',
+    'border-2 border-gray1 bg-white hover:bg-gray1 hover:text-white',
+  'secondary-background': 'bg-gray1 text-white',
   info: 'bg-color2 border-color2 text-white',
 };
 
@@ -36,7 +36,7 @@ const Button: FC<ButtonProps> = ({
 }: ButtonProps) => (
   <button
     type="button"
-    className={cx(`flex items-center justify-center text-center border-2 rounded-full bold focus:outline-none
+    className={cx(`flex items-center justify-center text-center rounded-full focus:outline-none
     ${THEME[theme]}
     ${SIZE[size]}`,
     { 'font-bold': size === 'sm' && theme === 'primary' },

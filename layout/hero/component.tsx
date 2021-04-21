@@ -1,7 +1,4 @@
-import React, {
-  FC,
-  ReactElement,
-} from 'react';
+import React, { FC } from 'react';
 
 import cx from 'classnames';
 
@@ -9,13 +6,13 @@ import cx from 'classnames';
 import Header from 'layout/header';
 
 interface HeroProps {
-  children: ReactElement[] | ReactElement,
+  children: any, // TO DO - review children: ReactChildren | ReactElement<any, string> & ReactNode,
   className?: string,
 }
 
 const Hero: FC<HeroProps> = ({ children, className }: HeroProps) => (
-  <div className="pb-44 bg-gradient-color1 text-white">
-    <Header />
+  <div className="pb-44 bg-gradient-color2 text-white">
+    <Header className="border-b border-white border-opacity-30" />
     <div className={cx('container m-auto px-32',
       { [className]: !!className })}
     >

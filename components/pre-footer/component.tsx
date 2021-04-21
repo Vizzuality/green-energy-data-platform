@@ -9,7 +9,7 @@ interface PreFooterProps {
 const PreFooter: FC<PreFooterProps> = ({
   className = '',
 }: PreFooterProps) => (
-  <div className={cx('bg-gray2 text-white border-b border-white border-opacity-10',
+  <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10',
     { [className]: className })}
   >
     <div className="text-xl flex w-full justify-center">
