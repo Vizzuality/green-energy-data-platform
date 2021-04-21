@@ -44,7 +44,7 @@ export const groupsLanding = [
     subtitle: 'Global Energy Investment.',
     description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
     href: '/energy',
-    src: 'images/landing/energy.png',
+    src: '/images/landing/energy.png',
   },
   {
     id: 'socio-economic',
@@ -52,7 +52,7 @@ export const groupsLanding = [
     subtitle: 'Agriculture.',
     description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
     href: '/socio-economic',
-    src: 'images/landing/socio-economic.png',
+    src: '/images/landing/socio-economic.png',
   },
   {
     id: 'coal-power-plant',
