@@ -19,7 +19,7 @@ const Header: FC<HeaderProps> = ({ className }: HeaderProps) => {
     <div className={cx('flex justify-between items-center px-12 py-2',
       { [className]: !!className })}
     >
-      <img alt="GEDP" src="images/logo_GEDP.svg" className="w-32" />
+      <img alt="GEDP" src="/images/logo_GEDP.svg" className="w-32" />
       {user && user.id && (
         <div className="flex items-center">
           <UserDropdown className="mr-4" />

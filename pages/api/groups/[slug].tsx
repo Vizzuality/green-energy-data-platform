@@ -1,6 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
+  const {
+    query: {
+      slug: querySlug,
+    },
+  } = req;
+
   res.status(200).json([
     {
       id: 1,
@@ -116,5 +122,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         { id: 14, name: 'Buildings' },
         { id: 15, name: 'Energy Resources Reserves' },
       ],
-    }]);
+    },
+  ].filter(({ slug }) => querySlug === slug));
 };
