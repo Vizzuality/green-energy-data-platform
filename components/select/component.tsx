@@ -5,7 +5,7 @@ import cx from 'classnames';
 import Icon from 'components/icon';
 
 export interface DropdownSelectProps {
-  menuElements: string[],
+  menuElements: { id: (string | number), name: string }[],
   border?: boolean,
   label?: string,
   icon?: string,
@@ -48,7 +48,6 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
           onMouseEnter: () => {
             openMenu();
           },
-          onClick: () => handleSelectedItemChange(),
         })}
       >
         {children}
@@ -65,19 +64,21 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
         )}
       </button>
       <ul
-        className={cx('absolute left-0 right-0 top-0 flex flex-col w-full z-50 bg-white rounded-xl',
+        className={cx('absolute left-0 top-0 min-w-min flex flex-col w-full z-50 rounded-xl divide-y divide-white divide-opacity-10',
+          { 'bg-gray1 text-white': isOpen },
           { [classNameMenu]: !!classNameMenu })}
         {...getMenuProps()}
       >
         {isOpen && (
           items.map((item, index) => (
             <li
-              data-code={item}
-              className={cx('px-4 py-2 first:rounded-t-xl last:rounded-b-xl', { 'bg-white text-gray3': highlightedIndex === index })}
-              key={item}
-              {...getItemProps({ item, index })}
+              data-code={item.id}
+              className={cx('px-4 py-2 first:rounded-t-xl last:rounded-b-xl',
+                { 'bg-white text-gray3 first:rounded-t-xl last:rounded-b-xl': highlightedIndex === index })}
+              key={item.id}
+              {...getItemProps({ item, index, key: item.id })}
             >
-              {item}
+              {item.name}
             </li>
           )))}
       </ul>

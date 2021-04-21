@@ -534,8 +534,19 @@ export const selectedIndicator = {
   },
 };
 
-export const indicatorsList = ['indicator1', 'indicator2', 'indicator3', 'indicator4'];
-export const datesList = ['1990', '2000', '2010', '2020'];
+export const indicatorsList = [
+  { id: 1, name: 'indicator1' },
+  { id: 2, name: 'indicator2' },
+  { id: 3, name: 'indicator3' },
+  { id: 4, name: 'indicator4' },
+];
+export const datesList = [
+  { id: 1, name: '1990' },
+  { id: 2, name: '2000' },
+  { id: 3, name: '2010' },
+  { id: 4, name: '2020' },
+];
+
 export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
 
 export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];

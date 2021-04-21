@@ -28,15 +28,15 @@ const MapContainer: FC = () => {
     setViewport(v);
   }, []);
 
-  const handleZoomChange = useCallback(
-    (zoom) => {
-      setViewport({
-        ...viewport,
-        zoom,
-      });
-    },
-    [viewport],
-  );
+  // const handleZoomChange = useCallback(
+  //   (zoom) => {
+  //     setViewport({
+  //       ...viewport,
+  //       zoom,
+  //     });
+  //   },
+  //   [viewport],
+  // );
 
   return (
     <div className="relative h-full border-4 border-gray5 rounded">

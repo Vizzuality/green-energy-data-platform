@@ -2,8 +2,6 @@ import React, {
   FC,
 } from 'react';
 
-import { useQuery } from 'react-query';
-
 import { useRouter } from 'next/router';
 
 // components
@@ -15,19 +13,17 @@ import Dropdown from 'components/select';
 import IndicatorsData from 'layout/indicator-data';
 import WidgetsGrid from 'layout/widgets-grid';
 
-import { fetchGroups } from 'services/groups';
-
+import { useGroups } from 'hooks/groups';
 import { relatedIndicators } from '../constants';
 
 const Group: FC = () => {
   const router = useRouter();
   const { group } = router.query;
+  const { groups, isLoading } = useGroups();
 
-  const { isLoading, error, data } = useQuery('groups', () => fetchGroups().then((res) => res));
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>There is an error</p>;
-  const groups = data;
-  const selected = groups.find((g) => g.id === group);
+
+  const selected = groups && groups.find((g) => g.id === group);
 
   if (!selected) return null;
 
@@ -37,7 +33,7 @@ const Group: FC = () => {
       <Hero>
         <Nav items={groups} className="py-7.5" />
         <div className="flex items-center">
-          <h1 className="text-5.5xl py-6">{selected.subgroups[0] || ''}</h1>
+          <h1 className="text-5.5xl py-6">{selected.subgroups[0].name || ''}</h1>
           <Dropdown
             menuElements={selected.subgroups}
             border

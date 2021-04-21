@@ -36,7 +36,7 @@ const Button: FC<ButtonProps> = ({
 }: ButtonProps) => (
   <button
     type="button"
-    className={cx(`flex items-center justify-center text-center rounded-full bold focus:outline-none
+    className={cx(`flex items-center justify-center text-center rounded-full focus:outline-none
     ${THEME[theme]}
     ${SIZE[size]}`,
     { 'font-bold': size === 'sm' && theme === 'primary' },
