@@ -1,7 +1,6 @@
 import React, {
   FC,
   useState,
-  useCallback,
 } from 'react';
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
@@ -12,43 +11,19 @@ import { useGroups } from 'hooks/groups';
 // components
 import VisualizationsNav from 'components/visualizations-nav';
 import Dropdown from 'components/select/component';
-// import Button from 'components/button';
+import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import DataSource from 'components/data-source';
 
 import { indicatorsList, datesList, selectedIndicator } from '../../constants';
 
+import IndicatorDataProps from './types';
+
 type ChartProps = {
   widgetData: any,
   widgetConfig: any
 };
-
-type CategoriesObject = {
-  [key: string]: string[]
-};
-
-type ObjectData = {
-  [key: string]: Object[]
-};
-
-interface IndicatorProps {
-  id: string | number,
-  title: string,
-  type: string,
-  visualizationTypes: string[],
-  categories: { id: number, name: string }[],
-  categories_filters: CategoriesObject,
-  startDate: string | number,
-  endDate: string | number,
-  data: ObjectData, // TO DO - change when we have clear de type of data
-  config?: Object
-}
-
-interface IndicatorDataProps {
-  className?: string;
-  indicator?: IndicatorProps;
-}
 
 const IndicatorData: FC<IndicatorDataProps> = ({
   className,
@@ -61,22 +36,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     data,
     config,
   } = indicator;
-  const {
-    query: {
-      group,
-    },
-  } = useRouter();
 
-  console.log('group', group);
 
   const [active, setActive] = useState(type || visualizationTypes[0]);
-  const [visible, setVisibility] = useState(false);
 
   const { groups } = useGroups();
-
-  const toggleVisibility = useCallback(() => {
-    setVisibility(!visible);
-  }, [visible]);
 
   const Loading = () => <p>loading...</p>;
   const DynamicChart = dynamic<ChartProps>(
@@ -106,14 +70,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               className="mr-4"
             />
             <Tooltip
-              visible={visible}
+              trigger="click"
               placement="bottom-start"
               content={(
                 <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
-                  {groups && groups[0].subgroups.map(({ name, id }) => (
-                    <li key={id}>
-                      <Link href={`/compare?comp1=${groups[0].id}&comp2=${id}`}>
-                        {name}
+
+                  {groups && groups[0].subgroups.map(({ name, id, slug }) => (
+                    <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
+                      <Link href={`/compare?comp1=${groups[0].id}&comp2=${slug}`}>
+                        <a className="flex items-center py-2 w-full last:border-b-0" href="/compare">
+                          <span>{name}</span>
+                          {' '}
+                          <Icon ariaLabel="arrow" name="arrow" className="ml-2" />
+                        </a>
                       </Link>
                     </li>
                   ))}
@@ -121,23 +90,20 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               )}
             >
               <button
-                size="md"
-                className="border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white"
-                onClick={toggleVisibility}
+                type="button"
+                className="border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full"
               >
                 Compare
               </button>
             </Tooltip>
           </div>
         </div>
-        <div>
-          <p className="text-sm py-7.5">
-            Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
-            auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla.
-            Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non
-            metus auctor fringilla.
-          </p>
-        </div>
+        <p className="text-sm py-7.5">
+          Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
+          auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla.
+          Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non
+          metus auctor fringilla.
+        </p>
         <div className="flex">
           <section className="flex-1 flex-col mr-8">
             <div className="flex items-center">

@@ -49,11 +49,9 @@ const SignupPage: FC<SignupProps> = ({
             <p className="text-lg pb-20">Create an account to explore more about GEDP data insights</p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="py-4">Already registered?</p>
-            <div>
-              <Link href={{ pathname: '/signin' }}>
-                <Button theme="primary">Sign in</Button>
-              </Link>
-            </div>
+            <Link href={{ pathname: '/signin' }} passHref>
+              <a href="/signin" className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black flex items-center justify-center text-center rounded-full focus:outline-none">Sign in</a>
+            </Link>
           </section>
           <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-20 md:px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
             <form method="post" className="inline-flex flex-col flex-grow w-full">
