@@ -4,11 +4,19 @@ import cx from 'classnames';
 
 import { useRouter } from 'next/router';
 
+type SubgroupsProps = {
+  id: string;
+  slug: string;
+  name: string;
+};
+
 export interface NavProps {
   items: Array<{
     id: number;
     slug: string;
     name: string;
+    status: string;
+    subgroups: SubgroupsProps[];
   }>;
   className?: string;
 }
@@ -19,8 +27,6 @@ export const Nav: React.FC<NavProps> = ({
 }: NavProps) => {
   const router = useRouter();
   const { group } = router.query;
-
-  console.log(router, items);
 
   return (
     <nav>

@@ -108,7 +108,7 @@ const ProfilePage: FC = () => {
                 Save Changes
               </Button>
             </form>
-            <div>
+            <>
               <p className="text-grayProfile text-opacity-50 pb-10 text-sm">
                 If you delete your account, please
                 keep the following in mind: Your profile will be permenantly
@@ -125,7 +125,7 @@ const ProfilePage: FC = () => {
               >
                 Delete account
               </Button>
-            </div>
+            </>
           </div>
         </section>
         <section className="flex flex-col w-1/2">

@@ -24,20 +24,44 @@ import { fetchSubgroup } from 'services/subgroups';
 import { getSession } from 'next-auth/client';
 import { relatedIndicators } from '../../constants';
 
-const GroupPage: FC = ({
+type SubgroupsProps = {
+  id: number;
+  slug: string;
+  name: string;
+};
+
+interface GroupPageProps {
+  group: { name: string },
+  groups: Array<{
+    id: number,
+    slug: string,
+    name: string,
+    status: string,
+    subgroups: SubgroupsProps[];
+  }>,
+  subgroup: {
+    group: string,
+    id: number,
+    slug: string,
+    name: string,
+  },
+}
+
+const GroupPage: FC<GroupPageProps> = ({
   groups,
   group,
   subgroup,
-}) => {
-  // const { groups } = useGroups();
+}: GroupPageProps) => {
 
   console.log('groups', groups);
   console.log('group', group);
   console.log('subgroup', subgroup);
 
+  const { name: groupName } = group;
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
-      <Head title={`${group} analysis`} />
+      <Head title={`${groupName} analysis`} />
       <Hero>
         <Nav items={groups} className="py-7.5" />
         <div className="flex items-center">
