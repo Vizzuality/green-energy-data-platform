@@ -12,7 +12,7 @@ import Button from 'components/button';
 
 import { useGroups } from 'hooks/groups';
 
-const Indicators: FC = () => {
+const IndicatorsPage: FC = () => {
   const { groups } = useGroups();
   if (!groups) return null;
   return (
@@ -33,12 +33,17 @@ const Indicators: FC = () => {
         </div>
       </Hero>
       <main className="container text-gray1 divide-y divide-gray1 divide-opacity-20">
-        {groups.map(({ id: group_id, name, subgroups }) => (
-          <div key={group_id} className="flex flex-col">
-            <h2 className="text-3.5xl pt-2">{name}</h2>
+        {groups.map(({
+          id: groupId,
+          name: groupName,
+          slug: groupSlug,
+          subgroups,
+        }) => (
+          <div key={groupId} className="flex flex-col">
+            <h2 className="text-3.5xl pt-2">{groupName}</h2>
             <div className="flex flex-col text-lg py-10">
-              {subgroups.map(({ id, subgroup }) => (
-                <Link key={id} href={`/${group_id}:${id}`}>{subgroup}</Link>
+              {subgroups.map(({ id: subgroupId, name: subgroupName, slug: subgroupSlug }) => (
+                <Link key={subgroupId} href={`/${groupSlug}:${subgroupSlug}`}>{subgroupName}</Link>
               ))}
             </div>
           </div>
@@ -48,4 +53,4 @@ const Indicators: FC = () => {
   );
 };
 
-export default Indicators;
+export default IndicatorsPage;

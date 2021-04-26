@@ -11,7 +11,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     {
       id: 1,
       slug: 'energy',
-      name: 'Energy',
+      title: 'Energy',
+      subtitle: 'Global Energy Investment.',
+      description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
       status: 'active',
       subgroups: [
         { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
@@ -34,7 +36,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     {
       id: 2,
       slug: 'socio-economic',
-      name: 'Socio-economic',
+      title: 'Socio economic',
+      subtitle: 'Agriculture.',
+      description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
       status: 'disabled',
       subgroups: [
         { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
@@ -57,7 +61,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     {
       id: 3,
       slug: 'coal-power-plant',
-      name: 'Coal power plant',
+      title: 'Coal power plants',
+      subtitle: 'Capacity power plants in China.',
+      description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
       status: 'disabled',
       subgroups: [
         { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
@@ -80,7 +86,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     {
       id: 4,
       slug: 'lorem ipsum',
-      name: 'lorem ipsum',
+      title: 'lorem ipsum',
+      subtitle: 'lorem ipsum in China.',
+      description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
       status: 'disabled',
       subgroups: [
         { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
@@ -103,7 +111,9 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     {
       id: 5,
       slug: 'lorem ipsum2',
-      name: 'lorem ipsum',
+      title: 'lorem ipsum',
+      subtitle: 'lorem ipsum in China.',
+      description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
       status: 'disabled',
       subgroups: [
         { id: 1, name: 'Energy Balance', slug: 'energy-balance' },

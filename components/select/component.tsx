@@ -26,7 +26,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
   className = '',
   classNameMenu = '',
   children = false,
-  handleSelectedItemChange,
+  // handleSelectedItemChange,
 }: DropdownSelectProps) => {
   const items = menuElements;
   const {
@@ -53,7 +53,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
         {children}
         {!children && (
           <>
-            {selectedItem || label}
+            {(selectedItem && selectedItem.name) || label}
             <Icon
               ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
               name={icon}

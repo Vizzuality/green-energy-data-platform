@@ -22,29 +22,14 @@ import { fetchGroup, fetchGroups } from 'services/groups';
 import { fetchSubgroup } from 'services/subgroups';
 
 import { getSession } from 'next-auth/client';
+import { GroupProps, SubgroupProps } from 'types/data';
+
 import { relatedIndicators } from '../../constants';
 
-type SubgroupsProps = {
-  id: number;
-  slug: string;
-  name: string;
-};
-
 interface GroupPageProps {
-  group: { name: string },
-  groups: Array<{
-    id: number,
-    slug: string,
-    name: string,
-    status: string,
-    subgroups: SubgroupsProps[];
-  }>,
-  subgroup: {
-    group: string,
-    id: number,
-    slug: string,
-    name: string,
-  },
+  group: GroupProps,
+  groups: GroupProps[],
+  subgroup: SubgroupProps
 }
 
 const GroupPage: FC<GroupPageProps> = ({
@@ -52,13 +37,7 @@ const GroupPage: FC<GroupPageProps> = ({
   group,
   subgroup,
 }: GroupPageProps) => {
-
-  console.log('groups', groups);
-  console.log('group', group);
-  console.log('subgroup', subgroup);
-
-  const { name: groupName } = group;
-
+  const { title: groupName } = group;
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
       <Head title={`${groupName} analysis`} />
@@ -81,6 +60,7 @@ const GroupPage: FC<GroupPageProps> = ({
           <WidgetsGrid items={relatedIndicators} />
         </section>
       </div>
+
     </LayoutPage>
   );
 };
