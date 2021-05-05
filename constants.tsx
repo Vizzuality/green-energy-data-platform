@@ -81,31 +81,37 @@ export const selectedIndicator = {
     {
       id: 1,
       name: 'Coal',
+      active: false,
     },
     {
       id: 2,
       name: 'Coke',
+      active: false,
     },
     {
       id: 3,
       name: 'Crude Oil',
-      default: true,
+      active: true,
     },
     {
       id: 4,
       name: 'Diesel Oil',
+      active: false,
     },
     {
       id: 5,
       name: 'Fuel Oil',
+      active: false,
     },
     {
       id: 6,
       name: 'Kerosene',
+      active: false,
     },
     {
       id: 7,
       name: 'LPG',
+      active: false,
     },
   ],
   categories_filters: {

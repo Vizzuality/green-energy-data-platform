@@ -13,17 +13,42 @@ const Filters: FC<FiltersProps> = ({
   categories,
   className = '',
 }: FiltersProps) => {
-  const active = categories.map((c) => (
-    {
-      ...c,
-      active: c.default,
-    }));
+  const [activeCategories, setActives] = useState(categories);
+
   const handleClick = () => {
     console.log('click scroll');
   };
+
   const handleFilter = (id: number) => {
-    console.log(id, 'filters');
+    const categoriesUpdate = activeCategories.map((c) => {
+      if (c.id === id) {
+        return {
+          ...c,
+          active: true,
+        };
+      }
+      return {
+        ...c,
+      };
+    });
+    setActives(categoriesUpdate);
   };
+
+  const removeCategory = (id: number) => {
+    const categoriesUpdate = activeCategories.map((c) => {
+      if (c.id === id) {
+        return {
+          ...c,
+          active: false,
+        };
+      }
+      return {
+        ...c,
+      };
+    });
+    setActives(categoriesUpdate);
+  };
+
   return (
     <div className={cx('inline-flex flex-col justify-center text-center rounded-md bg-gray5 hover:opacity-90 px-1.5',
       { [className]: className })}
@@ -35,9 +60,9 @@ const Filters: FC<FiltersProps> = ({
         </div>
       </div>
       <div className="flex flex-col items-center">
-        {categories.map(({ id, name, active }) => (
+        {activeCategories.map(({ id, name, active }) => (
           <button
-            key={id}
+            key={`${id}-${active}`}
             name={name}
             type="button"
             className={cx('flex justify-between cursor-pointer w-full mb-1.5 bg-white active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
@@ -46,12 +71,15 @@ const Filters: FC<FiltersProps> = ({
           >
             <span className="flex-1 py-2 pl-6">{name}</span>
             {active && (
-              <Icon
-                ariaLabel="close"
-                name="close"
-                size="sm"
-                className="ml-3 h-full"
-              />
+              <div className="h-full flex justify-center items-center">
+                <Icon
+                  ariaLabel="close"
+                  name="close"
+                  size="sm"
+                  className="mx-3"
+                  onClick={() => removeCategory(id)}
+                />
+              </div>
             )}
           </button>
         ))}
