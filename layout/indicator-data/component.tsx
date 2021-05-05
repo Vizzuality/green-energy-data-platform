@@ -114,9 +114,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 <div className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3">
                   <ul>
                     {groups.map(
-                      ({ name, status }) => (
+                      ({ name, status, id }) => (
                         status === 'disabled' && (
-                          <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
+                          <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
                             <Link key="group1" href="/compare" passHref>
                               <a className="flex items-center py-2 w-full last:border-b-0" href="/compare">
                                 <span>{name}</span>
