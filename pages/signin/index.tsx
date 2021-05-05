@@ -39,7 +39,7 @@ const SigninPage: FC<SigninProps> = ({
   };
 
   return (
-    <LayoutPage className="bg-gradient-color1 h-screen">
+    <LayoutPage className="bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
       <main className="flex flex-col h-full w-full m-auto">
         <Header />

@@ -12,7 +12,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const THEME = {
   primary:
     'border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
-  'primary-background': 'border-2 bg-white border-white',
+  'primary-background': 'text-gray1 border-2 bg-white border-white',
   secondary:
     'border-2 border-gray1 bg-white hover:bg-gray1 hover:text-white',
   'secondary-background': 'bg-gray1 text-white',
