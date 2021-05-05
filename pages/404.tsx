@@ -9,7 +9,7 @@ import Button from 'components/button';
 
 const ProfilePage: FC = () => (
   <LayoutPage className="text-white bg-color1">
-    <Head title="Green Energy Data Platform" />
+    <Head title="Page not found" />
     <main className="flex flex-col h-full w-full m-auto">
       <Header />
 
