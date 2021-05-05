@@ -71,7 +71,6 @@ const customServerSideProps = async (req) => {
     subgroup: subgroupQueryParam,
   } = req.query;
   const session = await getSession(req);
-
   const groups = await fetchGroups(`Bearer ${session.accessToken}`);
   const group = await fetchGroup(groupQueryParam, `Bearer ${session.accessToken}`);
   const subgroup = await fetchSubgroup(subgroupQueryParam, `Bearer ${session.accessToken}`);

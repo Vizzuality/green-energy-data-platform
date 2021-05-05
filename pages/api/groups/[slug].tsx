@@ -66,7 +66,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
       status: 'disabled',
       subgroups: [
-        { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
+        { id: 1, name: 'Energy Balance', slug: 'energy-balance3' },
         { id: 2, name: 'Energy Supply', slug: 'energy-supply' },
         { id: 3, name: 'Energy Efficiency', slug: 'energy-efficiency' },
         { id: 4, name: 'Energy Trade', slug: 'energy-trade' },
@@ -91,7 +91,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
       status: 'disabled',
       subgroups: [
-        { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
+        { id: 1, name: 'Energy Balance', slug: 'energy-balance2' },
         { id: 2, name: 'Energy Supply', slug: 'energy-supply' },
         { id: 3, name: 'Energy Efficiency', slug: 'energy-efficiency' },
         { id: 4, name: 'Energy Trade', slug: 'energy-trade' },
@@ -133,5 +133,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         { id: 15, name: 'Energy Resources Reserves', slug: 'energy-esources-reserves' },
       ],
     },
-  ].find(({ slug }) => querySlug === slug));
+  ].find(({ id }) => parseInt(querySlug, 10) === id));
 };

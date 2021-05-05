@@ -25,10 +25,7 @@ export const fetchGroup = (
   },
   params,
 })
-  .then(({ data }) => {
-    console.log(data, 'data')
-    return data
-  });
+  .then(({ data }) => data);
 
 export default {
   fetchGroups,

@@ -4,7 +4,6 @@ import React, {
 } from 'react';
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useGroups } from 'hooks/groups';
 
@@ -38,11 +37,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     config,
   } = indicator;
 
-
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
   const { groups } = useGroups();
-
   const Loading = () => <p>loading...</p>;
   const DynamicChart = dynamic<ChartProps>(
     () => import(`components/indicator-visualizations/${active}`),
@@ -78,7 +75,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
                   {groups && groups[0].subgroups.map(({ name, id, slug }) => (
                     <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
-                      <Link href={`/compare?comp1=${groups[0].id}&comp2=${slug}`}>
+                      <Link href={{
+                        pathname: '/compare',
+                        query: {
+                          // sgInd1: groups[0].slug,
+                          // sgInd2: slug,
+                          sgInd1: 'energy-balance',
+                          sgInd2: 'energy-supply',
+                        },
+                      }}
+                      >
                         <a className="flex items-center py-2 w-full last:border-b-0" href="/compare">
                           <span>{name}</span>
                           {' '}

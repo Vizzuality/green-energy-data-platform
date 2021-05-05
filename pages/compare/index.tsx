@@ -1,8 +1,7 @@
 import React, {
   FC,
 } from 'react';
-import Link from 'next/link';
-// import cx from 'classnames';
+
 import { useRouter } from 'next/router';
 
 // authentication
@@ -14,68 +13,67 @@ import {
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
-import Hero from 'layout/hero';
-import Button from 'components/button';
+import Header from 'layout/header';
+import Compare from 'layout/compare';
 
 // services
 import { fetchSubgroup } from 'services/subgroups';
 
 import { getSession } from 'next-auth/client';
 
-import { useGroups } from 'hooks/groups';
+import { useGroup, useGroups } from 'hooks/groups';
+import { useSubgroup } from 'hooks/subgroups';
 
 const ComparePage: FC = ({
   subgroup1,
-  subgroup2
+  subgroup2,
 }) => {
   const { groups } = useGroups();
+  const { query } = useRouter();
+  const { sgInd1, sgInd2 } = query;
+
+  const router = useRouter();
+  const { data } = useSubgroup(sgInd1);
+  const { data: dataGroup1 } = useGroup((data && data.group) || null);
+
+  const { data: dataCompare } = useSubgroup(sgInd2);
+  const { data: dataGroup2 } = useGroup((dataCompare && dataCompare.group) || null);
+  if (!dataGroup1 || !dataGroup2) return null;
 
   if (!groups) return null;
+  const handleClose = (id, group, slug) => {
+    const url = `${group + id}/${slug + id}`;
+    router.push(url, url, { shallow: true });
+  };
 
-  console.log(subgroup1, subgroup2, 'subgrupos')
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
-      hola
-      {/* <Head title="Green Energy Data Platform" />
-      <Hero>
-        <div className="flex flex-wrap space-x-3 items-center">
-          <p>Filter by:</p>
-          {groups.map(({ id, name }) => (
-            <Button
-              key={id}
-              size="xlg"
-              theme="primary"
-            >
-              {name}
-            </Button>
-          ))}
-        </div>
-      </Hero>
-      <main className="container text-gray1 divide-y divide-gray1 divide-opacity-20">
-        {groups.map(({ id: group_id, name, subgroups }) => (
-          <div key={group_id} className="flex flex-col">
-            <h2 className="text-3.5xl pt-2">{name}</h2>
-            <div className="flex flex-col text-lg py-10">
-              {subgroups.map(({ id, subgroup }) => (
-                <Link key={id} href={`/${group_id}:${id}`}>{subgroup}</Link>
-              ))}
-            </div>
-          </div>
-        ))}
-      </main> */}
+      <Head title="Green Energy Data Platform" />
+      <Header className="border-b border-white border-opacity-30" />
+      <section className="flex space-x-3">
+        <Compare
+          id={1}
+          subgroup={sgInd1}
+          group={dataGroup1.title}
+          onClose={handleClose}
+        />
+        <Compare
+          id={2}
+          subgroup={sgInd2}
+          group={dataGroup2.title}
+          onClose={handleClose}
+        />
+      </section>
     </LayoutPage>
   );
 };
 
 const customServerSideProps = async (req) => {
-  console.log(req.query, req, '******')
   const {
     subgroup1: subgroupQueryParam1,
     subgroup2: subgroupQueryParam2,
   } = req.query;
   const session = await getSession(req);
-  console.log(session)
-console.log(req.query, req)
   const subgroup1 = await fetchSubgroup(subgroupQueryParam1, `Bearer ${session.accessToken}`);
   const subgroup2 = await fetchSubgroup(subgroupQueryParam2, `Bearer ${session.accessToken}`);
 

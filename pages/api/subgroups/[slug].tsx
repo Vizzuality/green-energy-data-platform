@@ -6,7 +6,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       slug: querySlug,
     },
   } = req;
-
   res.status(200).json([
     {
       slug: 'energy-balance', id: 1, name: 'Energy Balance', group: 1,
