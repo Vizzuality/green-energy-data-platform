@@ -16,7 +16,7 @@ const Footer: FC<FooterProps> = ({
 
   >
     <div className="flex w-full justify-around p-2 items-center">
-      <img alt="GEDP" src="images/logo_GEDP.svg" className="w-28 h-auto" />
+      <img alt="GEDP" src="/images/logo_GEDP.svg" className="w-28 h-auto" />
       <div className="flex divide-x">
         <p className="px-4">Privacy Policy</p>
         <p className="px-4">Terms of Service</p>
