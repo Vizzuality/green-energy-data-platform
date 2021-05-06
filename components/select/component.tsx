@@ -7,7 +7,7 @@ import Icon from 'components/icon';
 export interface DropdownSelectProps {
   menuElements: { id: (string | number), name: string }[],
   border?: boolean,
-  label?: string,
+  label?: string | boolean,
   icon?: string,
   iconColor?: string,
   iconSize?: 'sm' | 'md' | 'lg' | 'xlg',
@@ -20,7 +20,7 @@ export interface DropdownSelectProps {
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
   menuElements,
-  label = '',
+  label,
   icon = '',
   iconSize,
   iconRotable = true,

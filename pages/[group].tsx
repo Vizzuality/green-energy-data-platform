@@ -24,7 +24,6 @@ const Group: FC = () => {
   if (isLoading) return <p>Loading...</p>;
 
   const selected = groups && groups.find((g) => g.id === group);
-
   if (!selected) return null;
 
   return (
@@ -36,11 +35,9 @@ const Group: FC = () => {
           <h1 className="text-5.5xl py-6">{selected.subgroups[0].name || ''}</h1>
           <Dropdown
             menuElements={selected.subgroups}
-            border="border-2"
-            className="ml-3 h-full"
+            className="ml-3 h-full border-2"
             icon="triangle_border"
             iconSize="md"
-            theme="light"
             label={false}
           />
         </div>

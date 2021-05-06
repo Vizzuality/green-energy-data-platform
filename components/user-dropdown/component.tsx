@@ -22,6 +22,7 @@ const UserDropdown: FC<UserDropdownProps> = ({
   };
 
   const { user } = useMe();
+
   const handleClick = () => {
     signOut({ callbackUrl: 'http://localhost:3000/signin' });
   };
