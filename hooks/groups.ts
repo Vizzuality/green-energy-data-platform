@@ -25,14 +25,15 @@ export function useGroups() {
   }), [status, error, isLoading, data]);
 }
 
-export function useGroup(id) {
+export function useGroup(id, queryConfig = {}) {
   const [session, loading] = useSession();
 
   const query = useQuery('fetch-group',
     () => fetchGroup(id, `Bearer ${session.accessToken}`)
       .then((data) => data),
     {
-      enabled: !!session && !loading,
+      ...queryConfig,
+      enabled: !!((!!session && !loading) && queryConfig?.enabled),
     });
 
   const {

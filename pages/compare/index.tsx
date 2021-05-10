@@ -39,7 +39,9 @@ const ComparePage: FC<CompareProps> = ({
   const router = useRouter();
   const { data } = useSubgroup(sgInd1);
 
-  const { data: dataGroup1 } = useGroup((data && data.group));
+  const { data: dataGroup1 } = useGroup(data?.group, ({
+    enabled: data?.group,
+  }));
 
   const { data: dataCompare } = useSubgroup(sgInd2);
   const { data: dataGroup2 } = useGroup((dataCompare && dataCompare.group));
