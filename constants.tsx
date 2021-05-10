@@ -59,7 +59,7 @@ export const groupsLanding = [
     title: 'Coal power plants',
     subtitle: 'Capacity power plants in China.',
     description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
-    href: '/coal-power-plants',
+    href: '/coal-power-plant',
     src: 'images/landing/coal-power-plants.png',
   },
 ];
@@ -81,31 +81,37 @@ export const selectedIndicator = {
     {
       id: 1,
       name: 'Coal',
+      active: false,
     },
     {
       id: 2,
       name: 'Coke',
+      active: false,
     },
     {
       id: 3,
       name: 'Crude Oil',
-      default: true,
+      active: true,
     },
     {
       id: 4,
       name: 'Diesel Oil',
+      active: false,
     },
     {
       id: 5,
       name: 'Fuel Oil',
+      active: false,
     },
     {
       id: 6,
       name: 'Kerosene',
+      active: false,
     },
     {
       id: 7,
       name: 'LPG',
+      active: false,
     },
   ],
   categories_filters: {

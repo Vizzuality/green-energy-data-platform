@@ -4,17 +4,15 @@ import Link from 'next/link';
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
-import Header from 'layout/header';
 import Button from 'components/button';
 
 const ProfilePage: FC = () => (
   <LayoutPage className="text-white bg-color1">
     <Head title="Page not found" />
-    <main className="flex flex-col h-full w-full m-auto">
-      <Header />
-
-      <div className="m-auto h-full flex-1 py-10 container">
-        <div className="flex flex-col px-10 items-center justify-around">
+    <main className="flex flex-col h-full w-full m-auto flex-grow">
+      <div className="container m-auto lg:px-10 p-4 w-full h-full flex flex-col flex-grow">
+        <img alt="GEDP" src="/images/logo_GEDP.svg" className="w-28 h-auto" />
+        <div className="flex flex-col p-10 items-center justify-around">
           <h1 className="text-9xl pb-5">404</h1>
           <h2 className="text-3.5xl pb-5">Oops, sorry we can’t find that page.</h2>
           <p className="text-lg pb-10">Either something went wrong or the page doesn’t exist anymore.</p>

@@ -2,7 +2,7 @@ import React, { ButtonHTMLAttributes, FC, ReactNode } from 'react';
 import cx from 'classnames';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: ReactNode,
+  children?: ReactNode | string,
   className?: string,
   onClick?: (evt: any | '') => void,
   size?: 'sm' | 'md' | 'lg' | 'xlg',
@@ -11,11 +11,12 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const THEME = {
   primary:
-    'border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
-  'primary-background': 'text-gray1 border-2 bg-white border-white',
+    'border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
+  'primary-background': 'bg-white border-white text-gray1',
   secondary:
-    'border-2 border-gray1 bg-white hover:bg-gray1 hover:text-white',
-  'secondary-background': 'bg-gray1 text-white',
+    'border-gray2 hover:bg-gray2 hover:text-white',
+  'secondary-background-dark': 'bg-button border-gray2 text-white',
+  'secondary-background-light': 'bg-white',
   info: 'bg-color2 border-color2 text-white',
 };
 
@@ -27,7 +28,7 @@ const SIZE = {
 };
 
 const Button: FC<ButtonProps> = ({
-  children = Button,
+  children,
   className,
   theme = 'primary-background',
   size = 'md',

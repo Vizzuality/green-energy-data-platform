@@ -21,7 +21,7 @@ const Item: FC<ItemProps> = ({
   links,
   className = '',
 }: ItemProps) => (
-  <div className="inline-flex flex-col s-center justify-center text-center rounded-2lg bg-gray1 divide-y divide-gray4 divide-opacity-90 hover:opacity-90">
+  <div className="inline-flex flex-col s-center justify-center text-center rounded-2lg divide-y divide-gray4 divide-opacity-90 hover:opacity-90">
     <div
       className={cx('flex w-full s-start justify-start p-5',
         { [className]: className })}

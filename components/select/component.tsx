@@ -7,8 +7,9 @@ import Icon from 'components/icon';
 export interface DropdownSelectProps {
   menuElements: { id: (string | number), name: string }[],
   border?: boolean,
-  label?: string,
+  label?: string | boolean,
   icon?: string,
+  iconColor?: string,
   iconSize?: 'sm' | 'md' | 'lg' | 'xlg',
   iconRotable?: boolean,
   className?: string,
@@ -19,14 +20,14 @@ export interface DropdownSelectProps {
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
   menuElements,
-  label = '',
+  label,
   icon = '',
   iconSize,
   iconRotable = true,
   className = '',
   classNameMenu = '',
   children = false,
-  handleSelectedItemChange,
+  // handleSelectedItemChange,
 }: DropdownSelectProps) => {
   const items = menuElements;
   const {
@@ -53,7 +54,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
         {children}
         {!children && (
           <>
-            {selectedItem || label}
+            {(selectedItem && selectedItem.name) || label}
             <Icon
               ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
               name={icon}

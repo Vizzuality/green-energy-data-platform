@@ -12,6 +12,7 @@ export default class MyDocument extends Document {
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <meta name="author" content="Vizzuality" />
           <meta name="robots" content="noindex" />
+          <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
         </Head>
         <body id="root">
           <Main />

@@ -19,9 +19,7 @@ const LayoutPage: FC<LayoutPageProps> = ({
     [className]: !!className,
   })}
   >
-    <div>
-      {children}
-    </div>
+    {children}
     <Footer />
   </div>
 );
