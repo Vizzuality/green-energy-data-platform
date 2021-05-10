@@ -38,12 +38,12 @@ export function useGroup(id) {
   const {
     data, status, error, isLoading,
   } = query;
-  return useMemo(() => ({
+  return ({
     status,
     error,
     isLoading,
     data,
-  }), [status, error, isLoading, data]);
+  });
 }
 
 export default {

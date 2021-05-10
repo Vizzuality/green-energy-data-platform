@@ -33,7 +33,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     title,
     type,
     visualizationTypes,
+    categories,
     data,
+    description,
     config,
   } = indicator;
 
@@ -73,7 +75,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               content={(
                 <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
 
-                  {groups && groups[0].subgroups.map(({ name, id, slug }) => (
+                  {groups && groups[0].subgroups.map(({ name, id }) => (
                     <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
                       <Link href={{
                         pathname: '/compare',
@@ -106,10 +108,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           </div>
         </div>
         <p className="text-sm py-7.5">
-          Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus
-          auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla.
-          Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non
-          metus auctor fringilla.
+          {description}
         </p>
         <div className="flex">
           <section className="flex-1 flex-col mr-8">

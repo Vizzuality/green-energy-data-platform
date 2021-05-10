@@ -21,28 +21,34 @@ import { fetchSubgroup } from 'services/subgroups';
 
 import { getSession } from 'next-auth/client';
 
-import { useGroup, useGroups } from 'hooks/groups';
+import { useGroup } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
 
-const ComparePage: FC = ({
+interface CompareProps {
+  subgroup1: string,
+  subgroup2: string,
+}
+
+const ComparePage: FC<CompareProps> = ({
   subgroup1,
   subgroup2,
-}) => {
-  const { groups } = useGroups();
+}: CompareProps) => {
   const { query } = useRouter();
   const { sgInd1, sgInd2 } = query;
 
   const router = useRouter();
   const { data } = useSubgroup(sgInd1);
-  const { data: dataGroup1 } = useGroup((data && data.group) || null);
+
+  const { data: dataGroup1 } = useGroup((data && data.group));
 
   const { data: dataCompare } = useSubgroup(sgInd2);
-  const { data: dataGroup2 } = useGroup((dataCompare && dataCompare.group) || null);
+  const { data: dataGroup2 } = useGroup((dataCompare && dataCompare.group));
+
   if (!dataGroup1 || !dataGroup2) return null;
 
-  if (!groups) return null;
-  const handleClose = (id, group, slug) => {
-    const url = `${group + id}/${slug + id}`;
+  const handleClose = (group, slug) => {
+    const { slug: groupSlug } = group;
+    const url = `${groupSlug}/${slug}`;
     router.push(url, url, { shallow: true });
   };
 
@@ -54,13 +60,13 @@ const ComparePage: FC = ({
         <Compare
           id={1}
           subgroup={sgInd1}
-          group={dataGroup1.title}
+          group={dataGroup1}
           onClose={handleClose}
         />
         <Compare
           id={2}
           subgroup={sgInd2}
-          group={dataGroup2.title}
+          group={dataGroup2}
           onClose={handleClose}
         />
       </section>

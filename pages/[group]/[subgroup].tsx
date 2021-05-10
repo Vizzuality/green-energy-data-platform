@@ -38,6 +38,7 @@ const GroupPage: FC<GroupPageProps> = ({
   subgroup,
 }: GroupPageProps) => {
   const { title: groupName } = group;
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
       <Head title={`${groupName} analysis`} />
@@ -51,6 +52,7 @@ const GroupPage: FC<GroupPageProps> = ({
             className="ml-3"
             icon="triangle_border"
             iconSize="lg"
+            isRounded
           />
         </div>
       </Hero>
@@ -70,6 +72,7 @@ const customServerSideProps = async (req) => {
     group: groupQueryParam,
     subgroup: subgroupQueryParam,
   } = req.query;
+
   const session = await getSession(req);
   const groups = await fetchGroups(`Bearer ${session.accessToken}`);
   const group = await fetchGroup(groupQueryParam, `Bearer ${session.accessToken}`);

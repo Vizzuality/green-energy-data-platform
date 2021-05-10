@@ -116,7 +116,7 @@ const SigninPage: FC<SigninProps> = ({
               <Button
                 type="submit"
                 aria-label="Log in"
-                theme="secondary-background"
+                theme="secondary-background-dark"
                 size="xlg"
                 onClick={(evt) => {
                   evt.preventDefault();

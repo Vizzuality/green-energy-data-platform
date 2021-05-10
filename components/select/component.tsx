@@ -12,6 +12,7 @@ export interface DropdownSelectProps {
   iconColor?: string,
   iconSize?: 'sm' | 'md' | 'lg' | 'xlg',
   iconRotable?: boolean,
+  isRounded?: boolean,
   className?: string,
   classNameMenu?: string,
   children?: ReactNode | boolean,
@@ -24,6 +25,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
   icon = '',
   iconSize,
   iconRotable = true,
+  isRounded = false,
   className = '',
   classNameMenu = '',
   children = false,
@@ -44,7 +46,9 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
     <div className={cx('relative w-max', { [className]: !!className })}>
       <button
         type="button"
-        className="inline-flex items-center justify-items-center text-sm text-color1 border-gray1 border-opacity-20 border rounded-2xl px-4 py-1 border-box"
+        className={cx('inline-flex items-center justify-items-center text-sm text-color1 border-gray1 border-opacity-20 border border-box',
+          { 'rounded-2xl px-4 py-1': !isRounded },
+          { 'p-4 rounded-full': isRounded })}
         {...getToggleButtonProps({
           onMouseEnter: () => {
             openMenu();
@@ -54,12 +58,15 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
         {children}
         {!children && (
           <>
-            {(selectedItem && selectedItem.name) || label}
+            {(selectedItem && selectedItem.name) || label || ''}
             <Icon
               ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
               name={icon}
               size={iconSize}
-              className={cx('ml-3', { 'transform -rotate-180': isOpen && iconRotable })}
+              className={cx(
+                { 'transform -rotate-180': isOpen && iconRotable },
+                { 'ml-3': (selectedItem && selectedItem.name) || label },
+              )}
             />
           </>
         )}

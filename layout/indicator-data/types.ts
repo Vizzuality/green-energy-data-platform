@@ -16,6 +16,7 @@ interface IndicatorProps {
   startDate: string | number,
   endDate: string | number,
   data: ObjectData, // TO DO - change when we have clear de type of data
+  description: string,
   config?: Object
 }
 

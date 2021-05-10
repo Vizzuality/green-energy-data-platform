@@ -133,5 +133,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         { id: 15, name: 'Energy Resources Reserves', slug: 'energy-esources-reserves' },
       ],
     },
-  ].find(({ id }) => parseInt(querySlug, 10) === id));
+  ].find(({ slug }) => querySlug === slug));
 };
