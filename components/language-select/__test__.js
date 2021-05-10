@@ -1,6 +1,6 @@
 describe('Translations toggle successfully', () => {
   it('Translates to EN', () => {
-    cy.visit('/signin');
+    cy.visit('/');
     cy.get('#downshift-0-toggle-button').click();
     cy.get('[data-code="en_GB"]').click();
     cy.get('#downshift-0-toggle-button')

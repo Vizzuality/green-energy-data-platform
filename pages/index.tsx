@@ -7,12 +7,6 @@ import {
   useSession,
 } from 'next-auth/client';
 
-// authentication
-import {
-  withAuthentication,
-  withUser,
-} from 'hoc/auth';
-
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
@@ -46,7 +40,5 @@ const HomePage: FC = () => {
     </LayoutPage>
   );
 };
-
-export const getServerSideProps = withAuthentication(withUser());
 
 export default HomePage;
