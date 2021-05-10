@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'News Gothic MT';
+  }
+
+  img,
+  svg {
+    display: block;
+    vertical-align: middle;
+  }
+
+  input::-webkit-decoration,
+  input::-webkit-cancel-button,
+  input::-webkit-results-button,
+  input::-webkit-results-decoration {
+    -webkit-appearance: none;
+  }
+
+  input::-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active
+  input::-webkit-autofill-selected {
+    background-color: white !important;
+  }
+
+  input[type=checkbox]:checked {
+    background-color: #3A3F59;
+    color: white;
+  }
+
+  /* News Gothic MT */
+  @font-face {
+    font-family: 'News Gothic MT';
+    src: url('/fonts/newsgothicmt-webfont.woff2') format('woff2'),
+      url('/fonts/newsgothicmt-webfont.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'News Gothic MT';
+    src: url('/fonts/newsgothicmtbold-webfont.woff2') format('woff2'),
+      url('/fonts/newsgothicmtbold-webfont.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+  }
+}
+
+@layer utilities {
+  .bg-shadow {
+    @apply shadow-sm;
+  }
+
+  @supports (filter: drop-shadow(10px 10px 30px rgba(22, 26, 47, 0.24))) {
+    .bg-shadow {
+      filter: drop-shadow(10px 10px 30px rgba(22, 26, 47, 0.24));
+    }
+  }
+}
