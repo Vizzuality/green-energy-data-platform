@@ -9,6 +9,7 @@ import VisualizationsOptions from './constants';
 export interface VisualizationsNavProps {
   visualizationTypes: string[],
   active: string;
+  mobile?: boolean,
   className?: string;
   onClick: (id: string) => void;
 }
@@ -16,6 +17,7 @@ export interface VisualizationsNavProps {
 export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
   visualizationTypes,
   className,
+  mobile = false,
   active,
   onClick,
 }: VisualizationsNavProps) => {
@@ -30,7 +32,7 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
         className={cx('flex justify-between flex-grow border-b-gray',
           { [className]: !!className })}
       >
-        <p className="pt-4">Select Visualization:</p>
+        {!mobile && (<p className="pt-4">Select Visualization:</p>)}
         {VisualizationsOptions.map(({ icon, label, id }) => (
           <li
             role="menuitem"
@@ -39,20 +41,28 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
             onKeyPress={() => handleVisualization(id)}
             className={cx('relative flex flex-col p-4 text-color1 cursor-pointer',
               { 'font-bold text-opacity-100': active === id },
-              { 'pointer-events-none text-opacity-20': !visualizationTypes.includes(id) })}
+              { 'pointer-events-none text-opacity-20': !visualizationTypes.includes(id) },
+              { 'border rounded border-color1': (active === id) && mobile })}
           >
             <div className="flex items-center">
               <Icon
                 ariaLabel={`${label}-visualization`}
                 name={icon}
                 size="lg"
-                className="mr-3 text-current"
+                className="text-current"
               />
-              <span className={cx('hidden sm:block', { 'text-gray2': active === id })}>
-                {label}
-              </span>
+              {!mobile && (
+                <span className={cx('ml-3 hidden sm:block', { 'text-gray2': active === id })}>
+                  {label}
+                </span>
+              )}
             </div>
-            <div className={cx({ 'absolute left-4 right-4 bottom-0 rounded-2xl h-1 bg-current': active === id })} />
+            {!mobile && (
+              <div className={cx(
+                { 'absolute left-4 right-4 bottom-0 rounded-2xl h-1 bg-current': active === id },
+              )}
+              />
+            )}
           </li>
         ))}
       </ul>

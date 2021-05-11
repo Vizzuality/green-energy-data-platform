@@ -21,11 +21,10 @@ const Item: FC<ItemProps> = ({
   links,
   className = '',
 }: ItemProps) => (
-  <div className="inline-flex flex-col s-center justify-center text-center rounded-2lg divide-y divide-gray4 divide-opacity-90 hover:opacity-90">
-    <div
-      className={cx('flex w-full s-start justify-start p-5',
-        { [className]: className })}
-    >
+  <div className={cx('w-full m-auto cursor-pointer inline-flex flex-grow text-center divide-y divide-gray4 divide-opacity-90 hover:bg-gray1 hover:bg-opacity-90 hover:text-white',
+    { [className]: className })}
+  >
+    <div className="inline-flex w-full lg:px-10 md:p-5">
       <Icon ariaLabel={name} color="text-color1" name={icon} size="lg" className="mr-5" />
       <div className="flex flex-col">
         <p className="inline-flex text-base">{name}</p>

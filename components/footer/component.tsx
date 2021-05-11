@@ -21,9 +21,9 @@ const Footer: FC<FooterProps> = ({
         <p className="px-4">Privacy Policy</p>
         <p className="px-4">Terms of Service</p>
       </div>
-      <div>
+      <>
         <LanguageSelect />
-      </div>
+      </>
     </div>
   </section>
 );
