@@ -25,7 +25,7 @@ export function useGroups() {
   }), [status, error, isLoading, data]);
 }
 
-export function useGroup(id, queryConfig = {}) {
+export function useGroup(id, queryConfig = { enabled: true }) {
   const [session, loading] = useSession();
 
   const query = useQuery('fetch-group',

@@ -9,6 +9,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       subtitle: 'Global Energy Investment.',
       description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
       status: 'active',
+      defaultSubgroup: 'energy-balance',
       subgroups: [
         { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
         { id: 2, name: 'Energy Supply', slug: 'energy-supply' },
@@ -33,9 +34,10 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       title: 'Socio economic',
       subtitle: 'Agriculture.',
       description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+      defaultSubgroup: 'transportation',
       status: 'disabled',
       subgroups: [
-        { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
+        { id: 1, name: 'Transportation', slug: 'transportation' },
         { id: 2, name: 'Energy Supply', slug: 'energy-supply' },
         { id: 3, name: 'Energy Efficiency', slug: 'energy-efficiency' },
         { id: 4, name: 'Energy Trade', slug: 'energy-trade' },
@@ -58,9 +60,10 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       title: 'Coal power plants',
       subtitle: 'Capacity power plants in China.',
       description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+      defaultSubgroup: 'capacity',
       status: 'disabled',
       subgroups: [
-        { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
+        { id: 1, name: 'Capacity', slug: 'capacity' },
         { id: 2, name: 'Energy Supply', slug: 'energy-supply' },
         { id: 3, name: 'Energy Efficiency', slug: 'energy-efficiency' },
         { id: 4, name: 'Energy Trade', slug: 'energy-trade' },
@@ -83,6 +86,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       title: 'lorem ipsum',
       subtitle: 'lorem ipsum in China.',
       description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+      defaultSubgroup: 'energy-balance',
       status: 'disabled',
       subgroups: [
         { id: 1, name: 'Energy Balance', slug: 'energy-balance' },
@@ -108,6 +112,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       title: 'lorem ipsum',
       subtitle: 'lorem ipsum in China.',
       description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
+      defaultSubgroup: 'energy-balance',
       status: 'disabled',
       subgroups: [
         { id: 1, name: 'Energy Balance', slug: 'energy-balance' },

@@ -74,10 +74,10 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       slug: 'industry', id: 79, name: 'Industry', groupId: '2',
     },
     {
-      slug: 'whatever33', id: 89, name: 'Energy Technology', group: 'energy',
+      slug: 'transportation', id: 89, name: 'Transportation', group: 'energy',
     },
     {
-      slug: 'whatever37', id: 99, name: 'Energy Consumption', group: 'energy',
+      slug: 'capacity', id: 99, name: 'Capacity', group: 'energy',
     },
     {
       slug: 'whatever99', id: 101, name: 'Internantional Comparison', group: 'energy',

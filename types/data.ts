@@ -12,5 +12,6 @@ export interface GroupProps {
   subtitle: string;
   status: string;
   description: string;
+  defaultSubgroup: string,
   subgroups: SubgroupProps[];
 }
