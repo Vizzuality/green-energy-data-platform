@@ -24,6 +24,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
   label,
   icon = '',
   iconSize,
+  iconColor,
   iconRotable = true,
   isRounded = false,
   className = '',
@@ -64,6 +65,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
               name={icon}
               size={iconSize}
               className={cx(
+                { iconColor: !!iconColor },
                 { 'transform -rotate-180': isOpen && iconRotable },
                 { 'ml-3': (selectedItem && selectedItem.name) || label },
               )}

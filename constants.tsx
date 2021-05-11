@@ -49,6 +49,7 @@ export const selectedIndicator = {
   id: 1,
   type: 'pie',
   title: 'Balance',
+  description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
   visualizationTypes: ['line', 'table', 'pie', 'bar', 'map'],
   categories: [
     {

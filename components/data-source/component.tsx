@@ -5,6 +5,7 @@ import Item from './item';
 
 interface DataProps {
   className?: string,
+  type?: 'vertical' | 'horizontal'
 }
 
 const downloadLinks = [
@@ -19,12 +20,32 @@ const dataSourceLinks = [
 
 const Card: FC<DataProps> = ({
   className = '',
+  type = 'vertical',
 }: DataProps) => (
-  <div className={cx('inline-flex flex-col s-center justify-center text-center bg-gray5 hover:opacity-90 rounded-2xl',
-    { [className]: className })}
+  <div className={cx('flex divide-gray4 divide-opacity-90 text-center bg-gray5 text-gray1 rounded-2xl',
+    { [className]: className },
+    { 'divide-y flex-col': type === 'vertical' },
+    { 'divide-x flex-row': type === 'horizontal' })}
   >
-    <Item className="rounded-t-2xl border-b border-gray4 border-opacity-90" icon="download" name="Download" links={downloadLinks} />
-    <Item className=" rounded-b-2xl" icon="data" name="Data Source" links={dataSourceLinks} />
+    <Item
+      icon="download"
+      name="Download"
+      links={downloadLinks}
+      className={cx(
+        { 'justify-center rounded-l-2xl': type === 'horizontal' },
+        { 'justify-start rounded-t-2xl': type === 'vertical' },
+      )}
+    />
+    <Item
+      icon="data"
+      name="Data
+      Source"
+      links={dataSourceLinks}
+      className={cx(
+        { 'justify-center rounded-r-2xl': type === 'horizontal' },
+        { 'justify-start rounded-b-2xl': type === 'vertical' },
+      )}
+    />
   </div>
 );
 

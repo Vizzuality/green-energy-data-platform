@@ -134,6 +134,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             <Filters categories={categories} className="mb-4" />
             <Legend categories={categories} className="mb-4" />
             <DataSource />
+            <DataSource type="horizontal" />
           </section>
         </div>
       </div>

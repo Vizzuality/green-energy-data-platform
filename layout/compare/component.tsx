@@ -12,16 +12,15 @@ import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 
+// hooks
+import { useGroup } from 'hooks/groups';
+import { useSubgroup } from 'hooks/subgroups';
+
 import { indicatorsList, datesList, selectedIndicator } from '../../constants';
 
 interface CompareLayoutProps {
-  id: number,
-  group: {
-    title: string
-    slug: string
-  },
   subgroup: string | string[],
-  onClose: (id: number, group: string, slug: string) => void,
+  onClose: (groupSlug: string, subgroupSlug: string) => void,
   className?: string,
 }
 
@@ -31,27 +30,30 @@ type ChartProps = {
 };
 
 const CompareLayout: FC<CompareLayoutProps> = ({
-  id,
-  group,
   subgroup,
   className,
   onClose,
 }: CompareLayoutProps) => {
   const {
-    title: groupTitle,
-    slug: groupSlug,
-  } = group;
-  const {
     title,
     type,
     visualizationTypes,
     categories,
-    data,
+    data: indicatorData,
     description,
     config,
   } = selectedIndicator;
-
   const [active, setActive] = useState(type || visualizationTypes[0]);
+
+  const { data: subgroupData } = useSubgroup(subgroup);
+  const { data: groupData, isLoading, status } = useGroup(subgroupData?.group, ({
+    enabled: subgroupData?.group,
+  }));
+
+  if (isLoading || status !== 'success') return <p>loading...</p>;
+
+  const { name: subgroupTitle, slug: subgroupSlug } = subgroupData;
+  const { title: groupTitle, subgroups, slug: groupSlug } = groupData;
 
   const Loading = () => <p>loading...</p>;
   const DynamicChart = dynamic<ChartProps>(
@@ -68,22 +70,22 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       >
         <button
           type="button"
-          className="absolute left-0 top-0 bg-gray1 px-8 py-2 rounded-tl-2xl rounded-br-2xl flex"
-          onClick={() => onClose(id, groupSlug, subgroup)}
+          className="absolute left-0 top-0 bg-gray1 rounded-tl-2xl rounded-br-2xl flex divide-x divide-white items-center"
+          onClick={() => onClose(groupSlug, subgroupSlug)}
         >
           <Icon
             ariaLabel="close"
             name="close"
             size="sm"
-            className="mx-3"
+            className="mx-3 "
           />
-          Don´t compare
+          <span className="px-8 py-1">Don´t compare</span>
         </button>
         <h2 className="text-white">{groupTitle}</h2>
         <div className="pt-4 flex items-center">
-          <h1 className="text-3.5xl py-6">{subgroup}</h1>
+          <h1 className="text-3.5xl py-6">{subgroupTitle}</h1>
           <Dropdown
-            menuElements={[{ id: 1, name: 'group1' }, { id: 2, name: 'group2' }]}
+            menuElements={subgroups}
             border
             className="ml-3 rounded-full p-6 text-white"
             icon="triangle_border"
@@ -92,15 +94,15 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           />
         </div>
       </Hero>
-      <div className={cx('container m-auto p-6 bg-white rounded-b-2xl', { [className]: !!className })}>
+      <div className={cx('container m-auto p-6 bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
         <VisualizationsNav
           active={active}
           mobile
           visualizationTypes={visualizationTypes}
           onClick={setActive}
         />
-        <div className="flex flex-col">
-          <div className="flex">
+        <div className="flex flex-col py-8">
+          <div className="flex justify-between items-center">
             <h2 className="text-gray1 font-bold">{title}</h2>
             <Dropdown
               menuElements={indicatorsList}
@@ -109,10 +111,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               className="mr-4"
             />
           </div>
-          {console.log(description, selectedIndicator, 'description')}
-          <p className="text-gray1">{description}</p>
+          <p className="text-gray1 py-8">{description}</p>
+          <Filters categories={categories} className="mb-4" />
         </div>
-        <div className="flex items-center">
+
+        <div className="flex text-gray1 items-center">
           Showing for:
           <Dropdown
             menuElements={datesList}
@@ -120,20 +123,18 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             label="Select dates"
             icon="calendar"
             iconSize="lg"
+            iconColor="text-gray1"
             iconRotable={false}
           />
         </div>
 
         <DynamicChart
-          widgetData={data[active]}
+          widgetData={indicatorData[active]}
           widgetConfig={config[active]}
         />
 
-        <section className="flex flex-col justify-between">
-          <Filters categories={categories} className="mb-4" />
-          <Legend categories={categories} className="mb-4" />
-          <DataSource />
-        </section>
+        <Legend categories={categories} className="mb-4" />
+        <DataSource type="horizontal" />
 
       </div>
     </div>

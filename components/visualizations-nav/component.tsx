@@ -59,7 +59,7 @@ export const VisualizationsNav: React.FC<VisualizationsNavProps> = ({
             </div>
             {!mobile && (
               <div className={cx(
-                { 'absolute left-4 right-4 bottom-0 rounded-2xl h-1 bg-current': active === id }
+                { 'absolute left-4 right-4 bottom-0 rounded-2xl h-1 bg-current': active === id },
               )}
               />
             )}
