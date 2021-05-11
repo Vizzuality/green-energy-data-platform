@@ -16,9 +16,8 @@ const ComparePage: FC = () => {
 
   const router = useRouter();
 
-  const handleClose = (group, slug) => {
-    const { slug: groupSlug } = group;
-    const url = `${groupSlug}/${slug}`;
+  const handleClose = (groupSlug, subgroupSlug) => {
+    const url = `${groupSlug}/${subgroupSlug}`;
     router.push(url, url, { shallow: true });
   };
 

@@ -52,7 +52,8 @@ const GroupPage: FC<GroupPageProps> = ({
             className="ml-3"
             icon="triangle_border"
             iconSize="lg"
-            isRounded
+            shape="circle"
+            theme="light"
           />
         </div>
       </Hero>

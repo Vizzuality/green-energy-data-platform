@@ -87,10 +87,12 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           <Dropdown
             menuElements={subgroups}
             border
-            className="ml-3 rounded-full p-6 text-white"
+            label={false}
+            className="rounded-full p-6 text-white"
             icon="triangle_border"
             iconSize="md"
-            isRounded
+            shape="circle"
+            theme="light"
           />
         </div>
       </Hero>

@@ -14,16 +14,15 @@ import Header from 'layout/header';
 
 interface HeroProps {
   children: ReactNode,
-  header: boolean,
-  rounded: boolean,
+  header?: boolean,
+  rounded?: boolean,
   className?: string,
 }
 
 const Hero: FC<HeroProps> = ({
   children,
   header = true,
-  rounded
-  = false,
+  rounded = false,
   className,
 }: HeroProps) => (
   <div className={cx(
