@@ -149,7 +149,7 @@ const SignupPage: FC<SignupProps> = ({
               <Button
                 type="submit"
                 aria-label="Sign in"
-                theme="secondary-background"
+                theme="secondary-background-dark"
                 size="xlg"
                 onClick={(evt) => {
                   evt.preventDefault();
