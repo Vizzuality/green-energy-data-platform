@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 import { useSession } from 'next-auth/client';
 
@@ -6,23 +5,18 @@ import { useSession } from 'next-auth/client';
 import { fetchGroups, fetchGroup } from 'services/groups';
 
 export function useGroups() {
-  const [session, loading] = useSession();
   const query = useQuery('fetch-groups',
-    () => fetchGroups(`Bearer ${session.accessToken}`)
-      .then((data) => data),
-    {
-      enabled: !!session && !loading,
-    });
+    () => fetchGroups().then((data) => data));
 
   const {
     data, status, error, isLoading,
   } = query;
-  return useMemo(() => ({
+  return ({
     status,
     error,
     isLoading,
     groups: data,
-  }), [status, error, isLoading, data]);
+  });
 }
 
 export function useGroup(id, queryConfig = { enabled: true }) {
