@@ -10,15 +10,16 @@ export function withAuthentication(getServerSidePropsFunc?: Function) {
     const session = await getSession(context);
 
     if (!session) {
-      return {
-        redirect: {
-          // if the user access to an authenticated page and it's not logged,
-          // redirect the user to the signin with a callbackURL to return later
-          // where the user meant to navigate initially
-          destination: !context.req.url.includes('signin') ? `/signin?callbackUrl=${context.req.url}` : '/signin',
-          permanent: false,
-        },
-      };
+      // return {
+      //   redirect: {
+      //     // if the user access to an authenticated page and it's not logged,
+      //     // redirect the user to the signin with a callbackURL to return later
+      //     // where the user meant to navigate initially
+      //     destination: !context.req.url.includes('signin') ? `/signin?callbackUrl=${context.req.url}` : '/signin',
+      //     permanent: false,
+      //   },
+      // };
+      return { props: {} };
     }
 
     if (getServerSidePropsFunc) {

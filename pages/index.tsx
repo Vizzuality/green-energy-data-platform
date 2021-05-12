@@ -32,17 +32,6 @@ const HomePage: FC = () => {
       </Hero>
       <GroupCard className="container m-auto" />
       <PreFooter />
-
-      {(!session) && (
-        <button
-          type="button"
-          onClick={() => {
-            signIn('credentials');
-          }}
-        >
-          Sign In
-        </button>
-      )}
     </LayoutPage>
   );
 };
