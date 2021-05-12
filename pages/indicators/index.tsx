@@ -13,29 +13,30 @@ import Button from 'components/button';
 import { useGroups } from 'hooks/groups';
 
 const IndicatorsPage: FC = () => {
-  const { groups } = useGroups();
-  if (!groups) return null;
+  const { groups, isLoading } = useGroups();
+
+  if (isLoading) return <p>loading...</p>;
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
-      <Hero>
-        <div className="flex flex-wrap space-x-3 items-center">
+      <Hero theme="dark">
+        <div className="flex flex-wrap space-x-3 items-center py-6">
           <p>Filter by:</p>
-          {groups.map(({ id, name }) => (
+          {groups.map(({ id, title }) => (
             <Button
               key={id}
               size="xlg"
-              theme="primary"
+              theme="primary-background"
             >
-              {name}
+              {title}
             </Button>
           ))}
         </div>
       </Hero>
-      <main className="container text-gray1 divide-y divide-gray1 divide-opacity-20">
+      <main className="container m-auto py-6 px-32 text-gray1 divide-y divide-gray1 divide-opacity-20">
         {groups.map(({
           id: groupId,
-          name: groupName,
+          title: groupName,
           slug: groupSlug,
           subgroups,
         }) => (
