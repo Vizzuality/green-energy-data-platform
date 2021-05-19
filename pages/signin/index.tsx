@@ -133,23 +133,23 @@ const SigninPage: FC<SigninProps> = ({
   );
 };
 
-// export const getServerSideProps = async (context) => {
-//   const session = await getSession(context);
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
 
-//   if (session) {
-//     return {
-//       redirect: {
-//         destination: context.query.callbackUrl || '/',
-//         permanent: false,
-//       },
-//     };
-//   }
+  if (session) {
+    return {
+      redirect: {
+        destination: context.query.callbackUrl || '/',
+        permanent: false,
+      },
+    };
+  }
 
-//   return ({
-//     props: {
-//       csrfToken: await getCSRFToken(context),
-//     },
-//   });
-// };
+  return ({
+    props: {
+      csrfToken: await getCSRFToken(context),
+    },
+  });
+};
 
 export default SigninPage;

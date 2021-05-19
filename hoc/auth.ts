@@ -9,22 +9,45 @@ export function withAuthentication(getServerSidePropsFunc?: Function) {
   return async (context: any) => {
     const session = await getSession(context);
 
-    if (!session) {
-      // return {
-      //   redirect: {
-      //     // if the user access to an authenticated page and it's not logged,
-      //     // redirect the user to the signin with a callbackURL to return later
-      //     // where the user meant to navigate initially
-      //     destination: !context.req.url.includes('signin') ? `/signin?callbackUrl=${context.req.url}` : '/signin',
-      //     permanent: false,
-      //   },
-      // };
-      return { props: {} };
+    if (!session && !process.env.NEXT_PUBLIC_FEATURE_FLAG_SKIP_AUTH) {
+      return {
+        redirect: {
+          // if the user access to an authenticated page and it's not logged,
+          // redirect the user to the signin with a callbackURL to return later
+          // where the user meant to navigate initially
+          destination: !context.req.url.includes('signin') ? `/signin?callbackUrl=${context.req.url}` : '/signin',
+          permanent: false,
+        },
+      };
+    }
+
+    if (!session && process.env.NEXT_PUBLIC_FEATURE_FLAG_SKIP_AUTH) {
+      if (getServerSidePropsFunc) {
+        const SSPF = await getServerSidePropsFunc(context, session);
+        return {
+          props: {
+            ...SSPF.props,
+          },
+        };
+      }
+      return {
+        props: {
+        },
+      };
     }
 
     if (getServerSidePropsFunc) {
       const SSPF = await getServerSidePropsFunc(context, session);
+      return {
+        props: {
+          session,
+          ...SSPF.props,
+        },
+      };
+    }
 
+    if (getServerSidePropsFunc) {
+      const SSPF = await getServerSidePropsFunc(context, session);
       return {
         props: {
           session,
@@ -45,7 +68,7 @@ export function withUser(getServerSidePropsFunc?: Function) {
   return async (context: any) => {
     const session = await getSession(context);
 
-    if (!session) {
+    if (!session && !process.env.NEXT_PUBLIC_FEATURE_FLAG_SKIP_AUTH) {
       if (getServerSidePropsFunc) {
         const SSPF = await getServerSidePropsFunc(context) || {};
 

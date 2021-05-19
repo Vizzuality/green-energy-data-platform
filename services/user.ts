@@ -7,13 +7,13 @@ export const fetchUsers = () => API.get('/users')
   // });
 
 export const fetchUserMe = (
-  params = {},
+  userToken: string,
   headers = {},
 ) => API.get('/users/me', {
   headers: {
+    Authorization: userToken,
     ...headers,
   },
-  params,
 })
   .then(({ data }) => data);
 

@@ -14,6 +14,10 @@
     vertical-align: middle;
   }
 
+  img {
+    height: 100%
+  }
+
   input::-webkit-decoration,
   input::-webkit-cancel-button,
   input::-webkit-results-button,

@@ -5,8 +5,12 @@ import { useSession } from 'next-auth/client';
 import { fetchGroups, fetchGroup } from 'services/groups';
 
 export function useGroups() {
+  const [session, loading] = useSession();
   const query = useQuery('fetch-groups',
-    () => fetchGroups().then((data) => data));
+    () => fetchGroups(`Bearer ${session.accessToken}`).then((data) => data),
+    {
+      enabled: !!session && !loading,
+    });
 
   const {
     data, status, error, isLoading,
@@ -21,18 +25,17 @@ export function useGroups() {
 
 export function useGroup(id, queryConfig = { enabled: true }) {
   const [session, loading] = useSession();
-
   const query = useQuery('fetch-group',
     () => fetchGroup(id, `Bearer ${session.accessToken}`)
       .then((data) => data),
     {
-      ...queryConfig,
-      enabled: !!((!!session && !loading) && queryConfig?.enabled),
+      enabled: !!session && !loading && queryConfig.enabled,
     });
 
   const {
     data, status, error, isLoading,
   } = query;
+
   return ({
     status,
     error,

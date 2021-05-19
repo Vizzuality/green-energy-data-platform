@@ -54,7 +54,8 @@
     "redux": "^4.0.5",
     "tailwindcss": "^2.0.2",
     "tailwindcss-border-gradients": "^2.0.3",
-    "use-debounce": "^5.2.0"
+    "use-debounce": "^5.2.0",
+    "vercel": "^22.0.1"
   },
   "devDependencies": {
     "@types/next-auth": "^3.7.2",

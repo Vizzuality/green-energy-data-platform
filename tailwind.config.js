@@ -58,7 +58,7 @@ module.exports = {
         '4xl': '4.5rem',
       },
       borderColor: {
-        'gradient-color1': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%);',
+        'gradient-color1': 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',
         'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
       },
       boxShadow: {

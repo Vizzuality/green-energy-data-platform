@@ -5,6 +5,7 @@ import cx from 'classnames';
 
 // components
 import Hero from 'layout/hero';
+import LoadingSpinner from 'components/loading-spinner';
 import Dropdown from 'components/select';
 import Icon from 'components/icon';
 import VisualizationsNav from 'components/visualizations-nav';
@@ -50,12 +51,12 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     enabled: subgroupData?.group,
   }));
 
-  if (isLoading || status !== 'success') return <p>loading...</p>;
+  if (isLoading || status !== 'success') return <LoadingSpinner isLoading={isLoading} />;
 
   const { name: subgroupTitle, slug: subgroupSlug } = subgroupData;
   const { title: groupTitle, subgroups, slug: groupSlug } = groupData;
 
-  const Loading = () => <p>loading...</p>;
+  const Loading = () => <LoadingSpinner isLoading={isLoading} />;
   const DynamicChart = dynamic<ChartProps>(
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },

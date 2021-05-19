@@ -5,12 +5,11 @@ import React, {
 import cx from 'classnames';
 import Link from 'next/link';
 
-import { useSession } from 'next-auth/client';
+// components
+import UserDropdown from 'components/user-dropdown';
 
 // components
 import Header from 'layout/header';
-import UserDropdown from 'components/user-dropdown';
-import SignIn from 'components/sign-in';
 
 interface HeroProps {
   children: ReactNode,
@@ -31,34 +30,30 @@ const Hero: FC<HeroProps> = ({
   rounded = false,
   theme = 'light',
   className,
-}: HeroProps) => {
-  const [session, loading] = useSession();
-  return (
-    <div className={cx(`${THEME[theme]}`,
-      { 'pb-44': !rounded },
-      { 'rounded-2xl': !!rounded },
+}: HeroProps) => (
+  <div className={cx(`${THEME[theme]}`,
+    { 'pb-44': !rounded },
+    { 'rounded-2xl': !!rounded },
+    { [className]: !!className })}
+  >
+    {header && (
+      <Header>
+        <div className="flex items-center">
+          <UserDropdown className="mr-4" />
+          <Link href="/indicators" passHref>
+            <a href="/indicators" className="ml-3 bg-white border-white text-gray1 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm">
+              Browse all data
+            </a>
+          </Link>
+        </div>
+      </Header>
+    )}
+    <div className={cx('container m-auto px-32',
       { [className]: !!className })}
     >
-      {header && (
-        <Header>
-          <div className="flex items-center">
-            {session && <UserDropdown className="mr-4" />}
-            {!session && !loading && <SignIn />}
-            <Link href="/indicators" passHref>
-              <a href="/indicators" className="ml-3 bg-white border-white text-gray1 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm">
-                Browse all data
-              </a>
-            </Link>
-          </div>
-        </Header>
-      )}
-      <div className={cx('container m-auto px-32',
-        { [className]: !!className })}
-      >
-        {children}
-      </div>
+      {children}
     </div>
-  );
-};
+  </div>
+);
 
 export default Hero;
