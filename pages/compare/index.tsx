@@ -9,6 +9,7 @@ import LayoutPage from 'layout';
 import Head from 'components/head';
 import Header from 'layout/header';
 import Compare from 'layout/compare';
+import LoadingSpinner from 'components/loading-spinner';
 
 const ComparePage: FC = () => {
   const { query } = useRouter();
@@ -20,6 +21,8 @@ const ComparePage: FC = () => {
     const url = `${groupSlug}/${subgroupSlug}`;
     router.push(url, url, { shallow: true });
   };
+
+  if (!sgInd1 || !sgInd2) return <LoadingSpinner />;
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1">

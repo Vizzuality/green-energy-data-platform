@@ -21,7 +21,6 @@ import WidgetsGrid from 'layout/widgets-grid';
 import { fetchGroup, fetchGroups } from 'services/groups';
 import { fetchSubgroup } from 'services/subgroups';
 
-import { getSession } from 'next-auth/client';
 import { GroupProps, SubgroupProps } from 'types/data';
 
 import { relatedIndicators } from '../../constants';
@@ -74,11 +73,9 @@ const customServerSideProps = async (req) => {
     subgroup: subgroupQueryParam,
   } = req.query;
 
-  const session = await getSession(req);
-  const accessToken = !!session && session.accessToken;
-  const groups = await fetchGroups(`Bearer ${accessToken}`);
-  const group = await fetchGroup(groupQueryParam, `Bearer ${accessToken}`);
-  const subgroup = await fetchSubgroup(subgroupQueryParam, `Bearer ${accessToken}`);
+  const groups = await fetchGroups();
+  const group = await fetchGroup(groupQueryParam);
+  const subgroup = await fetchSubgroup(subgroupQueryParam);
 
   return ({
     props: {

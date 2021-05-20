@@ -46,17 +46,17 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   } = selectedIndicator;
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
-  const { data: subgroupData } = useSubgroup(subgroup);
+  const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup(subgroup);
   const { data: groupData, isLoading, status } = useGroup(subgroupData?.group, ({
-    enabled: subgroupData?.group,
+    enabled: !!subgroupData?.group,
   }));
 
-  if (isLoading || status !== 'success') return <LoadingSpinner isLoading={isLoading} />;
+  if (isLoading || status !== 'success' || isLoadingGroup) return <LoadingSpinner />;
 
   const { name: subgroupTitle, slug: subgroupSlug } = subgroupData;
   const { title: groupTitle, subgroups, slug: groupSlug } = groupData;
 
-  const Loading = () => <LoadingSpinner isLoading={isLoading} />;
+  const Loading = () => <LoadingSpinner />;
   const DynamicChart = dynamic<ChartProps>(
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },
@@ -67,7 +67,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       <Hero
         header={false}
         rounded
-        className="relative rounded-t-2xl bg-gradient-color2 pt-14 pb-2"
+        className="relative rounded-t-2xl bg-gradient-color2 pb-2"
       >
         <button
           type="button"

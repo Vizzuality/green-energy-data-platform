@@ -4,6 +4,8 @@ import cx from 'classnames';
 import Link from 'next/link';
 import { useGroups } from 'hooks/groups';
 
+import LoadingSpinner from 'components/loading-spinner';
+
 interface GroupCardProps {
   className?: string;
 }
@@ -11,8 +13,11 @@ interface GroupCardProps {
 const GroupCard: FC<GroupCardProps> = ({
   className,
 }: GroupCardProps) => {
-  const { groups } = useGroups();
+  const { groups, isLoading } = useGroups();
+
+  if (isLoading) return <LoadingSpinner />;
   if (!groups) return null;
+
   return (
     <div className={cx('w-full', { [className]: className })}>
       {groups.map(({

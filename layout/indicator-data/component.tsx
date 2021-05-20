@@ -43,7 +43,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
   const { groups } = useGroups();
-  const Loading = () => <LoadingSpinner isLoading />;
+  const Loading = () => <LoadingSpinner />;
   const DynamicChart = dynamic<ChartProps>(
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },

@@ -1,29 +1,23 @@
-import { useMemo } from 'react';
 import { useQuery } from 'react-query';
-import { useSession } from 'next-auth/client';
 
 // services
 import { fetchSubgroup } from 'services/subgroups';
 
 export function useSubgroup(subgroup) {
-  const [session, loading] = useSession();
-
   const query = useQuery('fetch-subgroup',
-    () => fetchSubgroup(subgroup, `Bearer ${session.accessToken}`)
-      .then((data) => data),
-    {
-      enabled: !!session && !loading,
-    });
+    () => fetchSubgroup(subgroup)
+      .then((data) => data));
 
   const {
     data, status, error, isLoading,
   } = query;
-  return useMemo(() => ({
+
+  return {
     status,
     error,
     isLoading,
     data,
-  }), [status, error, isLoading, data]);
+  };
 }
 
 export default {
