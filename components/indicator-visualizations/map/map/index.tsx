@@ -98,7 +98,7 @@ const Map = ({
   const handleViewportChange = useCallback(
     (v) => {
       setViewport(v);
-      debouncedOnMapViewportChange.callback(v);
+      debouncedOnMapViewportChange(v);
     },
     [debouncedOnMapViewportChange],
   );
@@ -111,7 +111,7 @@ const Map = ({
       };
 
       setViewport(newViewport);
-      debouncedOnMapViewportChange.callback(newViewport);
+      debouncedOnMapViewportChange(newViewport);
     },
     [mapViewport, debouncedOnMapViewportChange],
   );
@@ -153,7 +153,7 @@ const Map = ({
       ...prevViewport,
       ...newViewport,
     }));
-    debouncedOnMapViewportChange.callback(newViewport);
+    debouncedOnMapViewportChange(newViewport);
 
     return setTimeout(() => {
       setFlight(false);
