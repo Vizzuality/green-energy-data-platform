@@ -19,7 +19,7 @@ import { useGroups } from 'hooks/groups';
 const IndicatorsPage: FC = () => {
   const { groups, isLoading } = useGroups();
 
-  if (isLoading) return <LoadingSpinner isLoading={isLoading} />;
+  if (isLoading) return <LoadingSpinner />;
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />

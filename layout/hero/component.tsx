@@ -48,7 +48,7 @@ const Hero: FC<HeroProps> = ({
         </div>
       </Header>
     )}
-    <div className={cx('container m-auto px-32',
+    <div className={cx('container m-auto lg:px-32 md:px-20',
       { [className]: !!className })}
     >
       {children}
