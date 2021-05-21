@@ -42,9 +42,9 @@ const GroupPage: FC<GroupPageProps> = ({
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
       <Head title={`${groupName} analysis`} />
       <Hero>
-        <Nav items={groups} className="py-7.5" />
+        <Nav items={groups} className="pt-10" />
         <div className="flex items-center">
-          <h1 className="text-5.5xl py-6">{subgroup.name}</h1>
+          <h1 className="text-5.5xl pt-3">{subgroup.name}</h1>
           <Dropdown
             menuElements={group.subgroups}
             border
