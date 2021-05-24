@@ -2,12 +2,6 @@ import React, {
   FC,
 } from 'react';
 
-// authentication
-import {
-  withAuthentication,
-  withUser,
-} from 'hoc/auth';
-
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
@@ -67,7 +61,7 @@ const GroupPage: FC<GroupPageProps> = ({
   );
 };
 
-const customServerSideProps = async (req) => {
+export const getServerSideProps = async (req) => {
   const {
     group: groupQueryParam,
     subgroup: subgroupQueryParam,
@@ -85,7 +79,5 @@ const customServerSideProps = async (req) => {
     },
   });
 };
-
-export const getServerSideProps = withAuthentication(withUser(customServerSideProps));
 
 export default GroupPage;

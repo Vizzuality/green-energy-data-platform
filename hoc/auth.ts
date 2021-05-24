@@ -9,7 +9,7 @@ export function withAuthentication(getServerSidePropsFunc?: Function) {
   return async (context: any) => {
     const session = await getSession(context);
 
-    if (!session && !process.env.NEXT_PUBLIC_FEATURE_FLAG_SKIP_AUTH) {
+    if (!session) {
       return {
         redirect: {
           // if the user access to an authenticated page and it's not logged,
@@ -17,31 +17,6 @@ export function withAuthentication(getServerSidePropsFunc?: Function) {
           // where the user meant to navigate initially
           destination: !context.req.url.includes('signin') ? `/signin?callbackUrl=${context.req.url}` : '/signin',
           permanent: false,
-        },
-      };
-    }
-
-    if (!session && process.env.NEXT_PUBLIC_FEATURE_FLAG_SKIP_AUTH) {
-      if (getServerSidePropsFunc) {
-        const SSPF = await getServerSidePropsFunc(context, session);
-        return {
-          props: {
-            ...SSPF.props,
-          },
-        };
-      }
-      return {
-        props: {
-        },
-      };
-    }
-
-    if (getServerSidePropsFunc) {
-      const SSPF = await getServerSidePropsFunc(context, session);
-      return {
-        props: {
-          session,
-          ...SSPF.props,
         },
       };
     }
@@ -68,7 +43,7 @@ export function withUser(getServerSidePropsFunc?: Function) {
   return async (context: any) => {
     const session = await getSession(context);
 
-    if (!session && !process.env.NEXT_PUBLIC_FEATURE_FLAG_SKIP_AUTH) {
+    if (!session) {
       if (getServerSidePropsFunc) {
         const SSPF = await getServerSidePropsFunc(context) || {};
 
@@ -86,7 +61,7 @@ export function withUser(getServerSidePropsFunc?: Function) {
 
     const queryClient = new QueryClient();
 
-    queryClient.prefetchQuery('me',
+    await queryClient.prefetchQuery('me',
       () => fetchUserMe(`Bearer ${session.accessToken}`)
         .then((data) => data));
 

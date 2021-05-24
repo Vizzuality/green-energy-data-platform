@@ -5,7 +5,6 @@ import React, {
 } from 'react';
 import Link from 'next/link';
 import {
-  csrfToken as getCSRFToken,
   signIn,
   getSession,
 } from 'next-auth/client';
@@ -18,13 +17,7 @@ import Header from 'layout/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
 
-type SignupProps = {
-  csrfToken?: string,
-};
-
-const SignupPage: FC<SignupProps> = ({
-  csrfToken,
-}: SignupProps) => {
+const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
     name: '',
     email: '',
@@ -54,12 +47,6 @@ const SignupPage: FC<SignupProps> = ({
           </section>
           <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-20 md:px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
             <form method="post" className="inline-flex flex-col flex-grow w-full">
-              <input
-                name="csrfToken"
-                type="hidden"
-                defaultValue={csrfToken}
-                className="border-b-gradient-to-r from-white to-white-50 focus:border-b-2"
-              />
               <div className="pb-6">
                 <label htmlFor="name" className="text-2.5xl font-bold">
                   Your name is:
@@ -179,9 +166,7 @@ export const getServerSideProps = async (context) => {
   }
 
   return ({
-    props: {
-      csrfToken: await getCSRFToken(context),
-    },
+    props: ({}),
   });
 };
 

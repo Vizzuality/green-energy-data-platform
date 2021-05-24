@@ -4,6 +4,7 @@ import React, {
   ChangeEvent,
 } from 'react';
 import cx from 'classnames';
+import { getSession } from 'next-auth/client';
 
 // authentication
 import { withAuthentication, withUser } from 'hoc/auth';
@@ -43,8 +44,6 @@ const ProfilePage: FC = () => {
       [e]: !passwordView[e],
     });
   };
-
-  if (!user) return null; // return signOut({ callbackUrl: 'http://localhost:3000/signin' });
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
@@ -217,6 +216,23 @@ const ProfilePage: FC = () => {
   );
 };
 
-export const getServerSideProps = withAuthentication(withUser());
+const customServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return ({
+      redirect: {
+        destination: '/signin?callbackUrl=/profile',
+        permanent: false,
+      },
+    });
+  }
+
+  return ({
+    props: {},
+  });
+};
+
+export const getServerSideProps = withAuthentication(withUser(customServerSideProps));
 
 export default ProfilePage;

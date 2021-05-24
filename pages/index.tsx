@@ -2,12 +2,6 @@ import React, {
   FC,
 } from 'react';
 
-// authentication
-import {
-  withAuthentication,
-  withUser,
-} from 'hoc/auth';
-
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
@@ -26,7 +20,5 @@ const HomePage: FC = () => (
     <PreFooter />
   </LayoutPage>
 );
-
-export const getServerSideProps = withAuthentication(withUser());
 
 export default HomePage;
