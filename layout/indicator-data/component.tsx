@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useGroups } from 'hooks/groups';
 
 // components
+import LoadingSpinner from 'components/loading-spinner';
 import VisualizationsNav from 'components/visualizations-nav';
 import Dropdown from 'components/select/component';
 import Icon from 'components/icon';
@@ -42,7 +43,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
   const { groups } = useGroups();
-  const Loading = () => <p>loading...</p>;
+  const Loading = () => <LoadingSpinner />;
   const DynamicChart = dynamic<ChartProps>(
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },

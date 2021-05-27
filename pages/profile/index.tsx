@@ -4,7 +4,10 @@ import React, {
   ChangeEvent,
 } from 'react';
 import cx from 'classnames';
+import { getSession } from 'next-auth/client';
 
+// authentication
+import { withAuthentication, withUser } from 'hoc/auth';
 import { useMe } from 'hooks/auth';
 
 // components
@@ -42,13 +45,11 @@ const ProfilePage: FC = () => {
     });
   };
 
-  if (!user) return null;
-
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
       <Hero>
-        <h1 className="text-5.5xl">Profile</h1>
+        <h1 className="text-5.5xl pt-3">Profile</h1>
       </Hero>
       <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
         <section className="flex flex-col w-1/2">
@@ -214,5 +215,24 @@ const ProfilePage: FC = () => {
     </LayoutPage>
   );
 };
+
+const customServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return ({
+      redirect: {
+        destination: '/signin?callbackUrl=/profile',
+        permanent: false,
+      },
+    });
+  }
+
+  return ({
+    props: {},
+  });
+};
+
+export const getServerSideProps = withAuthentication(withUser(customServerSideProps));
 
 export default ProfilePage;

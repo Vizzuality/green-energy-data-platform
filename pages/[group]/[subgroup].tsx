@@ -2,12 +2,6 @@ import React, {
   FC,
 } from 'react';
 
-// authentication
-import {
-  withAuthentication,
-  withUser,
-} from 'hoc/auth';
-
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
@@ -21,7 +15,6 @@ import WidgetsGrid from 'layout/widgets-grid';
 import { fetchGroup, fetchGroups } from 'services/groups';
 import { fetchSubgroup } from 'services/subgroups';
 
-import { getSession } from 'next-auth/client';
 import { GroupProps, SubgroupProps } from 'types/data';
 
 import { relatedIndicators } from '../../constants';
@@ -43,9 +36,9 @@ const GroupPage: FC<GroupPageProps> = ({
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
       <Head title={`${groupName} analysis`} />
       <Hero>
-        <Nav items={groups} className="py-7.5" />
+        <Nav items={groups} className="pt-10" />
         <div className="flex items-center">
-          <h1 className="text-5.5xl py-6">{subgroup.name}</h1>
+          <h1 className="text-5.5xl pt-3">{subgroup.name}</h1>
           <Dropdown
             menuElements={group.subgroups}
             border
@@ -68,16 +61,15 @@ const GroupPage: FC<GroupPageProps> = ({
   );
 };
 
-const customServerSideProps = async (req) => {
+export const getServerSideProps = async (req) => {
   const {
     group: groupQueryParam,
     subgroup: subgroupQueryParam,
   } = req.query;
 
-  const session = await getSession(req);
-  const groups = await fetchGroups(`Bearer ${session.accessToken}`);
-  const group = await fetchGroup(groupQueryParam, `Bearer ${session.accessToken}`);
-  const subgroup = await fetchSubgroup(subgroupQueryParam, `Bearer ${session.accessToken}`);
+  const groups = await fetchGroups();
+  const group = await fetchGroup(groupQueryParam);
+  const subgroup = await fetchSubgroup(subgroupQueryParam);
 
   return ({
     props: {
@@ -87,7 +79,5 @@ const customServerSideProps = async (req) => {
     },
   });
 };
-
-export const getServerSideProps = withAuthentication(withUser(customServerSideProps));
 
 export default GroupPage;

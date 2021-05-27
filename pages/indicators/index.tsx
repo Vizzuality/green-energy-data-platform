@@ -4,10 +4,14 @@ import React, {
 import Link from 'next/link';
 // import cx from 'classnames';
 
-// components
+// layout
 import LayoutPage from 'layout';
-import Head from 'components/head';
 import Hero from 'layout/hero';
+
+// components
+import Head from 'components/head';
+import Search from 'components/search';
+import LoadingSpinner from 'components/loading-spinner';
 import Button from 'components/button';
 
 import { useGroups } from 'hooks/groups';
@@ -15,11 +19,13 @@ import { useGroups } from 'hooks/groups';
 const IndicatorsPage: FC = () => {
   const { groups, isLoading } = useGroups();
 
-  if (isLoading) return <p>loading...</p>;
+  if (isLoading) return <LoadingSpinner />;
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
       <Hero theme="dark">
+        <Search />
+
         <div className="flex flex-wrap space-x-3 items-center py-6">
           <p>Filter by:</p>
           {groups.map(({ id, title }) => (
