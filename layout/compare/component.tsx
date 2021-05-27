@@ -47,11 +47,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
   const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup(subgroup);
-  const { data: groupData, isLoading, status } = useGroup(subgroupData?.group, ({
+  const { data: groupData, isLoading, isSuccess } = useGroup(subgroupData?.group, ({
     enabled: !!subgroupData?.group,
   }));
 
-  if (isLoading || status !== 'success' || isLoadingGroup) return <LoadingSpinner />;
+  if (isLoading || !isSuccess || isLoadingGroup) return <LoadingSpinner />;
 
   const { name: subgroupTitle, slug: subgroupSlug } = subgroupData;
   const { title: groupTitle, subgroups, slug: groupSlug } = groupData;

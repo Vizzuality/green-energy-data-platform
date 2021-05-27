@@ -9,12 +9,13 @@ export function useSubgroup(subgroup) {
       .then((data) => data));
 
   const {
-    data, status, error, isLoading,
+    data, status, error, isSuccess, isLoading,
   } = query;
 
   return {
     status,
     error,
+    isSuccess,
     isLoading,
     data,
   };

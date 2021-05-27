@@ -8,12 +8,14 @@ export function useGroups() {
     () => fetchGroups().then((data) => data));
 
   const {
-    data, status, error, isLoading,
+    data, status, error, isLoading, isSuccess,
   } = query;
+
   return ({
     status,
     error,
     isLoading,
+    isSuccess,
     groups: data,
   });
 }
@@ -27,13 +29,14 @@ export function useGroup(id, queryConfig = { enabled: true }) {
     });
 
   const {
-    data, status, error, isLoading,
+    data, status, error, isLoading, isSuccess,
   } = query;
 
   return ({
     status,
     error,
     isLoading,
+    isSuccess,
     data,
   });
 }
