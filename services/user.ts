@@ -1,4 +1,4 @@
-import { API } from 'lib/api';
+import { APInext, API } from 'lib/api';
 
 export const fetchUsers = () => API.get('/users')
   .then(({ data }) => data);
@@ -9,7 +9,7 @@ export const fetchUsers = () => API.get('/users')
 export const fetchUserMe = (
   userToken: string,
   headers = {},
-) => API.get('/users/me', {
+) => APInext.get('/users/me', {
   headers: {
     Authorization: userToken,
     ...headers,

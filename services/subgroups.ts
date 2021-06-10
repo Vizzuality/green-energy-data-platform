@@ -1,10 +1,10 @@
-import { API } from 'lib/api';
+import { APInext, API } from 'lib/api';
 
 export const fetchSubgroup = (
   id: string,
   params = {},
   headers = {},
-) => API.get(`/subgroups/${id}`, {
+) => APInext.get(`/subgroups/${id}`, {
   headers: {
     ...headers,
   },

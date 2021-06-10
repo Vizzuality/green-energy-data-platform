@@ -1,4 +1,4 @@
-import { API } from 'lib/api';
+import { API, APInext } from 'lib/api';
 
 export const fetchGroups = (
   params = {},
@@ -15,7 +15,7 @@ export const fetchGroup = (
   id: string,
   params = {},
   headers = {},
-) => API.get(`/groups/${id}`, {
+) => APInext.get(`/groups/${id}`, {
   headers: {
     ...headers,
   },
