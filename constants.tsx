@@ -519,6 +519,10 @@ export const indicatorsList = [
   { id: 2, name: 'indicator2' },
   { id: 3, name: 'indicator3' },
   { id: 4, name: 'indicator4' },
+  { id: 5, name: 'indicator5' },
+  { id: 6, name: 'indicator6' },
+  { id: 7, name: 'indicator7' },
+  { id: 8, name: 'indicator8' },
 ];
 export const datesList = [
   { id: 1, name: '1990' },
