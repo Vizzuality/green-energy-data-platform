@@ -2,6 +2,7 @@ import React, {
   FC,
 } from 'react';
 
+
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
@@ -16,6 +17,11 @@ import { fetchGroup, fetchGroups } from 'services/groups';
 import { fetchSubgroup } from 'services/subgroups';
 
 import { GroupProps, SubgroupProps } from 'types/data';
+
+import {
+  GROUPS,
+  SUBGROUPS,
+} from 'constants/api-payloads';
 
 import { relatedIndicators } from '../../constants';
 
@@ -67,13 +73,18 @@ export const getServerSideProps = async (req) => {
     subgroup: subgroupQueryParam,
   } = req.query;
 
-  const groups = await fetchGroups();
-  const group = await fetchGroup(groupQueryParam);
-  const subgroup = await fetchSubgroup(subgroupQueryParam);
+  // enable when we rely on an external API, not NextJS API
+  // const groups = await fetchGroups();
+  // const group = await fetchGroup(groupQueryParam);
+  // const subgroup = await fetchSubgroup(subgroupQueryParam);
+
+  // temporary workaround to work with NextJS API. Remove when external API is used.
+  const group = GROUPS.find(({ slug }) => groupQueryParam === slug);
+  const subgroup = SUBGROUPS.find(({ slug }) => subgroupQueryParam === slug);
 
   return ({
     props: {
-      groups,
+      groups: GROUPS,
       group,
       subgroup,
     },

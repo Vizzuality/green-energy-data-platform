@@ -18,7 +18,6 @@ export const Nav: React.FC<NavProps> = ({
 }: NavProps) => {
   const router = useRouter();
   const { group } = router.query;
-console.log(items)
   return (
     <nav>
       <ul className={cx('flex flex-grow text-white divide-x',
