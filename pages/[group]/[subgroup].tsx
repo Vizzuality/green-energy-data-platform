@@ -36,11 +36,10 @@ const GroupPage: FC<GroupPageProps> = ({
   group,
   subgroup,
 }: GroupPageProps) => {
-  const { title: groupName } = group;
-
+  // const { title: groupName } = group;
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
-      <Head title={`${groupName} analysis`} />
+      {/* <Head title={`${groupName} analysis`} /> */}
       <Hero>
             {/* <Nav items={groups} className="pt-10" /> */}
         <div className="flex items-center">
@@ -54,12 +53,12 @@ const GroupPage: FC<GroupPageProps> = ({
             shape="circle"
             theme="light"
           />
-        </div>
+        </div> */}
       </Hero>
       <div className="container m-auto">
         <section className="-mt-40">
-          <IndicatorsData />
-          <WidgetsGrid items={relatedIndicators} />
+          {/* <IndicatorsData /> */}
+          {/* <WidgetsGrid items={relatedIndicators} /> */}
         </section>
       </div>
 

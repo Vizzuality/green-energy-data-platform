@@ -27,7 +27,7 @@ export const Nav: React.FC<NavProps> = ({
           id,
           title,
           slug,
-          defaultSubgroup,
+          default_subgroup,
         }, index) => (
           <li
             key={id}

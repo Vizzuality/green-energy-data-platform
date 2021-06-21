@@ -4,7 +4,7 @@ export const fetchSubgroup = (
   id: string,
   params = {},
   headers = {},
-) => APInext.get(`/subgroups/${id}`, {
+) => API.get(`/subgroups/${'3bc37685-2b9c-48e0-9f4d-6db5a4cb0924'}/subgroups`, {
   headers: {
     ...headers,
   },

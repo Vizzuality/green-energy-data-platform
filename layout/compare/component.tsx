@@ -46,7 +46,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   } = selectedIndicator;
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
-  const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup(subgroup);
+  const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup('1bdb1c12-b9cf-4524-a546-a7a7a62a63af');
   const { data: groupData, isLoading, isSuccess } = useGroup(subgroupData?.group, ({
     enabled: !!subgroupData?.group,
   }));
