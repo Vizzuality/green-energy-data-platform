@@ -5,14 +5,19 @@ import React, {
   ReactNode,
 } from 'react';
 
+import cx from 'classnames';
+
 interface HeaderProps {
-  children?: ReactChildren | ReactElement<any, string> & ReactNode;
+  children?: ReactChildren | ReactElement<any, string> & ReactNode,
+  className?: string
 }
 
-const Header: FC<HeaderProps> = ({ children }: HeaderProps) => (
-  <div className="flex justify-between items-center px-12 py-2 border-b border-white border-opacity-30">
+const Header: FC<HeaderProps> = ({ children, className }: HeaderProps) => (
+  <div className={cx('flex justify-between items-center px-12 py-2 border-b border-white border-opacity-30',
+    { [className]: !!className })}
+  >
     <img alt="GEDP" src="/images/logo_GEDP.svg" className="w-36" />
-    {children}
+    { children }
   </div>
 );
 

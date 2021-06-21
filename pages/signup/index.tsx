@@ -5,7 +5,6 @@ import React, {
 } from 'react';
 import Link from 'next/link';
 import {
-  csrfToken as getCSRFToken,
   signIn,
   getSession,
 } from 'next-auth/client';
@@ -18,13 +17,7 @@ import Header from 'layout/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
 
-type SignupProps = {
-  csrfToken?: string,
-};
-
-const SignupPage: FC<SignupProps> = ({
-  csrfToken,
-}: SignupProps) => {
+const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
     name: '',
     email: '',
@@ -48,20 +41,12 @@ const SignupPage: FC<SignupProps> = ({
             <p className="text-lg pb-20">Create an account to explore more about GEDP data insights</p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="py-4">Already registered?</p>
-            <div>
-              <Link href={{ pathname: '/signin' }}>
-                <Button theme="primary">Sign in</Button>
-              </Link>
-            </div>
+            <Link href={{ pathname: '/signin' }} passHref>
+              <a href="/signin" className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black flex items-center justify-center text-center rounded-full focus:outline-none">Sign in</a>
+            </Link>
           </section>
           <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-20 md:px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
             <form method="post" className="inline-flex flex-col flex-grow w-full">
-              <input
-                name="csrfToken"
-                type="hidden"
-                defaultValue={csrfToken}
-                className="border-b-gradient-to-r from-white to-white-50 focus:border-b-2"
-              />
               <div className="pb-6">
                 <label htmlFor="name" className="text-2.5xl font-bold">
                   Your name is:
@@ -151,7 +136,7 @@ const SignupPage: FC<SignupProps> = ({
               <Button
                 type="submit"
                 aria-label="Sign in"
-                theme="secondary-background"
+                theme="secondary-background-dark"
                 size="xlg"
                 onClick={(evt) => {
                   evt.preventDefault();
@@ -181,9 +166,7 @@ export const getServerSideProps = async (context) => {
   }
 
   return ({
-    props: {
-      csrfToken: await getCSRFToken(context),
-    },
+    props: ({}),
   });
 };
 

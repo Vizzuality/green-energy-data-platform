@@ -6,16 +6,16 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string,
   onClick?: (evt: any | '') => void,
   size?: 'sm' | 'md' | 'lg' | 'xlg',
-  theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background' | 'info'
+  theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background-dark' | 'secondary-background-light' | 'info'
 }
 
 const THEME = {
   primary:
-    'border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
+    'border border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
   'primary-background': 'bg-white border-white text-gray1',
   secondary:
     'border-gray2 hover:bg-gray2 hover:text-white',
-  'secondary-background-dark': 'bg-button border-gray2 text-white',
+  'secondary-background-dark': 'bg-gray1 text-white',
   'secondary-background-light': 'bg-white',
   info: 'bg-color2 border-color2 text-white',
 };

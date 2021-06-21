@@ -45,8 +45,8 @@ const SigninPage: FC<SigninProps> = ({
         <Header />
         <div className="flex items-center h-full flex-1 justify-center p-12 md:p-4 m-auto">
           <section className="flex flex-col flex-1 w-full h-full justify-between py-20 md:py-10 max-w-xs text-white mx-20">
-            <h1 className="text-5.5xl font-bold py-7 tracking-tight">Sign in</h1>
-            <img alt="Sign-up" src="images/signup.svg" className="py-7" />
+            <h1 className="text-5.5xl font-bold pt-7 tracking-tight">Sign in</h1>
+            <img alt="Sign-up" src="/images/signup.svg" className="py-3" />
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="mt-10">Don&apos;t have an account?</p>
             <div className="py-4">
@@ -116,7 +116,7 @@ const SigninPage: FC<SigninProps> = ({
               <Button
                 type="submit"
                 aria-label="Log in"
-                theme="secondary-background"
+                theme="secondary-background-dark"
                 size="xlg"
                 onClick={(evt) => {
                   evt.preventDefault();

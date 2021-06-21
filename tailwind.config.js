@@ -1,5 +1,5 @@
 module.exports = {
-  purge: ['./components/**/*.{js,ts,jsx,tsx}', './pages/**/*.{js,ts,jsx,tsx}'],
+  purge: ['./**/*.{js,ts,jsx,tsx}'],
   darkMode: false,
   theme: {
     pseudo: {
@@ -27,7 +27,6 @@ module.exports = {
         color11: '#CC1771',
         color12: '#8E9195',
         'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
-
       },
       spacing: {
         3.75: '0.938rem',
@@ -59,10 +58,11 @@ module.exports = {
         '4xl': '4.5rem',
       },
       borderColor: {
-        'gradient-color1': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%);',
+        'gradient-color1': 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',
         'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
       },
       boxShadow: {
+        xsm: '0px 10px 20px rgba(14, 48, 114, 0.1)',
         sm: ' 0px 14px 20px rgba(14, 48, 114, 0.1)',
         md: 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
       },

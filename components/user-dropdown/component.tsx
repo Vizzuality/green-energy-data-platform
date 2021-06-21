@@ -60,7 +60,7 @@ const UserDropdown: FC<UserDropdownProps> = ({
           ariaLabel={visible ? 'collapse dropdown' : 'expand dropdown'}
           name="triangle_border"
           size="xlg"
-          className={cx('ml-3 p-2 border-2 border-white border-opacity-50 text-white rounded-full',
+          className={cx('ml-3 p-2 border-2 border-white border-opacity-30 text-white rounded-full',
             { 'rotate-180': !!visible },
             { 'transform -rotate-180 text-gray3': visible })}
         />

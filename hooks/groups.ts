@@ -1,32 +1,47 @@
-import { useMemo } from 'react';
 import { useQuery } from 'react-query';
-import { useSession } from 'next-auth/client';
 
 // services
-import { fetchGroups } from 'services/groups';
+import { fetchGroups, fetchGroup } from 'services/groups';
 
 export function useGroups() {
-  const [session, loading] = useSession();
-
-  const query = useQuery('groups',
-    () => fetchGroups(`Bearer ${session.accessToken}`)
-      .then((data) => data),
-    {
-      enabled: !!session && !loading,
-    });
+  const query = useQuery('fetch-groups',
+    () => fetchGroups().then((data) => data));
 
   const {
-    data, status, error, isLoading,
+    data, status, error, isLoading, isSuccess,
   } = query;
 
-  return useMemo(() => ({
+  return ({
     status,
     error,
     isLoading,
+    isSuccess,
     groups: data,
-  }), [status, error, isLoading, data]);
+  });
+}
+
+export function useGroup(id, queryConfig = { enabled: true }) {
+  const query = useQuery('fetch-group',
+    () => fetchGroup(id)
+      .then((data) => data),
+    {
+      enabled: queryConfig.enabled,
+    });
+
+  const {
+    data, status, error, isLoading, isSuccess,
+  } = query;
+
+  return ({
+    status,
+    error,
+    isLoading,
+    isSuccess,
+    data,
+  });
 }
 
 export default {
   useGroups,
+  useGroup,
 };

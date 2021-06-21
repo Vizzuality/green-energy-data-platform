@@ -37,33 +37,6 @@ const LabelContent = () => (
   </g>
 );
 
-export const groupsLanding = [
-  {
-    id: 'energy',
-    title: 'Energy',
-    subtitle: 'Global Energy Investment.',
-    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
-    href: '/energy',
-    src: 'images/landing/energy.png',
-  },
-  {
-    id: 'socio-economic',
-    title: 'Socio economic',
-    subtitle: 'Agriculture.',
-    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
-    href: '/socio-economic',
-    src: 'images/landing/socio-economic.png',
-  },
-  {
-    id: 'coal-power-plant',
-    title: 'Coal power plants',
-    subtitle: 'Capacity power plants in China.',
-    description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
-    href: '/coal-power-plant',
-    src: 'images/landing/coal-power-plants.png',
-  },
-];
-
 export const layers = [
   { id: 'layer1', label: 'layer1' },
   { id: 'layer2', label: 'layer2' },
@@ -76,6 +49,7 @@ export const selectedIndicator = {
   id: 1,
   type: 'pie',
   title: 'Balance',
+  description: 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.',
   visualizationTypes: ['line', 'table', 'pie', 'bar', 'map'],
   categories: [
     {
