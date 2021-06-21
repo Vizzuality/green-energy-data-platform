@@ -18,7 +18,7 @@ export const Nav: React.FC<NavProps> = ({
 }: NavProps) => {
   const router = useRouter();
   const { group } = router.query;
-
+console.log(items)
   return (
     <nav>
       <ul className={cx('flex flex-grow text-white divide-x',
@@ -36,12 +36,12 @@ export const Nav: React.FC<NavProps> = ({
               { 'pl-0': index === 0 },
               { 'font-bold': slug === group })}
           >
-            <Link
+            {/* <Link
               href="/[group]/[subgroup]"
               as={`/${slug}/${defaultSubgroup}`}
             >
               {title}
-            </Link>
+            </Link> */}
             <div className={cx(
               { 'absolute right-4 -bottom-4 rounded-2xl h-1 bg-current': slug === group },
               { 'left-0': slug === group && index === 0 },
