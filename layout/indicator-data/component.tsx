@@ -5,7 +5,9 @@ import React, {
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useGroups } from 'hooks/groups';
+
+// hooks
+import { useDates } from 'hooks/indicators';
 
 // components
 import LoadingSpinner from 'components/loading-spinner';
@@ -17,7 +19,7 @@ import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 
-import { indicatorsList, datesList, selectedIndicator } from '../../constants';
+import { datesList, selectedIndicator } from '../../constants';
 
 import IndicatorDataProps from './types';
 
@@ -28,22 +30,34 @@ type ChartProps = {
 
 const IndicatorData: FC<IndicatorDataProps> = ({
   className,
-  indicator = selectedIndicator,
+  defaultIndicator,
+  groups,
+  subgroups,
+  subgroup,
 }: IndicatorDataProps) => {
+
+  console.log(subgroup)
   const {
-    title,
-    type,
+    default_visualization: defaultVisualization,
     visualizationTypes,
-    categories,
-    data,
+    name,
+    // categories, // TO - DO - chamge when API is ready
+    // data,
+
     description,
     config,
-  } = indicator;
+  } = defaultIndicator;
 
-  const [active, setActive] = useState(type || visualizationTypes[0]);
+  const { indicators } = subgroup;
 
-  const { groups } = useGroups();
+  const dates = useDates(indicators);
+console.log(dates)
+  // TO - DO - change for the ones on top
+  const { categories, data } = selectedIndicator;
+console.log(defaultVisualization, typeof defaultVisualization)
+  const [active, setActive] = useState(defaultVisualization);
   const Loading = () => <LoadingSpinner />;
+
   const DynamicChart = dynamic<ChartProps>(
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },
@@ -61,11 +75,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       <div className="flex flex-col px-32 py-11 w-full">
         <div className="flex items-center w-full justify-between">
           <h2 className="text-3.5xl max-w-sm">
-            {title}
+            {name}
           </h2>
           <div className="flex">
             <Dropdown
-              menuElements={indicatorsList}
+              menuElements={indicators}
               label="Change indicator"
               icon="triangle_border"
               className="mr-4"
@@ -75,25 +89,40 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               placement="bottom-start"
               content={(
                 <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
-
-                  {groups && groups[0].subgroups.map(({ name, id }) => (
+                  {groups.map(({ name: groupName, id, subgroups: subgroupsCompare }) => (
                     <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
-                      <Link href={{
-                        pathname: '/compare',
-                        query: {
-                          // sgInd1: groups[0].slug,
-                          // sgInd2: slug,
-                          sgInd1: 'energy-balance',
-                          sgInd2: 'energy-supply',
-                        },
-                      }}
-                      >
-                        <a className="flex items-center py-2 w-full last:border-b-0" href="/compare">
-                          <span>{name}</span>
-                          {' '}
-                          <Icon ariaLabel="arrow" name="arrow" className="ml-2" />
-                        </a>
-                      </Link>
+                      <button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button" className="flex items-center py-2 w-full last:border-b-0">
+                        <span>{groupName}</span>
+                        {' '}
+                        <Icon ariaLabel="arrow" name="arrow" className="ml-2" />
+                      </button>
+                      <ul id="exp_elem_list" tabIndex={-1} role="listbox" aria-labelledby="exp_elem" className=" " aria-activedescendant="exp_elem_Pu">
+                        {subgroupsCompare.map(({ name: subgroupName, id: subgroupId }) => (
+
+                          <li key={subgroupName} id={`exp-elem_${subgroupId}`} role="option" className="" aria-selected="true">
+                            <Link href={{
+                              pathname: '/compare',
+                              query: {
+                                // sgInd1: defaultIndicator.slug,
+                                // sgInd2: slug,
+                                sgInd1: 'energy-balance',
+                                sgInd2: 'energy-supply',
+                              },
+                            }}
+                            >
+                              <a
+                                className="flex items-center py-2 w-full last:border-b-0"
+                                href="/compare"
+                              >
+                                {subgroupName}
+                              </a>
+
+                            </Link>
+                          </li>
+                        ))}
+
+                      </ul>
+                      {/* </Link> */}
                     </li>
                   ))}
                 </ul>
@@ -125,10 +154,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               />
             </div>
             <div className="flex-1 py-10 h-full">
-              <DynamicChart
+              {/* <DynamicChart
                 widgetData={data[active]}
                 widgetConfig={config[active]}
-              />
+              /> */}
             </div>
           </section>
           <section className="flex flex-col justify-between">

@@ -1,3 +1,5 @@
+import { GroupProps, SubgroupProps } from 'types/data';
+
 type CategoriesObject = {
   [key: string]: string[]
 };
@@ -8,8 +10,8 @@ type ObjectData = {
 
 interface IndicatorProps {
   id: string | number,
-  title: string,
-  type: string,
+  name: string,
+  default_visualization?: IndicatorProps,
   visualizationTypes: string[],
   categories: { id: number, name: string }[],
   categories_filters: CategoriesObject,
@@ -17,10 +19,12 @@ interface IndicatorProps {
   endDate: string | number,
   data: ObjectData, // TO DO - change when we have clear de type of data
   description: string,
-  config?: Object
+  config?: Object,
 }
 
 export default interface IndicatorDataProps {
   className?: string;
-  indicator?: IndicatorProps;
+  defaultIndicator: IndicatorProps;
+  groups: GroupProps[];
+  subgroups: SubgroupProps[];
 }

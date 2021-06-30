@@ -1,5 +1,6 @@
 import React, {
   FC,
+  useState,
 } from 'react';
 import Link from 'next/link';
 // import cx from 'classnames';
@@ -18,6 +19,11 @@ import { useGroups } from 'hooks/groups';
 
 const IndicatorsPage: FC = () => {
   const { groups, isLoading } = useGroups();
+  const [disabledGroups, setActive] = useState([]);
+  const handleGroups = () => {
+    console.log(groups)
+    setActive();
+  }
 
   if (isLoading) return <LoadingSpinner />;
   return (
@@ -28,13 +34,14 @@ const IndicatorsPage: FC = () => {
 
         <div className="flex flex-wrap space-x-3 items-center py-6">
           <p>Filter by:</p>
-          {groups.map(({ id, title }) => (
+          {groups.map(({ id, name }) => (
             <Button
               key={id}
               size="xlg"
               theme="primary-background"
+              onClick={handleGroups}
             >
-              {title}
+              {name}
             </Button>
           ))}
         </div>
@@ -42,7 +49,7 @@ const IndicatorsPage: FC = () => {
       <main className="container m-auto py-6 px-32 text-gray1 divide-y divide-gray1 divide-opacity-20">
         {groups.map(({
           id: groupId,
-          title: groupName,
+          name: groupName,
           slug: groupSlug,
           subgroups,
         }) => (

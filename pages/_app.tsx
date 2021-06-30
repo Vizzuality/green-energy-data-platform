@@ -5,7 +5,7 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { Hydrate } from 'react-query/hydration';
 import { Provider } from 'next-auth/client';
 
-import wrapper from 'config/store';
+import wrapper from 'store/store';
 
 // types
 import { LiveSettings } from 'types/transifex';
