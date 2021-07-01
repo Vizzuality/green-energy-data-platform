@@ -1,8 +1,7 @@
 describe('Translations toggle successfully', () => {
   it('Translates to EN', () => {
     cy.visit('/');
-    cy.wait(5000);
-    cy.get('#downshift-0-toggle-button').click();
+    cy.get('#downshift-0-toggle-button').click({ force: true, timeout: 2000 });
     cy.get('[data-code="en_GB"]').click();
     cy.get('#downshift-0-toggle-button')
       .invoke('text')
@@ -12,7 +11,7 @@ describe('Translations toggle successfully', () => {
   });
 
   it('Translates to ZH CH', () => {
-    cy.get('#downshift-0-toggle-button').click();
+    cy.get('#downshift-0-toggle-button').click({ force: true, timeout: 2000 });
     cy.get('[data-code="zh_CN"]').click();
     cy.get('#downshift-0-toggle-button')
       .invoke('text')
