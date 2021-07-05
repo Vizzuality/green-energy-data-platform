@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 // hooks
-import { useDates } from 'hooks/indicators';
+import { useIndicator } from 'hooks/indicators';
 
 // components
 import LoadingSpinner from 'components/loading-spinner';
@@ -18,6 +18,7 @@ import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
+
 
 import { datesList, selectedIndicator } from '../../constants';
 
@@ -36,32 +37,35 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   subgroup,
 }: IndicatorDataProps) => {
 
-  console.log(subgroup)
   const {
     default_visualization: defaultVisualization,
     visualizationTypes,
     name,
     // categories, // TO - DO - chamge when API is ready
     // data,
-
     description,
-    config,
   } = defaultIndicator;
 
   const { indicators } = subgroup;
 
-  const dates = useDates(indicators);
-console.log(dates)
+
   // TO - DO - change for the ones on top
-  const { categories, data } = selectedIndicator;
-console.log(defaultVisualization, typeof defaultVisualization)
+  const { categories, data, config } = selectedIndicator;
+
   const [active, setActive] = useState(defaultVisualization);
   const Loading = () => <LoadingSpinner />;
+
 
   const DynamicChart = dynamic<ChartProps>(
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },
   );
+
+  const groupId = '066bc939-a3cb-40f3-a4b3-21ad8fe9aef9';
+  const subgroupId = '69598aad-9db8-4e7a-9594-7125fc3a4d20';
+  const indicatorId = '3efd7616-8833-4c31-a070-3000796f3597';
+  const { indicator, widgetData } = useIndicator(groupId, subgroupId, indicatorId, active);
+
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
       { [className]: className })}
@@ -154,10 +158,10 @@ console.log(defaultVisualization, typeof defaultVisualization)
               />
             </div>
             <div className="flex-1 py-10 h-full">
-              {/* <DynamicChart
-                widgetData={data[active]}
+              <DynamicChart
+                widgetData={widgetData}
                 widgetConfig={config[active]}
-              /> */}
+              />
             </div>
           </section>
           <section className="flex flex-col justify-between">

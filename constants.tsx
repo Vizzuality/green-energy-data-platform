@@ -44,7 +44,6 @@ export const layers = [
   { id: 'layer4', label: 'layer4' },
 ];
 
-export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
 export const selectedIndicator = {
   id: 1,
   type: 'pie',
@@ -535,7 +534,6 @@ export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#
 
 export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
-  relatedIndicators,
   indicatorsList,
   datesList,
   layers,

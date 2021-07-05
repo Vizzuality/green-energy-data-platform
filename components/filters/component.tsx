@@ -18,7 +18,6 @@ const Filters: FC<FiltersProps> = ({
 }: FiltersProps) => {
   const dispatch = useDispatch();
 
-  console.log(categories)
   const [activeCategories, setActives] = useState(categories);
   const handleClick = (direction) => {
     direction === 'up' ? console.log('scroll up') : console.log('scroll down');

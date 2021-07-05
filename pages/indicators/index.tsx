@@ -21,7 +21,6 @@ const IndicatorsPage: FC = () => {
   const { groups, isLoading } = useGroups();
   const [disabledGroups, setActive] = useState([]);
   const handleGroups = () => {
-    console.log(groups)
     setActive();
   }
 

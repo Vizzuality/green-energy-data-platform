@@ -1066,8 +1066,11 @@ export const INDICATORS = [
   },
 ];
 
+export const RELATED_INDICATORS = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
+
 export default {
   GROUPS,
   SUBGROUPS,
   INDICATORS,
+  RELATED_INDICATORS,
 };

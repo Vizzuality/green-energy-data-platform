@@ -14,34 +14,47 @@ import Hero from 'layout/hero';
 import IndicatorData from 'layout/indicator-data';
 import WidgetsGrid from 'layout/widgets-grid';
 
-// services
-import { fetchGroup, fetchGroups } from 'services/groups';
-import { fetchSubgroup } from 'services/subgroups';
-import { fetchIndicators } from 'services/indicators';
+// import { GroupProps, SubgroupProps, IndicatorsProps } from 'types/data';
 
-import { GroupProps, SubgroupProps, IndicatorsProps } from 'types/data';
+import { useGroups, useGroup } from 'hooks/groups';
+import { useSubgroup } from 'hooks/subgroups';
+import { useIndicators, useIndicator, useIndicatorData } from 'hooks/indicators';
+import { useRecord } from 'hooks/records';
 
-import { relatedIndicators } from '../../constants';
+import { RELATED_INDICATORS } from 'constants/api-payloads';
+import { useRouter } from 'next/router';
 
-interface GroupPageProps {
-  group: GroupProps,
-  groups: GroupProps[],
-  subgroup: SubgroupProps,
-  indicators: IndicatorsProps[],
-}
+// interface GroupPageProps {
+//   group: GroupProps,
+//   groups: GroupProps[],
+//   subgroup: SubgroupProps,
+//   indicators: IndicatorsProps[],
+// }
 
-const GroupPage: FC<GroupPageProps> = ({
-  groups,
-  group,
-  subgroup,
-  indicators,
-}: GroupPageProps) => {
+const GroupPage: FC = () => {
+  // get slugs, ids for hook TO - DO - change when API works by slugs
+
+  // const router = useRouter();
+  // const { group: groupId, subgroup: subgroupId } = router.query;
+
+  const groupId = '066bc939-a3cb-40f3-a4b3-21ad8fe9aef9';
+  const subgroupId = '69598aad-9db8-4e7a-9594-7125fc3a4d20';
+  const indicatorId = '3efd7616-8833-4c31-a070-3000796f3597';
+
+  const { groups } = useGroups();
+  const { data: group } = useGroup(groupId);
+  const { data: subgroup } = useSubgroup(groupId, subgroupId);
+  const { data: indicators } = useIndicators(groupId, subgroupId);
+
+
+  const indicatorData = useIndicatorData(groupId, subgroupId);
+
   if (!groups || !group || !subgroup || !indicators) return <LoadingSpinner />;
-
   const {
     default_subgroup,
     subgroups,
   } = group;
+
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
@@ -69,41 +82,12 @@ const GroupPage: FC<GroupPageProps> = ({
             subgroups={subgroups}
             subgroup={subgroup}
           />
-          <WidgetsGrid items={relatedIndicators} />
+          <WidgetsGrid items={RELATED_INDICATORS} />
         </section>
       </div>
 
     </LayoutPage>
   );
-};
-
-export const getServerSideProps = async (req) => {
-  // TO DO - update when API gets ready to search by slug
-  // const {
-  //   group: groupQueryParam,
-  //   subgroup: subgroupQueryParam,
-  // } = req.query;
-
-  const groupQueryParam = '066bc939-a3cb-40f3-a4b3-21ad8fe9aef9';
-  const subgroupQueryParam = '69598aad-9db8-4e7a-9594-7125fc3a4d20';
-  // enable when we rely on an external API, not NextJS API
-  const groups = await fetchGroups();
-  const group = await fetchGroup(groupQueryParam);
-  const subgroup = await fetchSubgroup(groupQueryParam, subgroupQueryParam);
-  const indicators = await fetchIndicators(groupQueryParam, subgroupQueryParam);
-
-  // temporary workaround to work with NextJS API. Remove when external API is used.
-  // const group = GROUPS.find(({ slug }) => groupQueryParam === slug);
-  // const subgroup = SUBGROUPS.find(({ slug }) => subgroupQueryParam === slug);
-
-  return ({
-    props: {
-      groups,
-      group,
-      subgroup,
-      indicators,
-    },
-  });
 };
 
 export default GroupPage;
