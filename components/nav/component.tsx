@@ -4,26 +4,25 @@ import cx from 'classnames';
 
 // hooks
 import { useRouter } from 'next/router';
-
-import { GroupProps } from 'types/data';
+import { useGroups } from 'hooks/groups';
 
 export interface NavProps {
-  items: Array<GroupProps>;
   className?: string;
 }
 
 export const Nav: React.FC<NavProps> = ({
-  items,
   className,
 }: NavProps) => {
   const router = useRouter();
   const { group } = router.query;
+  const { groups } = useGroups();
+
   return (
     <nav>
       <ul className={cx('flex flex-grow text-white divide-x',
         { [className]: !!className })}
       >
-        {items?.map(({
+        {groups?.map(({
           id,
           name,
           slug,
@@ -36,7 +35,7 @@ export const Nav: React.FC<NavProps> = ({
               { 'font-bold': slug === group })}
           >
             <Link
-              href="/[group]/[subgroup]"
+              href="/[group]/[subgroup]?"
               as={`/${slug}/${default_subgroup}`}
             >
               {name}

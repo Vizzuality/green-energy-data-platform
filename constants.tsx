@@ -272,14 +272,6 @@ export const selectedIndicator = {
           type: 'monotone',
           dataKey: 'value',
         },
-        {
-          type: 'monotone',
-          dataKey: 'value2',
-        },
-        {
-          type: 'monotone',
-          dataKey: 'value3',
-        },
       ],
       gradients: [
         {

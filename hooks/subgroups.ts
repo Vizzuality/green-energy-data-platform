@@ -4,21 +4,9 @@ import { useQuery } from 'react-query';
 import { fetchSubgroup } from 'services/subgroups';
 
 export function useSubgroup(group_id, subgroup_id) {
-  const query = useQuery('fetch-subgroup',
+  return useQuery(['fetch-subgroup', group_id, subgroup_id],
     () => fetchSubgroup(group_id, subgroup_id)
-      .then((data) => data));
-
-  const {
-    data, status, error, isSuccess, isLoading,
-  } = query;
-
-  return {
-    status,
-    error,
-    isSuccess,
-    isLoading,
-    data,
-  };
+      .then((data) => data), { keepPreviousData: true });
 }
 
 export default {

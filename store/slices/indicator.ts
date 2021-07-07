@@ -16,7 +16,7 @@ export const filtersSlice = createSlice({
   name: 'indicator',
   initialState,
   reducers: {
-    addFilter: (state, action: PayloadAction<string>) => ({
+    addFilter: (state: Filter, action: PayloadAction<string>) => ({
       ...state,
       filters: action.payload,
     }),

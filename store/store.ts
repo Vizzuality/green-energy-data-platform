@@ -1,11 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import type { ReducersMapObject } from '@reduxjs/toolkit';
 import rootReducer from 'store/slices';
-
-import { createWrapper } from 'next-redux-wrapper';
+import group from './slices/group';
+import subgroup from './slices/subgroup';
 
 const staticReducers = {
-  rootReducer,
+  group,
+  subgroup,
 };
 
 const asyncReducers = {};
@@ -15,7 +16,7 @@ const createReducer = (reducers: ReducersMapObject) => combineReducers({
   ...reducers,
 });
 
-const makeStore = () => configureStore({
+const makeStore = configureStore({
   reducer: createReducer(asyncReducers),
   devTools: process.env.NODE_ENV !== 'production',
 });
@@ -26,4 +27,4 @@ export type RootState = ReturnType<typeof makeStore.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof makeStore.dispatch;
 
-export default createWrapper(makeStore);
+export default makeStore;

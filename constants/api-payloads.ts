@@ -1,6 +1,6 @@
 export const GROUPS = [
   {
-    id: 1,
+    id: '066bc939-a3cb-40f3-a4b3-21ad8fe9aef9',
     slug: 'energy',
     name: 'Energy',
     subtitle: 'Global Energy Investment.',
@@ -132,7 +132,7 @@ export const GROUPS = [
 
 export const SUBGROUPS = [
   {
-    slug: 'energy-balance', id: 1, name: 'Energy Balance', group: '1',
+    slug: 'energy-balance', id: '69598aad-9db8-4e7a-9594-7125fc3a4d20', name: 'Energy Balance', group: '1',
   },
   {
     slug: 'energy-supply', id: 2, name: 'Energy Supply', group: '1',

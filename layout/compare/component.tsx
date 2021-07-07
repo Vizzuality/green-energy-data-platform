@@ -16,8 +16,9 @@ import DataSource from 'components/data-source';
 // hooks
 import { useGroup } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
+import { useRouter } from 'next/router';
 
-import { indicatorsList, datesList, selectedIndicator } from '../../constants';
+import { datesList, selectedIndicator } from '../../constants';
 
 interface CompareLayoutProps {
   subgroup: string | string[],
@@ -84,7 +85,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         <h2 className="text-white">{groupTitle}</h2>
         <div className="pt-4 flex items-center">
           <h1 className="text-3.5xl py-6">{subgroupTitle}</h1>
-          <Dropdown
+          {/* <Dropdown
             menuElements={subgroups}
             border
             label={false}
@@ -93,7 +94,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             iconSize="md"
             shape="circle"
             theme="light"
-          />
+          /> */}
         </div>
       </Hero>
       <div className={cx('container m-auto p-6 bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
@@ -106,15 +107,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         <div className="flex flex-col py-8">
           <div className="flex justify-between items-center">
             <h2 className="text-gray1 font-bold">{title}</h2>
-            <Dropdown
-              menuElements={indicatorsList}
-              label="Change indicator"
-              icon="triangle_border"
-              className="mr-4"
-            />
           </div>
           <p className="text-gray1 py-8">{description}</p>
-          <Filters categories={categories} className="mb-4" />
+          {categories.length > 1 && <Filters categories={categories} className="mb-4" />}
         </div>
 
         <div className="flex text-gray1 items-center">
@@ -135,7 +130,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           widgetConfig={config[active]}
         />
 
-        <Legend categories={categories} className="mb-4" />
+        {categories.length > 1 && <Legend categories={categories} className="mb-4" />}
         <DataSource type="horizontal" />
 
       </div>

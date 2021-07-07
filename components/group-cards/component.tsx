@@ -13,13 +13,12 @@ interface GroupCardProps {
 const GroupCard: FC<GroupCardProps> = ({
   className,
 }: GroupCardProps) => {
-  // TO - DO: uncomment when API is working
-  const { groups, isLoading } = useGroups();
+  const { data: groups, isLoading } = useGroups();
   if (isLoading) return <LoadingSpinner />;
 
   return (
     <div className={cx('w-full', { [className]: className })}>
-      {groups.map(({
+      {groups?.map(({
         id,
         slug,
         name,

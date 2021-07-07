@@ -10,6 +10,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       slug: querySlug,
     },
   } = req;
-
-  res.status(200).json(GROUPS.find(({ slug }) => querySlug === slug));
+  res.status(200).json(GROUPS.find(({ slug, id }) => (querySlug === slug) || (querySlug === id.toString())));
 };

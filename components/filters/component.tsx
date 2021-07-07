@@ -23,6 +23,8 @@ const Filters: FC<FiltersProps> = ({
     direction === 'up' ? console.log('scroll up') : console.log('scroll down');
   };
 
+  if (!activeCategories) return null;
+
   const handleFilter = useCallback((id: number) => {
     const categoriesUpdate = activeCategories.map((c) => {
       if (c.id === id) {
@@ -50,7 +52,7 @@ const Filters: FC<FiltersProps> = ({
         </div>
       </div>
       <div className="flex flex-col items-center">
-        {activeCategories.map(({ id, name, active }) => (
+        {activeCategories?.map(({ id, name, active }) => (
           <button
             key={`${id}`}
             name={name}

@@ -18,11 +18,14 @@ import Button from 'components/button';
 import { useGroups } from 'hooks/groups';
 
 const IndicatorsPage: FC = () => {
-  const { groups, isLoading } = useGroups();
-  const [disabledGroups, setActive] = useState([]);
-  const handleGroups = () => {
-    setActive();
-  }
+  const { data: groups, isLoading } = useGroups();
+  const [disabledGroups, setActive] = useState(['066bc939-a3cb-40f3-a4b3-21ad8fe9aef9']);
+
+  const handleGroups = (id) => {
+    disabledGroups.find((group) => group === id)
+      ? setActive(disabledGroups.filter((group) => group === id))
+      : setActive(disabledGroups.push(id));
+  };
 
   if (isLoading) return <LoadingSpinner />;
   return (
@@ -33,12 +36,12 @@ const IndicatorsPage: FC = () => {
 
         <div className="flex flex-wrap space-x-3 items-center py-6">
           <p>Filter by:</p>
-          {groups.map(({ id, name }) => (
+          {groups?.map(({ id, name }) => (
             <Button
               key={id}
               size="xlg"
               theme="primary-background"
-              onClick={handleGroups}
+              onClick={() => handleGroups(id)}
             >
               {name}
             </Button>
@@ -46,7 +49,7 @@ const IndicatorsPage: FC = () => {
         </div>
       </Hero>
       <main className="container m-auto py-6 px-32 text-gray1 divide-y divide-gray1 divide-opacity-20">
-        {groups.map(({
+        {groups?.map(({
           id: groupId,
           name: groupName,
           slug: groupSlug,

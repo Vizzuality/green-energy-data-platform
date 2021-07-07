@@ -17,7 +17,7 @@ export interface DropdownSelectProps {
   children?: ReactNode | boolean,
   handleSelectedItemChange?: () => void | boolean,
   theme?: string
-  shape?: string
+  shape?: string,
 }
 
 const SHAPE = {
@@ -54,6 +54,7 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
     openMenu,
     selectedItem,
   } = useSelect({ items: menuElements });
+
   return (
     <div className={cx('relative w-max', { [className]: !!className })}>
       <button

@@ -25,6 +25,4 @@ interface IndicatorProps {
 export default interface IndicatorDataProps {
   className?: string;
   defaultIndicator: IndicatorProps;
-  groups: GroupProps[];
-  subgroups: SubgroupProps[];
 }
