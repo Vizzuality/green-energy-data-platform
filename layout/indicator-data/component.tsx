@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useGroups } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
-import { useIndicators, useIndicator } from 'hooks/indicators';
+import { useIndicator } from 'hooks/indicators';
 
 // components
 import LoadingSpinner from 'components/loading-spinner';
@@ -53,10 +53,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },
   );
-  // TO - DO - change for the ones on top
   const { config } = selectedIndicator;
 
-  const groupId = '066bc939-a3cb-40f3-a4b3-21ad8fe9aef9';
+  // const groupId = '066bc939-a3cb-40f3-a4b3-21ad8fe9aef9';
   // const subgroupId = '69598aad-9db8-4e7a-9594-7125fc3a4d20';
   const indicatorId = '3efd7616-8833-4c31-a070-3000796f3597';
   const { widgetData } = useIndicator(groupSlug, subgroupSlug, indicatorId, active);
@@ -82,14 +81,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               placement="bottom-start"
               content={(
                 <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
-                  {subgroup?.indicators?.map(({ name: groupName, id, subgroups: subgroupsCompare }) => (
-                    <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
-                      <button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button" className="flex items-center py-2 w-full last:border-b-0">
-                        <span>{groupName}</span>
-                        {' '}
-                      </button>
-                    </li>
-                  ))}
+                  {subgroup?.indicators?.map(
+                    ({ name: groupName, id, subgroups: subgroupsCompare }) => (
+                      <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
+                        <button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button" className="flex items-center py-2 w-full last:border-b-0">
+                          <span>{groupName}</span>
+                          {' '}
+                        </button>
+                      </li>
+                    ),
+                  )}
                 </ul>
               )}
             >
@@ -108,7 +109,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               placement="bottom-start"
               content={(
                 <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
-                  {groups?.map(({ name: groupName, id, subgroups: subgroupsCompare }) => (
+                  {groups?.map(({
+                    name: groupName, id, subgroups: subgroupsCompare, slug,
+                  }) => (
                     <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
                       <button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button" className="flex items-center py-2 w-full last:border-b-0">
                         <span>{groupName}</span>
@@ -116,29 +119,30 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         <Icon ariaLabel="arrow" name="arrow" className="ml-2" />
                       </button>
                       <ul id="exp_elem_list" tabIndex={-1} role="listbox" aria-labelledby="exp_elem" className=" " aria-activedescendant="exp_elem_Pu">
-                        {subgroupsCompare.map(({ name: subgroupName, id: subgroupId }) => (
-
-                          <li key={subgroupName} id={`exp-elem_${subgroupId}`} role="option" className="" aria-selected="true">
-                            <Link href={{
-                            pathname: '/compare',
-                            query: {
-                              // sgInd1: defaultIndicator.slug,
-                              // sgInd2: slug,
-                              sgInd1: 'energy-balance',
-                              sgInd2: 'energy-supply',
-                            },
-                          }}
-                          >
-                            <a
-                                className="flex items-center py-2 w-full last:border-b-0"
-                                href="/compare"
+                        {subgroupsCompare.map(
+                          ({ name: subgroupName, id: subgroupId, slug: subgroupCompareSlug }) => (
+                            <li key={subgroupName} id={`exp-elem_${subgroupId}`} role="option" className="" aria-selected="true">
+                              <Link href={{
+                                pathname: '/compare',
+                                query: {
+                                  gInd1: groupSlug,
+                                  sgInd1: subgroupSlug,
+                                  gInd2: slug,
+                                  sgInd2: subgroupCompareSlug,
+                                },
+                              }}
                               >
-                                {subgroupName}
-                              </a>
+                                <a
+                                  className="flex items-center py-2 w-full last:border-b-0"
+                                  href="/compare"
+                                >
+                                  {subgroupName}
+                                </a>
 
-                          </Link>
-                          </li>
-                        ))}
+                              </Link>
+                            </li>
+                          ),
+                        )}
 
                       </ul>
                       {/* </Link> */}

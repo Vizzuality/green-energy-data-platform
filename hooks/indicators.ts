@@ -34,7 +34,7 @@ export function useIndicator(groupId, subgroupId, indicatorId, active) {
   return useMemo(() => {
     const { records } = !!data && data;
     const parsedData = records?.filter(
-      ({ visualizationTypes }) => visualizationTypes.includes(active)
+      ({ visualizationTypes }) => visualizationTypes.includes(active),
     );
     const widgetData = parsedData?.map((d) => {
       if (active === 'bar') {

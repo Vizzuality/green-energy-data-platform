@@ -6,7 +6,6 @@ import cx from 'classnames';
 // components
 import Head from 'components/head';
 import Nav from 'components/nav';
-import LoadingSpinner from 'components/loading-spinner';
 import Tooltip from 'components/tooltip';
 import Icon from 'components/icon';
 
@@ -20,9 +19,17 @@ import WidgetsGrid from 'layout/widgets-grid';
 
 import { useGroup } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
+import { useIndicators } from 'hooks/indicators';
 
 import { RELATED_INDICATORS } from 'constants/api-payloads';
 import { useRouter } from 'next/router';
+
+// interface GroupPageProps {
+//   group: GroupProps,
+//   groups: GroupProps[],
+//   subgroup: SubgroupProps,
+//   indicators: IndicatorsProps[],
+// }
 
 const GroupPage: FC = () => {
   // get slugs, ids for hook TO - DO - change when API works by slugs
@@ -39,11 +46,18 @@ const GroupPage: FC = () => {
   const { query: { group: groupQuery, subgroup: subgroupQuery } } = router;
 
   const { data: group } = useGroup(groupQuery);
-  const { isLoading, data: subgroup } = useSubgroup(groupQuery, subgroupQuery);
+  const { data: subgroup } = useSubgroup(groupQuery, subgroupQuery);
+  const { data: indicators } = useIndicators(groupQuery, subgroupQuery);
+
+  if (!group || !subgroup || !indicators) return null;
+
+  const {
+    subgroups,
+  } = group;
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
-      <Head title={`${group?.name} analysis`} />
+      <Head title={`${group.name} analysis`} />
       <Hero>
         <Nav className="pt-10" />
 
@@ -54,7 +68,7 @@ const GroupPage: FC = () => {
             <ul
               className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
             >
-              {group?.subgroups.map(({ slug, id, name }) => (
+              {subgroups.map(({ slug, id, name }) => (
                 <li
                   data-code={id}
                   className="px-4 py-2 first:rounded-t-xl last:rounded-b-xl bg-white text-gray3 first:rounded-t-xl last:rounded-b-xl"
@@ -78,7 +92,7 @@ const GroupPage: FC = () => {
             type="button"
             className="flex items-center"
           >
-            <h1 className="text-5.5xl pt-3">{subgroup?.name}</h1>
+            <h1 className="text-5.5xl pt-3">{subgroup.name}</h1>
             <Icon
               ariaLabel="collapse dropdown"
               name="triangle_border"
@@ -93,11 +107,7 @@ const GroupPage: FC = () => {
       </Hero>
       <div className="container m-auto">
         <section className="-mt-40">
-          {isLoading
-            ? <LoadingSpinner />
-            : (
-              <IndicatorData />
-            )}
+          <IndicatorData />
           <WidgetsGrid items={RELATED_INDICATORS} />
         </section>
       </div>

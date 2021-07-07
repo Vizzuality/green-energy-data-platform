@@ -16,12 +16,12 @@ import DataSource from 'components/data-source';
 // hooks
 import { useGroup } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
-import { useRouter } from 'next/router';
 
 import { datesList, selectedIndicator } from '../../constants';
 
 interface CompareLayoutProps {
-  subgroup: string | string[],
+  groupSlug: string,
+  subgroupSlug: string,
   onClose: (groupSlug: string, subgroupSlug: string) => void,
   className?: string,
 }
@@ -32,6 +32,8 @@ type ChartProps = {
 };
 
 const CompareLayout: FC<CompareLayoutProps> = ({
+  groupSlug,
+  subgroupSlug,
   className,
   onClose,
 }: CompareLayoutProps) => {
@@ -46,15 +48,18 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   } = selectedIndicator;
   const [active, setActive] = useState(type || visualizationTypes[0]);
 
-  // const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup(subgroup);
-  const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup('1bdb1c12-b9cf-4524-a546-a7a7a62a63af');
-  const { data: groupData, isLoading, isSuccess } = useGroup(subgroupData?.group, ({
-    enabled: !!subgroupData?.group,
-  }));
+  const { data: groupData, isLoading, isSuccess } = useGroup(groupSlug);
+  const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup(groupSlug, subgroupSlug);
+
   if (isLoading || !isSuccess || isLoadingGroup) return <LoadingSpinner />;
 
-  const { name: subgroupTitle, slug: subgroupSlug } = subgroupData;
-  const { title: groupTitle, subgroups, slug: groupSlug } = groupData;
+  const {
+    name: groupName,
+  } = groupData;
+
+  const {
+    name: subgroupName,
+  } = subgroupData;
 
   const Loading = () => <LoadingSpinner />;
   const DynamicChart = dynamic<ChartProps>(
@@ -82,19 +87,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           />
           <span className="px-8 py-1">Don´t compare</span>
         </button>
-        <h2 className="text-white">{groupTitle}</h2>
+        <h2 className="text-white">{groupName}</h2>
         <div className="pt-4 flex items-center">
-          <h1 className="text-3.5xl py-6">{subgroupTitle}</h1>
-          {/* <Dropdown
-            menuElements={subgroups}
-            border
-            label={false}
-            className="rounded-full p-6 text-white"
-            icon="triangle_border"
-            iconSize="md"
-            shape="circle"
-            theme="light"
-          /> */}
+          <h1 className="text-3.5xl py-6">{subgroupName}</h1>
         </div>
       </Hero>
       <div className={cx('container m-auto p-6 bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
