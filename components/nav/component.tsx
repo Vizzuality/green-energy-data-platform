@@ -15,7 +15,7 @@ export const Nav: React.FC<NavProps> = ({
 }: NavProps) => {
   const router = useRouter();
   const { group } = router.query;
-  const { groups } = useGroups();
+  const { data: groups } = useGroups();
 
   return (
     <nav>

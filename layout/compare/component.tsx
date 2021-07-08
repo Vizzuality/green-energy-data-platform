@@ -20,9 +20,9 @@ import { useSubgroup } from 'hooks/subgroups';
 import { datesList, selectedIndicator } from '../../constants';
 
 interface CompareLayoutProps {
-  groupSlug: string,
-  subgroupSlug: string,
-  onClose: (groupSlug: string, subgroupSlug: string) => void,
+  groupSlug: string | string[],
+  subgroupSlug: string | string[],
+  onClose: (groupSlug: string | string[], subgroupSlug: string | string[]) => void,
   className?: string,
 }
 
@@ -47,7 +47,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     config,
   } = selectedIndicator;
   const [active, setActive] = useState(type || visualizationTypes[0]);
-
   const { data: groupData, isLoading, isSuccess } = useGroup(groupSlug);
   const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup(groupSlug, subgroupSlug);
 
