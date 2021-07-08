@@ -25,12 +25,6 @@ import { RELATED_INDICATORS } from 'constants/api-payloads';
 import { useRouter } from 'next/router';
 
 const GroupPage: FC = () => {
-  // get slugs, ids for hook TO - DO - change when API works by slugs
-
-  // const router = useRouter();
-  // const { group: groupId, subgroup: subgroupId } = router.query;
-  // const { selectedSubgroup } = useSelector((state) => state.subgroup);
-
   // const groupId = '066bc939-a3cb-40f3-a4b3-21ad8fe9aef9';
   // const subgroupId = '69598aad-9db8-4e7a-9594-7125fc3a4d20';
   // const indicatorId = '3efd7616-8833-4c31-a070-3000796f3597';

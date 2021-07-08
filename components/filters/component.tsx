@@ -1,9 +1,6 @@
 import React, { FC, useState, useCallback } from 'react';
 import cx from 'classnames';
 
-import { useDispatch } from 'react-redux';
-import { addFilter } from 'store/slices/indicator';
-
 // components
 import Icon from 'components/icon';
 
@@ -16,17 +13,11 @@ const Filters: FC<FiltersProps> = ({
   categories,
   className = '',
 }: FiltersProps) => {
-  const dispatch = useDispatch();
-
   const [activeCategories, setActives] = useState(categories);
-  const handleClick = (direction) => {
-    direction === 'up' ? console.log('scroll up') : console.log('scroll down');
-  };
-
-  if (!activeCategories) return null;
+  const handleClick = (direction) => direction === 'up' ? console.log('scroll up') : console.log('scroll down');
 
   const handleFilter = useCallback((id: number) => {
-    const categoriesUpdate = activeCategories.map((c) => {
+    const categoriesUpdate = activeCategories?.map((c) => {
       if (c.id === id) {
         return {
           ...c,
@@ -38,8 +29,7 @@ const Filters: FC<FiltersProps> = ({
       };
     });
     setActives(categoriesUpdate);
-    dispatch(addFilter(categoriesUpdate));
-  }, [activeCategories, dispatch]);
+  }, [activeCategories]);
 
   return (
     <div className={cx('inline-flex flex-col justify-center text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1',
