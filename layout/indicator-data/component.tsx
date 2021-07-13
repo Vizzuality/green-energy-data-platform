@@ -176,11 +176,17 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 iconRotable={false}
               />
             </div>
-            <div className="flex-1 py-10 h-full">
+            <div className={cx('flex-1 py-10 h-full', {
+              'bg-gradient-color1': widgetData,
+            })}
+            >
+              <Icon ariaLabel="no data found" name="illus_nodata" size="2xlg" className="mr-5" />
+              {widgetData && (
               <DynamicChart
                 widgetData={widgetData}
                 widgetConfig={config[active]}
               />
+              )}
             </div>
           </section>
           <section className="flex flex-col justify-between">

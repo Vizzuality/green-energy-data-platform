@@ -33,7 +33,10 @@ const GroupPage: FC = () => {
   const { query: { group: groupQuery, subgroup: subgroupQuery } } = router;
 
   const { data: group } = useGroup(groupQuery);
-  const { isLoading, data: subgroup } = useSubgroup(groupQuery, subgroupQuery);
+
+  console.log(group)
+  debugger
+  const { isLoading, data: subgroup } = useSubgroup(groupQuery, subgroupQuery, { enabled: !!groupQuery && !!subgroupQuery});
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
@@ -41,7 +44,7 @@ const GroupPage: FC = () => {
       <Hero>
         <Nav className="pt-10" />
 
-        <Tooltip
+        {/* <Tooltip
           trigger="click"
           placement="bottom-start"
           content={(
@@ -82,18 +85,18 @@ const GroupPage: FC = () => {
             />
           </button>
 
-        </Tooltip>
+        </Tooltip> */}
 
       </Hero>
       <div className="container m-auto">
-        <section className="-mt-40">
-          {isLoading
+        {/* <section className="-mt-40"> */}
+          {/* {isLoading
             ? <LoadingSpinner />
             : (
               <IndicatorData />
             )}
           <WidgetsGrid items={RELATED_INDICATORS} />
-        </section>
+        </section> */}
       </div>
 
     </LayoutPage>

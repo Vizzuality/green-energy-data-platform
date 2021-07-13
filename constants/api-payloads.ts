@@ -132,7 +132,7 @@ export const GROUPS = [
 
 export const SUBGROUPS = [
   {
-    slug: 'energy-balance', id: '69598aad-9db8-4e7a-9594-7125fc3a4d20', name: 'Energy Balance', group: '1',
+    slug: 'energy-balance', id: '69598aad-9db8-4e7a-9594-7125fc3a4d20', name: 'Energy Balance', group: '1', default_indicator: 'ff168071-2310-4da4-bae4-95a780c353e4',
   },
   {
     slug: 'energy-supply', id: 2, name: 'Energy Supply', group: '1',
