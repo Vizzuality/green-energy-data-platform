@@ -6,7 +6,7 @@ import cx from 'classnames';
 // components
 import Hero from 'layout/hero';
 import LoadingSpinner from 'components/loading-spinner';
-import Dropdown from 'components/select';
+import Tooltip from 'components/tooltip';
 import Icon from 'components/icon';
 import VisualizationsNav from 'components/visualizations-nav';
 import Filters from 'components/filters';
@@ -95,7 +95,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         <VisualizationsNav
           active={active}
           mobile
-          visualizationTypes={visualizationTypes}
+          visualizationTypes={['map']}
           onClick={setActive}
         />
         <div className="flex flex-col py-8">
@@ -108,15 +108,26 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
         <div className="flex text-gray1 items-center">
           Showing for:
-          <Dropdown
-            menuElements={datesList}
-            className="bg-white ml-3"
-            label="Select dates"
-            icon="calendar"
-            iconSize="lg"
-            iconColor="text-gray1"
-            iconRotable={false}
-          />
+          <Tooltip
+            trigger="click"
+            placement="bottom-start"
+            content={(
+              <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
+                hola
+              </ul>
+            )}
+          >
+            <button
+              type="button"
+              className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+            >
+              <span>Select dates</span>
+              <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+
+            </button>
+          </Tooltip>
+
+
         </div>
 
         <DynamicChart

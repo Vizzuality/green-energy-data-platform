@@ -33,7 +33,7 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
           { [className]: !!className })}
       >
         {!mobile && (<p className="pt-4">Select Visualization:</p>)}
-        {VisualizationsOptions.map(({
+        {VisualizationsOptions?.map(({
           icon, label, id, slug,
         }) => (
           <li
@@ -43,7 +43,7 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
             onKeyPress={() => handleVisualization(id)}
             className={cx('relative flex flex-col p-4 text-color1 cursor-pointer',
               { 'font-bold text-opacity-100': active === slug },
-              { 'pointer-events-none text-opacity-20': !visualizationTypes.includes(id) },
+              { 'pointer-events-none text-opacity-20': !visualizationTypes?.includes(id) },
               { 'border rounded border-color1': (active === id) && mobile })}
           >
             <div className="flex items-center">

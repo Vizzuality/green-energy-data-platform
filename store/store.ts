@@ -1,12 +1,13 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import type { ReducersMapObject } from '@reduxjs/toolkit';
-import rootReducer from 'store/slices';
 import group from './slices/group';
 import subgroup from './slices/subgroup';
+import indicator from './slices/indicator';
 
 const staticReducers = {
   group,
   subgroup,
+  indicator,
 };
 
 const asyncReducers = {};

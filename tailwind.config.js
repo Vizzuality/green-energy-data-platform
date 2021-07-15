@@ -38,6 +38,11 @@ module.exports = {
       maxWidth: {
         xs: '15.5rem',
       },
+      minHeight: {
+        '1/4': '25vh',
+        '1/2': '50vh',
+        '3/4': '75vh',
+      },
       fontSize: {
         '2.5xl': '1.625rem',
         '3.5xl': '2rem',
@@ -71,8 +76,6 @@ module.exports = {
         'gradient-color2': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%)',
         'gradient-gray1': 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
         'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
-        nodata: "url('/imgages/illus_nodata.svg')",
-
       },
       inset: {
         17: '4.75rem',

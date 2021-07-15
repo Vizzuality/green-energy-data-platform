@@ -26,7 +26,7 @@ export function useIndicators(group_id, subgroup_id) {
 }
 
 export function useIndicator(groupId, subgroupId, indicatorId, active) {
-  const query = useQuery(`fetch-groups-${groupId}-${subgroupId}-${indicatorId}`,
+  const query = useQuery(['fetch-indicator', groupId, subgroupId, indicatorId],
     () => fetchIndicator(groupId, subgroupId, indicatorId)
       .then((data) => data));
   const { data } = query;
@@ -36,6 +36,11 @@ export function useIndicator(groupId, subgroupId, indicatorId, active) {
     const parsedData = records?.filter(
       ({ visualizationTypes }) => visualizationTypes.includes(active),
     );
+
+    const years = (parsedData?.map((d) => d.year))?.reduce(
+      (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
+    );
+
     const widgetData = parsedData?.map((d) => {
       if (active === 'bar') {
         return {
@@ -52,12 +57,21 @@ export function useIndicator(groupId, subgroupId, indicatorId, active) {
     });
 
     return {
-      ...data,
+      ...query,
+      years,
       widgetData,
     };
-  }, [data, active]);
+  }, [data, query, active]);
+}
+
+export function useDefaultIndicator(group) {
+  if (!group) return null;
+  const { default_subgroup: defaultSubgroup, subgroups } = group;
+  return subgroups.find((subgroup) => subgroup.slug === defaultSubgroup);
 }
 
 export default {
+  useDefaultIndicator,
   useIndicators,
+  useIndicator,
 };
