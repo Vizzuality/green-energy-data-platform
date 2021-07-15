@@ -37,7 +37,6 @@ const MapContainer: FC = () => {
   //   },
   //   [viewport],
   // );
-
   return (
     <div className="relative h-full border-4 border-gray5 rounded">
       <Map

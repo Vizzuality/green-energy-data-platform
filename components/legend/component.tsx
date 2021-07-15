@@ -16,7 +16,7 @@ const Legend: FC<LegendProps> = ({
     { [className]: className })}
   >
     <ul className="flex flex-col items-center my-2.5">
-      {categories.map(({ id, name }, index) => (
+      {categories?.map(({ id, name }, index) => (
         <li
           key={id}
           className="flex items-center w-full active:bg-color1 rounded-md focus:bg-blue text-left text-sm"

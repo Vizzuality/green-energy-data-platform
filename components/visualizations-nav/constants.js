@@ -10,7 +10,7 @@ const VisualizationsOptions = [
     label: 'Distribution',
   },
   {
-    id: 'map',
+    id: 'choropleth',
     icon: 'map',
     label: 'Map',
   },

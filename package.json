@@ -27,6 +27,7 @@
     "@react-types/shared": "^3.5.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@tippyjs/react": "^4.2.5",
+    "@types/lodash.orderby": "^4.6.6",
     "@types/react-map-gl": "^5.2.9",
     "autoprefixer": "^10.1.0",
     "axios": "^0.21.1",

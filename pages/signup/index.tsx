@@ -108,14 +108,14 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="terms&conditions" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
+                <label htmlFor="terms-conditions" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
                   <span>
                     I agree with the
-                    <a href="/terms&conditions"> Terms and Conditions</a>
+                    <a href="/terms-conditions"> Terms and Conditions</a>
                   </span>
                   <input
-                    id="terms&conditions"
-                    name="terms&conditions"
+                    id="terms-conditions"
+                    name="terms-conditions"
                     type="checkbox"
                     className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1"
                   />

@@ -5,6 +5,12 @@ export const API = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+export const APInext = axios.create({
+  baseURL: '/api',
+  headers: { 'Content-Type': 'application/json' },
+});
+
 export default {
   API,
+  APInext,
 };

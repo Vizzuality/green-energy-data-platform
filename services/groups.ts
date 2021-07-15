@@ -1,8 +1,8 @@
 import { API } from 'lib/api';
 
 export const fetchGroups = (
-  params = {},
   headers = {},
+  params = {},
 ) => API.get('/groups', {
   headers: {
     ...headers,

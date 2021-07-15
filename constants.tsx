@@ -44,7 +44,6 @@ export const layers = [
   { id: 'layer4', label: 'layer4' },
 ];
 
-export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
 export const selectedIndicator = {
   id: 1,
   type: 'pie',
@@ -272,14 +271,6 @@ export const selectedIndicator = {
         {
           type: 'monotone',
           dataKey: 'value',
-        },
-        {
-          type: 'monotone',
-          dataKey: 'value2',
-        },
-        {
-          type: 'monotone',
-          dataKey: 'value3',
         },
       ],
       gradients: [
@@ -519,6 +510,10 @@ export const indicatorsList = [
   { id: 2, name: 'indicator2' },
   { id: 3, name: 'indicator3' },
   { id: 4, name: 'indicator4' },
+  { id: 5, name: 'indicator5' },
+  { id: 6, name: 'indicator6' },
+  { id: 7, name: 'indicator7' },
+  { id: 8, name: 'indicator8' },
 ];
 export const datesList = [
   { id: 1, name: '1990' },
@@ -531,7 +526,6 @@ export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#
 
 export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
-  relatedIndicators,
   indicatorsList,
   datesList,
   layers,
