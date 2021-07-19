@@ -11,7 +11,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         coal: ['coal1', 'coal2'],
         Coke: ['coke1', 'coke2'],
         'Crude Oil': ['crude1', 'crude2'],
-        'Diesel Oil': ['diesel1', 'disel2'],
+        'Diesel Oil': ['diesel1', 'diesel2'],
         'Fuel Oil': ['fuel1', 'fuel1'],
         Kerosene: ['kerosene1', 'kerosene2'],
         LPG: ['lgp1', 'lgp2'],

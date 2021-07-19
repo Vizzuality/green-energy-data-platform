@@ -2,13 +2,15 @@ import React, {
   FC,
   useState,
   FormEvent,
+  useCallback,
 } from 'react';
 import Link from 'next/link';
 import {
-  signIn,
   getSession,
 } from 'next-auth/client';
 import cx from 'classnames';
+
+import { signUp } from 'services/user';
 
 // components
 import LayoutPage from 'layout';
@@ -22,6 +24,7 @@ const SignupPage: FC = () => {
     name: '',
     email: '',
     password: '',
+    password_confirmation: '',
   });
   const handleChange = (type: string, e: FormEvent<HTMLInputElement>): void => {
     setCredentials({
@@ -29,6 +32,11 @@ const SignupPage: FC = () => {
       [type]: e.currentTarget.value,
     });
   };
+
+  const handleSubmit = useCallback((evt) => {
+    evt.preventDefault();
+    signUp(credentials);
+  }, [credentials]);
 
   return (
     <LayoutPage className="bg-gradient-color1">
@@ -46,7 +54,7 @@ const SignupPage: FC = () => {
             </Link>
           </section>
           <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-20 md:px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
-            <form method="post" className="inline-flex flex-col flex-grow w-full">
+            <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
                 <label htmlFor="name" className="text-2.5xl font-bold">
                   Your name is:
@@ -108,14 +116,14 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="terms&conditions" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
+                <label htmlFor="terms-conditions" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
                   <span>
                     I agree with the
-                    <a href="/terms&conditions"> Terms and Conditions</a>
+                    <a href="/terms-conditions"> Terms and Conditions</a>
                   </span>
                   <input
-                    id="terms&conditions"
-                    name="terms&conditions"
+                    id="terms-conditions"
+                    name="terms-conditions"
                     type="checkbox"
                     className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1"
                   />
@@ -138,10 +146,6 @@ const SignupPage: FC = () => {
                 aria-label="Sign in"
                 theme="secondary-background-dark"
                 size="xlg"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  signIn('credentials');
-                }}
               >
                 Create account
               </Button>

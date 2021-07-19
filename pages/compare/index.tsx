@@ -13,7 +13,9 @@ import LoadingSpinner from 'components/loading-spinner';
 
 const ComparePage: FC = () => {
   const { query } = useRouter();
-  const { sgInd1, sgInd2 } = query;
+  const {
+    gInd1, sgInd1, gInd2, sgInd2,
+  } = query;
 
   const router = useRouter();
 
@@ -22,7 +24,7 @@ const ComparePage: FC = () => {
     router.push(url, url, { shallow: true });
   };
 
-  if (!sgInd1 || !sgInd2) return <LoadingSpinner />;
+  if (!gInd1 || !sgInd1 || !sgInd2 || !sgInd2) return <LoadingSpinner />;
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
@@ -30,11 +32,13 @@ const ComparePage: FC = () => {
       <Header className="border-b border-white border-opacity-30" />
       <section className="flex space-x-3">
         <Compare
-          subgroup={sgInd1}
+          groupSlug={gInd1}
+          subgroupSlug={sgInd1}
           onClose={handleClose}
         />
         <Compare
-          subgroup={sgInd2}
+          groupSlug={gInd2}
+          subgroupSlug={sgInd2}
           onClose={handleClose}
         />
       </section>

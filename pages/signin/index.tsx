@@ -2,6 +2,7 @@ import React, {
   FC,
   useState,
   FormEvent,
+  useCallback,
 } from 'react';
 import Link from 'next/link';
 import {
@@ -38,6 +39,14 @@ const SigninPage: FC<SigninProps> = ({
     });
   };
 
+  const handleSubmit = useCallback(async (evt) => {
+    evt.preventDefault();
+    signIn('email-password', {
+      email: 'maria.luena@vizzuality.com',
+      password: 'maria123',
+    });
+  }, []);
+
   return (
     <LayoutPage className="bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
@@ -55,13 +64,13 @@ const SigninPage: FC<SigninProps> = ({
                   href="/signup"
                   className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black py-0.5 px-4 text-center rounded-full focus:outline-none"
                 >
-                  Signup
+                  Sign up
                 </a>
               </Link>
             </div>
           </section>
           <section className="flex flex-col flex-1 w-full justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 sm:px-16 min-w-70 shadow-sm">
-            <form method="post" className="inline-flex flex-col flex-1 w-full">
+            <form onSubmit={handleSubmit} className="inline-flex flex-col flex-1 w-full">
               <input
                 name="csrfToken"
                 type="hidden"
@@ -118,10 +127,6 @@ const SigninPage: FC<SigninProps> = ({
                 aria-label="Log in"
                 theme="secondary-background-dark"
                 size="xlg"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  signIn('credentials');
-                }}
               >
                 Access with this account
               </Button>

@@ -1,5 +1,6 @@
 import React, {
   FC,
+  useState,
 } from 'react';
 import Link from 'next/link';
 // import cx from 'classnames';
@@ -14,10 +15,20 @@ import Search from 'components/search';
 import LoadingSpinner from 'components/loading-spinner';
 import Button from 'components/button';
 
+// utils
+
+import { Filter } from 'utils';
+
 import { useGroups } from 'hooks/groups';
 
 const IndicatorsPage: FC = () => {
-  const { groups, isLoading } = useGroups();
+  const { data: groups, isLoading } = useGroups();
+  const [disabledGroups, setActive] = useState([]);
+
+  const handleGroups = (slug) => {
+    Filter(disabledGroups, slug);
+    setActive(disabledGroups);
+  };
 
   if (isLoading) return <LoadingSpinner />;
   return (
@@ -28,21 +39,22 @@ const IndicatorsPage: FC = () => {
 
         <div className="flex flex-wrap space-x-3 items-center py-6">
           <p>Filter by:</p>
-          {groups.map(({ id, title }) => (
+          {groups?.map(({ id, slug, name }) => (
             <Button
               key={id}
               size="xlg"
               theme="primary-background"
+              onClick={() => handleGroups(slug)}
             >
-              {title}
+              {name}
             </Button>
           ))}
         </div>
       </Hero>
       <main className="container m-auto py-6 px-32 text-gray1 divide-y divide-gray1 divide-opacity-20">
-        {groups.map(({
+        {groups?.map(({
           id: groupId,
-          title: groupName,
+          name: groupName,
           slug: groupSlug,
           subgroups,
         }) => (
