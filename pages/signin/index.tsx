@@ -2,6 +2,7 @@ import React, {
   FC,
   useState,
   FormEvent,
+  useCallback,
 } from 'react';
 import Link from 'next/link';
 import {
@@ -38,6 +39,14 @@ const SigninPage: FC<SigninProps> = ({
     });
   };
 
+  const handleSubmit = useCallback(async (evt) => {
+    evt.preventDefault();
+    signIn('email-password', {
+      email: 'maria.luena@vizzuality.com',
+      password: 'maria123',
+    });
+  }, []);
+
   return (
     <LayoutPage className="bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
@@ -45,8 +54,8 @@ const SigninPage: FC<SigninProps> = ({
         <Header />
         <div className="flex items-center h-full flex-1 justify-center p-12 md:p-4 m-auto">
           <section className="flex flex-col flex-1 w-full h-full justify-between py-20 md:py-10 max-w-xs text-white mx-20">
-            <h1 className="text-5.5xl font-bold py-7 tracking-tight">Sign in</h1>
-            <img alt="Sign-up" src="images/signup.svg" className="py-7" />
+            <h1 className="text-5.5xl font-bold pt-7 tracking-tight">Sign in</h1>
+            <img alt="Sign-up" src="/images/signup.svg" className="py-3" />
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="mt-10">Don&apos;t have an account?</p>
             <div className="py-4">
@@ -55,13 +64,13 @@ const SigninPage: FC<SigninProps> = ({
                   href="/signup"
                   className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black py-0.5 px-4 text-center rounded-full focus:outline-none"
                 >
-                  Signup
+                  Sign up
                 </a>
               </Link>
             </div>
           </section>
           <section className="flex flex-col flex-1 w-full justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 sm:px-16 min-w-70 shadow-sm">
-            <form method="post" className="inline-flex flex-col flex-1 w-full">
+            <form onSubmit={handleSubmit} className="inline-flex flex-col flex-1 w-full">
               <input
                 name="csrfToken"
                 type="hidden"
@@ -116,12 +125,8 @@ const SigninPage: FC<SigninProps> = ({
               <Button
                 type="submit"
                 aria-label="Log in"
-                theme="secondary-background"
+                theme="secondary-background-dark"
                 size="xlg"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  signIn('credentials');
-                }}
               >
                 Access with this account
               </Button>

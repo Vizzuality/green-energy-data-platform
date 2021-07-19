@@ -23,7 +23,6 @@ export function withAuthentication(getServerSidePropsFunc?: Function) {
 
     if (getServerSidePropsFunc) {
       const SSPF = await getServerSidePropsFunc(context, session);
-
       return {
         props: {
           session,
@@ -62,7 +61,7 @@ export function withUser(getServerSidePropsFunc?: Function) {
 
     const queryClient = new QueryClient();
 
-    queryClient.prefetchQuery('me',
+    await queryClient.prefetchQuery('me',
       () => fetchUserMe(`Bearer ${session.accessToken}`)
         .then((data) => data));
 

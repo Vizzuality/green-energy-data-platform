@@ -5,16 +5,38 @@ export const fetchUsers = () => API.get('/users')
 
 export const fetchUserMe = (
   userToken: string,
-  params = {},
   headers = {},
 ) => API.get('/users/me', {
   headers: {
-    Authorization: userToken,
+    Authentication: userToken,
     ...headers,
   },
-  params,
 })
   .then(({ data }) => data);
+
+export const logIn = (
+  params = {},
+) => API.post('/users/login',
+  {
+    ...params,
+  },
+  {
+    headers: {
+      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
+    },
+  }).then(({ data }) => data);
+
+export const signUp = (
+  params = {},
+) => API.post('/users/signup',
+  {
+    ...params,
+  },
+  {
+    headers: {
+      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
+    },
+  }).then(({ data }) => data);
 
 export default {
   fetchUsers,

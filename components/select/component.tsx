@@ -16,17 +16,32 @@ export interface DropdownSelectProps {
   classNameMenu?: string,
   children?: ReactNode | boolean,
   handleSelectedItemChange?: () => void | boolean,
+  theme?: string
+  shape?: string,
 }
+
+const SHAPE = {
+  rectangle: 'rounded-2xl px-4 py-1 border',
+  circle: 'rounded-full p-4 border-2',
+};
+
+const THEME = {
+  light: 'text-white border-white',
+  dark: 'text-color1 border-gray1',
+};
 
 export const DropdownSelect: FC<DropdownSelectProps> = ({
   menuElements,
   label,
   icon = '',
   iconSize,
+  iconColor,
   iconRotable = true,
   className = '',
   classNameMenu = '',
   children = false,
+  shape = 'rectangle',
+  theme = 'dark',
   // handleSelectedItemChange,
 }: DropdownSelectProps) => {
   const items = menuElements;
@@ -38,13 +53,15 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
     getItemProps,
     openMenu,
     selectedItem,
-  } = useSelect({ items });
+  } = useSelect({ items: menuElements });
 
   return (
     <div className={cx('relative w-max', { [className]: !!className })}>
       <button
         type="button"
-        className="inline-flex items-center justify-items-center text-sm text-color1 border-gray1 border-opacity-20 border rounded-2xl px-4 py-1 border-box"
+        className={cx('inline-flex items-center justify-items-center text-sm border-box border-opacity-30',
+          `${SHAPE[shape]}`,
+          `${THEME[theme]}`)}
         {...getToggleButtonProps({
           onMouseEnter: () => {
             openMenu();
@@ -54,19 +71,23 @@ export const DropdownSelect: FC<DropdownSelectProps> = ({
         {children}
         {!children && (
           <>
-            {(selectedItem && selectedItem.name) || label}
+            {(selectedItem && label && selectedItem.name) || label || ''}
             <Icon
               ariaLabel={isOpen ? 'collapse dropdown' : 'expand dropdown'}
               name={icon}
               size={iconSize}
-              className={cx('ml-3', { 'transform -rotate-180': isOpen && iconRotable })}
+              className={cx(
+                { iconColor: !!iconColor },
+                { 'transform -rotate-180': isOpen && iconRotable },
+                { 'ml-3': (selectedItem && selectedItem.name && label) || label },
+              )}
             />
           </>
         )}
       </button>
       <ul
         className={cx('absolute left-0 top-0 min-w-min flex flex-col w-full z-50 rounded-xl divide-y divide-white divide-opacity-10',
-          { 'bg-gray1 text-white': isOpen },
+          { 'bg-gray1 text-white shadow-xsm': isOpen },
           { [classNameMenu]: !!classNameMenu })}
         {...getMenuProps()}
       >

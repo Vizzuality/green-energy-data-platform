@@ -4,7 +4,10 @@ import React, {
   ChangeEvent,
 } from 'react';
 import cx from 'classnames';
+import { getSession } from 'next-auth/client';
 
+// authentication
+import { withAuthentication, withUser } from 'hoc/auth';
 import { useMe } from 'hooks/auth';
 
 // components
@@ -15,7 +18,7 @@ import Icon from 'components/icon';
 import Button from 'components/button';
 
 const ProfilePage: FC = () => {
-  const { user } = useMe();
+  const { data: user } = useMe();
   const [passwordView, setPasswordVisibility] = useState({
     new: false,
     confirmation: false,
@@ -42,18 +45,19 @@ const ProfilePage: FC = () => {
     });
   };
 
-  if (!user) return null;
+  const handleSubmit = () => {
+  };
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
       <Hero>
-        <h1 className="text-5.5xl">Profile</h1>
+        <h1 className="text-5.5xl pt-3">Profile</h1>
       </Hero>
       <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
         <section className="flex flex-col w-1/2">
           <div className="p-16 flex-1 flex flex-col justify-between">
-            <form method="post" className="flex flex-col items-start">
+            <form onSubmit={handleSubmit} className="flex flex-col items-start">
               <label
                 htmlFor="name"
                 className="w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
@@ -64,7 +68,7 @@ const ProfilePage: FC = () => {
                     id="name"
                     name="name"
                     type="text"
-                    defaultValue={user.name}
+                    defaultValue={user?.name}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
                       { 'text-grayProfile text-opacity-100': credentials.name.length })}
                     onChange={(e) => handleChange('name', e)}
@@ -88,7 +92,7 @@ const ProfilePage: FC = () => {
                     name="email"
                     type="email"
                     placeholder="Write your email account"
-                    defaultValue={user.email}
+                    defaultValue={user?.email}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
                       { 'text-grayProfile text-opacity-100': credentials.email.length })}
                     onChange={(e) => handleChange('email', e)}
@@ -108,7 +112,7 @@ const ProfilePage: FC = () => {
                 Save Changes
               </Button>
             </form>
-            <div>
+            <>
               <p className="text-grayProfile text-opacity-50 pb-10 text-sm">
                 If you delete your account, please
                 keep the following in mind: Your profile will be permenantly
@@ -125,7 +129,7 @@ const ProfilePage: FC = () => {
               >
                 Delete account
               </Button>
-            </div>
+            </>
           </div>
         </section>
         <section className="flex flex-col w-1/2">
@@ -214,5 +218,24 @@ const ProfilePage: FC = () => {
     </LayoutPage>
   );
 };
+
+const customServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return ({
+      redirect: {
+        destination: '/signin?callbackUrl=/profile',
+        permanent: false,
+      },
+    });
+  }
+
+  return ({
+    props: {},
+  });
+};
+
+export const getServerSideProps = withAuthentication(withUser(customServerSideProps));
 
 export default ProfilePage;

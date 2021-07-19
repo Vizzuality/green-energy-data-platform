@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import cx from 'classnames';
 
 interface FooterProps {
@@ -18,12 +19,16 @@ const Footer: FC<FooterProps> = ({
     <div className="flex w-full justify-around p-2 items-center">
       <img alt="GEDP" src="/images/logo_GEDP.svg" className="w-28 h-auto" />
       <div className="flex divide-x">
-        <p className="px-4">Privacy Policy</p>
-        <p className="px-4">Terms of Service</p>
+        <Link href="/privacy-policy" passHref>
+          <a href="/privacy-policy" className="px-4 cursor-pointer">Privacy Policy</a>
+        </Link>
+        <Link href="/terms-conditions" passHref>
+          <a href="/terms-conditions" className="px-4 cursor-pointer">Terms of Service</a>
+        </Link>
       </div>
-      <div>
+      <>
         <LanguageSelect />
-      </div>
+      </>
     </div>
   </section>
 );

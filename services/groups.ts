@@ -1,12 +1,22 @@
 import { API } from 'lib/api';
 
 export const fetchGroups = (
-  userToken: string,
-  params = {},
   headers = {},
+  params = {},
 ) => API.get('/groups', {
   headers: {
-    Authorization: userToken,
+    ...headers,
+  },
+  params,
+})
+  .then(({ data }) => data);
+
+export const fetchGroup = (
+  id: string,
+  params = {},
+  headers = {},
+) => API.get(`/groups/${id}`, {
+  headers: {
     ...headers,
   },
   params,
@@ -15,4 +25,5 @@ export const fetchGroups = (
 
 export default {
   fetchGroups,
+  fetchGroup,
 };
