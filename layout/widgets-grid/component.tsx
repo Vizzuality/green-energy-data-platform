@@ -5,30 +5,28 @@ import cx from 'classnames';
 
 import Link from 'next/link';
 
-import LoadingSpinner from 'components/loading-spinner';
+// import LoadingSpinner from 'components/loading-spinner';
 
-import bar from 'components/indicator-visualizations/bar';
-import line from 'components/indicator-visualizations/line';
-import map from 'components/indicator-visualizations/map';
-import pie from 'components/indicator-visualizations/pie';
-import table from 'components/indicator-visualizations/table';
+// import bar from 'components/indicator-visualizations/bar';
+// import line from 'components/indicator-visualizations/line';
+// import map from 'components/indicator-visualizations/map';
+// import pie from 'components/indicator-visualizations/pie';
+// import table from 'components/indicator-visualizations/table';
 
 interface WidgetsGridProps {
   items: Array<string>;
   className?: string,
 }
 
-type ChartProps = {
-  widgetData: any,
-  widgetConfig: any
-};
+// type ChartProps = {
+//   widgetData: any,
+//   widgetConfig: any
+// };
 
 const WidgetsGrid: FC<WidgetsGridProps> = ({
   items,
   className,
-}: WidgetsGridProps) => {
-  console.log(items, 'items')
-  return (
+}: WidgetsGridProps) => (
   <section className="grid grid-cols-3 grid-flow gap-x-13 gap-y-6.5 py-13">
     {items?.map((w, index) => (
       <div
@@ -51,6 +49,5 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
     </div>
   </section>
 );
-    };
 
 export default WidgetsGrid;

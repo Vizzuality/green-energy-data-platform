@@ -3,6 +3,8 @@ import React, {
 } from 'react';
 import cx from 'classnames';
 
+import Link from 'next/link';
+
 // components
 import Head from 'components/head';
 import Nav from 'components/nav';
@@ -45,23 +47,16 @@ const GroupPage: FC = () => {
                 slug: sgSlug, id, name, default_indicator: { slug: indicatorSlug },
               }) => (
                 <li
-                  data-code={id}
-                  className="px-4 py-2 first:rounded-t-xl last:rounded-b-xl bg-white text-gray3 first:rounded-t-xl last:rounded-b-xl"
                   key={id}
+                  className="px-4 py-2 first:rounded-t-xl last:rounded-b-xl bg-white text-gray3 first:rounded-t-xl last:rounded-b-xl"
                 >
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      router.push(`/${group.slug}/${sgSlug}/${indicatorSlug}`);
-                    }}
-                  >
-                    {name}
-                  </button>
+                  <Link href={`/${group.slug}/${sgSlug}/${indicatorSlug}`} passHref>
+                    <a href={`/${group.slug}/${sgSlug}/${indicatorSlug}`} className="px-4 cursor-pointer">{name}</a>
+                  </Link>
                 </li>
               ))}
             </ul>
-              )}
+          )}
         >
           <button
             type="button"

@@ -4,7 +4,7 @@ import Link from 'next/link';
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
-import Button from 'components/images';
+import Button from 'components/button';
 
 const ProfilePage: FC = () => (
   <LayoutPage className="text-white bg-color1">

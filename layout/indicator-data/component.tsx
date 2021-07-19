@@ -52,6 +52,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     isLoading,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, active);
 
+  const [selectedYear, setYear] = useState(years?.[0]);
+
   const Loading = () => <LoadingSpinner />;
 
   useEffect(() => {
@@ -141,14 +143,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
                   </button>
                 </Tooltip>
-
                 <Tooltip
                   trigger="click"
                   placement="bottom-start"
                   content={(
                     <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
                       {groups?.map(({
-                        name: groupName, id, subgroups: subgroupsCompare, slug,
+                        name: groupName, id, subgroups: subgroupsCompare, slug, default_indicator,
                       }) => (
                         <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
                           <button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button" className="flex items-center py-2 w-full last:border-b-0">
@@ -158,15 +159,21 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                           </button>
                           <ul id="exp_elem_list" tabIndex={-1} role="listbox" aria-labelledby="exp_elem" className="" aria-activedescendant="exp_elem_Pu">
                             {subgroupsCompare.map(
-                              ({ name: subgroupName, id: subgroupId, slug: subgroupCompareSlug }) => (
+                              (
+                                {
+                                  name: subgroupName, id: subgroupId, slug: subgroupCompareSlug, default_indicator: compareIndicator,
+                                },
+                              ) => (
                                 <li key={subgroupName} id={`exp-elem_${subgroupId}`} role="option" className="" aria-selected="true">
                                   <Link href={{
                                     pathname: '/compare',
                                     query: {
-                                      gInd1: groupSlug,
-                                      sgInd1: subgroupSlug,
-                                      gInd2: slug,
-                                      sgInd2: subgroupCompareSlug,
+                                      g1: groupSlug,
+                                      sg1: subgroupSlug,
+                                      ind1: 'agriculture',
+                                      g2: slug,
+                                      sg2: subgroupCompareSlug,
+                                      ind2: compareIndicator.slug,
                                     },
                                   }}
                                   >
@@ -203,27 +210,96 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             </p>
             <div className="flex">
               <section className="flex-1 flex-col mr-8">
-                {active === 'bar' && (
-                <div className="flex items-center">
-                  Showing for:
-                  <Tooltip
-                    trigger="click"
-                    placement="bottom-start"
-                    content={(
-                      <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
-                        {years?.map((year) => <li key={year}>{year}</li>)}
-                      </ul>
-                    )}
-                  >
-                    <button
-                      type="button"
-                      className="ml-3 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                {active === 'line' && (
+                  <>
+                    <div className="flex items-center">
+                      Showing from:
+                      <Tooltip
+                        trigger="click"
+                        placement="bottom-start"
+                        hideOnClick
+                        content={(
+                          <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
+                            {years?.map((year) => <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10" key={year}>{year}</li>)}
+                          </ul>
+                        )}
+                      >
+                        <button
+                          type="button"
+                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                        >
+                          <span>Select dates</span>
+                          <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                        </button>
+                      </Tooltip>
+                    </div>
+                    <div className="flex items-center">
+                      to
+                      <Tooltip
+                        trigger="click"
+                        placement="bottom-start"
+                        hideOnClick
+                        content={(
+                          <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
+                            {years?.map((year) => <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10" key={year}>{year}</li>)}
+                          </ul>
+                        )}
+                      >
+                        <button
+                          type="button"
+                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                        >
+                          <span>Select dates</span>
+                          <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                        </button>
+                      </Tooltip>
+                    </div>
+                    {/* <div className="flex items-center">
+                      to
+                      <Tooltip
+                        trigger="click"
+                        placement="bottom-start"
+                        hideOnClick
+                        content={(
+                          <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
+                            {years?.map((year) => <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10" key={year}>{year}</li>)}
+                          </ul>
+                        )}
+                      >
+                        <button
+                          type="button"
+                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                        >
+                          <span>Select dates</span>
+                          <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                        </button>
+                      </Tooltip>
+                    </div> */}
+                  </>
+                )}
+
+                {(active === 'bar' || active === 'pie') && (
+                  <div className="flex items-center">
+                    Showing for:
+                    <Tooltip
+                      trigger="click"
+                      placement="bottom-start"
+                      hideOnClick
+                      content={(
+                        <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
+                          {years?.map((year) => <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10" key={year}>{year}</li>)}
+                        </ul>
+                      )}
                     >
-                      <span>Select dates</span>
-                      <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                    </button>
-                  </Tooltip>
-                </div>
+                      <button
+                        type="button"
+                        className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                      >
+                        <span>Select dates</span>
+                        <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                      </button>
+                    </Tooltip>
+                  </div>
                 )}
                 <div className="flex-1 py-10 h-full">
                   <Icon ariaLabel="no data found" name="illus_nodata" size="2xlg" className="mr-5" />

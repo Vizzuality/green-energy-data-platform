@@ -46,6 +46,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     description,
     config,
   } = selectedIndicator;
+
+
   const [active, setActive] = useState(type || visualizationTypes[0]);
   const { data: groupData, isLoading, isSuccess } = useGroup(groupSlug);
   const { data: subgroupData, isLoading: isLoadingGroup } = useSubgroup(groupSlug, subgroupSlug);
@@ -126,7 +128,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
             </button>
           </Tooltip>
-
 
         </div>
 

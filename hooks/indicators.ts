@@ -54,6 +54,13 @@ export function useIndicator(groupId, subgroupId, indicatorId, active) {
           value: d.value,
         };
       }
+
+      if (active === 'pie') {
+        return {
+          label: d.category_1,
+          value: d.value,
+        };
+      }
     });
 
     return {

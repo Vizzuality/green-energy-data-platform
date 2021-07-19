@@ -45,6 +45,10 @@ const ProfilePage: FC = () => {
     });
   };
 
+  const handleSubmit = () => {
+
+  };
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
@@ -54,7 +58,7 @@ const ProfilePage: FC = () => {
       <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
         <section className="flex flex-col w-1/2">
           <div className="p-16 flex-1 flex flex-col justify-between">
-            <form method="post" className="flex flex-col items-start">
+            <form onSubmit={handleSubmit} className="flex flex-col items-start">
               <label
                 htmlFor="name"
                 className="w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"

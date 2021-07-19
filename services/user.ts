@@ -1,5 +1,7 @@
 import { APInext, API } from 'lib/api';
 
+const API_TOKEN = process.env.NEXT_API_TOKEN;
+
 export const fetchUsers = () => API.get('/users')
   .then(({ data }) => data);
   // .catch((e) => {
@@ -19,7 +21,11 @@ export const fetchUserMe = (
 
 export const signUp = (
   params = {},
-) => API.post('/users/signup', params).then(({ data }) => data);
+) => API.post('/users/signup',
+  {
+    API_TOKEN,
+    ...params,
+  }).then(({ data }) => data);
 
 export default {
   fetchUsers,
