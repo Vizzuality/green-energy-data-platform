@@ -2,6 +2,8 @@ import React, {
   FC,
 } from 'react';
 
+import cx from 'classnames';
+
 import { useGroups } from 'hooks/groups';
 
 // components
@@ -23,7 +25,11 @@ const HomePage: FC = () => {
       </Hero>
       {isLoading
         ? <LoadingSpinner />
-        : groups?.map((group, index) => <GroupCard key={group.id} group={group} index={index} className="container m-auto" />) }
+        : groups?.map((group, index) => (
+          <div key={group.id} className="container m-auto">
+            <GroupCard group={group} className={cx('flex justify-around', { 'flex-row-reverse': index % 2 !== 0 })} />
+          </div>
+        ))}
       <PreFooter />
     </LayoutPage>
   );

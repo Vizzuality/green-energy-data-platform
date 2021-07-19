@@ -46,7 +46,6 @@ const ProfilePage: FC = () => {
   };
 
   const handleSubmit = () => {
-
   };
 
   return (

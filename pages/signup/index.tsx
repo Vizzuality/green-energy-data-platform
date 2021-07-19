@@ -10,6 +10,8 @@ import {
 } from 'next-auth/client';
 import cx from 'classnames';
 
+import { signUp } from 'services/user';
+
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
@@ -22,11 +24,20 @@ const SignupPage: FC = () => {
     name: '',
     email: '',
     password: '',
+    password_confirmation: '',
   });
   const handleChange = (type: string, e: FormEvent<HTMLInputElement>): void => {
     setCredentials({
       ...credentials,
       [type]: e.currentTarget.value,
+    });
+  };
+
+  const handleSubmit = () => {
+    signup({
+      email: 'maria.luena@vizzuality.com',
+      password: 'maria123',
+      password_confirmation: 'maria123',
     });
   };
 
@@ -46,7 +57,7 @@ const SignupPage: FC = () => {
             </Link>
           </section>
           <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-20 md:px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
-            <form method="post" className="inline-flex flex-col flex-grow w-full">
+            <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
                 <label htmlFor="name" className="text-2.5xl font-bold">
                   Your name is:
