@@ -18,7 +18,7 @@ import Icon from 'components/icon';
 import Button from 'components/button';
 
 const ProfilePage: FC = () => {
-  const { user } = useMe();
+  const { data: user } = useMe();
   const [passwordView, setPasswordVisibility] = useState({
     new: false,
     confirmation: false,
@@ -68,7 +68,7 @@ const ProfilePage: FC = () => {
                     id="name"
                     name="name"
                     type="text"
-                    defaultValue={user.name}
+                    defaultValue={user?.name}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
                       { 'text-grayProfile text-opacity-100': credentials.name.length })}
                     onChange={(e) => handleChange('name', e)}
@@ -92,7 +92,7 @@ const ProfilePage: FC = () => {
                     name="email"
                     type="email"
                     placeholder="Write your email account"
-                    defaultValue={user.email}
+                    defaultValue={user?.email}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
                       { 'text-grayProfile text-opacity-100': credentials.email.length })}
                     onChange={(e) => handleChange('email', e)}

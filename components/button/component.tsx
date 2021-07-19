@@ -4,6 +4,7 @@ import cx from 'classnames';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode | string,
   className?: string,
+  type?: 'reset' | 'button' | 'submit',
   onClick?: (evt: any | '') => void,
   size?: 'sm' | 'md' | 'lg' | 'xlg',
   theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background-dark' | 'secondary-background-light' | 'info'
@@ -34,9 +35,10 @@ const Button: FC<ButtonProps> = ({
   size = 'md',
   disabled,
   onClick,
+  type = 'button',
 }: ButtonProps) => (
   <button
-    type="button"
+    type={type}
     className={cx(`flex items-center justify-center text-center rounded-full focus:outline-none
     ${THEME[theme]}
     ${SIZE[size]}`,

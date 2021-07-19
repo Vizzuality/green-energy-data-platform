@@ -32,7 +32,7 @@ export function useIndicator(groupId, subgroupId, indicatorId, active) {
   const { data } = query;
 
   return useMemo(() => {
-    const { records } = !!data && data;
+    const { records } = data || {};
     const parsedData = records?.filter(
       ({ visualizationTypes }) => visualizationTypes.includes(active),
     );

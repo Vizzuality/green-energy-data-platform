@@ -34,7 +34,7 @@ const Icon: FC<IconProps> = ({
   return (
     <svg
       aria-label={ariaLabel}
-      className={cx(`flex-shrink-0 w- ${classNames} fill-current`, { [`text-${color}`]: color && !!color.length })}
+      className={cx(`flex-shrink-0 ${classNames} fill-current`, { [`text-${color}`]: color && !!color.length })}
       onClick={onClick}
     >
       <use xlinkHref={`#icon-${name}`} />

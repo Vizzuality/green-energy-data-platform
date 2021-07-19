@@ -2,10 +2,10 @@ import React, {
   FC,
   useState,
   FormEvent,
+  useCallback,
 } from 'react';
 import Link from 'next/link';
 import {
-  signIn,
   getSession,
 } from 'next-auth/client';
 import cx from 'classnames';
@@ -33,13 +33,10 @@ const SignupPage: FC = () => {
     });
   };
 
-  const handleSubmit = () => {
-    signup({
-      email: 'maria.luena@vizzuality.com',
-      password: 'maria123',
-      password_confirmation: 'maria123',
-    });
-  };
+  const handleSubmit = useCallback((evt) => {
+    evt.preventDefault();
+    signUp(credentials);
+  }, [credentials]);
 
   return (
     <LayoutPage className="bg-gradient-color1">
@@ -149,10 +146,6 @@ const SignupPage: FC = () => {
                 aria-label="Sign in"
                 theme="secondary-background-dark"
                 size="xlg"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  signIn('credentials');
-                }}
               >
                 Create account
               </Button>
