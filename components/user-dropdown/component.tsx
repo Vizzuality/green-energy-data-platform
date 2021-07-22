@@ -24,10 +24,16 @@ const UserDropdown: FC<UserDropdownProps> = ({
   const { data: user } = useMe();
 
   const handleClick = () => {
-    signOut({ callbackUrl: 'http://localhost:3000/signin' });
+    signOut({ callbackUrl: '/signin' });
   };
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <Link href="/signin">
+        <Icon ariaLabel="sign in" className="cursor-pointer" name="profile" size="xlg" />
+      </Link>
+    );
+  }
 
   return (
     <Tooltip
@@ -52,9 +58,9 @@ const UserDropdown: FC<UserDropdownProps> = ({
         className={cx('w-max inline-flex items-center text-sm border-box z-index-10',
           { [className]: !!className })}
       >
-        <div className="flex flex-col items-start text-base">
-          <span>Welcome,</span>
-          <span className="font-bold">{user.name}</span>
+        <div className="flex flex-col items-end text-base">
+          <span>Welcome, </span>
+          <span className="font-bold">{user.username}</span>
         </div>
         <Icon
           ariaLabel={visible ? 'collapse dropdown' : 'expand dropdown'}
