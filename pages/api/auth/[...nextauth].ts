@@ -39,14 +39,12 @@ const options: OptionsProps = {
     Providers.Credentials({
       id: 'email-password',
       name: 'email + password',
-      async authorize(credentials){
-        console.log('credentials', credentials);
+      async authorize(credentials) {
         let user = null;
         try {
           user = await logIn(credentials);
-          console.log('user', user);
         } catch (e) {
-          console.log(e.message);
+          throw new Error(`error signin: ${e.message}`);
         }
 
         // Any object returned will be saved in `user` property of the JWT
