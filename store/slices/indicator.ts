@@ -1,24 +1,41 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type Indicator = {
-  year: string,
+  year: number,
+  start_year: number,
+  end_year: number,
+  region: string,
 };
 
 const initialState = {
-  year: '',
+  year: null,
 } as Indicator;
 
-export const groupSlice = createSlice({
+export const indicatorSlice = createSlice({
   name: 'indicator',
   initialState,
   reducers: {
-    setYear: (state: Indicator, action: PayloadAction<string>) => ({
+    setYear: (state: Indicator, action: PayloadAction<number>) => ({
       ...state,
       year: action.payload,
+    }),
+    setStartYear: (state: Indicator, action: PayloadAction<number>) => ({
+      ...state,
+      start_year: action.payload,
+    }),
+    setEndYear: (state: Indicator, action: PayloadAction<number>) => ({
+      ...state,
+      end_year: action.payload,
+    }),
+    setRegion: (state: Indicator, action: PayloadAction<string>) => ({
+      ...state,
+      region: action.payload,
     }),
   },
 });
 
-export const { setYear } = groupSlice.actions;
+export const {
+  setYear, setStartYear, setEndYear, setRegion,
+} = indicatorSlice.actions;
 
-export default groupSlice.reducer;
+export default indicatorSlice.reducer;

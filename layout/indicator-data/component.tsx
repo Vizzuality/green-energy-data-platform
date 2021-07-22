@@ -3,11 +3,13 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 // hooks
+import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { useGroups } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
@@ -21,6 +23,8 @@ import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
+
+import { setYear } from 'store/slices/indicator';
 
 import { selectedIndicator } from '../../constants';
 
@@ -44,15 +48,18 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug);
 
   const [active, setActive] = useState(null);
+  const dispatch = useDispatch();
+  const { year: currentYear } = useSelector((state) => state.indicator);
+  const options = {
+    currentYear,
+  };
 
   const {
     data,
     widgetData,
     years,
     isLoading,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, active);
-
-  const [selectedYear, setYear] = useState(years?.[0]);
+  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, active, options);
 
   const Loading = () => <LoadingSpinner />;
 
@@ -220,7 +227,15 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         hideOnClick
                         content={(
                           <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
-                            {years?.map((year) => <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10" key={year}>{year}</li>)}
+                            {years?.map(
+                              (year: number) => (
+                                <li key={year} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
+                                  <button type="button" onClick={() => setYear(year)}>
+                                    {year}
+                                  </button>
+                                </li>
+                              ),
+                            )}
                           </ul>
                         )}
                       >
@@ -287,7 +302,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       hideOnClick
                       content={(
                         <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
-                          {years?.map((year) => <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10" key={year}>{year}</li>)}
+                          {years?.map((year) => (
+                            <li
+                              key={year}
+                              className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10"
+                            >
+                              <button
+                                type="button"
+                                onClick={() => dispatch(setYear(year))}
+                              >
+                                {year}
+                              </button>
+                            </li>
+                          ))}
                         </ul>
                       )}
                     >

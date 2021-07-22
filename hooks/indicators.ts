@@ -25,7 +25,7 @@ export function useIndicators(group_id, subgroup_id) {
   };
 }
 
-export function useIndicator(groupId, subgroupId, indicatorId, active) {
+export function useIndicator(groupId, subgroupId, indicatorId, active, options) {
   const query = useQuery(['fetch-indicator', groupId, subgroupId, indicatorId],
     () => fetchIndicator(groupId, subgroupId, indicatorId)
       .then((data) => data));
@@ -36,6 +36,8 @@ export function useIndicator(groupId, subgroupId, indicatorId, active) {
     const parsedData = records?.filter(
       ({ visualizationTypes }) => visualizationTypes.includes(active),
     );
+
+    const { year, region } = options;
 
     const years = (parsedData?.map((d) => d.year))?.reduce(
       (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
@@ -56,19 +58,21 @@ export function useIndicator(groupId, subgroupId, indicatorId, active) {
       }
 
       if (active === 'pie') {
-        return {
-          label: d.category_1,
-          value: d.value,
-        };
+        if (d.region.name === region && year === d.year) {
+          return {
+            label: d.category_1,
+            value: d.value,
+          };
+        }
       }
-    });
+    }).filter((p) => p);
 
     return {
       ...query,
       years,
       widgetData,
     };
-  }, [data, query, active]);
+  }, [data, query, active, options]);
 }
 
 export function useDefaultIndicator(group) {
