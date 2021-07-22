@@ -3,6 +3,7 @@ import React, {
   useState,
   FormEvent,
   useCallback,
+  useRef,
 } from 'react';
 import Link from 'next/link';
 import {
@@ -26,6 +27,8 @@ const SignupPage: FC = () => {
     password: '',
     password_confirmation: '',
   });
+  const passwordInputRef = useRef(null);
+  const passwordConfirmationInputRef = useRef(null);
   const handleChange = (type: string, e: FormEvent<HTMLInputElement>): void => {
     setCredentials({
       ...credentials,
@@ -35,7 +38,12 @@ const SignupPage: FC = () => {
 
   const handleSubmit = useCallback((evt) => {
     evt.preventDefault();
-    signUp(credentials);
+
+    if (passwordInputRef?.current?.value !== passwordConfirmationInputRef?.current?.value) {
+      passwordConfirmationInputRef.current.setCustomValidity("Passwords Don't Match");
+    } else {
+      signUp(credentials);
+    }
   }, [credentials]);
 
   return (
@@ -59,13 +67,19 @@ const SignupPage: FC = () => {
                 <label htmlFor="name" className="text-2.5xl font-bold">
                   Your name is:
                   <div className="relative mb-10 sm:mb-4 font-normal">
-                    <Icon ariaLabel="profile" name="profile" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
+                    <Icon
+                      ariaLabel="profile"
+                      name="profile"
+                      size="lg"
+                      className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold"
+                    />
                     <input
                       id="name"
                       name="name"
                       type="name"
                       placeholder="Write your name account"
-                      className={cx('w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
+                      className={cx(
+                        'w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
                         { 'placeholder-opacity-100': credentials.name.length })}
                       value={credentials.name}
                       onChange={(e) => handleChange('name', e)}
@@ -101,6 +115,7 @@ const SignupPage: FC = () => {
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
                     <input
+                      ref={passwordInputRef}
                       id="password"
                       name="password"
                       type="password"
@@ -116,28 +131,55 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
+                <label htmlFor="password_confirmation" className="text-2.5xl pb-10 font-bold">
+                  Repeat password:
+                  <div className="relative mb-10 sm:mb-4 font-normal">
+                    <Icon ariaLabel="password-confirmation-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
+                    <input
+                      ref={passwordConfirmationInputRef}
+                      id="password_confirmation"
+                      name="password_confirmation"
+                      type="password"
+                      placeholder="Repeat password"
+                      className={cx('w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
+                        { 'placeholder-opacity-100': credentials.password_confirmation.length })}
+                      value={credentials.password_confirmation}
+                      onChange={(e) => handleChange('password_confirmation', e)}
+                      required
+                    />
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
+                      { 'bg-gradient-color1': credentials.password_confirmation.length })}
+                    />
+                  </div>
+                </label>
                 <label htmlFor="terms-conditions" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
                   <span>
                     I agree with the
-                    <a href="/terms-conditions"> Terms and Conditions</a>
+                    <Link href={{ pathname: '/terms-conditions' }} passHref>
+                      <a href="/terms-conditions"> Terms and Conditions</a>
+                    </Link>
                   </span>
                   <input
                     id="terms-conditions"
                     name="terms-conditions"
                     type="checkbox"
-                    className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1"
+                    className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1 cursor-pointer"
+                    required
                   />
                 </label>
                 <label htmlFor="privacy-policy" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
                   <span>
                     I agree with the
-                    <a href="/privacy-policy"> Privacy Policy</a>
+                    <Link href={{ pathname: '/privacy-policy' }} passHref>
+                      <a href="/privacy-policy"> Privacy Policy</a>
+                    </Link>
                   </span>
                   <input
                     id="privacy-policy"
                     name="privacy-policy"
                     type="checkbox"
-                    className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1"
+                    className="mr-3 border border-gray1 appearance-none p-1.5 rounded-sm checked:bg-gray1 cursor-pointer"
+                    required
                   />
                 </label>
               </div>
