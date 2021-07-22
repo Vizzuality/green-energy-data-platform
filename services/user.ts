@@ -38,7 +38,16 @@ export const signUp = (
     },
   }).then(({ data }) => data);
 
-export default {
-  fetchUsers,
-  fetchUserMe,
-};
+export const updateUser = (
+  params = {},
+  userToken: string,
+) => API.put('/users/me',
+  {
+    ...params,
+  },
+  {
+    headers: {
+      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
+      Authentication: `Bearer ${userToken}`,
+    },
+  }).then(({ data }) => data);
