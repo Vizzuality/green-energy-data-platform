@@ -63,7 +63,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     years,
     regions,
     defaultYear,
-    defaultRegion,
     isLoading,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, active, options);
 
@@ -226,82 +225,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             </p>
             <div className="flex">
               <section className="flex-1 flex-col mr-8">
-                {/*  {active === 'line' && (
-                  <>
-                    <div className="flex items-center">
-                      <span className="pr-2">Showing from:</span>
-                      <Tooltip
-                        trigger="click"
-                        placement="bottom-start"
-                        hideOnClick
-                        content={(
-                          <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
-                            {years?.map(
-                              (year: number) => (
-                                <li key={year} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
-                                  <button type="button" onClick={() => setYear(year)}>
-                                    {year}
-                                  </button>
-                                </li>
-                              ),
-                            )}
-                          </ul>
-                        )}
-                      >
-                        <button
-                          type="button"
-                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                        >
-                          <span>Select dates</span>
-                          <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="pr-2">to</span>
-                      <Tooltip
-                        trigger="click"
-                        placement="bottom-start"
-                        hideOnClick
-                        content={(
-                          <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
-                            {years?.map((year) => <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10" key={year}>{year}</li>)}
-                          </ul>
-                        )}
-                      >
-                        <button
-                          type="button"
-                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                        >
-                          <span>Select dates</span>
-                          <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                    {/* <div className="flex items-center">
-                      to
-                      <Tooltip
-                        trigger="click"
-                        placement="bottom-start"
-                        hideOnClick
-                        content={(
-                          <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
-                            {years?.map((year) => <li className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10" key={year}>{year}</li>)}
-                          </ul>
-                        )}
-                      >
-                        <button
-                          type="button"
-                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                        >
-                          <span>Select dates</span>
-                          <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </>
-                )} */}
-
                 {(active === 'bar' || active === 'pie') && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
@@ -311,16 +234,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       hideOnClick
                       content={(
                         <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
-                          {years?.map((year) => (
+                          {years?.map((y) => (
                             <li
-                              key={year}
+                              key={y}
                               className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10"
                             >
                               <button
                                 type="button"
-                                onClick={() => dispatch(setYear(year))}
+                                onClick={() => dispatch(setYear(y))}
                               >
-                                {year}
+                                {y}
                               </button>
                             </li>
                           ))}

@@ -114,7 +114,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             placement="bottom-start"
             content={(
               <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
-                hola
+                {/* {years.map(year => (<li>{year}</li>))} */}
               </ul>
             )}
           >

@@ -48,12 +48,14 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options: 
       (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
     );
 
-    const defaultYear = years?.[0];
+    if (!years) return null;
+    const defaultYear = years[0];
 
     const regions = (parsedData?.map((d) => d.region.name))?.reduce(
       (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
     );
 
+    if (!regions) return null;
     const defaultRegion = regions.includes('China') ? 'China' : regions[0];
 
     const widgetData = parsedData?.map((d) => {
@@ -84,6 +86,7 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options: 
 
     return {
       ...query,
+      data,
       years,
       defaultYear,
       regions,
