@@ -63,6 +63,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     years,
     regions,
     defaultYear,
+    defaultRegion,
     isLoading,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, active, options);
 
@@ -77,8 +78,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     }
   }, [subgroup, years, dispatch]);
 
-  () => dispatch(setYear(defaultYear));
-  () => dispatch(setYear(defaultRegion));
+  useEffect(() => {
+    dispatch(setYear(defaultYear));
+    dispatch(setRegion(defaultRegion));
+  }, [dispatch, defaultYear, defaultRegion]);
 
   if (!subgroup || !data) return null;
 

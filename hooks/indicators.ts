@@ -32,13 +32,17 @@ interface OptionProps {
 
 export function useIndicator(groupId, subgroupId, indicatorId, active, options: OptionProps) {
   const query = useQuery(['fetch-indicator', groupId, subgroupId, indicatorId],
-    () => fetchIndicator(groupId, subgroupId, indicatorId)
-      .then((data) => data));
+    () => fetchIndicator(groupId, subgroupId, indicatorId).then((data) => data),
+    {
+      placeholderData: {
+        records: [],
+      },
+    });
   const { data } = query;
 
   return useMemo(() => {
-    const { records } = data || {};
-    const parsedData = records?.filter(
+    const { records } = data;
+    const parsedData = records.filter(
       ({ visualizationTypes }) => visualizationTypes.includes(active),
     );
 
