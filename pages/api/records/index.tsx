@@ -402,7 +402,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
             },
           ],
           yAxis: {
-            domain: [0, 1000],
             tick: {
               fill: '#C4C4C4',
               fontSize: '14px',

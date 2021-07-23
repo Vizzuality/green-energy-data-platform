@@ -25,7 +25,12 @@ export function useIndicators(group_id, subgroup_id) {
   };
 }
 
-export function useIndicator(groupId, subgroupId, indicatorId, active, options) {
+interface OptionProps {
+  year: number,
+  region: string,
+}
+
+export function useIndicator(groupId, subgroupId, indicatorId, active, options: OptionProps) {
   const query = useQuery(['fetch-indicator', groupId, subgroupId, indicatorId],
     () => fetchIndicator(groupId, subgroupId, indicatorId)
       .then((data) => data));
@@ -43,12 +48,22 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options) 
       (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
     );
 
+    const defaultYear = years?.[0];
+
+    const regions = (parsedData?.map((d) => d.region.name))?.reduce(
+      (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
+    );
+
+    const defaultRegion = regions.includes('China') ? 'China' : regions[0];
+
     const widgetData = parsedData?.map((d) => {
       if (active === 'bar') {
-        return {
-          province: d.region.name,
-          value1: d.value,
-        };
+        if (year === d.year) {
+          return {
+            province: d.region.name,
+            value: d.value,
+          };
+        }
       }
       if (active === 'line') {
         return {
@@ -58,7 +73,7 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options) 
       }
 
       if (active === 'pie') {
-        if (d.region.name === region && year === d.year) {
+        if (region === d.region.name && year === d.year) {
           return {
             label: d.category_1,
             value: d.value,
@@ -70,6 +85,9 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options) 
     return {
       ...query,
       years,
+      defaultYear,
+      regions,
+      defaultRegion,
       widgetData,
     };
   }, [data, query, active, options]);

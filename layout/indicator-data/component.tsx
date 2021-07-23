@@ -24,7 +24,7 @@ import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 
-import { setYear } from 'store/slices/indicator';
+import { setYear, setRegion } from 'store/slices/indicator';
 
 import { selectedIndicator } from '../../constants';
 
@@ -49,15 +49,21 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const [active, setActive] = useState(null);
   const dispatch = useDispatch();
-  const { year: currentYear } = useSelector((state) => state.indicator);
+  const { year } = useSelector((state) => state.indicator);
+  const { region } = useSelector((state) => state.indicator);
+
   const options = {
-    currentYear,
+    year,
+    region,
   };
 
   const {
     data,
     widgetData,
     years,
+    regions,
+    defaultYear,
+    defaultRegion,
     isLoading,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, active, options);
 
@@ -70,7 +76,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       } = subgroup?.default_indicator || subgroup?.indicators[0];
       setActive(defaultVisualization);
     }
-  }, [subgroup]);
+  }, [subgroup, years, dispatch]);
+
+  () => dispatch(setYear(defaultYear));
+  () => dispatch(setYear(defaultRegion));
 
   if (!subgroup || !data) return null;
 
@@ -217,10 +226,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             </p>
             <div className="flex">
               <section className="flex-1 flex-col mr-8">
-                {active === 'line' && (
+                {/*  {active === 'line' && (
                   <>
                     <div className="flex items-center">
-                      Showing from:
+                      <span className="pr-2">Showing from:</span>
                       <Tooltip
                         trigger="click"
                         placement="bottom-start"
@@ -249,7 +258,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       </Tooltip>
                     </div>
                     <div className="flex items-center">
-                      to
+                      <span className="pr-2">to</span>
                       <Tooltip
                         trigger="click"
                         placement="bottom-start"
@@ -289,13 +298,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                           <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                         </button>
                       </Tooltip>
-                    </div> */}
+                    </div>
                   </>
-                )}
+                )} */}
 
                 {(active === 'bar' || active === 'pie') && (
                   <div className="flex items-center">
-                    Showing for:
+                    <span className="pr-2">Showing for:</span>
                     <Tooltip
                       trigger="click"
                       placement="bottom-start"
@@ -312,6 +321,42 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                                 onClick={() => dispatch(setYear(year))}
                               >
                                 {year}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    >
+                      <button
+                        type="button"
+                        className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                      >
+                        <span>Select dates</span>
+                        <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                )}
+
+                {(active === 'line' || active === 'pie') && (
+                  <div className="flex items-center">
+                    <span className="pr-2">Region:</span>
+                    <Tooltip
+                      trigger="click"
+                      placement="bottom-start"
+                      hideOnClick
+                      content={(
+                        <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
+                          {regions?.map((region) => (
+                            <li
+                              key={region}
+                              className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10"
+                            >
+                              <button
+                                type="button"
+                                onClick={() => dispatch(setRegion(region))}
+                              >
+                                {region}
                               </button>
                             </li>
                           ))}
