@@ -41,11 +41,13 @@ const SigninPage: FC<SigninProps> = ({
 
   const handleSubmit = useCallback(async (evt) => {
     evt.preventDefault();
-    signIn('email-password', {
-      email: 'maria.luena@vizzuality.com',
-      password: 'maria123',
-    });
-  }, []);
+    const {
+      name,
+      ...restCredentials
+    } = credentials;
+
+    signIn('email-password', restCredentials);
+  }, [credentials]);
 
   return (
     <LayoutPage className="bg-gradient-color1">

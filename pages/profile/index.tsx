@@ -1,14 +1,21 @@
 import React, {
   FC,
   useState,
+  useCallback,
   ChangeEvent,
 } from 'react';
+import { useQueryClient } from 'react-query';
 import cx from 'classnames';
 import { getSession } from 'next-auth/client';
 
 // authentication
 import { withAuthentication, withUser } from 'hoc/auth';
 import { useMe } from 'hooks/auth';
+
+// services
+import {
+  updateUser,
+} from 'services/user';
 
 // components
 import LayoutPage from 'layout';
@@ -18,13 +25,14 @@ import Icon from 'components/icon';
 import Button from 'components/button';
 
 const ProfilePage: FC = () => {
+  const queryClient = useQueryClient();
   const { data: user } = useMe();
   const [passwordView, setPasswordVisibility] = useState({
     new: false,
     confirmation: false,
   });
   const [credentials, setCredentials] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     new: '',
@@ -45,8 +53,24 @@ const ProfilePage: FC = () => {
     });
   };
 
-  const handleSubmit = () => {
-  };
+  const handleSubmit = useCallback(async (evt) => {
+    evt.preventDefault();
+
+    const {
+      username,
+    } = credentials;
+
+    const {
+      token,
+    } = user;
+
+    try {
+      await updateUser({ username }, token);
+      queryClient.invalidateQueries('me');
+    } catch (e) {
+      throw new Error(`something went wrong updating user: ${e.message}`);
+    }
+  }, [credentials, user, queryClient]);
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
@@ -65,13 +89,13 @@ const ProfilePage: FC = () => {
                 NAME
                 <div className="relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                   <input
-                    id="name"
-                    name="name"
+                    id="username"
+                    name="username"
                     type="text"
-                    defaultValue={user?.name}
+                    defaultValue={user?.username}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
-                      { 'text-grayProfile text-opacity-100': credentials.name.length })}
-                    onChange={(e) => handleChange('name', e)}
+                      { 'text-grayProfile text-opacity-100': credentials.username.length })}
+                    onChange={(e) => handleChange('username', e)}
                   />
                   <Icon
                     ariaLabel="mail-input"
@@ -91,6 +115,7 @@ const ProfilePage: FC = () => {
                     id="email"
                     name="email"
                     type="email"
+                    disabled
                     placeholder="Write your email account"
                     defaultValue={user?.email}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
@@ -103,11 +128,8 @@ const ProfilePage: FC = () => {
               <Button
                 type="submit"
                 aria-label="Sign in"
+                theme="secondary"
                 className="py-20 bg-gray1 border-gray1 text-white text-sm"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  console.log('saving changes');
-                }}
               >
                 Save Changes
               </Button>
@@ -202,6 +224,7 @@ const ProfilePage: FC = () => {
               <Button
                 type="submit"
                 aria-label="Sign in"
+                theme="secondary"
                 className="py-20 bg-gray1 border-gray1 text-white text-sm"
                 onClick={(evt) => {
                   evt.preventDefault();

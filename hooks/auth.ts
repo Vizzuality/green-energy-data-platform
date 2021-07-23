@@ -9,7 +9,10 @@ export function useMe() {
 
   return useQuery('me',
     () => fetchUserMe(`Bearer ${session.accessToken}`)
-      .then((data) => data),
+      .then((data) => ({
+        ...data,
+        token: session.accessToken,
+      })),
     {
       enabled: !!session && !loading,
     });
