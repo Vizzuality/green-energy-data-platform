@@ -1,31 +1,13 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 
+// services
 import { logIn } from 'services/user';
-
-interface ProviderCredentialsOptions {
-  id: string;
-  name: string;
-  authorize(credentials: Record<string, string>): Promise<any>;
-}
-
-type OptionsProps = {
-  pages: {
-    signIn: string;
-  };
-  session: {
-    jwt: boolean,
-    maxAge: number
-  }
-  providers: ProviderCredentialsOptions[]; // TO - DO change type once it's finished
-  callbacks: any,
-};
 
 // time the session will be active if the user is inactive.
 const MAX_AGE = 12 * 60 * 60; // 12 hours
 
-const options: OptionsProps = {
+export default NextAuth({
   pages: {
     signIn: '/signin',
   },
@@ -64,18 +46,10 @@ const options: OptionsProps = {
       });
     },
     async session(session, token) {
-      const newSession = session;
-      newSession.accessToken = token.accessToken;
-      return newSession;
-    },
-    async redirect() {
-      // // By default it should be redirect to /
-      // if (['/sign-in', '/sign-up', '/auth-callback'].includes(callbackUrl)) {
-      //   return '/';
-      // }
-      // return callbackUrl;
+      return ({
+        ...session,
+        accessToken: token.accessToken,
+      });
     },
   },
-};
-
-export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options);
+});
