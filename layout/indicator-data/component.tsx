@@ -70,13 +70,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const Loading = () => <LoadingSpinner />;
 
   useEffect(() => {
-    if (subgroup) {
       const {
         default_visualization: defaultVisualization,
-      } = subgroup?.default_indicator || subgroup?.indicators[0];
+      } = data;
       setActive(defaultVisualization);
-    }
-  }, [subgroup, years, dispatch]);
+  }, []);
 
   useEffect(() => {
     dispatch(setYear(defaultYear));
