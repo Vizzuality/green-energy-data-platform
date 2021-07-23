@@ -20,6 +20,7 @@ const Tooltip: FC<TooltipProps> = ({
       </div>
     )}
   >
+  
     {children}
   </Tippy>
 );

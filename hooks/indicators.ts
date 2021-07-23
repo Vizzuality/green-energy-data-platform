@@ -39,9 +39,9 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options: 
       },
     });
   const { data } = query;
-
+  const { records } = data;
+  
   return useMemo(() => {
-    const { records } = data;
     const parsedData = records.filter(
       ({ visualizationTypes }) => visualizationTypes.includes(active),
     );
@@ -97,7 +97,7 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options: 
       defaultRegion,
       widgetData,
     };
-  }, [data, query, active, options]);
+  }, [data, query, active, options, records]);
 }
 
 export function useDefaultIndicator(group) {

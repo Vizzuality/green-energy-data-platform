@@ -49,8 +49,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const [active, setActive] = useState(null);
   const dispatch = useDispatch();
-  const { year } = useSelector((state) => state.indicator);
-  const { region } = useSelector((state) => state.indicator);
+  const { year, region } = useSelector((state) => state.indicator);
 
   const options = {
     year,
@@ -74,7 +73,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         default_visualization: defaultVisualization,
       } = data;
       setActive(defaultVisualization);
-  }, []);
+  }, [active, data]);
 
   useEffect(() => {
     dispatch(setYear(defaultYear));
@@ -116,7 +115,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             visualizationTypes={visualizationTypes}
             onClick={setActive}
           />
-          <div className="flex flex-col px-32 py-11 w-full">
+          <div className="flex flex-col lg:px-32 md:px-24 sm:px-16 py-11 w-full">
             <div className="flex items-center w-full justify-between">
               <h2 className="flex text-3.5xl max-w-sm">
                 {name}
@@ -124,6 +123,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               <div className="flex">
                 <Tooltip
                   trigger="click"
+                  maxHeight={400}
                   placement="bottom-start"
                   content={(
                     <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
@@ -158,10 +158,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" />
 
                   </button>
+                  
                 </Tooltip>
                 <Tooltip
                   trigger="click"
                   placement="bottom-start"
+                  trigger="click"
+                  maxHeight={400}
                   content={(
                     <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
                       {groups?.map(({
@@ -231,8 +234,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     <span className="pr-2">Showing for:</span>
                     <Tooltip
                       trigger="click"
+                      maxHeight={400}
                       placement="bottom-start"
-                      hideOnClick
                       content={(
                         <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
                           {years?.map((y) => (
@@ -267,8 +270,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     <span className="pr-2">Region:</span>
                     <Tooltip
                       trigger="click"
+                      maxHeight={400}
                       placement="bottom-start"
-                      hideOnClick
                       content={(
                         <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
                           {regions?.map((region) => (
@@ -291,7 +294,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         type="button"
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
-                        <span>Select dates</span>
+                        <span>Region</span>
                         <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                       </button>
                     </Tooltip>
