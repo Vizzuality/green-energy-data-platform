@@ -42,11 +42,14 @@ const SigninPage: FC<SigninProps> = ({
   const handleSubmit = useCallback(async (evt) => {
     evt.preventDefault();
     const {
-      name,
-      ...restCredentials
+      email,
+      password,
     } = credentials;
 
-    signIn('email-password', restCredentials);
+    signIn('email-password', {
+      email,
+      password,
+    });
   }, [credentials]);
 
   return (
