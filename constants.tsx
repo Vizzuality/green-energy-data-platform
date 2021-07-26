@@ -464,16 +464,10 @@ export const selectedIndicator = {
       },
       bars: [
         {
-          dataKey: 'value1',
-          stackId: 'a',
-        },
-        {
-          dataKey: 'value2',
-          stackId: 'a',
+          dataKey: 'value',
         },
       ],
       yAxis: {
-        domain: [0, 1000],
         tick: {
           fill: '#C4C4C4',
           fontSize: '14px',

@@ -48,7 +48,7 @@ const GroupPage: FC = () => {
               }) => (
                 <li
                   key={id}
-                  className="px-4 py-2 first:rounded-t-xl last:rounded-b-xl bg-white text-gray3 first:rounded-t-xl last:rounded-b-xl"
+                  className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 py-2"
                 >
                   <Link href={`/${group.slug}/${sgSlug}/${indicatorSlug}`} passHref>
                     <a href={`/${group.slug}/${sgSlug}/${indicatorSlug}`} className="px-4 cursor-pointer">{name}</a>

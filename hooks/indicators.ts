@@ -1,13 +1,16 @@
 import { useQuery } from 'react-query';
 import { useMemo } from 'react';
 
+import {
+  IndicatorsProps,
+} from 'types/data';
+
 // services
 import { fetchIndicators, fetchIndicator } from 'services/indicators';
 
 export function useIndicators(group_id, subgroup_id) {
   const query = useQuery('fetch-indicators',
-    () => fetchIndicators(group_id, subgroup_id)
-      .then((data) => data));
+    () => fetchIndicators(group_id, subgroup_id));
 
   const {
     data, status, error, isSuccess, isLoading,
@@ -25,28 +28,71 @@ export function useIndicators(group_id, subgroup_id) {
   };
 }
 
-export function useIndicator(groupId, subgroupId, indicatorId, active) {
-  const query = useQuery(['fetch-indicator', groupId, subgroupId, indicatorId],
-    () => fetchIndicator(groupId, subgroupId, indicatorId)
-      .then((data) => data));
+interface OptionProps {
+  year: null,
+  region: string,
+}
+
+export function useIndicator(groupId, subgroupId, indicatorId, active, options: OptionProps) {
+  const query = useQuery<IndicatorsProps, Error>(['fetch-indicator', groupId, subgroupId, indicatorId],
+    () => fetchIndicator(groupId, subgroupId, indicatorId), {
+      placeholderData: {
+        records: [],
+        categories: [],
+        category_filters: {},
+        default_visualization: null,
+        description: null,
+        end_date: null,
+        id: null,
+        name: null,
+        published: false,
+        start_date: null,
+        visualizationTypes: [],
+      },
+    });
   const { data } = query;
 
   return useMemo(() => {
-    const { records } = data || {};
-    const parsedData = records?.filter(
+    if (!data) {
+      return ({
+        ...query,
+        years: [],
+        defaultYear: null,
+        regions: [],
+        defaultRegion: null,
+        widgetData: [],
+      });
+    }
+
+    const { records } = data;
+    const parsedData = records.filter(
       ({ visualizationTypes }) => visualizationTypes.includes(active),
     );
+
+    const { year, region } = options;
 
     const years = (parsedData?.map((d) => d.year))?.reduce(
       (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
     );
 
+    if (!years) return null;
+    const defaultYear = years[0];
+
+    const regions = (parsedData?.map((d) => d.region.name))?.reduce(
+      (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
+    );
+
+    if (!regions) return null;
+    const defaultRegion = regions.includes('China') ? 'China' : regions[0];
+
     const widgetData = parsedData?.map((d) => {
       if (active === 'bar') {
-        return {
-          province: d.region.name,
-          value1: d.value,
-        };
+        if (year === d.year) {
+          return {
+            province: d.region.name,
+            value: d.value,
+          };
+        }
       }
       if (active === 'line') {
         return {
@@ -56,19 +102,27 @@ export function useIndicator(groupId, subgroupId, indicatorId, active) {
       }
 
       if (active === 'pie') {
-        return {
-          label: d.category_1,
-          value: d.value,
-        };
+        if (region === d.region.name && year === d.year) {
+          return {
+            label: d.category_1,
+            value: d.value,
+          };
+        }
       }
-    });
+
+      return d;
+    }).filter((p) => p);
 
     return {
       ...query,
+      data,
       years,
+      defaultYear,
+      regions,
+      defaultRegion,
       widgetData,
     };
-  }, [data, query, active]);
+  }, [data, query, active, options]);
 }
 
 export function useDefaultIndicator(group) {
@@ -76,9 +130,3 @@ export function useDefaultIndicator(group) {
   const { default_subgroup: defaultSubgroup, subgroups } = group;
   return subgroups.find((subgroup) => subgroup.slug === defaultSubgroup);
 }
-
-export default {
-  useDefaultIndicator,
-  useIndicators,
-  useIndicator,
-};

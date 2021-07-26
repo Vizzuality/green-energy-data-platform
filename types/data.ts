@@ -19,9 +19,35 @@ export interface GroupProps {
   subgroups: SubgroupProps[];
 }
 
+interface Region {
+  id: string,
+  name: string,
+  region_type: string,
+}
+
+interface Unit {
+  id: string,
+  name: string,
+}
+
+interface Record {
+  category_1?: string,
+  category_2?: string,
+  id: string,
+  value: number,
+  unit: Unit,
+  region: Region,
+  year: number,
+  visualizationTypes: string[],
+}
+
+interface CategoryFilters {
+  [key: string]: string | number,
+}
+
 export interface IndicatorsProps {
   categories: [],
-  category_filters: unknown, // TO DO - change when API gets updated
+  category_filters: CategoryFilters,
   default_visualization: string,
   description: string;
   end_date: number,
@@ -30,4 +56,5 @@ export interface IndicatorsProps {
   published: boolean,
   start_date: number,
   visualizationTypes: string[],
+  records: Record[],
 }

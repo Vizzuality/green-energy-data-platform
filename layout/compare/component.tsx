@@ -17,7 +17,7 @@ import DataSource from 'components/data-source';
 import { useGroup } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
 
-import { datesList, selectedIndicator } from '../../constants';
+import { selectedIndicator } from '../../constants';
 
 interface CompareLayoutProps {
   groupSlug: string | string[],
@@ -46,7 +46,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     description,
     config,
   } = selectedIndicator;
-
 
   const [active, setActive] = useState(type || visualizationTypes[0]);
   const { data: groupData, isLoading, isSuccess } = useGroup(groupSlug);
@@ -109,13 +108,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         </div>
 
         <div className="flex text-gray1 items-center">
-          Showing for:
+          <span className="pr-2">Showing for:</span>
           <Tooltip
             trigger="click"
             placement="bottom-start"
             content={(
               <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
-                hola
+                {/* {years.map(year => (<li>{year}</li>))} */}
               </ul>
             )}
           >

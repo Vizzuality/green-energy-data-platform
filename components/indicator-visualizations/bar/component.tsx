@@ -41,6 +41,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     tooltip,
     ...rest
   } = widgetConfig;
+
   return (
     <ResponsiveContainer width="100%" height={500} {...rest}>
       <BarChart width={400} height={500} data={widgetData} {...rest}>
