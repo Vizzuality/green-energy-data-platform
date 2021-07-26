@@ -2,7 +2,12 @@ import React, {
   FC,
 } from 'react';
 import cx from 'classnames';
-
+import {
+  QueryClient,
+  useQueryClient,
+} from 'react-query';
+import { dehydrate } from 'react-query/hydration';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 // components
@@ -11,29 +16,58 @@ import Nav from 'components/nav';
 import Tooltip from 'components/tooltip';
 import Icon from 'components/icon';
 
+// services
+import { fetchIndicator } from 'services/indicators';
+
 // layout
 import LayoutPage from 'layout';
 import Hero from 'layout/hero';
 import IndicatorData from 'layout/indicator-data';
 import WidgetsGrid from 'layout/widgets-grid';
 
-// import { GroupProps, SubgroupProps, IndicatorsProps } from 'types/data';
-
+// hooks
 import { useGroup } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
-import { useRouter } from 'next/router';
+import { useIndicator } from 'hooks/indicators';
 
 const GroupPage: FC = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { query: { group: groupQuery, subgroup: subgroupQuery } } = router;
   const subgroupSlug = subgroupQuery?.[0];
+  const indicatorSlug = subgroupQuery?.[1];
 
-  const { data: group } = useGroup(groupQuery);
-  const { data: subgroup } = useSubgroup(groupQuery, subgroupSlug);
+  const { data: group } = useGroup(groupQuery, {
+    refetchOnWindowFocus: false,
+  });
+  const { data: subgroup } = useSubgroup(groupQuery, subgroupSlug, {
+    refetchOnWindowFocus: false,
+  });
+
+  const {
+    data,
+  } = useIndicator(groupQuery, subgroupSlug, indicatorSlug, ({
+    placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
+      records: [],
+      categories: [],
+      category_filters: {},
+      default_visualization: null,
+      description: null,
+      end_date: null,
+      id: null,
+      name: null,
+      published: false,
+      start_date: null,
+      visualizationTypes: [],
+      group: null,
+      subgroup: null,
+    },
+    refetchOnWindowFocus: false,
+  }));
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
-      <Head title={`${group?.name} analysis`} />
+      <Head title={`${data?.group?.name} analysis`} />
       <Hero>
         <Nav className="pt-10" />
         <Tooltip
@@ -44,14 +78,14 @@ const GroupPage: FC = () => {
               className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
             >
               {group?.subgroups.map(({
-                slug: sgSlug, id, name, default_indicator: { slug: indicatorSlug },
+                slug: sgSlug, id, name, default_indicator: { slug: _indicatorSlug },
               }) => (
                 <li
                   key={id}
                   className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 py-2"
                 >
-                  <Link href={`/${group.slug}/${sgSlug}/${indicatorSlug}`} passHref>
-                    <a href={`/${group.slug}/${sgSlug}/${indicatorSlug}`} className="px-4 cursor-pointer">{name}</a>
+                  <Link href={`/${group.slug}/${sgSlug}/${_indicatorSlug}`} passHref>
+                    <a href={`/${group.slug}/${sgSlug}/${_indicatorSlug}`} className="px-4 cursor-pointer">{name}</a>
                   </Link>
                 </li>
               ))}
@@ -63,17 +97,16 @@ const GroupPage: FC = () => {
             className="flex items-center"
           >
             <h1 className="text-5.5xl pt-3">
-              {subgroup?.name}
+              {data?.subgroup?.name}
             </h1>
             <Icon
               ariaLabel="collapse dropdown"
               name="triangle_border"
               size="2xlg"
               className={cx('ml-3 border-2 text-white border-white border-opacity-30 hover:bg-color1 rounded-full p-4',
-                { 'transform -rotate-180': true })}
+                { 'transform -rotate-180': false })}
             />
           </button>
-
         </Tooltip>
       </Hero>
       <div className="container m-auto">
@@ -86,6 +119,36 @@ const GroupPage: FC = () => {
 
     </LayoutPage>
   );
+};
+
+export const getServerSideProps = async ({ query }) => {
+  const {
+    group: groupSlug,
+    subgroup,
+  } = query;
+
+  const subgroupSlug = subgroup?.[0];
+  const indicatorSlug = subgroup?.[1];
+
+  if (!indicatorSlug) {
+    return ({
+      notFound: true,
+    });
+  }
+
+  const queryClient = new QueryClient();
+
+  // prefetch indicator
+  await queryClient.prefetchQuery(
+    `indicator-${indicatorSlug}`,
+    () => fetchIndicator(groupSlug, subgroupSlug, indicatorSlug),
+  );
+
+  return ({
+    props: ({
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+    }),
+  });
 };
 
 export default GroupPage;

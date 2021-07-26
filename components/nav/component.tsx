@@ -15,7 +15,9 @@ export const Nav: React.FC<NavProps> = ({
 }: NavProps) => {
   const router = useRouter();
   const { group } = router.query;
-  const { data: groups } = useGroups();
+  const { data: groups } = useGroups({
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <nav>

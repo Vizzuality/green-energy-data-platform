@@ -14,7 +14,7 @@ const Filters: FC<FiltersProps> = ({
   className = '',
 }: FiltersProps) => {
   const [activeCategories, setActives] = useState(categories);
-  const handleClick = (direction) => direction === 'up' ? console.log('scroll up') : console.log('scroll down');
+  const handleClick = (direction) => direction;
 
   const handleFilter = useCallback((id: number) => {
     const categoriesUpdate = activeCategories?.map((c) => {
