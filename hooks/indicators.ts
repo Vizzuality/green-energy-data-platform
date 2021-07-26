@@ -1,13 +1,16 @@
 import { useQuery } from 'react-query';
 import { useMemo } from 'react';
 
+import {
+  IndicatorsProps,
+} from 'types/data';
+
 // services
 import { fetchIndicators, fetchIndicator } from 'services/indicators';
 
 export function useIndicators(group_id, subgroup_id) {
   const query = useQuery('fetch-indicators',
-    () => fetchIndicators(group_id, subgroup_id)
-      .then((data) => data));
+    () => fetchIndicators(group_id, subgroup_id));
 
   const {
     data, status, error, isSuccess, isLoading,
@@ -26,22 +29,42 @@ export function useIndicators(group_id, subgroup_id) {
 }
 
 interface OptionProps {
-  year: number,
+  year: null,
   region: string,
 }
 
 export function useIndicator(groupId, subgroupId, indicatorId, active, options: OptionProps) {
-  const query = useQuery(['fetch-indicator', groupId, subgroupId, indicatorId],
-    () => fetchIndicator(groupId, subgroupId, indicatorId).then((data) => data),
-    {
+  const query = useQuery<IndicatorsProps, Error>(['fetch-indicator', groupId, subgroupId, indicatorId],
+    () => fetchIndicator(groupId, subgroupId, indicatorId), {
       placeholderData: {
         records: [],
+        categories: [],
+        category_filters: {},
+        default_visualization: null,
+        description: null,
+        end_date: null,
+        id: null,
+        name: null,
+        published: false,
+        start_date: null,
+        visualizationTypes: [],
       },
     });
   const { data } = query;
-  const { records } = data;
-  
+
   return useMemo(() => {
+    if (!data) {
+      return ({
+        ...query,
+        years: [],
+        defaultYear: null,
+        regions: [],
+        defaultRegion: null,
+        widgetData: [],
+      });
+    }
+
+    const { records } = data;
     const parsedData = records.filter(
       ({ visualizationTypes }) => visualizationTypes.includes(active),
     );
@@ -86,6 +109,8 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options: 
           };
         }
       }
+
+      return d;
     }).filter((p) => p);
 
     return {
@@ -97,7 +122,7 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options: 
       defaultRegion,
       widgetData,
     };
-  }, [data, query, active, options, records]);
+  }, [data, query, active, options]);
 }
 
 export function useDefaultIndicator(group) {
@@ -105,9 +130,3 @@ export function useDefaultIndicator(group) {
   const { default_subgroup: defaultSubgroup, subgroups } = group;
   return subgroups.find((subgroup) => subgroup.slug === defaultSubgroup);
 }
-
-export default {
-  useDefaultIndicator,
-  useIndicators,
-  useIndicator,
-};

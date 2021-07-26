@@ -69,11 +69,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const Loading = () => <LoadingSpinner />;
 
   useEffect(() => {
-      const {
-        default_visualization: defaultVisualization,
-      } = data;
-      setActive(defaultVisualization);
-  }, [active, data]);
+    const {
+      default_visualization: defaultVisualization,
+    } = data;
+
+    setActive(defaultVisualization);
+  }, [data]);
 
   useEffect(() => {
     dispatch(setYear(defaultYear));
@@ -158,17 +159,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" />
 
                   </button>
-                  
+
                 </Tooltip>
                 <Tooltip
                   trigger="click"
                   placement="bottom-start"
-                  trigger="click"
                   maxHeight={400}
                   content={(
                     <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
                       {groups?.map(({
-                        name: groupName, id, subgroups: subgroupsCompare, slug, default_indicator,
+                        name: groupName, id, subgroups: subgroupsCompare, slug,
                       }) => (
                         <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
                           <button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button" className="flex items-center py-2 w-full last:border-b-0">
@@ -177,39 +177,42 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                             <Icon ariaLabel="arrow" name="arrow" className="ml-2" />
                           </button>
                           <ul id="exp_elem_list" tabIndex={-1} role="listbox" aria-labelledby="exp_elem" className="" aria-activedescendant="exp_elem_Pu">
-                            {subgroupsCompare.map(
-                              (
-                                {
-                                  name: subgroupName, id: subgroupId, slug: subgroupCompareSlug, default_indicator: compareIndicator,
-                                },
-                              ) => (
-                                <li key={subgroupName} id={`exp-elem_${subgroupId}`} role="option" className="" aria-selected="true">
-                                  <Link href={{
-                                    pathname: '/compare',
-                                    query: {
-                                      g1: groupSlug,
-                                      sg1: subgroupSlug,
-                                      ind1: 'agriculture',
-                                      g2: slug,
-                                      sg2: subgroupCompareSlug,
-                                      ind2: compareIndicator.slug,
-                                    },
-                                  }}
+                            {subgroupsCompare.map(({
+                              name: subgroupName,
+                              id: subgroupId,
+                              slug: subgroupCompareSlug,
+                              default_indicator: compareIndicator,
+                            }) => (
+                              <li
+                                key={subgroupName}
+                                id={`exp-elem_${subgroupId}`}
+                                role="option"
+                                className=""
+                                aria-selected="true"
+                              >
+                                <Link href={{
+                                  pathname: '/compare',
+                                  query: {
+                                    g1: groupSlug,
+                                    sg1: subgroupSlug,
+                                    ind1: 'agriculture',
+                                    g2: slug,
+                                    sg2: subgroupCompareSlug,
+                                    ind2: compareIndicator.slug,
+                                  },
+                                }}
+                                >
+                                  <a
+                                    className="flex items-center py-2 w-full last:border-b-0"
+                                    href="/compare"
                                   >
-                                    <a
-                                      className="flex items-center py-2 w-full last:border-b-0"
-                                      href="/compare"
-                                    >
-                                      {subgroupName}
-                                    </a>
+                                    {subgroupName}
+                                  </a>
 
-                                  </Link>
-                                </li>
-                              ),
-                            )}
-
+                                </Link>
+                              </li>
+                            ))}
                           </ul>
-                          {/* </Link> */}
                         </li>
                       ))}
                     </ul>
@@ -274,14 +277,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       placement="bottom-start"
                       content={(
                         <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
-                          {regions?.map((region) => (
+                          {regions?.map((_region) => (
                             <li
                               key={region}
                               className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10"
                             >
                               <button
                                 type="button"
-                                onClick={() => dispatch(setRegion(region))}
+                                onClick={() => dispatch(setRegion(_region))}
                               >
                                 {region}
                               </button>
