@@ -28,13 +28,13 @@ export function useIndicators(group_id, subgroup_id) {
   };
 }
 
-interface OptionProps {
-  year: null,
-  region: string,
-}
-
-export function useIndicator(groupId, subgroupId, indicatorId, active, options: OptionProps) {
-  const query = useQuery<IndicatorsProps, Error>(['fetch-indicator', groupId, subgroupId, indicatorId],
+export function useIndicator(
+  groupId,
+  subgroupId,
+  indicatorId,
+  queryOptions = {},
+) {
+  return useQuery<IndicatorsProps, Error>(`indicator-${indicatorId}`,
     () => fetchIndicator(groupId, subgroupId, indicatorId), {
       placeholderData: {
         records: [],
@@ -48,81 +48,11 @@ export function useIndicator(groupId, subgroupId, indicatorId, active, options: 
         published: false,
         start_date: null,
         visualizationTypes: [],
+        group: null,
+        subgroup: null,
       },
+      ...queryOptions,
     });
-  const { data } = query;
-
-  return useMemo(() => {
-    if (!data) {
-      return ({
-        ...query,
-        years: [],
-        defaultYear: null,
-        regions: [],
-        defaultRegion: null,
-        widgetData: [],
-      });
-    }
-
-    const { records } = data;
-    const parsedData = records.filter(
-      ({ visualizationTypes }) => visualizationTypes.includes(active),
-    );
-
-    const { year, region } = options;
-
-    const years = (parsedData?.map((d) => d.year))?.reduce(
-      (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
-    );
-
-    if (!years) return null;
-    const defaultYear = years[0];
-
-    const regions = (parsedData?.map((d) => d.region.name))?.reduce(
-      (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
-    );
-
-    if (!regions) return null;
-    const defaultRegion = regions.includes('China') ? 'China' : regions[0];
-
-    const widgetData = parsedData?.map((d) => {
-      if (active === 'bar') {
-        if (year === d.year) {
-          return {
-            province: d.region.name,
-            value: d.value,
-          };
-        }
-      }
-      if (active === 'line') {
-        return {
-          label: d.year,
-          value: d.value,
-        };
-      }
-
-      if (active === 'pie') {
-        if (region === d.region.name && year === d.year) {
-          return {
-            label: d.category_1,
-            value: d.value,
-          };
-        }
-      }
-
-      return d;
-    }).filter((p) => p);
-
-    return {
-      ...query,
-      data,
-      years,
-      defaultYear,
-      regions,
-      defaultRegion,
-      widgetData,
-    };
-  }, [data, query, active, options]);
 }
 
 export function useDefaultIndicator(group) {

@@ -45,6 +45,12 @@ interface CategoryFilters {
   [key: string]: string | number,
 }
 
+interface Group {
+  id: string,
+  name: string,
+  slug: string,
+}
+
 export interface IndicatorsProps {
   categories: [],
   category_filters: CategoryFilters,
@@ -57,4 +63,6 @@ export interface IndicatorsProps {
   start_date: number,
   visualizationTypes: string[],
   records: Record[],
+  group: Group,
+  subgroup: Group,
 }

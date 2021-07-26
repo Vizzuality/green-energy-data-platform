@@ -492,7 +492,7 @@ export const selectedIndicator = {
           dataKey: 'value',
           cx: '50%',
           cy: '50%',
-          outerRadius: 80,
+          // outerRadius: 80,
         },
       ],
     },

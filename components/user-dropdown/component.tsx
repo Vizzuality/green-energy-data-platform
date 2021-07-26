@@ -1,4 +1,7 @@
-import React, { FC, useState } from 'react';
+import React, {
+  FC,
+  useState,
+} from 'react';
 import Link from 'next/link';
 import cx from 'classnames';
 
@@ -29,8 +32,11 @@ const UserDropdown: FC<UserDropdownProps> = ({
 
   if (!user) {
     return (
-      <Link href="/signin">
-        <Icon ariaLabel="sign in" className="cursor-pointer" name="profile" size="xlg" />
+      <Link href="/signin" passHref>
+        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+        <a>
+          <Icon ariaLabel="sign in" className="cursor-pointer" name="profile" size="xlg" />
+        </a>
       </Link>
     );
   }

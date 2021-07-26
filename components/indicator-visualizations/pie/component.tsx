@@ -3,10 +3,10 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  CartesianGrid,
-  CartesianAxis,
-  XAxis,
-  YAxis,
+  // CartesianGrid,
+  // CartesianAxis,
+  // XAxis,
+  // YAxis,
   Tooltip,
   PieProps,
   Cell,
@@ -38,10 +38,10 @@ interface ChartProps {
 }
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   const {
-    cartesianGrid,
-    cartesianAxis,
-    xAxis,
-    yAxis,
+    // cartesianGrid,
+    // cartesianAxis,
+    // xAxis,
+    // yAxis,
     pies,
     tooltip,
   } = widgetConfig;
@@ -69,11 +69,11 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   // }; - TO DO - remove when it's clear label has disappearded forever
   return (
     <ResponsiveContainer width="100%" height={500}>
-      <PieChart width={400} height={200}>
-        {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
+      <PieChart>
+        {/* {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
-        {yAxis && (<YAxis {...yAxis} />)}
+        {yAxis && (<YAxis {...yAxis} />)} */}
         {pies && Object.keys(pies).map((pie, index) => (
           <Pie
             key={pie}
