@@ -75,6 +75,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const {
     data,
+    isLoading,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
     placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
       records: [],
@@ -144,13 +145,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
       { [className]: className })}
     >
-      {/* {isLoading && <LoadingSpinner />}
-      {!isLoading && !widgetData && (
-        <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-          <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-          <p>Data not found.</p>
-        </div>
-      )} */}
+      {/* {isLoading && <LoadingSpinner />} */}
 
       <VisualizationsNav
         active={visualizationType}
@@ -262,88 +257,101 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         <p className="text-sm py-7.5">
           {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
         </p>
-        <div className="flex flex-col h-full">
-          <section className="flex">
-            {/* year filter */}
-            {['bar', 'pie'].includes(visualizationType) && (
-              <div className="flex items-center">
-                <span className="pr-2">Showing for:</span>
-                <Tooltip
-                  trigger="click"
-                  placement="bottom-start"
-                  content={(
-                    <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                      {years?.map((_year) => (
-                        <li
-                          key={_year}
-                          className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
-                        >
-                          <button
-                            type="button"
-                            className="flex items-center py-2 w-full last:border-b-0 px-5"
-                            onClick={() => dispatch(setFilters({ year: _year }))}
-                          >
-                            {_year}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                >
-                  <button
-                    type="button"
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                  >
-                    <span>{year || 'Select dates'}</span>
-                    <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                  </button>
-                </Tooltip>
-              </div>
-            )}
+        <div className="flex justify-between">
+          <div className="flex flex-col h-full w-full">
+            <section className="flex flex-col w-full">
+              <div className="flex">
+                {/* year filter */}
+                {['bar', 'pie'].includes(visualizationType) && (
+                  <div className="flex items-center">
+                    <span className="pr-2">Showing for:</span>
+                    <Tooltip
+                      trigger="click"
+                      placement="bottom-start"
+                      content={(
+                        <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                          {years?.map((_year) => (
+                            <li
+                              key={_year}
+                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
+                            >
+                              <button
+                                type="button"
+                                className="flex items-center py-2 w-full last:border-b-0 px-5"
+                                onClick={() => dispatch(setFilters({ year: _year }))}
+                              >
+                                {_year}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    >
+                      <button
+                        type="button"
+                        className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                      >
+                        <span>{year || 'Select dates'}</span>
+                        <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                )}
 
-            {/* region filter */}
-            {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
-              <div className="flex items-center">
-                <span className="pr-2">Region:</span>
-                <Tooltip
-                  trigger="click"
-                  placement="bottom-start"
-                  content={(
-                    <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
-                      {regions.map((_region) => (
-                        <li
-                          key={_region}
-                          className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
-                        >
-                          <button
-                            type="button"
-                            onClick={() => dispatch(setFilters({ region: _region }))}
-                          >
-                            {_region}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                >
-                  <button
-                    type="button"
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                  >
-                    <span>{region || 'Select a region'}</span>
-                    <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                  </button>
-                </Tooltip>
+                {/* region filter */}
+                {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
+                  <div className="flex items-center">
+                    <span className="pr-2">Region:</span>
+                    <Tooltip
+                      trigger="click"
+                      placement="bottom-start"
+                      content={(
+                        <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
+                          {regions.map((_region) => (
+                            <li
+                              key={_region}
+                              className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
+                            >
+                              <button
+                                type="button"
+                                onClick={() => dispatch(setFilters({ region: _region }))}
+                              >
+                                {_region}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    >
+                      <button
+                        type="button"
+                        className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                      >
+                        <span>{region || 'Select a region'}</span>
+                        <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                )}
               </div>
-            )}
-          </section>
+              <div className="flex h-full w-full py-8">
+                {!isLoading && !widgetRecords.length && (
+                  <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
+                    <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                    <p>Data not found</p>
+                  </div>
+                )}
+
+                {(!!widgetRecords.length) && (
+                  <DynamicChart
+                    widgetData={widgetRecords}
+                    widgetConfig={widgetConfig}
+                  />
+                )}
+              </div>
+            </section>
+          </div>
           <div className="flex h-full">
-            <div className="flex h-full w-full py-8">
-              <DynamicChart
-                widgetData={widgetRecords}
-                widgetConfig={widgetConfig}
-              />
-            </div>
             <section className="flex flex-col justify-between h-full ml-8">
               {/* {categories?.length > 1 && <Filters categories={categories} className="mb-4" />} */}
               {categories?.length > 1 && <Legend categories={categories} className="overflow-y-auto mb-4" />}
