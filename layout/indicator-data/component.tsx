@@ -9,7 +9,7 @@ import {
 } from 'react-query';
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
-// import Link from 'next/link';
+import Link from 'next/link';
 
 // hooks
 import { useSelector, useDispatch } from 'react-redux';
@@ -166,27 +166,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           <div className="flex">
             <Tooltip
               trigger="click"
-              maxHeight={400}
-              placement="bottom-start"
+              placement="bottom-end"
               content={(
-                <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
+                <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                   {subgroup?.indicators?.map(
                     ({ name: groupName, id, slug }) => (
-                      <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
-                        <button
-                          type="button"
-                          aria-haspopup="listbox"
-                          aria-labelledby="exp_elem exp_button"
-                          id="exp_button"
-                          className="flex items-center py-2 w-full last:border-b-0"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            router.push(`/${groupSlug}/${subgroupSlug}/${slug}`);
-                          }}
-                        >
-                          <span>{groupName}</span>
-                          {' '}
-                        </button>
+                      <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">
+                        <Link href={`/${groupSlug}/${subgroupSlug}/${slug}`}>
+                          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                          <a className="flex items-center py-2 w-full last:border-b-0">{groupName}</a>
+                        </Link>
                       </li>
                     ),
                   )}
@@ -199,7 +188,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               >
                 <span>Change Indicator</span>
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" />
-
               </button>
 
             </Tooltip>
@@ -274,24 +262,25 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         <p className="text-sm py-7.5">
           {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
         </p>
-        <div className="flex">
-          <section className="flex-1 flex-col mr-8">
+        <div className="flex flex-col h-full">
+          <section className="flex">
+            {/* year filter */}
             {['bar', 'pie'].includes(visualizationType) && (
               <div className="flex items-center">
                 <span className="pr-2">Showing for:</span>
                 <Tooltip
                   trigger="click"
-                  maxHeight={400}
                   placement="bottom-start"
                   content={(
-                    <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
+                    <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                       {years?.map((_year) => (
                         <li
                           key={_year}
-                          className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10"
+                          className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
                         >
                           <button
                             type="button"
+                            className="flex items-center py-2 w-full last:border-b-0 px-5"
                             onClick={() => dispatch(setFilters({ year: _year }))}
                           >
                             {_year}
@@ -305,26 +294,26 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     type="button"
                     className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                   >
-                    <span>Select dates</span>
+                    <span>{year || 'Select dates'}</span>
                     <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                   </button>
                 </Tooltip>
               </div>
             )}
 
-            {['line', 'pie'].includes(visualizationType) && (
+            {/* region filter */}
+            {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
               <div className="flex items-center">
                 <span className="pr-2">Region:</span>
                 <Tooltip
                   trigger="click"
-                  maxHeight={400}
                   placement="bottom-start"
                   content={(
-                    <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 max-h-48 overflow-y-scroll">
+                    <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
                       {regions.map((_region) => (
                         <li
                           key={_region}
-                          className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10"
+                          className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
                         >
                           <button
                             type="button"
@@ -341,24 +330,26 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     type="button"
                     className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                   >
-                    <span>Region</span>
+                    <span>{region || 'Select a region'}</span>
                     <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                   </button>
                 </Tooltip>
               </div>
             )}
-            <div className="flex-1 h-full py-8">
+          </section>
+          <div className="flex h-full">
+            <div className="flex h-full w-full py-8">
               <DynamicChart
                 widgetData={widgetRecords}
                 widgetConfig={widgetConfig}
               />
             </div>
-          </section>
-          <section className="flex flex-col justify-between">
-            {/* {categories?.length > 1 && <Filters categories={categories} className="mb-4" />} */}
-            {categories?.length > 1 && <Legend categories={categories} className="mb-4" />}
-            <DataSource />
-          </section>
+            <section className="flex flex-col justify-between h-full ml-8">
+              {/* {categories?.length > 1 && <Filters categories={categories} className="mb-4" />} */}
+              {categories?.length > 1 && <Legend categories={categories} className="overflow-y-auto mb-4" />}
+              <DataSource />
+            </section>
+          </div>
         </div>
       </div>
     </div>

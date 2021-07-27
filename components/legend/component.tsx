@@ -12,10 +12,10 @@ const Legend: FC<LegendProps> = ({
   categories = [],
   className = '',
 }: LegendProps) => (
-  <div className={cx('inline-flex flex-col justify-center text-center bg-white rounded-md border-gray5 border-6 hover:opacity-90 px-1.5 text-gray1',
+  <div className={cx('inline-flex flex-col justify-center text-center bg-white rounded-md border-gray5 border-6 hover:opacity-90 px-1.5 text-gray1 max-h-64',
     { [className]: className })}
   >
-    <ul className="flex flex-col items-center my-2.5">
+    <ul className="flex flex-col items-center my-2.5 py-2.5">
       {categories.map((category, index) => (
         <li
           key={category}

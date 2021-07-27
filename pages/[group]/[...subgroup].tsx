@@ -39,6 +39,9 @@ const GroupPage: FC = () => {
 
   const { data: group } = useGroup(groupQuery, {
     refetchOnWindowFocus: false,
+    placeholderData: {
+      subgroups: [],
+    },
   });
   const { data: subgroup } = useSubgroup(groupQuery, subgroupSlug, {
     refetchOnWindowFocus: false,
@@ -77,15 +80,15 @@ const GroupPage: FC = () => {
             <ul
               className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
             >
-              {group?.subgroups.map(({
+              {group.subgroups.map(({
                 slug: sgSlug, id, name, default_indicator: { slug: _indicatorSlug },
               }) => (
                 <li
                   key={id}
-                  className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 py-2"
+                  className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
                 >
                   <Link href={`/${group.slug}/${sgSlug}/${_indicatorSlug}`} passHref>
-                    <a href={`/${group.slug}/${sgSlug}/${_indicatorSlug}`} className="px-4 cursor-pointer">{name}</a>
+                    <a href={`/${group.slug}/${sgSlug}/${_indicatorSlug}`} className="px-5 cursor-pointer w-full py-2 flex">{name}</a>
                   </Link>
                 </li>
               ))}

@@ -15,10 +15,15 @@ const Tooltip: FC<TooltipProps> = ({
   <Tippy
     {...props}
     interactive
+    // render={() => (
+    //   <div className="relative">
+    //     {content}
+    //   </div>
+    // )}
     render={() => (
-      <div className="relative">
+      <>
         {content}
-      </div>
+      </>
     )}
   >
 
