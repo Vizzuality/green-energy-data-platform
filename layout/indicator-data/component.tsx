@@ -409,10 +409,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 )}
 
                 {(!!filteredRecords.length) && (
-                  <DynamicChart
-                    widgetData={filteredRecords}
-                    widgetConfig={widgetConfig}
-                  />
+                  <div className="flex h-full w-full min-h-1/2 py-8">
+                    <DynamicChart
+                      widgetData={filteredRecords}
+                      widgetConfig={widgetConfig}
+                    />
+                  </div>
                 )}
               </div>
             </section>
@@ -420,7 +422,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           <div className="flex h-full">
             <section className="flex flex-col justify-between h-full ml-8">
               {/* {categories?.length > 1 && <Filters categories={categories} className="mb-4" />} */}
-              {categories?.length > 1 && <Legend categories={categories} className="overflow-y-auto mb-4" />}
+              {categories.length > 0 && <Legend categories={categories} className="overflow-y-auto mb-4" />}
               <DataSource />
             </section>
           </div>
