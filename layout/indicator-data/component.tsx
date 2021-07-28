@@ -3,13 +3,14 @@ import React, {
   useEffect,
   useState,
   useMemo,
+  useCallback,
 } from 'react';
 import {
   useQueryClient,
 } from 'react-query';
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 // hooks
 import { useSelector, useDispatch } from 'react-redux';
@@ -35,6 +36,7 @@ import {
   filterRecords,
   getYearsFromRecords,
   getRegionsFromRecords,
+  getCategoriesFromRecords,
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
@@ -51,12 +53,60 @@ type ChartProps = {
 const IndicatorData: FC<IndicatorDataProps> = ({
   className,
 }: IndicatorDataProps) => {
+  const [dropdownVisibility, setDropdownVisibility] = useState({
+    indicator: false,
+    year: false,
+    region: false,
+  });
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  const { year, region } = useSelector((state) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
+
+  const handleIndicatorChange = useCallback((url) => {
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      indicator: false,
+    });
+
+    router.push(url);
+  }, [router, dropdownVisibility]);
+
+  const toggleDropdown = useCallback((key) => {
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      [key]: !dropdownVisibility[key],
+    });
+  }, [dropdownVisibility]);
+
+  const closeDropdown = useCallback((key) => {
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      [key]: false,
+    });
+  }, [dropdownVisibility]);
+
+  const handleYearChange = useCallback((_year) => {
+    dispatch(setFilters({ year: _year }));
+
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      year: false,
+    });
+  }, [dispatch, dropdownVisibility]);
+
+  const handleRegionChange = useCallback((_region) => {
+    dispatch(setFilters({ region: _region }));
+
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      region: false,
+    });
+  }, [dispatch, dropdownVisibility]);
 
   // todo: uncomment along with Compare select
   // const { data: groups } = useGroups({
@@ -67,9 +117,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
   });
-
-  const dispatch = useDispatch();
-  const { year, region } = useSelector((state) => state.indicator);
 
   const filters = useMemo(() => ({
     year,
@@ -116,8 +163,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [records, filters, visualizationType],
   );
 
+  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
   const widgetConfig = useMemo(
-    () => selectedIndicator?.config?.[visualizationType], [visualizationType],
+    () => selectedIndicator.config[visualizationType],
+    [visualizationType],
   );
 
   useEffect(() => {
@@ -131,7 +181,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const {
     visualizationTypes,
     name,
-    categories,
     description,
   } = data;
 
@@ -142,9 +191,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     }));
   }, [dispatch, defaultYear, defaultRegion]);
 
-  const DynamicChart = dynamic<ChartProps>(
-    () => import(`components/indicator-visualizations/${visualizationType}`),
-  );
+  const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
@@ -163,17 +210,22 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           </h2>
           <div className="flex">
             <Tooltip
-              trigger="click"
               placement="bottom-end"
+              visible={dropdownVisibility.indicator}
+              interactive
+              onClickOutside={() => closeDropdown('indicator')}
               content={(
                 <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                   {subgroup?.indicators?.map(
                     ({ name: groupName, id, slug }) => (
                       <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">
-                        <Link href={`/${groupSlug}/${subgroupSlug}/${slug}`}>
-                          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                          <a className="flex items-center py-2 w-full last:border-b-0">{groupName}</a>
-                        </Link>
+                        <button
+                          type="button"
+                          className="flex items-center py-2 w-full last:border-b-0"
+                          onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${slug}`)}
+                        >
+                          {groupName}
+                        </button>
                       </li>
                     ),
                   )}
@@ -182,6 +234,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             >
               <button
                 type="button"
+                onClick={() => { toggleDropdown('indicator'); }}
                 className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
               >
                 <span>Change Indicator</span>
@@ -269,8 +322,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
                     <Tooltip
-                      trigger="click"
                       placement="bottom-start"
+                      visible={dropdownVisibility.year}
+                      interactive
+                      onClickOutside={() => closeDropdown('year')}
                       content={(
                         <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                           {years.map((_year) => (
@@ -281,7 +336,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                               <button
                                 type="button"
                                 className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                onClick={() => dispatch(setFilters({ year: _year }))}
+                                onClick={() => { handleYearChange(_year); }}
                               >
                                 {_year}
                               </button>
@@ -292,6 +347,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     >
                       <button
                         type="button"
+                        onClick={() => { toggleDropdown('year'); }}
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
                         <span>{year || 'Select dates'}</span>
@@ -306,8 +362,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   <div className="flex items-center">
                     <span className="pr-2">Region:</span>
                     <Tooltip
-                      trigger="click"
                       placement="bottom-start"
+                      visible={dropdownVisibility.region}
+                      interactive
+                      onClickOutside={() => closeDropdown('region')}
                       content={(
                         <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
                           {regions.map((_region) => (
@@ -317,7 +375,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                             >
                               <button
                                 type="button"
-                                onClick={() => dispatch(setFilters({ region: _region }))}
+                                onClick={() => handleRegionChange(_region)}
                               >
                                 {_region}
                               </button>
@@ -328,6 +386,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     >
                       <button
                         type="button"
+                        onClick={() => { toggleDropdown('region'); }}
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
                         <span>{region || 'Select a region'}</span>

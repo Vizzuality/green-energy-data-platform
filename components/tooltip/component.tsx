@@ -20,11 +20,7 @@ const Tooltip: FC<TooltipProps> = ({
     //     {content}
     //   </div>
     // )}
-    render={() => (
-      <>
-        {content}
-      </>
-    )}
+    render={() => content}
   >
 
     {children}

@@ -41,7 +41,7 @@ export const filterRecords = (
     }
 
     if (visualizationType === 'pie') {
-      if (year === d.year && d.region.name === region) return true;
+      if (year === d.year && d.region.name === region && d.unit.name === 'Percentage') return true;
     }
 
     return false;
@@ -55,3 +55,7 @@ export const getYearsFromRecords = (
 export const getRegionsFromRecords = (
   records: Record[],
 ) => compact(uniq(records.map((d) => d.region.name))).sort();
+
+export const getCategoriesFromRecords = (
+  records: Record[],
+) => compact(uniq(records.map((d) => d.category_1))).sort();

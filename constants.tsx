@@ -485,13 +485,13 @@ export const selectedIndicator = {
     },
     pie: {
       margin: {
-        top: 20, right: 0, left: 0, bottom: 0,
+        // top: 20, right: 0, left: 0, bottom: 0,
       },
       pies: [
         {
-          dataKey: 'value',
-          cx: '50%',
-          cy: '50%',
+          // dataKey: 'value',
+          // cx: '50%',
+          // cy: '50%',
           // outerRadius: 80,
         },
       ],
