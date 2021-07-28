@@ -37,7 +37,7 @@ export const filterRecords = (
     // }
 
     if (visualizationType === 'line') {
-      if (d.category_1 && d.category_2 === 'Total' && d.unit.name !== 'Percentage') return true;
+      if (d.unit.name !== 'Percentage') return true;
     }
 
     if (visualizationType === 'pie') {

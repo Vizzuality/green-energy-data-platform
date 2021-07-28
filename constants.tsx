@@ -293,9 +293,7 @@ export const selectedIndicator = {
       xAxis: {
         dataKey: 'year',
       },
-      yAxis: {
-
-      },
+      yAxis: {},
       tooltip: {
 
       },
@@ -516,7 +514,16 @@ export const datesList = [
   { id: 4, name: '2020' },
 ];
 
-export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
+export const colors = [
+  '#1B5183',
+  '#1E6D86',
+  '#2A8FAF',
+  '#C9E6E8',
+  '#929292',
+  '#766964',
+  '#F8981C',
+  '#760015',
+];
 
 export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
