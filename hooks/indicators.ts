@@ -3,10 +3,15 @@ import { useMemo } from 'react';
 
 import {
   IndicatorsProps,
+  Record,
 } from 'types/data';
 
 // services
-import { fetchIndicators, fetchIndicator } from 'services/indicators';
+import {
+  fetchIndicators,
+  fetchIndicator,
+  fetchIndicatorRecords,
+} from 'services/indicators';
 
 export function useIndicators(group_id, subgroup_id) {
   const query = useQuery('fetch-indicators',
@@ -59,4 +64,17 @@ export function useDefaultIndicator(group) {
   if (!group) return null;
   const { default_subgroup: defaultSubgroup, subgroups } = group;
   return subgroups.find((subgroup) => subgroup.slug === defaultSubgroup);
+}
+
+export function useIndicatorRecords(
+  groupId,
+  subgroupId,
+  indicatorId,
+  queryOptions = {},
+) {
+  return useQuery<Record[], Error>(`indicator-records-${indicatorId}`,
+    () => fetchIndicatorRecords(groupId, subgroupId, indicatorId), {
+      placeholderData: [],
+      ...queryOptions,
+    });
 }

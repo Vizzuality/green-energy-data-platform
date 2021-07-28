@@ -291,7 +291,7 @@ export const selectedIndicator = {
         },
       ],
       xAxis: {
-        dataKey: 'label',
+        dataKey: 'year',
       },
       yAxis: {
 

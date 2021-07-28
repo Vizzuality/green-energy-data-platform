@@ -16,10 +16,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 // import { useGroups } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
-import { useIndicator } from 'hooks/indicators';
+import {
+  useIndicator,
+  useIndicatorRecords,
+} from 'hooks/indicators';
 
 // components
-// import LoadingSpinner from 'components/loading-spinner';
+import LoadingSpinner from 'components/loading-spinner';
 import VisualizationsNav from 'components/visualizations-nav';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
@@ -29,7 +32,9 @@ import DataSource from 'components/data-source';
 
 // utils
 import {
-  parseDataByVisualizationType,
+  filterRecords,
+  getYearsFromRecords,
+  getRegionsFromRecords,
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
@@ -42,8 +47,6 @@ type ChartProps = {
   widgetData: any,
   widgetConfig: any
 };
-
-// const Loading = () => <LoadingSpinner />;
 
 const IndicatorData: FC<IndicatorDataProps> = ({
   className,
@@ -75,10 +78,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const {
     data,
-    isLoading,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
     placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
-      records: [],
       categories: [],
       category_filters: {},
       default_visualization: null,
@@ -97,16 +98,27 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const [visualizationType, setVisualizationType] = useState(data.default_visualization);
 
-  const widgetData = useMemo(
-    () => parseDataByVisualizationType(data, filters, visualizationType),
-    [data, filters, visualizationType],
+  const {
+    data: records,
+    isFetching: isFetchingRecords,
+  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
+    refetchOnWindowFocus: false,
+  });
+
+  const years = useMemo(() => getYearsFromRecords(records), [records]);
+  const regions = useMemo(() => getRegionsFromRecords(records), [records]);
+
+  const defaultYear = useMemo(() => years?.[0], [years]);
+  const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
+
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, visualizationType),
+    [records, filters, visualizationType],
   );
 
   const widgetConfig = useMemo(
     () => selectedIndicator?.config?.[visualizationType], [visualizationType],
   );
-
-  const widgetRecords = useMemo(() => widgetData.widgetData, [widgetData]);
 
   useEffect(() => {
     const {
@@ -123,13 +135,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     description,
   } = data;
 
-  const {
-    defaultRegion,
-    defaultYear,
-    regions,
-    years,
-  } = widgetData;
-
   useEffect(() => {
     dispatch(setFilters({
       ...defaultYear && { year: defaultYear },
@@ -145,8 +150,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
       { [className]: className })}
     >
-      {/* {isLoading && <LoadingSpinner />} */}
-
       <VisualizationsNav
         active={visualizationType}
         className="px-32 w-full"
@@ -270,7 +273,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       placement="bottom-start"
                       content={(
                         <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                          {years?.map((_year) => (
+                          {years.map((_year) => (
                             <li
                               key={_year}
                               className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
@@ -334,17 +337,21 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   </div>
                 )}
               </div>
-              <div className="flex h-full w-full py-8">
-                {!isLoading && !widgetRecords.length && (
+              <div className="flex h-full w-full min-h-1/2">
+                {isFetchingRecords && (
+                  <LoadingSpinner />
+                )}
+
+                {!isFetchingRecords && !filteredRecords.length && (
                   <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
                     <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
                     <p>Data not found</p>
                   </div>
                 )}
 
-                {(!!widgetRecords.length) && (
+                {(!!filteredRecords.length) && (
                   <DynamicChart
-                    widgetData={widgetRecords}
+                    widgetData={filteredRecords}
                     widgetConfig={widgetConfig}
                   />
                 )}

@@ -1,7 +1,10 @@
-import compact from 'lodash/compact';
+import {
+  compact,
+  uniq,
+} from 'lodash';
 
 import {
-  IndicatorsProps,
+  Record,
 } from 'types/data';
 
 import {
@@ -13,34 +16,17 @@ export const Filter = (arr: (string | number)[], param: number) => {
   return index ? arr.splice(param) : arr.push(param);
 };
 
-export const parseDataByVisualizationType = (
-  data: IndicatorsProps,
+export const filterRecords = (
+  records: Record[],
   filters: IndicatorFilters,
   visualizationType: string,
 ) => {
-  const { records } = data;
-  const parsedData = records.filter(
-    ({ visualizationTypes }) => visualizationTypes.includes(visualizationType),
-  );
+  const {
+    year,
+    region,
+  } = filters;
 
-  const { year, region } = filters;
-
-  const years = compact((parsedData?.map((d) => d.year))?.reduce(
-    (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
-  )).sort();
-
-  if (!years) return null;
-  const defaultYear = years[0];
-
-  const regions = compact((parsedData?.map((d) => d.region.name))?.reduce(
-    (acc, item) => (acc.includes(item) ? acc : [...acc, item]), [],
-  ));
-
-  if (!regions) return null;
-  const defaultRegion = regions.includes('China') ? 'China' : regions[0];
-
-  const widgetData = parsedData?.filter((d) => {
-    if (year === d.year && d.region.name === region) return true;
+  return records.filter((d) => {
     // if (visualizationType === 'bar') {
     //   if (year === d.year) {
     //     return {
@@ -49,31 +35,23 @@ export const parseDataByVisualizationType = (
     //     };
     //   }
     // }
-    // if (visualizationType === 'line') {
-    //   return {
-    //     label: d.year,
-    //     value: d.value,
-    //   };
-    // }
 
-    // if (visualizationType === 'pie') {
-    //   console.log(d, year, region);
-    //   if  {
+    if (visualizationType === 'line') {
+      if (d.category_1 && d.category_2 === 'Total' && d.unit.name !== 'Percentage') return true;
+    }
 
-    //   }
-    // }
+    if (visualizationType === 'pie') {
+      if (year === d.year && d.region.name === region) return true;
+    }
 
     return false;
   });
-
-  return {
-    data,
-    years,
-    defaultYear,
-    regions,
-    defaultRegion,
-    widgetData,
-  };
 };
 
-export default Filter;
+export const getYearsFromRecords = (
+  records: Record[],
+) => compact(uniq(records.map((d) => d.year))).sort();
+
+export const getRegionsFromRecords = (
+  records: Record[],
+) => compact(uniq(records.map((d) => d.region.name))).sort();

@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import orderBy from 'lodash/orderBy';
 import {
   ResponsiveContainer,
   CartesianGrid,
