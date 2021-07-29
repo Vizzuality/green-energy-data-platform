@@ -1,5 +1,7 @@
 import React, {
   FC,
+  useCallback,
+  useState,
 } from 'react';
 import cx from 'classnames';
 import {
@@ -8,7 +10,6 @@ import {
 } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 // components
 import Head from 'components/head';
@@ -31,11 +32,18 @@ import { useSubgroup } from 'hooks/subgroups';
 import { useIndicator } from 'hooks/indicators';
 
 const GroupPage: FC = () => {
+  const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
   const { query: { group: groupQuery, subgroup: subgroupQuery } } = router;
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
+
+  const handleSubgroupChange = useCallback((url) => {
+    setDropdownVisibility(false);
+
+    router.push(url);
+  }, [router]);
 
   const { data: group } = useGroup(groupQuery, {
     refetchOnWindowFocus: false,
@@ -74,8 +82,10 @@ const GroupPage: FC = () => {
       <Hero>
         <Nav className="pt-10" />
         <Tooltip
-          trigger="click"
           placement="bottom-start"
+          visible={dropdownVisibility}
+          interactive
+          onClickOutside={() => { setDropdownVisibility(false); }}
           content={(
             <ul
               className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
@@ -87,9 +97,13 @@ const GroupPage: FC = () => {
                   key={id}
                   className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
                 >
-                  <Link href={`/${group.slug}/${sgSlug}/${_indicatorSlug}`} passHref>
-                    <a href={`/${group.slug}/${sgSlug}/${_indicatorSlug}`} className="px-5 cursor-pointer w-full py-2 flex">{name}</a>
-                  </Link>
+                  <button
+                    type="button"
+                    className="px-5 cursor-pointer w-full py-2 flex"
+                    onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${_indicatorSlug}`)}
+                  >
+                    {name}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -98,6 +112,7 @@ const GroupPage: FC = () => {
           <button
             type="button"
             className="flex items-center"
+            onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
           >
             <h1 className="text-5.5xl pt-3">
               {data?.subgroup?.name}
