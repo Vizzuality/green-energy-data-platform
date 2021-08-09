@@ -41,7 +41,7 @@ import {
 
 import { setFilters } from 'store/slices/indicator';
 
-import { selectedIndicator } from '../../constants';
+import chartConfig from './config';
 
 import IndicatorDataProps from './types';
 
@@ -166,7 +166,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
   const widgetConfig = useMemo(
-    () => selectedIndicator.config[visualizationType],
+    () => chartConfig[visualizationType],
     [visualizationType],
   );
 
@@ -192,7 +192,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   }, [dispatch, defaultYear, defaultRegion]);
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
-
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
       { [className]: className })}

@@ -17,8 +17,8 @@ import DataSource from 'components/data-source';
 import { useGroup } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
 
-import CONFIG from 'constants';
 import { selectedIndicator } from '../../constants';
+import chartConfig from '../indicator-data/config';
 
 interface CompareLayoutProps {
   groupSlug: string | string[],
@@ -45,7 +45,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     categories,
     data: indicatorData,
     description,
-    config,
   } = selectedIndicator;
 
   const [active, setActive] = useState(type || visualizationTypes[0]);
@@ -132,7 +131,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
         <DynamicChart
           widgetData={indicatorData[active]}
-          widgetConfig={config[active]}
+          widgetConfig={chartConfig[active]}
         />
 
         {categories.length > 1 && <Legend categories={[]} className="mb-4" />}

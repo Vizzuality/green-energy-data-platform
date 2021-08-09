@@ -37,33 +37,32 @@ interface ChartProps {
   indicatorId: string
 }
 
-const RADIAN = Math.PI / 180;
+// const RADIAN = Math.PI / 180;
 
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  value,
-}) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+// const renderCustomizedLabel = ({
+//   cx,
+//   cy,
+//   midAngle,
+//   innerRadius,
+//   outerRadius,
+//   value,
+// }) => {
+//   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+//   const x = cx + radius * Math.cos(-midAngle * RADIAN);
+//   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-  return (
-    <text
-      x={x}
-      y={y}
-      textAnchor={x > cx ? 'start' : 'end'}
-      fill="white"
-      dominantBaseline="central"
-    >
-      {`${value.toFixed(2)}%`}
-    </text>
-  );
-};
-
+//   return (
+//     <text
+//       x={x}
+//       y={y}
+//       textAnchor={x > cx ? 'start' : 'end'}
+//       fill="white"
+//       dominantBaseline="central"
+//     >
+//       {`${value.toFixed(2)}%`}
+//     </text>
+//   );
+// };
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   const {
     pies,
@@ -98,7 +97,6 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
             key={pie}
             {...pies[pie]}
             data={widgetData}
-            label={renderCustomizedLabel}
             labelLine={false}
             fill={colors[index]}
           >
