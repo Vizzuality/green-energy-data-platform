@@ -384,57 +384,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
             },
           ],
         },
-        bar: {
-          margin: {
-            top: 20, right: 0, left: 0, bottom: 100,
-          },
-          cartesianGrid: {
-            vertical: false,
-          },
-          bars: [
-            {
-              dataKey: 'value1',
-              stackId: 'a',
-            },
-            {
-              dataKey: 'value2',
-              stackId: 'a',
-            },
-          ],
-          yAxis: {
-            tick: {
-              fill: '#C4C4C4',
-              fontSize: '14px',
-            },
-          },
-          xAxis: {
-            type: 'category',
-            dataKey: 'province',
-            interval: 0,
-            tick: 'Tick',
-            label: {
-              content: 'LabelContent',
-            },
-          },
-        },
-        pie: {
-          margin: {
-            top: 20, right: 0, left: 0, bottom: 0,
-          },
-          cartesianGrid: {
-            vertical: false,
-          },
-          pies: [
-            {
-              nameKey: 'label',
-              dataKey: 'value',
-              cx: '50%',
-              cy: '50%',
-              outerRadius: 90,
-              innerRadius: 70,
-            },
-          ],
-        },
       },
     },
   ]);
