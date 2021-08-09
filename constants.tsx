@@ -1,42 +1,3 @@
-import React, { FC } from 'react';
-
-type PayloadObject = {
-  value: number,
-};
-
-interface TickProps {
-  x: number,
-  y: number,
-  payload: PayloadObject
-}
-
-const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
-  const { value } = payload;
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text
-        x={0}
-        y={-10}
-        dy={14}
-        textAnchor="end"
-        fill="#C4C4C4"
-        transform="rotate(270)"
-        fontSize="14px"
-      >
-        {value}
-      </text>
-    </g>
-  );
-});
-
-const LabelContent = () => (
-  <g>
-    <text x="50%" y={480} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
-      Region
-    </text>
-  </g>
-);
-
 export const layers = [
   { id: 'layer1', label: 'layer1' },
   { id: 'layer2', label: 'layer2' },
@@ -504,23 +465,6 @@ export const selectedIndicator = {
   },
 };
 
-export const indicatorsList = [
-  { id: 1, name: 'indicator1' },
-  { id: 2, name: 'indicator2' },
-  { id: 3, name: 'indicator3' },
-  { id: 4, name: 'indicator4' },
-  { id: 5, name: 'indicator5' },
-  { id: 6, name: 'indicator6' },
-  { id: 7, name: 'indicator7' },
-  { id: 8, name: 'indicator8' },
-];
-export const datesList = [
-  { id: 1, name: '1990' },
-  { id: 2, name: '2000' },
-  { id: 3, name: '2010' },
-  { id: 4, name: '2020' },
-];
-
 export const colors = [
   '#1B5183',
   '#1E6D86',
@@ -534,8 +478,6 @@ export const colors = [
 
 export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
-  indicatorsList,
-  datesList,
   layers,
   colors,
   selectedIndicator,
