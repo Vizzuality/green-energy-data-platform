@@ -99,11 +99,11 @@ const chartConfig = {
     pies: [
       {
         nameKey: 'category_1',
-        dataKey: 'value',
-        cx: '50%',
-        cy: '50%',
-        outerRadius: 100,
-        innerRadius: 0,
+        // dataKey: 'value',
+        // cx: '10%',
+        // cy: '10%',
+        // outerRadius: 100,
+        // innerRadius: 0,
       },
     ],
     tooltip: {
