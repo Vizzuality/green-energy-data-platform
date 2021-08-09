@@ -485,12 +485,17 @@ export const selectedIndicator = {
       margin: {
         // top: 20, right: 0, left: 0, bottom: 0,
       },
+      cartesianGrid: {
+        vertical: false,
+      },
       pies: [
         {
-          // dataKey: 'value',
-          // cx: '50%',
-          // cy: '50%',
-          // outerRadius: 80,
+          nameKey: 'label',
+          dataKey: 'value',
+          cx: '50%',
+          cy: '50%',
+          outerRadius: 90,
+          innerRadius: 70,
         },
       ],
     },

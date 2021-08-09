@@ -421,12 +421,17 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
           margin: {
             top: 20, right: 0, left: 0, bottom: 0,
           },
+          cartesianGrid: {
+            vertical: false,
+          },
           pies: [
             {
+              nameKey: 'label',
               dataKey: 'value',
               cx: '50%',
               cy: '50%',
-              outerRadius: 80,
+              outerRadius: 90,
+              innerRadius: 70,
             },
           ],
         },
