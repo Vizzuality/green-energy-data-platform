@@ -24,6 +24,7 @@ export const filterRecords = (
   const {
     year,
     region,
+    unit,
   } = filters;
 
   const hideTotals = records.filter((r) => r.category_1 !== 'Total');
@@ -38,11 +39,11 @@ export const filterRecords = (
     // }
 
     if (visualizationType === 'line') {
-      if (d.unit.name !== 'Percentage') return true;
+      if (d.unit.name === unit) return true;
     }
 
     if (visualizationType === 'pie') {
-      if (year === d.year && d.region.name === region) return true;
+      if (year === d.year && d.region.name === region && d.unit.name === unit) return true;
     }
 
     return false;
@@ -56,6 +57,10 @@ export const getYearsFromRecords = (
 export const getRegionsFromRecords = (
   records: Record[],
 ) => compact(uniq(records.map((d) => d.region.name))).sort();
+
+export const getUnitsFromRecords = (
+  records: Record[],
+) => compact(uniq(records.map((d) => d.unit.name))).sort();
 
 export const getCategoriesFromRecords = (
   records: Record[],

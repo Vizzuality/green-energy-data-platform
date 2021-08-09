@@ -5,6 +5,7 @@ export type IndicatorFilters = {
   start_year?: number,
   end_year?: number,
   region: string,
+  unit: string,
 };
 
 const initialState = {

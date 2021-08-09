@@ -29,6 +29,7 @@ interface Unit {
   id: string,
   name: string,
 }
+
 export interface Record {
   category_1?: string,
   category_2?: string,
