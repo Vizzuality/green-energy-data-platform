@@ -31,20 +31,18 @@ const Card: FC<DataProps> = ({
       icon="download"
       name="Download"
       links={downloadLinks}
-      className={cx(
+      className={cx('p-6',
         { 'justify-center rounded-l-2xl': type === 'horizontal' },
-        { 'justify-start rounded-t-2xl': type === 'vertical' },
-      )}
+        { 'justify-start rounded-t-2xl': type === 'vertical' })}
     />
     <Item
       icon="data"
       name="Data
       Source"
       links={dataSourceLinks}
-      className={cx(
+      className={cx('p-6',
         { 'justify-center rounded-r-2xl': type === 'horizontal' },
-        { 'justify-start rounded-b-2xl': type === 'vertical' },
-      )}
+        { 'justify-start rounded-b-2xl': type === 'vertical' })}
     />
   </div>
 );
