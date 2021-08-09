@@ -26,7 +26,8 @@ export const filterRecords = (
     region,
   } = filters;
 
-  return records.filter((d) => {
+  const hideTotals = records.filter((r) => r.category_1 !== 'Total');
+  return hideTotals.filter((d) => {
     // if (visualizationType === 'bar') {
     //   if (year === d.year) {
     //     return {
@@ -41,7 +42,7 @@ export const filterRecords = (
     }
 
     if (visualizationType === 'pie') {
-      if (year === d.year && d.region.name === region && d.unit.name === 'Percentage') return true;
+      if (year === d.year && d.region.name === region) return true;
     }
 
     return false;
