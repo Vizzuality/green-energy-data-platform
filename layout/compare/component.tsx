@@ -17,6 +17,7 @@ import DataSource from 'components/data-source';
 import { useGroup } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
 
+import CONFIG from 'constants';
 import { selectedIndicator } from '../../constants';
 
 interface CompareLayoutProps {
@@ -66,7 +67,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     () => import(`components/indicator-visualizations/${active}`),
     { loading: Loading },
   );
-
   return (
     <div className="py-20 text-white rounded-2xl">
       <Hero

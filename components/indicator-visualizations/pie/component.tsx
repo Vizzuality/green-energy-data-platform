@@ -69,7 +69,27 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     tooltip,
     ...rest
   } = widgetConfig;
-
+  // const RADIAN = Math.PI / 180;
+  // const renderCustomizedLabel = ({
+  //   cx,
+  //   cy,
+  //   midAngle,
+  //   innerRadius,
+  //   outerRadius,
+  //   value,
+  //   label,
+  // }) => {
+  //   const radius = innerRadius + (outerRadius - innerRadius);
+  //   const x = cx + radius * 1.5 * Math.cos(-midAngle * RADIAN);
+  //   const y = cy + radius * 1.5 * Math.sin(-midAngle * RADIAN);
+  //   return (
+  //     <text
+  //       x={x}
+  //       y={y} fill="red" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+  //       {label} - {`${(value * 100).toFixed(0)}%`}
+  //     </text>
+  //   );
+  // }; - TO DO - remove when it's clear label has disappearded forever
   return (
     <ResponsiveContainer>
       <PieChart {...rest}>
@@ -87,7 +107,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
             ))}
           </Pie>
         ))}
-        {tooltip && (<Tooltip />)}
+        {tooltip && (<Tooltip {...tooltip} />)}
       </PieChart>
     </ResponsiveContainer>
   );
