@@ -1,6 +1,7 @@
 import {
   compact,
   uniq,
+  groupBy,
 } from 'lodash';
 
 import {
@@ -16,6 +17,10 @@ export const Filter = (arr: (string | number)[], param: number) => {
   return index ? arr.splice(param) : arr.push(param);
 };
 
+export const getCategoriesFromRecords = (
+  records: Record[],
+) => compact(uniq(records.map((d) => d.category_1))).sort();
+
 export const filterRecords = (
   records: Record[],
   filters: IndicatorFilters,
@@ -26,9 +31,14 @@ export const filterRecords = (
     region,
     unit,
   } = filters;
-  const results = records.filter((r) => (r.category_1 !== 'Total' && r.category_2 !== 'Total'));
+  const categories = getCategoriesFromRecords(records).filter((category) => category !== 'Total');
 
-  return results.filter((d) => {
+  const results = records.filter((r) => {
+    if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
+    return r;
+  });
+
+  const recordsByFilters = results.filter((d) => {
     // if (visualizationType === 'bar') {
     //   if (year === d.year) {
     //     return {
@@ -48,6 +58,10 @@ export const filterRecords = (
 
     return false;
   });
+
+  // const groupedByCategory1 = groupBy(recordsByFilters, 'category_1');
+
+  return recordsByFilters;
 };
 
 export const getTotalRecords = (
@@ -69,7 +83,3 @@ export const getRegionsFromRecords = (
 export const getUnitsFromRecords = (
   records: Record[],
 ) => compact(uniq(records.map((d) => d.unit.name))).sort();
-
-export const getCategoriesFromRecords = (
-  records: Record[],
-) => compact(uniq(records.map((d) => d.category_1))).sort();
