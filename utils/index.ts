@@ -26,9 +26,9 @@ export const filterRecords = (
     region,
     unit,
   } = filters;
+  const results = records.filter((r) => (r.category_1 !== 'Total' && r.category_2 !== 'Total'));
 
-  const hideTotals = records.filter((r) => r.category_1 !== 'Total');
-  return hideTotals.filter((d) => {
+  return results.filter((d) => {
     // if (visualizationType === 'bar') {
     //   if (year === d.year) {
     //     return {
@@ -49,6 +49,14 @@ export const filterRecords = (
     return false;
   });
 };
+
+export const getTotalRecords = (
+  records: Record[],
+) => compact(uniq(records.filter((r) => {
+  if (r.category_1 !== 'Total' && (r.category_2 === null || r.category_2 === 'Total')) return true;
+  if ((r.category_1 === 'Total' || r.category_1 === null) && (r.category_2 !== 'Total')) return true;
+  return false;
+}))).sort();
 
 export const getYearsFromRecords = (
   records: Record[],

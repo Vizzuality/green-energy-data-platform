@@ -34,6 +34,7 @@ import DataSource from 'components/data-source';
 // utils
 import {
   filterRecords,
+  getTotalRecords,
   getYearsFromRecords,
   getUnitsFromRecords,
   getRegionsFromRecords,
@@ -175,6 +176,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, visualizationType),
     [records, filters, visualizationType],
+  );
+
+  const totalRecords = useMemo(
+    () => getTotalRecords(filteredRecords),
+    [filteredRecords],
   );
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
@@ -370,7 +376,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     </Tooltip>
                   </div>
                 )}
-
                 {/* region filter */}
                 {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
                   <div className="flex items-center">
@@ -422,7 +427,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   </div>
                 )}
 
-                {(!!filteredRecords.length) && (
+                {(!!filteredRecords.length && !isFetchingRecords) && (
                   <div className="flex flex-col h-full w-full min-h-1/2 py-8">
                     <div className="flex items-center">
                       <Tooltip
@@ -459,7 +464,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       </Tooltip>
                     </div>
                     <DynamicChart
-                      widgetData={filteredRecords}
+                      widgetData={totalRecords}
                       widgetConfig={widgetConfig}
                     />
                   </div>
