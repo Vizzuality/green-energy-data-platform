@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import cx from 'classnames';
 
-import { format } from 'd3-format';
+// import { format } from 'd3-format';
 
 type PayloadProps = {
   fill: string,
@@ -18,7 +18,7 @@ interface TooltipProps {
   payload?: CategoriesProps[],
 }
 
-const formatValue = format(',.4p');
+// const formatValue = format(',.4p');
 
 const Tooltip: FC<TooltipProps> = ({
   className,
@@ -40,7 +40,7 @@ const Tooltip: FC<TooltipProps> = ({
               style={{ backgroundColor: fill }}
             />
             <span className="flex-1 py-1 pl-6">{name}</span>
-            <span className="flex-1 py-1 pl-6">{formatValue(value / 100)}</span>
+            <span className="flex-1 py-1 pl-6">{value}</span>
           </li>
         ))}
       </ul>

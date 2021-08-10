@@ -40,7 +40,6 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     tooltip,
     ...rest
   } = widgetConfig;
-
   return (
     <ResponsiveContainer width="100%" height={500} {...rest}>
       <BarChart width={400} height={500} data={widgetData} {...rest}>
@@ -52,7 +51,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
           Object.keys(bars)
             .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={colors[index]} />
             )))}
-        {tooltip && (<Tooltip {...tooltip} />)}
+        {tooltip && (<Tooltip />)}
       </BarChart>
     </ResponsiveContainer>
   );
