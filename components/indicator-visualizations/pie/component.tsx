@@ -34,7 +34,6 @@ interface ChartProps {
   widgetData: Object[],
   widgetConfig: ConfigProps,
   color?: string,
-  indicatorId: string
 }
 
 const RADIAN = Math.PI / 180;
@@ -68,11 +67,12 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   const {
     pies,
     tooltip,
+    ...rest
   } = widgetConfig;
 
   return (
-    <ResponsiveContainer width="100%" height={500}>
-      <PieChart>
+    <ResponsiveContainer>
+      <PieChart {...rest}>
         {pies && Object.keys(pies).map((pie, index) => (
           <Pie
             key={pie}

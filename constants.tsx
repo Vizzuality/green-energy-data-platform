@@ -259,6 +259,8 @@ export const selectedIndicator = {
   },
   config: {
     line: {
+      height: 400,
+      width: '100%',
       margin: {
         top: 20, right: 0, left: 0, bottom: 0,
       },

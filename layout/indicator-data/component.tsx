@@ -409,7 +409,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 )}
 
                 {(!!filteredRecords.length) && (
-                  <div className="flex h-full w-full min-h-1/2 py-8">
+                  <div className="flex flex-1 h-full min-h-1/2 py-8 max-w-2xl">
                     <DynamicChart
                       widgetData={filteredRecords}
                       widgetConfig={widgetConfig}

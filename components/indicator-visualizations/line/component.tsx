@@ -31,13 +31,13 @@ interface ConfigProps {
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
   tooltip: Object,
+  height: number,
 }
 
 interface ChartProps {
   widgetData: Object[],
   widgetConfig: ConfigProps,
   color?: string,
-  indicatorId: string
 }
 
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
@@ -47,6 +47,8 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     xAxis,
     yAxis,
     tooltip,
+    height,
+    ...rest
   } = widgetConfig;
 
   const categories = useMemo(() => Object.keys(groupBy(widgetData, 'category_1')).filter((key) => key !== 'null'), [widgetData]);
@@ -92,8 +94,8 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   );
 
   return (
-    <ResponsiveContainer width="100%" height={500}>
-      <LineChart width={400} height={200} data={parsedData}>
+    <ResponsiveContainer height={height || 400}>
+      <LineChart {...rest} data={parsedData}>
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}

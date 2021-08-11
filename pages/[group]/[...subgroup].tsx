@@ -28,7 +28,6 @@ import WidgetsGrid from 'layout/widgets-grid';
 
 // hooks
 import { useGroup } from 'hooks/groups';
-import { useSubgroup } from 'hooks/subgroups';
 import { useIndicator } from 'hooks/indicators';
 
 const GroupPage: FC = () => {
@@ -50,9 +49,6 @@ const GroupPage: FC = () => {
     placeholderData: {
       subgroups: [],
     },
-  });
-  const { data: subgroup } = useSubgroup(groupQuery, subgroupSlug, {
-    refetchOnWindowFocus: false,
   });
 
   const {
@@ -128,10 +124,9 @@ const GroupPage: FC = () => {
         </Tooltip>
       </Hero>
       <div className="container m-auto">
-        <section className="-mt-40">
+        <section className="max-w-6xl m-auto -mt-40 ">
           <IndicatorData />
-
-          <WidgetsGrid items={subgroup?.relatedIndicators} />
+          <WidgetsGrid />
         </section>
       </div>
 
