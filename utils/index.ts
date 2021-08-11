@@ -1,7 +1,7 @@
 import {
   compact,
   uniq,
-  groupBy,
+  chain,
 } from 'lodash';
 
 import {
@@ -71,6 +71,19 @@ export const getTotalRecords = (
   if ((r.category_1 === 'Total' || r.category_1 === null) && (r.category_2 !== 'Total')) return true;
   return false;
 }))).sort();
+
+export const getGroupedValues = (
+  records: Record[],
+) => chain(records)
+  .groupBy('category_1')
+  .map((value, key) => ({ [key]: value }))
+  .value();
+
+export const getWidgetData = (
+  records: Record[],
+) => records
+  .map((r) => Object.values(r)[0]
+    .reduce((previous, current) => (current.value || 0) + previous, 0));
 
 export const getYearsFromRecords = (
   records: Record[],

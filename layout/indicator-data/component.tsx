@@ -35,6 +35,8 @@ import DataSource from 'components/data-source';
 import {
   filterRecords,
   getTotalRecords,
+  getGroupedValues,
+  getWidgetData,
   getYearsFromRecords,
   getUnitsFromRecords,
   getRegionsFromRecords,
@@ -183,6 +185,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [filteredRecords],
   );
 
+  const groupes = useMemo(
+    () => getGroupedValues(filteredRecords),
+    [filteredRecords],
+  );
+
+  const widgetsdta = useMemo(
+    () => getWidgetData(groupes),
+    [groupes],
+  );
+console.log(groupes,widgetsdta,  filteredRecords, totalRecords)
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
   const widgetConfig = useMemo(
