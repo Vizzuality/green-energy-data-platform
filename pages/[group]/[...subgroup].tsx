@@ -91,7 +91,10 @@ const GroupPage: FC = () => {
               className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
             >
               {group.subgroups.map(({
-                slug: sgSlug, id, name, default_indicator: { slug: _indicatorSlug },
+                slug: sgSlug, id, name,
+
+                // TODO - change to default when API gets fixed
+                // default_indicator: { slug: _indicatorSlug },
               }) => (
                 <li
                   key={id}
@@ -100,7 +103,7 @@ const GroupPage: FC = () => {
                   <button
                     type="button"
                     className="px-5 cursor-pointer w-full py-2 flex"
-                    onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${_indicatorSlug}`)}
+                    onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${'actual-final-consumption'}`)}
                   >
                     {name}
                   </button>

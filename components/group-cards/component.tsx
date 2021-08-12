@@ -30,7 +30,11 @@ const GroupCard: FC<GroupCardProps> = ({
   } = group;
 
   const defaultData = useDefaultIndicator(group);
-  const { default_indicator: { slug: indicatorSlug }, slug: subgroupSlug } = defaultData;
+  // const { default_indicator: { slug: indicatorSlug }, slug: subgroupSlug } = defaultData;
+  const { slug: subgroupSlug } = defaultData;
+
+  // TODO - change to default when API gets fixed
+  const indicatorSlug = 'actual-final-consumption';
 
   return (
     <div className={cx('w-full', { [className]: className })}>

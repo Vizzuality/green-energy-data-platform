@@ -67,6 +67,7 @@ export const filterRecords = (
 export const getTotalRecords = (
   records: Record[],
 ) => compact(uniq(records.filter((r) => {
+  console.log(records)
   if (r.category_1 !== 'Total' && (r.category_2 === null || r.category_2 === 'Total')) return true;
   if ((r.category_1 === 'Total' || r.category_1 === null) && (r.category_2 !== 'Total')) return true;
   return false;
