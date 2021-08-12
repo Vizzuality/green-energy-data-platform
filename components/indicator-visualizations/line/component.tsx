@@ -101,7 +101,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
         {lines && Object.keys(lines).map((line, index) => (
           <Line key={line} {...lines[line]} stroke={colors[index]} />
         ))}
-        {tooltip && (<Tooltip />)}
+        {tooltip && (<Tooltip {...tooltip} />)}
       </LineChart>
     </ResponsiveContainer>
   );

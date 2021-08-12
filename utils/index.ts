@@ -67,7 +67,6 @@ export const filterRecords = (
 export const getTotalRecords = (
   records: Record[],
 ) => compact(uniq(records.filter((r) => {
-  console.log(records)
   if (r.category_1 !== 'Total' && (r.category_2 === null || r.category_2 === 'Total')) return true;
   if ((r.category_1 === 'Total' || r.category_1 === null) && (r.category_2 !== 'Total')) return true;
   return false;
@@ -77,14 +76,15 @@ export const getGroupedValues = (
   records: Record[],
 ) => chain(records)
   .groupBy('category_1')
-  .map((value, key) => ({ [key]: value }))
+  .map((value, key) => (
+    {
+      name: key,
+      value: value.reduce(
+        (previous, current) => (current.value || 0) + previous, 0,
+      ),
+      year: value[0].year,
+    }))
   .value();
-
-export const getWidgetData = (
-  records: Record[],
-) => records
-  .map((r) => Object.values(r)[0]
-    .reduce((previous, current) => (current.value || 0) + previous, 0));
 
 export const getYearsFromRecords = (
   records: Record[],

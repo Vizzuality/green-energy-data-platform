@@ -220,7 +220,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
             },
           ],
           xAxis: {
-            dataKey: 'label',
+            dataKey: 'year',
           },
           yAxis: {
 

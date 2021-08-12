@@ -64,9 +64,7 @@ export function useDefaultIndicator(group) {
   if (!group) return null;
   const { default_subgroup: defaultSubgroup, subgroups } = group;
   const defaultSub = subgroups.find((subgroup) => subgroup.slug === defaultSubgroup);
-
-  // TODO - change to subgroups[0] when API gets fixed
-  return defaultSub || subgroups[4];
+  return defaultSub || subgroups[0];
 }
 
 export function useIndicatorRecords(

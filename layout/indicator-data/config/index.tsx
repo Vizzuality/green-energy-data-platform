@@ -63,29 +63,11 @@ const chartConfig = {
         dataKey: 'value',
       },
     ],
-    gradients: [
-      {
-        offset: '7.05%',
-        stopColor: 'rgba(0, 107, 254, 0.64)',
-        stopOpacity: 1,
-      },
-      {
-        offset: '100%',
-        stopColor: 'rgba(0, 107, 254, 0.1)',
-        stopOpacity: 1,
-      },
-      {
-        offset: '100%',
-        stopColor: 'rgba(0, 107, 254, 0)',
-        stopOpacity: 1,
-      },
-    ],
     xAxis: {
       dataKey: 'year',
     },
     yAxis: {},
     tooltip: {
-
     },
   },
   pie: {
@@ -97,7 +79,7 @@ const chartConfig = {
     },
     pies: [
       {
-        nameKey: 'category_1',
+        nameKey: 'name',
         // dataKey: 'value',
         // cx: '10%',
         // cy: '10%',

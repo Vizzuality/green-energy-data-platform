@@ -36,7 +36,6 @@ import {
   filterRecords,
   getTotalRecords,
   getGroupedValues,
-  getWidgetData,
   getYearsFromRecords,
   getUnitsFromRecords,
   getRegionsFromRecords,
@@ -180,23 +179,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [records, filters, visualizationType],
   );
 
-  const totalRecords = useMemo(
-    () => getTotalRecords(filteredRecords),
-    [filteredRecords],
-  );
-
-  const groupes = useMemo(
+  const widgetData = useMemo(
     () => getGroupedValues(filteredRecords),
     [filteredRecords],
   );
 
-  const widgetsdta = useMemo(
-    () => getWidgetData(groupes),
-    [groupes],
-  );
-console.log(groupes,widgetsdta,  filteredRecords, totalRecords)
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
-
   const widgetConfig = useMemo(
     () => chartConfig[visualizationType],
     [visualizationType],
@@ -476,7 +464,7 @@ console.log(groupes,widgetsdta,  filteredRecords, totalRecords)
                       </Tooltip>
                     </div>
                     <DynamicChart
-                      widgetData={totalRecords}
+                      widgetData={widgetData}
                       widgetConfig={widgetConfig}
                     />
                   </div>
