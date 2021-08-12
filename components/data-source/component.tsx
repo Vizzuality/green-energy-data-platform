@@ -9,13 +9,13 @@ interface DataProps {
 }
 
 const downloadLinks = [
-  { label: 'CSV', href: '' },
-  { label: 'XML', href: '' },
-  { label: 'EXCEL', href: '' },
+  { label: 'CSV', format: 'csv' },
+  { label: 'XML', format: 'xml' },
+  { label: 'JSON', format: 'json' },
 ];
 
 const dataSourceLinks = [
-  { label: 'Data Source', href: '' },
+  { label: 'Data Source', format: '' },
 ];
 
 const Card: FC<DataProps> = ({

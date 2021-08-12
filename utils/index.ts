@@ -3,6 +3,8 @@ import {
   uniq,
 } from 'lodash';
 
+import { saveAs } from 'file-saver';
+
 import {
   Record,
 } from 'types/data';
@@ -59,3 +61,9 @@ export const getRegionsFromRecords = (
 export const getCategoriesFromRecords = (
   records: Record[],
 ) => compact(uniq(records.map((d) => d.category_1))).sort();
+
+export const parseDataToDownload = (
+  format: string,
+  data: any,
+  fileName: string,
+) => saveAs(new File([format === 'json' ? JSON.stringify(data) : data], `${fileName}.${format}`));
