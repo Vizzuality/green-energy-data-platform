@@ -35,9 +35,9 @@ export const filterRecords = (
 
   const results = records.filter((r) => {
     if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
+
     return r;
   });
-
   const recordsByFilters = results.filter((d) => {
     // if (visualizationType === 'bar') {
     //   if (year === d.year) {
@@ -59,32 +59,38 @@ export const filterRecords = (
     return false;
   });
 
-  // const groupedByCategory1 = groupBy(recordsByFilters, 'category_1');
-
   return recordsByFilters;
 };
 
-export const getTotalRecords = (
-  records: Record[],
-) => compact(uniq(records.filter((r) => {
-  if (r.category_1 !== 'Total' && (r.category_2 === null || r.category_2 === 'Total')) return true;
-  if ((r.category_1 === 'Total' || r.category_1 === null) && (r.category_2 !== 'Total')) return true;
-  return false;
-}))).sort();
-
 export const getGroupedValues = (
+  visualization: string,
   records: Record[],
-) => chain(records)
-  .groupBy('category_1')
-  .map((value, key) => (
-    {
-      name: key,
-      value: value.reduce(
-        (previous, current) => (current.value || 0) + previous, 0,
-      ),
-      year: value[0].year,
-    }))
-  .value();
+) => {
+  let data;
+
+  if (visualization === 'pie') {
+    data = chain(records)
+      .groupBy('category_1')
+      .map((value, key) => (
+        {
+          name: key,
+          value: value.reduce(
+            (previous, current) => (current.value || 0) + previous, 0,
+          ),
+          year: value[0].year,
+        }))
+      .value();
+  }
+
+  if (visualization === 'line') {
+    data = records.map(({ value, category_1, year }) => ({
+      label: category_1,
+      value,
+      year,
+    }));
+  }
+  return data;
+};
 
 export const getYearsFromRecords = (
   records: Record[],
