@@ -20,7 +20,7 @@ import groupBy from 'lodash/groupBy';
 import { colors } from '../../../constants';
 
 type Object = {
-  label: string | number,
+  [key: string]: string | number,
   value: string | number,
 };
 
