@@ -3,6 +3,8 @@ import {
   uniq,
 } from 'lodash';
 
+import { saveAs } from 'file-saver';
+
 import {
   Record,
 } from 'types/data';
@@ -59,3 +61,20 @@ export const getRegionsFromRecords = (
 export const getCategoriesFromRecords = (
   records: Record[],
 ) => compact(uniq(records.map((d) => d.category_1))).sort();
+
+export const getTodaysDate = () => {
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const yyyy = today.getFullYear();
+  return `${mm}/${dd}/${yyyy}`;
+};
+
+export const parseDataToDownload = (
+  format: string,
+  data: any,
+  fileName: string,
+) => {
+  const date = getTodaysDate();
+  return saveAs(new File([format === 'json' ? JSON.stringify(data) : data], `${fileName}-${date}.${format}`));
+};

@@ -41,7 +41,27 @@ export const fetchIndicatorRecords = (
 })
   .then(({ data }) => data);
 
+export const fetchDataToDownload = (
+  userToken: string,
+  id: string,
+  file_format: string,
+  params = {},
+  headers = {},
+) => API.get('/downloads', {
+  headers: {
+    Authentication: userToken,
+    ...headers,
+  },
+  params: {
+    id,
+    file_format,
+    ...params,
+  },
+})
+  .then(({ data }) => data);
+
 export default {
   fetchIndicators,
   fetchIndicator,
+  fetchDataToDownload,
 };
