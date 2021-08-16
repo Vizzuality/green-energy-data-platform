@@ -29,6 +29,7 @@ import ModelIntercomparison from './model-intercomparison';
 import CompareDropdownContent from './compare-dropdown/component';
 
 import IndicatorDataProps from './types';
+import Map from 'components/indicator-visualizations/map';
 
 const IndicatorData: FC<IndicatorDataProps> = ({
   className,

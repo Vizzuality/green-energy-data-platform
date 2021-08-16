@@ -74,7 +74,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
           { [className]: className })}
       >
         <Link href="/indicators" passHref>
-          <a href="/indicators" className="w-full h-full items-center flex justify-center m-auto p-6 text-lg cursor-pointer">
+          <a href="/indicators" className="w-full h-full items-center flex justify-center m-auto p-6 text-lg">
             View datasets for other indicators
           </a>
         </Link>
