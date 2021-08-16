@@ -1,5 +1,3 @@
-import { colors } from 'constants';
-
 export const ACTIVE_LAYERS = [
 
   // GEOJSON DATA LAYER
@@ -64,7 +62,7 @@ export const ACTIVE_LAYERS = [
     },
   },
   {
-    id: 'multip',
+    id: 'coal-power-plants',
     type: 'geojson',
     source: {
       type: 'geojson',

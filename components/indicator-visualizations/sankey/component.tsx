@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import {
   ResponsiveContainer,
+  Tooltip,
   LineProps,
   XAxisProps,
   YAxisProps,
@@ -12,8 +13,7 @@ import {
 
 import DemoSankeyLink from './demoSankeyLink';
 import DemoSankeyNode from './demoSankeyNode';
-
-import groupBy from 'lodash/groupBy';
+import CONFIG from './config';
 
 type Object = {
   label: string | number,
@@ -34,7 +34,7 @@ interface ChartProps {
   widgetConfig: ConfigProps,
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
+const Chart: FC<ChartProps> = () => {
   // const {
   //   cartesianGrid,
   //   cartesianAxis,
@@ -43,7 +43,6 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   //   tooltip,
   // } = widgetConfig;
 
-  const categories = useMemo(() => Object.keys(groupBy(widgetData, 'category_1')).filter((key) => key !== 'null'), [widgetData]);
   const widgetFakeData = {
     nodes: [
       { name: 'agric' },
@@ -55,7 +54,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
       { name: 'whatever6' },
       { name: 'whatever7' },
       { name: 'whatever8' },
-      { name: 'whatever9' }
+      { name: 'whatever9' },
     ],
     links: [
       { source: 0, target: 5, value: 30 },
@@ -68,8 +67,8 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
       { source: 2, target: 9, value: 11 },
       { source: 3, target: 9, value: 8 },
       { source: 3, target: 8, value: 23 },
-      { source: 2, target: 5, value: 20 }
-    ]
+      { source: 2, target: 5, value: 20 },
+    ],
   };
   return (
     <ResponsiveContainer width="100%" height={500}>
@@ -77,27 +76,16 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
         width={400}
         height={200}
         data={widgetFakeData}
-
-        // {...widgetConfig}
-
-        // link={{ stroke: '#77c878' }}
-         node={<DemoSankeyNode containerWidth={960} />}
-        // nodePading={50}
-        margin={{
-          left: 200,
-           right: 200,
-           top: 100,
-           bottom: 100,
-         }}
-         link={<DemoSankeyLink />}
+        node={<DemoSankeyNode />}
+        {...CONFIG}
       >
-        {/* {tooltip && (<Tooltip />)} */}
+        <Tooltip />
         <defs>
-            <linearGradient id={'linkGradient'}>
-              <stop offset="0%" stopColor="rgba(0, 136, 254, 0.5)" />
-              <stop offset="100%" stopColor="rgba(0, 197, 159, 0.3)" />
-            </linearGradient>
-          </defs>
+          <linearGradient id="linkGradient">
+            <stop offset="0%" stopColor="rgba(0, 136, 254, 0.5)" />
+            <stop offset="100%" stopColor="rgba(0, 197, 159, 0.3)" />
+          </linearGradient>
+        </defs>
 
       </Sankey>
     </ResponsiveContainer>
