@@ -1,4 +1,4 @@
-import { colors } from "constants";
+import { colors } from 'constants';
 
 export const ACTIVE_LAYERS = [
 

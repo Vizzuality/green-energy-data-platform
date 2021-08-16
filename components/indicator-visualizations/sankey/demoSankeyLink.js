@@ -12,7 +12,7 @@ const Demo = (props, {
   index,
 }) => {
   const [color, setColor] = useState('red');
-  console.log(props)
+  console.log(props);
   return (
     <Layer key={`CustomLink${index}`}>
       <path
