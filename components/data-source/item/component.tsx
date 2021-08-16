@@ -24,7 +24,7 @@ const Item: FC<ItemProps> = ({
   <div className={cx('w-full m-auto cursor-pointer inline-flex flex-grow text-center divide-y divide-gray4 divide-opacity-90 hover:bg-gray1 hover:bg-opacity-90 hover:text-white',
     { [className]: className })}
   >
-    <div className="items-center inline-flex w-full lg:px-10 md:p-5">
+    <div className="items-center inline-flex w-full">
       <Icon ariaLabel={name} color="text-color1" name={icon} size="lg" className="mr-5" />
       <div className="flex flex-col">
         <p className="inline-flex text-base">{name}</p>

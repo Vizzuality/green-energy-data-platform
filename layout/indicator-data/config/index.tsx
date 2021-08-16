@@ -47,7 +47,7 @@ const TooltipContent: FC<TooltipProps> = ({
   payload,
 }: TooltipProps) => <Tooltip payload={payload} />;
 
-const chartConfig = {
+const chartConfig = (categories) => ({
   line: {
     margin: {
       top: 20, right: 0, left: 0, bottom: 0,
@@ -91,51 +91,46 @@ const chartConfig = {
       content: TooltipContent,
     },
   },
+  // bar: {
+  //   margin: {
+  //     top: 20, right: 0, left: 0, bottom: 100,
+  //   },
+  //   cartesianGrid: {
+  //     vertical: false,
+  //   },
+  //   bars: [
+  //     {
+  //       dataKey: 'category_1',
+  //       stackId: 'a',
+  //     },
+  //   ],
+  //   yAxis: {
+  //     tick: {
+  //       fill: '#C4C4C4',
+  //       fontSize: '14px',
+  //     },
+  //   },
+  //   xAxis: {
+  //     type: 'category',
+  //     dataKey: 'province',
+  //     interval: 0,
+  //     tick: Tick,
+  //     label: {
+  //       content: LabelContent,
+  //     },
+  //   },
+  // },
   bar: {
-    margin: {
-      top: 20, right: 0, left: 0, bottom: 100,
-    },
-    cartesianGrid: {
-      vertical: false,
-    },
-    bars: [
-      {
-        dataKey: 'value',
-      },
-    ],
-    yAxis: {
-      tick: {
-        fill: '#C4C4C4',
-        fontSize: '14px',
-      },
-    },
-    xAxis: {
-      type: 'category',
-      dataKey: 'province',
-      interval: 0,
-      tick: Tick,
-      label: {
-        content: LabelContent,
-      },
-    },
-  },
-  stacked_bar: {
     margin: {
       top: 20, right: 0, left: 0, bottom: 0,
     },
     cartesianGrid: {
       vertical: false,
     },
-    bars: [
-      {
-        dataKey: 'value1',
-        stackId: 'a',
-      },
-      {
-        dataKey: 'value2',
-        stackId: 'a',
-      },
-    ],
+    bars: categories.map((c) => ({
+      dataKey: c,
+      stackId: 'a',
+    })),
     xAxis: {
       dataKey: 'province',
     },
@@ -295,6 +290,6 @@ const chartConfig = {
       },
     ],
   },
-};
+});
 
 export default chartConfig;

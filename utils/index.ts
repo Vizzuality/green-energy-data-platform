@@ -2,6 +2,10 @@ import {
   compact,
   uniq,
   chain,
+  flatten,
+  merge,
+  keyBy,
+  mergeWith
 } from 'lodash';
 
 import {
@@ -31,6 +35,7 @@ export const filterRecords = (
     region,
     unit,
   } = filters;
+
   const categories = getCategoriesFromRecords(records).filter((category) => category !== 'Total');
 
   const results = records.filter((r) => {
@@ -49,11 +54,15 @@ export const filterRecords = (
     // }
 
     if (visualizationType === 'line') {
-      if (d.unit.name === unit) return true;
+      if (d.region.name === region && d.unit.name === unit) return true;
     }
 
     if (visualizationType === 'pie') {
       if (year === d.year && d.region.name === region && d.unit.name === unit) return true;
+    }
+
+    if (visualizationType === 'bar' || visualizationType === 'map') {
+      if (year === d.year && d.unit.name === unit) return true;
     }
 
     return false;
@@ -67,7 +76,6 @@ export const getGroupedValues = (
   records: Record[],
 ) => {
   let data;
-
   if (visualization === 'pie') {
     data = chain(records)
       .groupBy('category_1')
@@ -89,6 +97,23 @@ export const getGroupedValues = (
       year,
     }));
   }
+  if (visualization === 'bar') {
+
+    data = flatten(chain(records)
+      .groupBy('region.name')
+      .map((value) => flatten(chain(value)
+        .groupBy('category_1')
+        .map((res, key) => (
+          {
+            [key]: res.reduce(
+              (previous, current) => (current.value || 0) + previous, 0,
+            ),
+            province: res[0].region.name,
+          }))
+        .value()))
+      .value());
+  }
+
   return data;
 };
 

@@ -185,8 +185,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
   const widgetConfig = useMemo(
-    () => chartConfig[visualizationType],
-    [visualizationType],
+    () => chartConfig(categories)[visualizationType],
+    [visualizationType, categories],
   );
 
   useEffect(() => {
@@ -210,6 +210,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ...defaultUnit && { unit: defaultUnit },
     }));
   }, [dispatch, defaultYear, defaultRegion, defaultUnit]);
+  console.log(widgetData)
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
   return (
