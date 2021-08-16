@@ -28,7 +28,6 @@ interface ChartProps {
   widgetData: any[],
   widgetConfig: ConfigProps,
   color?: string,
-  indicatorId: string
 }
 
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {

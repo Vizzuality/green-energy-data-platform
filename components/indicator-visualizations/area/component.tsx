@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 
 type Object = {
-  label: string | number,
+  [key: string]: string | number,
   value: string | number,
 };
 
