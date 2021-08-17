@@ -10,7 +10,6 @@ import {
 } from 'react-query';
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
-// import Link from 'next/link';
 
 // hooks
 import { useSelector, useDispatch } from 'react-redux';
@@ -34,7 +33,9 @@ import DataSource from 'components/data-source';
 // utils
 import {
   filterRecords,
+  getGroupedValues,
   getYearsFromRecords,
+  getUnitsFromRecords,
   getRegionsFromRecords,
   getCategoriesFromRecords,
 } from 'utils';
@@ -57,10 +58,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     indicator: false,
     year: false,
     region: false,
+    unit: false,
   });
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const { year, region } = useSelector((state) => state.indicator);
+  const { year, region, unit } = useSelector((state) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -108,6 +110,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     });
   }, [dispatch, dropdownVisibility]);
 
+  const handleUnitChange = useCallback((_unit) => {
+    dispatch(setFilters({ unit: _unit }));
+
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      unit: false,
+    });
+  }, [dispatch, dropdownVisibility]);
   // todo: uncomment along with Compare select
   // const { data: groups } = useGroups({
   //   refetchOnWindowFocus: false,
@@ -121,7 +131,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const filters = useMemo(() => ({
     year,
     region,
-  }), [year, region]);
+    unit,
+  }), [year, region, unit]);
 
   const {
     data,
@@ -154,9 +165,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const years = useMemo(() => getYearsFromRecords(records), [records]);
   const regions = useMemo(() => getRegionsFromRecords(records), [records]);
+  const units = useMemo(() => getUnitsFromRecords(records), [records]);
 
   const defaultYear = useMemo(() => years?.[0], [years]);
   const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
+  const defaultUnit = useMemo(() => units?.[0], [units]);
 
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, visualizationType),
@@ -166,8 +179,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
   const widgetConfig = useMemo(
-    () => chartConfig[visualizationType],
-    [visualizationType],
+    () => chartConfig(categories)[visualizationType],
+    [visualizationType, categories],
+  );
+
+  const widgetData = useMemo(
+    () => getGroupedValues(visualizationType, filteredRecords),
+    [visualizationType, filteredRecords],
   );
 
   useEffect(() => {
@@ -188,8 +206,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     dispatch(setFilters({
       ...defaultYear && { year: defaultYear },
       ...defaultRegion && { region: defaultRegion },
+      ...defaultUnit && { unit: defaultUnit },
     }));
-  }, [dispatch, defaultYear, defaultRegion]);
+  }, [dispatch, defaultYear, defaultRegion, defaultUnit]);
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
   return (
@@ -407,13 +426,47 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   </div>
                 )}
 
-                {(!!filteredRecords.length) && (
-                  <div className="flex flex-1 h-full min-h-1/2 py-8 max-w-2xl">
-                    <DynamicChart
-                      widgetData={filteredRecords}
-                      widgetConfig={widgetConfig}
-                    />
+                {(!!filteredRecords.length && !isFetchingRecords) && (
+                <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                  <div className="flex items-center">
+                    <Tooltip
+                      placement="bottom-start"
+                      visible={dropdownVisibility.unit}
+                      interactive
+                      onClickOutside={() => closeDropdown('unit')}
+                      content={(
+                        <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                          {units.map((_unit) => (
+                            <li
+                              key={_unit}
+                              className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
+                            >
+                              <button
+                                type="button"
+                                className="flex items-center py-2 w-full last:border-b-0 px-5"
+                                onClick={() => { handleUnitChange(_unit); }}
+                              >
+                                {_unit}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => { toggleDropdown('unit'); }}
+                        className="flex items-center cursor-pointer text-color1 hover:bg-color1 hover:rounded-full hover:text-white py-0.5 px-4 mr-4"
+                      >
+                        <span>{unit}</span>
+                      </button>
+                    </Tooltip>
                   </div>
+                  <DynamicChart
+                    widgetData={widgetData}
+                    widgetConfig={widgetConfig}
+                  />
+                </div>
                 )}
               </div>
             </section>

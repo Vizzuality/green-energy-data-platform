@@ -25,6 +25,7 @@ const Tooltip: FC<TooltipProps> = ({
   payload,
 }: TooltipProps) => {
   if (!payload) return null;
+
   return (
     <div className={cx('inline-flex flex-col justify-center text-center bg-white rounded-md border-gray5 border-6 hover:opacity-90 px-1.5 text-gray1 max-h-64',
       { [className]: className })}
@@ -40,7 +41,7 @@ const Tooltip: FC<TooltipProps> = ({
               style={{ backgroundColor: fill }}
             />
             <span className="flex-1 py-1 pl-6">{name}</span>
-            <span className="flex-1 py-1 pl-6">{value}</span>
+            <span className="flex-1 py-1 pl-6">{value.toFixed(2)}</span>
           </li>
         ))}
       </ul>

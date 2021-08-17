@@ -23,7 +23,8 @@ interface ConfigProps {
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  tooltip: Object,
+  tooltip?: Object,
+  height?: number,
 }
 
 interface ChartProps {
@@ -36,10 +37,12 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   const {
     pies,
     tooltip,
+    height,
     ...rest
   } = widgetConfig;
+
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer height={height || 400}>
       <PieChart {...rest}>
         {pies && Object.keys(pies).map((pie, index) => (
           <Pie

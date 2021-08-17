@@ -48,7 +48,7 @@ const TooltipContent: FC<TooltipProps> = ({
   payload,
 }: TooltipProps) => <Tooltip payload={payload} />;
 
-const chartConfig = {
+const chartConfig = (categories) => ({
   line: {
     margin: {
       top: 20, right: 0, left: 0, bottom: 0,
@@ -86,7 +86,8 @@ const chartConfig = {
     },
     yAxis: {},
     tooltip: {
-
+      isAnimationActive: false,
+      content: TooltipContent,
     },
   },
   pie: {
@@ -98,15 +99,14 @@ const chartConfig = {
     },
     pies: [
       {
-        nameKey: 'category_1',
-        // dataKey: 'value',
-        // cx: '10%',
-        // cy: '10%',
-        // outerRadius: 100,
-        // innerRadius: 0,
+        nameKey: 'name',
+        dataKey: 'value',
+        cx: '50%',
+        cy: '50%',
       },
     ],
     tooltip: {
+      isAnimationActive: false,
       content: TooltipContent,
     },
   },
@@ -117,11 +117,11 @@ const chartConfig = {
     cartesianGrid: {
       vertical: false,
     },
-    bars: [
-      {
-        dataKey: 'value',
-      },
-    ],
+    isAnimationActive: false,
+    bars: categories.map((c) => ({
+      dataKey: c,
+      stackId: 'a',
+    })),
     yAxis: {
       tick: {
         fill: '#C4C4C4',
@@ -136,6 +136,10 @@ const chartConfig = {
       label: {
         content: LabelContent,
       },
+    },
+    tooltip: {
+      isAnimationActive: false,
+      content: TooltipContent,
     },
   },
   stacked_bar: {
@@ -314,6 +318,6 @@ const chartConfig = {
       },
     ],
   },
-};
+});
 
 export default chartConfig;

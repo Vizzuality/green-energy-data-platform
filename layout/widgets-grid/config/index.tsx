@@ -364,12 +364,13 @@ const widgetsConfig = {
     height: 190,
     width: 300,
     margin: {
-      // top: 20, right: 0, left: 0, bottom: 0,
+      top: 20, right: 0, left: 0, bottom: 0,
     },
     pies: [
       {
         dataKey: 'value',
-        outerRadius: 80,
+        outerRadius: 100,
+        innerRadius: 0,
       },
     ],
   },

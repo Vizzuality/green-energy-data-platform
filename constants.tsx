@@ -416,34 +416,34 @@ export const selectedIndicator = {
         },
       ],
     },
-    bar: {
-      margin: {
-        top: 20, right: 0, left: 0, bottom: 100,
-      },
-      cartesianGrid: {
-        vertical: false,
-      },
-      bars: [
-        {
-          dataKey: 'value',
-        },
-      ],
-      yAxis: {
-        tick: {
-          fill: '#C4C4C4',
-          fontSize: '14px',
-        },
-      },
-      xAxis: {
-        type: 'category',
-        dataKey: 'province',
-        interval: 0,
-        tick: Tick,
-        label: {
-          content: LabelContent,
-        },
-      },
-    },
+    // bar: {
+    //   margin: {
+    //     top: 20, right: 0, left: 0, bottom: 100,
+    //   },
+    //   cartesianGrid: {
+    //     vertical: false,
+    //   },
+    //   bars: [
+    //     {
+    //       dataKey: 'value',
+    //     },
+    //   ],
+    //   yAxis: {
+    //     tick: {
+    //       fill: '#C4C4C4',
+    //       fontSize: '14px',
+    //     },
+    //   },
+    //   xAxis: {
+    //     type: 'category',
+    //     dataKey: 'province',
+    //     interval: 0,
+    //     tick: Tick,
+    //     label: {
+    //       content: LabelContent,
+    //     },
+    //   },
+    // },
     pie: {
       margin: {
         // top: 20, right: 0, left: 0, bottom: 0,
@@ -453,7 +453,7 @@ export const selectedIndicator = {
       },
       pies: [
         {
-          nameKey: 'label',
+          nameKey: 'name',
           dataKey: 'value',
           cx: '50%',
           cy: '50%',
