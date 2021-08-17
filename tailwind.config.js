@@ -85,5 +85,8 @@ module.exports = {
   },
   variants: {
     borderRadius: ['responsive', 'hover', 'first', 'last'],
+    extend: {
+      fontWeight: ['hover', 'focus'],
+    },
   },
 };

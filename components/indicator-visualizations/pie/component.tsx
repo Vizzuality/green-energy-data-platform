@@ -3,10 +3,6 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  // CartesianGrid,
-  // CartesianAxis,
-  // XAxis,
-  // YAxis,
   Tooltip,
   PieProps,
   Cell,
@@ -27,7 +23,8 @@ interface ConfigProps {
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  tooltip: Object,
+  tooltip?: Object,
+  height?: number,
 }
 
 interface ChartProps {
@@ -36,49 +33,22 @@ interface ChartProps {
   color?: string,
 }
 
-const RADIAN = Math.PI / 180;
-
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  value,
-}) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      textAnchor={x > cx ? 'start' : 'end'}
-      fill="white"
-      dominantBaseline="central"
-    >
-      {`${value.toFixed(2)}%`}
-    </text>
-  );
-};
-
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
   const {
     pies,
     tooltip,
+    height,
     ...rest
   } = widgetConfig;
 
   return (
-    <ResponsiveContainer>
+    <ResponsiveContainer height={height || 400}>
       <PieChart {...rest}>
         {pies && Object.keys(pies).map((pie, index) => (
           <Pie
             key={pie}
             {...pies[pie]}
             data={widgetData}
-            label={renderCustomizedLabel}
             labelLine={false}
             fill={colors[index]}
           >
@@ -87,7 +57,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
             ))}
           </Pie>
         ))}
-        {tooltip && (<Tooltip />)}
+        {tooltip && (<Tooltip {...tooltip} />)}
       </PieChart>
     </ResponsiveContainer>
   );

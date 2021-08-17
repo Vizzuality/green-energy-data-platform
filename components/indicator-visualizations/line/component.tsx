@@ -20,8 +20,7 @@ import groupBy from 'lodash/groupBy';
 import { colors } from '../../../constants';
 
 type Object = {
-  [key: string]: string | number,
-  value: string | number,
+  [key: string]: string | number | (() => void),
 };
 
 interface ConfigProps {
@@ -30,7 +29,7 @@ interface ConfigProps {
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  tooltip: Object,
+  tooltip?: Object,
   height: number,
 }
 
@@ -103,7 +102,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
         {lines && Object.keys(lines).map((line, index) => (
           <Line key={line} {...lines[line]} stroke={colors[index]} />
         ))}
-        {tooltip && (<Tooltip />)}
+        {tooltip && (<Tooltip {...tooltip} />)}
       </LineChart>
     </ResponsiveContainer>
   );
