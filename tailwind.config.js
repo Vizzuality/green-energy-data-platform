@@ -15,7 +15,7 @@ module.exports = {
         gray4: '#C4C4C4',
         gray5: '#EAEFF3',
         grayProfile: '#35373E', // TO DO - change name when adapting colors
-        'color-red': '#FF472E',
+        warning: '#FF472E',
         // chart colors
         color4: '#A880FF',
         color5: '#29C2DA',

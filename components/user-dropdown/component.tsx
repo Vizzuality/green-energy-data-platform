@@ -25,7 +25,6 @@ const UserDropdown: FC<UserDropdownProps> = ({
   };
 
   const { data: user } = useMe();
-
   const handleClick = () => {
     signOut({ callbackUrl: '/signin' });
   };

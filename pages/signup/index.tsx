@@ -19,10 +19,11 @@ import Head from 'components/head';
 import Header from 'layout/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
+import router from 'next/router';
 
 const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
-    name: '',
+    username: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -35,23 +36,26 @@ const SignupPage: FC = () => {
       [type]: e.currentTarget.value,
     });
   };
-
   const handleSubmit = useCallback((evt) => {
     evt.preventDefault();
 
     if (passwordInputRef?.current?.value !== passwordConfirmationInputRef?.current?.value) {
       passwordConfirmationInputRef.current.setCustomValidity("Passwords Don't Match");
     } else {
-      signUp(credentials);
+      signUp(credentials).then(({ data, status }) => {
+        if (!!data || status === 201) {
+          router.push('signin');
+        }
+      });
     }
   }, [credentials]);
 
   return (
     <LayoutPage className="bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
-      <main className="flex flex-col h-full w-full m-auto">
+      <main className="flex flex-col h-full w-full m-auto min-h-screen pb-20">
         <Header />
-        <div className="flex items-center h-full flex-grow justify-center p-12 md:p-4 max-w-5xl m-auto">
+        <div className="overflow-y-auto flex items-center h-full flex-grow justify-center p-12 md:p-4 max-w-5xl m-auto">
           <section className="flex flex-col justify-start max-w-xs text-white mx-20">
             <h1 className="text-5.5xl font-bold py-7 tracking-tight">Sign up</h1>
             <p className="text-lg pb-20">Create an account to explore more about GEDP data insights</p>
@@ -64,7 +68,7 @@ const SignupPage: FC = () => {
           <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl px-20 md:px-24 sm:px-16 min-w-70shadow-sm max-w-2xl">
             <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
-                <label htmlFor="name" className="text-2.5xl font-bold">
+                <label htmlFor="username" className="text-2.5xl font-bold">
                   Your name is:
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon
@@ -74,15 +78,16 @@ const SignupPage: FC = () => {
                       className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold"
                     />
                     <input
-                      id="name"
-                      name="name"
+                      id="username"
+                      name="username"
                       type="name"
                       placeholder="Write your name account"
                       className={cx(
                         'w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
-                        { 'placeholder-opacity-100': credentials.name.length })}
-                      value={credentials.name}
-                      onChange={(e) => handleChange('name', e)}
+                        { 'placeholder-opacity-100': credentials.username.length },
+                      )}
+                      value={credentials.username}
+                      onChange={(e) => handleChange('username', e)}
                       required
                     />
                     <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',

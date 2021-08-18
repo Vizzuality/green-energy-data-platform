@@ -15,7 +15,7 @@ const LayoutPage: FC<LayoutPageProps> = ({
   className = 'test',
   children,
 }: LayoutPageProps) => (
-  <div className={cx('min-h-screen relative', {
+  <div className={cx('relative', {
     [className]: !!className,
   })}
   >

@@ -17,7 +17,7 @@ import LoadingSpinner from 'components/loading-spinner';
 const HomePage: FC = () => {
   const { data: groups, isLoading } = useGroups();
   return (
-    <LayoutPage className="h-full pb-48">
+    <LayoutPage className="h-full pb-48 min-h-screen">
       <Head title="Welcome to Green Energy Data Platform" />
       <Hero className="flex flex-col text-center py-24 sm:py-3">
         <h1 className="text-5.5xl pb-14">Discover data insights for a sustainable future.</h1>
