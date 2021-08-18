@@ -17,6 +17,7 @@ import { useMe } from 'hooks/auth';
 // services
 import {
   updateUser,
+  passwordRecovery,
 } from 'services/user';
 
 // components
@@ -74,8 +75,12 @@ const ProfilePage: FC = () => {
     }
   }, [credentials, user, queryClient]);
 
+  const handleRecover = () => {
+    passwordRecovery(credentials.email);
+  };
+
   return (
-    <LayoutPage className="text-white bg-gradient-gray1">
+    <LayoutPage className="text-white bg-gradient-gray1 min-h-screen">
       <Head title="Green Energy Data Platform" />
       <Hero className="lg:px-32 md:px-20">
         <h1 className="text-5.5xl pt-3">{i18next.t('profile')}</h1>
@@ -143,7 +148,8 @@ const ProfilePage: FC = () => {
               <Button
                 type="button"
                 aria-label="delete account"
-                className="border-color-red text-color-red text-sm"
+                className="text-sm"
+                theme="warning"
                 onClick={(evt) => {
                   evt.preventDefault();
                   console.log('deleting account');
@@ -177,10 +183,13 @@ const ProfilePage: FC = () => {
 
                 </div>
               </label>
-              {/* TO - DO change href when it's ready */}
-              <a href="/" className="underline pb-10 text-xs">
+              <button
+                type="button"
+                className="underline pb-10 text-xs"
+                onClick={handleRecover}
+              >
                 {i18next.t('dontRememberPassword')}
-              </a>
+              </button>
               <fieldset className="w-full text-xs">
                 <label htmlFor="new-password" className="pb-10 tracking-tight text-grayProfile">
                   {i18next.t('newPassword')}
