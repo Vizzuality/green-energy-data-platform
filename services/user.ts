@@ -54,7 +54,7 @@ export const updateUser = (
 
 export const passwordRecovery = (
   params = {},
-) => API.get('/users/recover_password_token',
+) => API.get('/users/recover-password-token',
   {
     ...params,
   }).then((response) => console.log(params, response));
@@ -73,3 +73,13 @@ export const passwordChangeToRecover = (
       ...headers,
     },
   }).then((response) => console.log(response));
+
+export const deleteUser = (
+  userToken: string,
+) => API.delete('/users/me',
+  {
+    headers: {
+      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
+      Authentication: `Bearer ${userToken}`,
+    },
+  });

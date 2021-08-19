@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import { useQueryClient } from 'react-query';
 import cx from 'classnames';
-import { getSession } from 'next-auth/client';
+import { getSession, signOut } from 'next-auth/client';
 
 // authentication
 import { withAuthentication, withUser } from 'hoc/auth';
@@ -16,6 +16,7 @@ import { useMe } from 'hooks/auth';
 import {
   updateUser,
   passwordRecovery,
+  deleteUser,
 } from 'services/user';
 
 // components
@@ -54,7 +55,7 @@ const ProfilePage: FC = () => {
     });
   };
 
-  const handleSubmit = useCallback(async (evt) => {
+  const handleSave = useCallback(async (evt) => {
     evt.preventDefault();
 
     const {
@@ -77,16 +78,32 @@ const ProfilePage: FC = () => {
     passwordRecovery(credentials.email);
   };
 
+  const handleDelete = useCallback(async (evt) => {
+    evt.preventDefault();
+
+    const {
+      token,
+    } = user;
+
+    try {
+      await deleteUser(token);
+      queryClient.invalidateQueries('me');
+      signOut({ callbackUrl: '/signup' });
+    } catch (e) {
+      throw new Error(`something went wrong deleting account: ${e.message}`);
+    }
+  }, [user, queryClient]);
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1 min-h-screen">
       <Head title="Green Energy Data Platform" />
-      <Hero className="lg:px-32 md:px-20">
-        <h1 className="text-5.5xl pt-3">Profile</h1>
+      <Hero>
+        <h1 className="m-auto max-w-5xl text-5.5xl pt-3">Profile</h1>
       </Hero>
-      <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
+      <div className="max-w-5xl container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
         <section className="flex flex-col w-1/2">
           <div className="p-16 flex-1 flex flex-col justify-between">
-            <form onSubmit={handleSubmit} className="flex flex-col items-start">
+            <form onSubmit={handleSave} className="flex flex-col items-start">
               <label
                 htmlFor="name"
                 className="w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
@@ -131,10 +148,11 @@ const ProfilePage: FC = () => {
                 </div>
               </label>
               <Button
-                type="submit"
+                type="button"
                 aria-label="Sign in"
                 theme="secondary"
                 className="py-20 bg-gray1 border-gray1 text-white text-sm"
+                onClick={handleSave}
               >
                 Save Changes
               </Button>
@@ -157,6 +175,17 @@ const ProfilePage: FC = () => {
               >
                 Delete account
               </Button>
+              <div className="w-full">
+                <Button
+                  type="button"
+                  aria-label="delete account"
+                  theme="warning"
+                  className="flex justify-left text-sm"
+                  onClick={handleDelete}
+                >
+                  Delete account
+                </Button>
+              </div>
             </>
           </div>
         </section>
@@ -238,10 +267,6 @@ const ProfilePage: FC = () => {
                 aria-label="Sign in"
                 theme="secondary"
                 className="py-20 bg-gray1 border-gray1 text-white text-sm"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  console.log('Changing password');
-                }}
               >
                 Change password
               </Button>
