@@ -56,7 +56,7 @@ export const filterRecords = (
         && d.unit.name === unit && year === d.year) return true;
     }
 
-    if (visualizationType === 'bar' || visualizationType === 'map') {
+    if (visualizationType === 'bar' || visualizationType === 'choropleth') {
       if (year === d.year && d.unit.name === unit) return true;
     }
 
