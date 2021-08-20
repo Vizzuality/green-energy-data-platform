@@ -21,7 +21,17 @@ import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from './constants';
 // components
 import Map from './map';
 
-const MapContainer: FC = () => {
+interface MapContainerProps {
+  hasLegend?: boolean,
+  style?: Object,
+}
+
+const MapContainer: FC<MapContainerProps> = (
+  {
+    hasLegend = true,
+    style = {},
+  }: MapContainerProps,
+) => {
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
 
   const handleViewportChange = useCallback((v) => {
@@ -38,7 +48,7 @@ const MapContainer: FC = () => {
   //   [viewport],
   // );
   return (
-    <div className="relative h-full border-4 border-gray5 rounded">
+    <div className="relative h-full border-4 border-gray5 rounded" style={style}>
       <Map
         width="100%"
         height="100%"
@@ -59,7 +69,7 @@ const MapContainer: FC = () => {
         viewport={viewport}
         onZoomChange={handleZoomChange}
       /> */}
-      <Legend />
+      {hasLegend && <Legend />}
     </div>
   );
 };

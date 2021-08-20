@@ -79,6 +79,7 @@ const GroupPage: FC = () => {
         <Nav className="pt-10" />
         <Tooltip
           placement="bottom-start"
+          className=""
           visible={dropdownVisibility}
           interactive
           onClickOutside={() => { setDropdownVisibility(false); }}

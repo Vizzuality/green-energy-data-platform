@@ -1,147 +1,9 @@
-const widgetData = {
-  pie: [
-    {
-      label: 'General system charges',
-      value: 8.0,
-    },
-    {
-      label: 'Taxes',
-      value: 14.2,
-    },
-    {
-      label: 'Network and size costs',
-      value: 15.4,
-    },
-    {
-      label: 'Supplying costs',
-      value: 62.4,
-    },
-  ],
-  bar: [
-    {
-      label: 'Anhui',
-      value: 199,
-    },
-    {
-      label: 'Fujian',
-      value: 20,
-    },
-    {
-      label: 'Gansu',
-      value: 505,
-
-    },
-    {
-      label: 'Guangdong',
-      value: 327,
-    },
-    {
-      label: 'Guizhou',
-      value: 199,
-
-    },
-    {
-      label: 'Hebei',
-      value: 20,
-    },
-    {
-      label: 'Heilongjiang',
-      value: 505,
-
-    },
-    {
-      label: 'Henan',
-      value: 327,
-    },
-    {
-      label: 'Hubei',
-      value: 199,
-
-    },
-    {
-      label: 'Hunan',
-      value: 20,
-    },
-    {
-      label: 'Jiangsu',
-      value: 505,
-
-    },
-    {
-      label: 'Jiangxi',
-      value: 327,
-    },
-    {
-      label: 'Jilin',
-      value: 199,
-
-    },
-    {
-      label: 'Liaoning',
-      value: 20,
-    },
-    {
-      label: 'Qinghai',
-      value: 505,
-
-    },
-    {
-      label: 'Shaanxi',
-      value: 327,
-    },
-    {
-      label: 'Shandong',
-      value: 327,
-    },
-    {
-      label: 'Shanxi',
-      value: 199,
-
-    },
-    {
-      label: 'Sichuan',
-      value: 20,
-    },
-    {
-      label: 'Yunnan',
-      value: 505,
-
-    },
-    {
-      label: 'Zhejiang',
-      value: 327,
-    },
-  ],
-  line: [
-    {
-      value: 0,
-      year: 1995,
-    },
-    {
-      value: 50,
-      year: 2000,
-    },
-    {
-      value: 100,
-      year: 2005,
-    },
-    {
-      value: 150,
-      year: 2010,
-    },
-    {
-      value: 250,
-      year: 2015,
-    },
-  ],
-};
-
-const widgetsConfig = {
+const CONFIG = {
   line: {
     height: 190,
     width: 300,
     margin: {
-      top: 20, right: 0, left: 0, bottom: 0,
+      top: 20, right: 0, left: -30, bottom: 0,
     },
     cartesianGrid: {
       vertical: false,
@@ -173,8 +35,11 @@ const widgetsConfig = {
     ],
     xAxis: {
       dataKey: 'year',
+      fontSize: '12px',
     },
-    yAxis: {},
+    yAxis: {
+      fontSize: '12px',
+    },
     tooltip: {
 
     },
@@ -338,7 +203,7 @@ const widgetsConfig = {
     height: 190,
     width: 300,
     margin: {
-      top: 20, right: 0, left: 0, bottom: 100,
+      top: 20, right: 0, left: -30, bottom: 100,
     },
     cartesianGrid: {
       vertical: false,
@@ -351,7 +216,7 @@ const widgetsConfig = {
     yAxis: {
       tick: {
         fill: '#C4C4C4',
-        fontSize: '14px',
+        fontSize: '12px',
       },
     },
     xAxis: {
@@ -361,10 +226,10 @@ const widgetsConfig = {
     },
   },
   pie: {
-    height: 190,
+    height: 220,
     width: 300,
     margin: {
-      top: 20, right: 0, left: 0, bottom: 0,
+      top: 20, right: 0, left: -30, bottom: 0,
     },
     pies: [
       {
@@ -374,6 +239,12 @@ const widgetsConfig = {
       },
     ],
   },
+  choropleth: {
+    hadLegend: false,
+    margin: {
+      top: 20,
+    },
+  },
 };
 
-export { widgetData, widgetsConfig };
+export default CONFIG;
