@@ -46,11 +46,14 @@ export const filterRecords = (
 
   const recordsByFilters = results.filter((d) => {
     if (visualizationType === 'line') {
-      if (d.region.name === region && d.unit.name === unit) return true;
+      // API return region name to null for China
+      if ((d.region.name === region || (d.region.name === null))
+        && d.unit.name === unit) return true;
     }
 
     if (visualizationType === 'pie') {
-      if (year === d.year && d.region.name === region && d.unit.name === unit) return true;
+      if ((d.region.name === region || (d.region.name === null))
+        && d.unit.name === unit && year === d.year) return true;
     }
 
     if (visualizationType === 'bar' || visualizationType === 'map') {
@@ -59,7 +62,44 @@ export const filterRecords = (
 
     return false;
   });
+  return recordsByFilters;
+};
 
+export const filterRelatedIndicators = (
+  records: Record[],
+  filters: IndicatorFilters,
+  visualizationType: string,
+) => {
+  const { region } = filters;
+
+  const categories = getCategoriesFromRecords(records).filter((category) => category !== 'Total');
+
+  const results = records.filter((r) => {
+    if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
+
+    return r;
+  });
+
+  const recordsByFilters = results.filter((d) => {
+    if (visualizationType === 'line') {
+      // API return region name to null for China
+      if (d.region.name === region || d.region.name === null) return true;
+    }
+
+    if (visualizationType === 'pie') {
+      if (d.region.name === region || d.region.name === null) return true;
+    }
+
+    if (visualizationType === 'bar') {
+      if (d.region.name === region || d.region.name === null) return true;
+    }
+
+    if (visualizationType === 'choropleth') {
+      if (d.region.name === region || d.region.name === null) return true;
+    }
+
+    return false;
+  });
   return recordsByFilters;
 };
 
