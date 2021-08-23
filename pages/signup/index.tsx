@@ -20,6 +20,7 @@ import Header from 'layout/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
 import router from 'next/router';
+import i18next from 'i18next';
 
 const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
@@ -161,7 +162,10 @@ const SignupPage: FC = () => {
                   <span>
                     I agree with the
                     <Link href={{ pathname: '/terms-conditions' }} passHref>
-                      <a href="/terms-conditions"> Terms and Conditions</a>
+                      <a href="/terms-conditions">
+                        {' '}
+                        {i18next.t('terms')}
+                      </a>
                     </Link>
                   </span>
                   <input
@@ -176,7 +180,9 @@ const SignupPage: FC = () => {
                   <span>
                     I agree with the
                     <Link href={{ pathname: '/privacy-policy' }} passHref>
-                      <a href="/privacy-policy"> Privacy Policy</a>
+                      <a href="/privacy-policy">
+                        {i18next.t('privacy')}
+                      </a>
                     </Link>
                   </span>
                   <input

@@ -6,6 +6,8 @@ import {
   groupBy,
 } from 'lodash';
 
+import i18n from 'i18next';
+
 import { saveAs } from 'file-saver';
 
 import {
@@ -15,6 +17,12 @@ import {
 import {
   IndicatorFilters,
 } from 'store/slices/indicator';
+import resources from 'dictionary';
+
+export const initializeLanguage = () => i18n.init({
+  resources,
+  lng: 'en',
+});
 
 export const Filter = (arr: (string | number)[], param: number) => {
   const index = arr.indexOf(param) !== -1;
