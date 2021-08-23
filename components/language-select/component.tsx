@@ -46,26 +46,27 @@ const LanguageSelect = () => {
           size="sm"
         />
       </button>
+      {isOpen && (
       <ul
         className="flex-col bg-gray1 absolute bottom-7 w-full pl-8 rounded p-2 border border-white border-opacity-25"
         {...getMenuProps()}
       >
-        {(
-          items.map((item, index) => (
-            <li
-              data-code={item.code}
-              style={
+        {items.map((item, index) => (
+          <li
+            data-code={item.code}
+            style={
                 highlightedIndex === index
                   ? { backgroundColor: '#bde4ff' }
                   : {}
               }
-              key={`${item.code}`}
-              {...getItemProps({ item: item.name, index })}
-            >
-              {item.name}
-            </li>
-          )))}
+            key={`${item.code}`}
+            {...getItemProps({ item, index })}
+          >
+            {item.name}
+          </li>
+        ))}
       </ul>
+      )}
     </div>
   );
 };
