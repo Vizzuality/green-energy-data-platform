@@ -1,13 +1,12 @@
 import React, { FC } from 'react';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import cx from 'classnames';
+
+import LanguageSelect from 'components/language-select';
 
 interface FooterProps {
   className?: string,
 }
-
-const LanguageSelect = dynamic(() => import('components/language-select'), { ssr: false });
 
 const Footer: FC<FooterProps> = ({
   className = '',

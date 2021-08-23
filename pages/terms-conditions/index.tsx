@@ -4,12 +4,13 @@ import React, { FC } from 'react';
 import LayoutPage from 'layout';
 import Head from 'components/head';
 import Hero from 'layout/hero';
+import i18next from 'i18next';
 
 const TermsAndConditionsPage: FC = () => (
   <LayoutPage className="text-white bg-gradient-gray1 pb-48">
     <Head title="Green Energy Data Platform" />
     <Hero>
-      <h1 className="text-5.5xl pt-3">Terms and conditions</h1>
+      <h1 className="text-5.5xl pt-3">{i18next.t('terms')}</h1>
     </Hero>
     <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
       <section className="lg:mx-28 md:mx-16 md:my-14 my-3 text-justify">

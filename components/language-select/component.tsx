@@ -1,38 +1,26 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import { useSelect } from 'downshift';
 import cx from 'classnames';
+
+import i18n from 'i18next';
 
 // components
 import Icon from 'components/icon';
 
 const LanguageSelect = () => {
-  const [languages, setLanguages] = useState([]);
-  const items = languages;
-
-  const { Transifex } = (window as any);
-
-  const getAllLanguages = useCallback(() => new Promise((resolve, reject) => {
-    Transifex.live.onError((err) => reject(err));
-    Transifex.live.onFetchLanguages((lan) => resolve(lan));
-  }), [Transifex]);
-
-  useEffect(() => {
-    if (Transifex && typeof Transifex !== 'undefined') {
-      Transifex.live.onReady(() => {
-        const langCode = Transifex.live.detectLanguage();
-        const { code } = Transifex.live.getSourceLanguage();
-        Transifex.live.translateTo(langCode);
-        Transifex.live.translateTo(code);
-      });
-      getAllLanguages()
-        .then((lan: object[]) => setLanguages(lan))
-        .catch((err) => err);
-    }
-  }, [Transifex, getAllLanguages]);
-
   const onSelectedItemChange = (item) => {
-    Transifex.live.translateTo(item.selectedItem.code);
+    const { selectedItem: { code } } = item;
+    i18n.changeLanguage(code);
   };
+
+  const items = [{
+    name: 'English',
+    code: 'en',
+  },
+  {
+    name: 'Chinese',
+    code: 'zh_CN',
+  }];
 
   const {
     isOpen,
@@ -59,10 +47,10 @@ const LanguageSelect = () => {
         />
       </button>
       <ul
-        className="flex-col bg-gray1 absolute bottom-7 w-full pl-8"
+        className="flex-col bg-gray1 absolute bottom-7 w-full pl-8 rounded p-2 border border-white border-opacity-25"
         {...getMenuProps()}
       >
-        {isOpen && (
+        {(
           items.map((item, index) => (
             <li
               data-code={item.code}
