@@ -1,12 +1,11 @@
 const CONFIG = {
-  nodePading: 50,
+  nodePadding: 30,
   margin: {
-    left: 200,
-    right: 200,
-    top: 100,
-    bottom: 100,
+    left: 250,
+    right: 50,
+    top: 10,
+    bottom: 50,
   },
-  link: { stroke: '#77c878' },
 };
 
 export default CONFIG;
