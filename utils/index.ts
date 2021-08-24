@@ -40,7 +40,6 @@ export const filterRecords = (
 
   const results = records.filter((r) => {
     if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
-
     return r;
   });
 
@@ -108,6 +107,7 @@ export const getGroupedValues = (
   records: Record[],
 ) => {
   let data;
+
   if (visualization === 'pie') {
     data = chain(records)
       .groupBy('category_1')
@@ -123,11 +123,32 @@ export const getGroupedValues = (
   }
 
   if (visualization === 'line') {
-    data = records.map(({ value, category_1, year }) => ({
-      label: category_1,
-      value,
-      year,
-    }));
+    data = flatten(chain(records)
+      .groupBy('year')
+      .map((value) => flatten(chain(value)
+        .groupBy('category_1')
+        .map((res, key) => (
+          {
+            [key !== 'null' ? key : 'Total']: res.reduce(
+              (previous, current) => (current.value || 0) + previous, 0,
+            ),
+            year: res[0].year,
+          }))
+        .value()))
+      .value());
+    const dataByYear = groupBy(data, 'year');
+
+    return Object.keys(dataByYear).map((year) => dataByYear[year]
+      .reduce((acc, next) => {
+        const { year: currentYear, ...rest } = next;
+
+        return ({
+          ...acc,
+          ...rest,
+        });
+      }, {
+        year,
+      }));
   }
 
   if (visualization === 'bar') {
@@ -137,7 +158,7 @@ export const getGroupedValues = (
         .groupBy('category_1')
         .map((res, key) => (
           {
-            [key]: res.reduce(
+            [key || 'Total']: res.reduce(
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             province: res[0].region.name,

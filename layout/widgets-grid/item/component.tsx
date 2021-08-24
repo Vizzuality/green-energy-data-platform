@@ -19,9 +19,11 @@ import { useSelector } from 'react-redux';
 import {
   filterRelatedIndicators,
   getGroupedValues,
+  getCategoriesFromRecords,
+
 } from 'utils';
 
-import widgetsConfig from '../config';
+import ChartConfig from '../config';
 
 interface GridItemProps {
   group: string,
@@ -36,11 +38,6 @@ const GridItem: FC<GridItemProps> = ({
   indicator,
   visualization,
 }: GridItemProps) => {
-  const widgetConfig = useMemo(
-    () => widgetsConfig[visualization],
-    [visualization],
-  );
-
   const { year, region, unit } = useSelector((state) => state.indicator);
 
   const filters = useMemo(() => ({
@@ -61,6 +58,12 @@ const GridItem: FC<GridItemProps> = ({
     [records, filters, visualization],
   );
 
+  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
+  const widgetConfig = useMemo(
+    () => ChartConfig(categories)[visualization],
+    [visualization, categories],
+  );
   const widgetData = useMemo(
     () => getGroupedValues(visualization, filteredRecords),
     [visualization, filteredRecords],

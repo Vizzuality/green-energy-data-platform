@@ -42,7 +42,7 @@ import {
 
 import { setFilters } from 'store/slices/indicator';
 
-import chartConfig from './config';
+import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
 
@@ -179,7 +179,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
   const widgetConfig = useMemo(
-    () => chartConfig(categories)[visualizationType],
+    () => ChartConfig(categories)[visualizationType],
     [visualizationType, categories],
   );
 
