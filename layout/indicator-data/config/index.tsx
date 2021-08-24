@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 
 import Tooltip from 'components/widgets/tooltip';
 
@@ -49,7 +49,7 @@ const TooltipContent: FC<TooltipProps> = ({
 }: TooltipProps) => <Tooltip payload={payload} />;
 
 const ChartConfig = (categories) => {
-  const getLines = useMemo(() => {
+  const getLines = () => {
     if (categories.length) {
       return categories.map((category) => ({
         type: 'monotone',
@@ -60,7 +60,7 @@ const ChartConfig = (categories) => {
       type: 'monotone',
       dataKey: 'Total',
     }]);
-  }, [categories]);
+  };
 
   return ({
     line: {
