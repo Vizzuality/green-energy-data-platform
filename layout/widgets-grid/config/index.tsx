@@ -1,3 +1,13 @@
+import { format } from 'd3-format';
+
+const numberFormat = format('.2s');
+
+const DefaultTick = {
+  fill: '#3A3F59',
+  opacity: 0.5,
+  fontSize: '12px',
+};
+
 const CONFIG = (categories) => {
   const getLines = () => {
     if (categories.length) {
@@ -18,7 +28,7 @@ const CONFIG = (categories) => {
       height: 190,
       width: 300,
       margin: {
-        top: 20, right: 0, left: -30, bottom: 0,
+        top: 20, right: 0, left: -10, bottom: 0,
       },
       cartesianGrid: {
         vertical: false,
@@ -45,13 +55,11 @@ const CONFIG = (categories) => {
       ],
       xAxis: {
         dataKey: 'year',
-        fontSize: '12px',
+        tick: DefaultTick,
       },
       yAxis: {
-        fontSize: '12px',
-      },
-      tooltip: {
-
+        tick: DefaultTick,
+        tickFormatter: (value) => numberFormat(value),
       },
     },
     table: {
@@ -224,15 +232,13 @@ const CONFIG = (categories) => {
         },
       ],
       yAxis: {
-        tick: {
-          fill: '#C4C4C4',
-          fontSize: '12px',
-        },
+        tick: DefaultTick,
       },
       xAxis: {
         type: 'category',
         dataKey: 'label',
         interval: 0,
+        tick: DefaultTick,
       },
     },
     pie: {

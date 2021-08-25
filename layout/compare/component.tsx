@@ -134,7 +134,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           widgetConfig={chartConfig[active]}
         />
 
-        {categories.length > 1 && <Legend categories={[]} className="mb-4" />}
+        {categories.length > 1 && <Legend categories={[]} subcategories={[]} className="mb-4" />}
         <DataSource type="horizontal" />
 
       </div>
