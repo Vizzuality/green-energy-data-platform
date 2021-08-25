@@ -40,26 +40,65 @@ export const filterRecords = (
 
   const results = records.filter((r) => {
     if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
+    return r;
+  });
+
+  const recordsByFilters = results.filter((d) => {
+    if (visualizationType === 'line') {
+      // API return region name to null for China
+      if ((d.region.name === region || (d.region.name === null))
+        && d.unit.name === unit) return true;
+    }
+
+    if (visualizationType === 'pie') {
+      if ((d.region.name === region || (d.region.name === null))
+        && d.unit.name === unit && year === d.year) return true;
+    }
+
+    if (visualizationType === 'bar' || visualizationType === 'choropleth') {
+      if (year === d.year && d.unit.name === unit) return true;
+    }
+
+    return false;
+  });
+  return recordsByFilters;
+};
+
+export const filterRelatedIndicators = (
+  records: Record[],
+  filters: IndicatorFilters,
+  visualizationType: string,
+) => {
+  const { region } = filters;
+
+  const categories = getCategoriesFromRecords(records).filter((category) => category !== 'Total');
+
+  const results = records.filter((r) => {
+    if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
 
     return r;
   });
 
   const recordsByFilters = results.filter((d) => {
     if (visualizationType === 'line') {
-      if (d.region.name === region && d.unit.name === unit) return true;
+      // API return region name to null for China
+      if (d.region.name === region || d.region.name === null) return true;
     }
 
     if (visualizationType === 'pie') {
-      if (year === d.year && d.region.name === region && d.unit.name === unit) return true;
+      if (d.region.name === region || d.region.name === null) return true;
     }
 
-    if (visualizationType === 'bar' || visualizationType === 'map') {
-      if (year === d.year && d.unit.name === unit) return true;
+    if (visualizationType === 'bar') {
+      if (d.region.name === region || d.region.name === null) return true;
+    }
+
+    if (visualizationType === 'choropleth') {
+      if (d.region.name === region || d.region.name === null) return true;
     }
 
     return false;
   });
-
   return recordsByFilters;
 };
 
@@ -68,6 +107,7 @@ export const getGroupedValues = (
   records: Record[],
 ) => {
   let data;
+
   if (visualization === 'pie') {
     data = chain(records)
       .groupBy('category_1')
@@ -83,11 +123,32 @@ export const getGroupedValues = (
   }
 
   if (visualization === 'line') {
-    data = records.map(({ value, category_1, year }) => ({
-      label: category_1,
-      value,
-      year,
-    }));
+    data = flatten(chain(records)
+      .groupBy('year')
+      .map((value) => flatten(chain(value)
+        .groupBy('category_1')
+        .map((res, key) => (
+          {
+            [key !== 'null' ? key : 'Total']: res.reduce(
+              (previous, current) => (current.value || 0) + previous, 0,
+            ),
+            year: res[0].year,
+          }))
+        .value()))
+      .value());
+    const dataByYear = groupBy(data, 'year');
+
+    return Object.keys(dataByYear).map((year) => dataByYear[year]
+      .reduce((acc, next) => {
+        const { year: currentYear, ...rest } = next;
+
+        return ({
+          ...acc,
+          ...rest,
+        });
+      }, {
+        year,
+      }));
   }
 
   if (visualization === 'bar') {
@@ -97,7 +158,7 @@ export const getGroupedValues = (
         .groupBy('category_1')
         .map((res, key) => (
           {
-            [key]: res.reduce(
+            [key || 'Total']: res.reduce(
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             province: res[0].region.name,

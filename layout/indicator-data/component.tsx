@@ -42,7 +42,7 @@ import {
 
 import { setFilters } from 'store/slices/indicator';
 
-import chartConfig from './config';
+import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
 
@@ -163,6 +163,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, visualizationType),
+    [records, filters, visualizationType],
+  );
+
   const years = useMemo(() => getYearsFromRecords(records), [records]);
   const regions = useMemo(() => getRegionsFromRecords(records), [records]);
   const units = useMemo(() => getUnitsFromRecords(records), [records]);
@@ -171,15 +176,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
   const defaultUnit = useMemo(() => units?.[0], [units]);
 
-  const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType),
-    [records, filters, visualizationType],
-  );
-
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
   const widgetConfig = useMemo(
-    () => chartConfig(categories)[visualizationType],
+    () => ChartConfig(categories)[visualizationType],
     [visualizationType, categories],
   );
 
@@ -413,6 +413,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     </Tooltip>
                   </div>
                 )}
+                {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4">China</span>}
               </div>
               <div className="flex h-full w-full min-h-1/2">
                 {isFetchingRecords && (

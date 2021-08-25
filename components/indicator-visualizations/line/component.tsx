@@ -1,6 +1,5 @@
 import React, {
   FC,
-  useMemo,
 } from 'react';
 import {
   ResponsiveContainer,
@@ -15,7 +14,6 @@ import {
   XAxisProps,
   YAxisProps,
 } from 'recharts';
-import groupBy from 'lodash/groupBy';
 
 import { colors } from '../../../constants';
 
@@ -45,56 +43,15 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     cartesianAxis,
     xAxis,
     yAxis,
+    lines,
     tooltip,
     height,
     ...rest
   } = widgetConfig;
 
-  const categories = useMemo(() => Object.keys(groupBy(widgetData, 'category_1')).filter((key) => key !== 'null'), [widgetData]);
-
-  const parsedData = useMemo(() => {
-    const dataByYears = groupBy(widgetData, 'year');
-    const years = Object.keys(dataByYears);
-
-    if (!categories.length) {
-      return years.map((dataByYear) => ({
-        year: +dataByYear,
-        ...dataByYears[dataByYear].reduce((current, next) => ({
-          ...current,
-          value: next.value,
-        }), {}),
-      }));
-    }
-
-    return years.map((dataByYear) => ({
-      year: +dataByYear,
-      ...dataByYears[dataByYear].reduce((current, next: any) => ({
-        ...current,
-        [next.category_1]: next.value,
-      }), {}),
-    }));
-  }, [widgetData, categories]);
-
-  const lines = useMemo(
-    () => {
-      if (!categories.length) {
-        return [{
-          type: 'monotone',
-          dataKey: 'value',
-        }];
-      }
-
-      return categories.map((category) => ({
-        type: 'monotone',
-        dataKey: category,
-      }));
-    },
-    [categories],
-  );
-
   return (
     <ResponsiveContainer height={height || 400}>
-      <LineChart {...rest} data={parsedData}>
+      <LineChart {...rest} data={widgetData}>
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
