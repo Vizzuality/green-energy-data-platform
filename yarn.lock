@@ -2259,15 +2259,10 @@ d3-ease@^2.0.0:
   resolved "https://registry.yarnpkg.com/d3-ease/-/d3-ease-2.0.0.tgz#fd1762bfca00dae4bacea504b1d628ff290ac563"
   integrity sha512-68/n9JWarxXkOWMshcT5IcjbB+agblQUaIsbnXmrzejn2O82n3p2A9R2zEB9HIEFWKFwPAEDDN8gR0VdSAyyAQ==
 
-"d3-format@1 - 2":
+"d3-format@1 - 2", d3-format@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-2.0.0.tgz#a10bcc0f986c372b729ba447382413aabf5b0767"
   integrity sha512-Ab3S6XuE/Q+flY96HXT0jOXcM4EAClYFnRGY5zsjRGNy6qCYrQsMffs7cV5Q9xejb35zxW5hf/guKw34kvIKsA==
-
-d3-format@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-3.0.1.tgz#e41b81b2ab79277141ec1404aa5d05001da64084"
-  integrity sha512-hdL7+HBIohpgfolhBxr1KX47VMD6+vVD/oEFrxk5yhmzV2prk99EkFKYpXuhVkFpTgHdJ6/4bYcjdLPPXV4tIA==
 
 d3-hexbin@^0.2.1:
   version "0.2.2"
@@ -4116,7 +4111,7 @@ language-tags@^1.0.5:
   dependencies:
     language-subtag-registry "~0.3.2"
 
-layer-manager@^3.0.8:
+layer-manager@3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/layer-manager/-/layer-manager-3.0.8.tgz#c194ad43fa5baa2dabff8c2d99887be2e911e7e3"
   integrity sha512-/pmjYym//UQ/TsJbNMPLtyjNiSD+wrTFlwu/9j2TFL6ynnXoI5GvFzkLNBVM6+/JHYd3MMEhwf0btiXvdorHmQ==
