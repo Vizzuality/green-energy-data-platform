@@ -17,9 +17,10 @@ import Icons from 'components/icons';
 // styles
 import 'styles/index.css';
 
+initializeLanguage();
+
 const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => {
   const queryClient = new QueryClient();
-  initializeLanguage();
 
   return (
     <>
