@@ -1,11 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+type CategoryObject = {
+  label: string, value?: string
+};
+
 export type IndicatorFilters = {
   year: number,
   start_year?: number,
   end_year?: number,
   region: string,
   unit: string,
+  category: CategoryObject,
 };
 
 const initialState = {
@@ -18,7 +23,7 @@ export const indicatorSlice = createSlice({
   reducers: {
     setFilters: (
       state: IndicatorFilters,
-      action: PayloadAction<{ [key: string]: string | number }>,
+      action: PayloadAction<{ [key: string]: string | number | CategoryObject }>,
     ) => ({
       ...state,
       ...action.payload,

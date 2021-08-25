@@ -17,6 +17,12 @@ interface TooltipProps {
   payload: PayloadObject[]
 }
 
+const DefaultTick = {
+  fill: '#3A3F59',
+  opacity: 0.5,
+  fontSize: '14px',
+};
+
 const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
   const { value } = payload;
   return (
@@ -26,7 +32,8 @@ const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
         y={-10}
         dy={14}
         textAnchor="end"
-        fill="#C4C4C4"
+        fill="#3A3F59"
+        opacity={0.5}
         transform="rotate(270)"
         fontSize="14px"
       >
@@ -62,6 +69,19 @@ const ChartConfig = (categories) => {
     }]);
   };
 
+  const getBars = () => {
+    if (categories.length) {
+      return categories.map((c) => ({
+        dataKey: c,
+        stackId: 'a',
+      }));
+    }
+    return ([{
+      stackId: 'a',
+      dataKey: 'Total',
+    }]);
+  };
+
   return ({
     line: {
       margin: {
@@ -92,8 +112,11 @@ const ChartConfig = (categories) => {
       ],
       xAxis: {
         dataKey: 'year',
+        tick: DefaultTick,
       },
-      yAxis: {},
+      yAxis: {
+        tick: DefaultTick,
+      },
       tooltip: {
         isAnimationActive: false,
         content: TooltipContent,
@@ -127,15 +150,9 @@ const ChartConfig = (categories) => {
         vertical: false,
       },
       isAnimationActive: false,
-      bars: categories.map((c) => ({
-        dataKey: c,
-        stackId: 'a',
-      })),
+      bars: getBars(),
       yAxis: {
-        tick: {
-          fill: '#C4C4C4',
-          fontSize: '14px',
-        },
+        tick: DefaultTick,
       },
       xAxis: {
         type: 'category',
@@ -170,6 +187,7 @@ const ChartConfig = (categories) => {
       ],
       xAxis: {
         dataKey: 'province',
+        tick: DefaultTick,
       },
     },
     table: {

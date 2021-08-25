@@ -38,6 +38,7 @@ import {
   getUnitsFromRecords,
   getRegionsFromRecords,
   getCategoriesFromRecords,
+  getSubcategoriesFromRecords,
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
@@ -60,11 +61,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     year: false,
     region: false,
     unit: false,
+    category: { label: 'category_1', value: null },
   });
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const { year, region, unit } = useSelector((state) => state.indicator);
+  const {
+    year, region, unit, category,
+  } = useSelector((state) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -134,7 +138,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     year,
     region,
     unit,
-  }), [year, region, unit]);
+    category,
+  }), [year, region, unit, category]);
 
   const {
     data,
@@ -177,17 +182,20 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const defaultYear = useMemo(() => years?.[0], [years]);
   const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
   const defaultUnit = useMemo(() => units?.[0], [units]);
+  const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const subcategories = useMemo(() => getSubcategoriesFromRecords(filteredRecords), [filteredRecords]);
 
+  const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(categories)[visualizationType],
-    [visualizationType, categories],
+    () => ChartConfig(widgetDataKeys)[visualizationType],
+    [visualizationType, widgetDataKeys],
   );
 
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filteredRecords),
-    [visualizationType, filteredRecords],
+    () => getGroupedValues(visualizationType, filters, filteredRecords),
+    [visualizationType, filters, filteredRecords],
   );
 
   useEffect(() => {
@@ -209,8 +217,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ...defaultYear && { year: defaultYear },
       ...defaultRegion && { region: defaultRegion },
       ...defaultUnit && { unit: defaultUnit },
+      ...defaultCategory && { category: { label: defaultCategory } },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit]);
+  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
   return (
@@ -478,10 +487,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               </div>
             </section>
           </div>
+
           <div className="flex h-full">
             <section className="flex flex-col justify-between h-full ml-8">
-              {/* {categories?.length > 1 && <Filters categories={categories} className="mb-4" />} */}
-              {categories.length > 0 && <Legend categories={categories} className="overflow-y-auto mb-4" />}
+              {categories.length > 0 && (
+                <Legend
+                  categories={categories}
+                  subcategories={subcategories}
+                  className="overflow-y-auto mb-4"
+                />
+              )}
               <DataSource />
             </section>
           </div>
