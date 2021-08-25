@@ -351,6 +351,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {['bar', 'pie'].includes(visualizationType) && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
+                    {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
+                    {years.length > 1 && (
                     <Tooltip
                       placement="bottom-start"
                       visible={dropdownVisibility.year}
@@ -384,6 +386,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                       </button>
                     </Tooltip>
+                    )}
                   </div>
                 )}
 
@@ -400,15 +403,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       interactive
                       onClickOutside={() => closeDropdown('region')}
                       content={(
-                        <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
+                        <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                           {regions.map((_region) => (
                             <li
                               key={_region}
-                              className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
+                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
                             >
                               <button
                                 type="button"
                                 onClick={() => handleRegionChange(_region)}
+                                className="flex items-center py-2 w-full last:border-b-0 px-5"
                               >
                                 {_region}
                               </button>
@@ -423,12 +427,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
                         <span>{region || 'Select a region'}</span>
-                        <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                       </button>
                     </Tooltip>
                   </div>
                 )}
-                {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4">China</span>}
+                {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
               </div>
               <div className="flex h-full w-full min-h-1/2">
                 {isFetchingRecords && (
