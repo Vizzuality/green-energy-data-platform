@@ -2,7 +2,9 @@ import React from 'react';
 import { useSelect } from 'downshift';
 import cx from 'classnames';
 
+// language utils
 import i18n from 'i18next';
+import { languages } from 'utils/translations';
 
 // components
 import Icon from 'components/icon';
@@ -13,22 +15,13 @@ const LanguageSelect = () => {
     i18n.changeLanguage(code);
   };
 
-  const items = [{
-    name: 'English',
-    code: 'en',
-  },
-  {
-    name: 'Chinese',
-    code: 'zh_CN',
-  }];
-
   const {
     isOpen,
     getToggleButtonProps,
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({ items, onSelectedItemChange });
+  } = useSelect({ items: languages, onSelectedItemChange });
 
   return (
     <div className="flex items-center relative">
@@ -48,19 +41,20 @@ const LanguageSelect = () => {
       </button>
       {isOpen && (
       <ul
-        className="flex-col bg-gray1 absolute bottom-7 w-full pl-8 rounded p-2 border border-white border-opacity-25"
+        className="flex-col bg-gray1 absolute bottom-11 w-full rounded-xl border border-white border-opacity-25 divide-y divide-white divide-opacity-10"
         {...getMenuProps()}
       >
-        {items.map((item, index) => (
+        {languages.map((item, index) => (
           <li
             data-code={item.code}
             style={
                 highlightedIndex === index
-                  ? { backgroundColor: '#bde4ff' }
+                  ? { backgroundColor: 'rgba(78, 82, 106, 0.95)' }
                   : {}
               }
             key={`${item.code}`}
             {...getItemProps({ item, index })}
+            className="pl-8 p-2 first:rounded-t-xl last:rounded-b-xl "
           >
             {item.name}
           </li>

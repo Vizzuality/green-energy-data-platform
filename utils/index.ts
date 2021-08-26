@@ -17,7 +17,7 @@ import {
 import {
   IndicatorFilters,
 } from 'store/slices/indicator';
-import resources from 'dictionary';
+import resources from 'utils/translations';
 
 export const initializeLanguage = () => i18n.init({
   resources,
