@@ -235,7 +235,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               interactive
               onClickOutside={() => closeDropdown('indicator')}
               content={(
-                <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                   {subgroup?.indicators?.map(
                     ({ name: groupName, id, slug }) => (
                       <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">

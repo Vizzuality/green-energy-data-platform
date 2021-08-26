@@ -1,4 +1,13 @@
-const resources = {
+export const languages = [{
+  name: 'English',
+  code: 'en',
+},
+{
+  name: 'Chinese',
+  code: 'zh_CN',
+}];
+
+export const resources = {
   en: {
     translation: {
       change: 'Change indicator',
