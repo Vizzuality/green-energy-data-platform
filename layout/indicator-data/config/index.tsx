@@ -61,11 +61,13 @@ const ChartConfig = (categories) => {
       return categories.map((category) => ({
         type: 'monotone',
         dataKey: category,
+        strokeWidth: 2,
       }));
     }
     return ([{
       type: 'monotone',
       dataKey: 'Total',
+      strokeWidth: 2,
     }]);
   };
 

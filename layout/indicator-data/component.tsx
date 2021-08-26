@@ -41,9 +41,12 @@ import {
   getSubcategoriesFromRecords,
 } from 'utils';
 
+import { RootState } from 'store/store';
+
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
+import Filters from 'components/filters';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
@@ -68,7 +71,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const dispatch = useDispatch();
   const {
     year, region, unit, category,
-  } = useSelector((state) => state.indicator);
+  } = useSelector((state: RootState) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -458,7 +461,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                           {units.map((_unit) => (
                             <li
                               key={_unit}
-                              className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
+                              className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
                             >
                               <button
                                 type="button"
@@ -475,7 +478,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       <button
                         type="button"
                         onClick={() => { toggleDropdown('unit'); }}
-                        className="flex items-center cursor-pointer text-color1 hover:bg-color1 hover:rounded-full hover:text-white py-0.5 px-4 mr-4"
+                        className="text-sm flex items-center cursor-pointer text-gray1 text-opacity-50"
                       >
                         <span>{unit}</span>
                       </button>
@@ -494,9 +497,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           <div className="flex h-full">
             <section className="flex flex-col justify-between h-full ml-8">
               {categories.length > 0 && (
+              <Filters
+                categories={categories}
+                className="overflow-y-auto mb-4"
+              />
+              )}
+              {categories.length > 0 && (
                 <Legend
-                  categories={categories}
-                  subcategories={subcategories}
+                  categories={category.label === 'category_1' ? categories : subcategories}
                   className="overflow-y-auto mb-4"
                 />
               )}

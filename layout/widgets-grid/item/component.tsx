@@ -23,6 +23,8 @@ import {
 
 } from 'utils';
 
+import { RootState } from 'store/store';
+
 import CONFIG from '../config';
 
 interface GridItemProps {
@@ -40,7 +42,7 @@ const GridItem: FC<GridItemProps> = ({
 }: GridItemProps) => {
   const {
     year, region, unit, category,
-  } = useSelector((state) => state.indicator);
+  } = useSelector((state: RootState) => state.indicator);
 
   const filters = useMemo(() => ({
     year,
