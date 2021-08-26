@@ -19,6 +19,7 @@ import Head from 'components/head';
 import Header from 'layout/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
+import i18next from 'i18next';
 
 const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
@@ -80,7 +81,8 @@ const SignupPage: FC = () => {
                       placeholder="Write your name account"
                       className={cx(
                         'w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
-                        { 'placeholder-opacity-100': credentials.name.length })}
+                        { 'placeholder-opacity-100': credentials.name.length },
+                      )}
                       value={credentials.name}
                       onChange={(e) => handleChange('name', e)}
                       required
@@ -156,7 +158,10 @@ const SignupPage: FC = () => {
                   <span>
                     I agree with the
                     <Link href={{ pathname: '/terms-conditions' }} passHref>
-                      <a href="/terms-conditions"> Terms and Conditions</a>
+                      <a href="/terms-conditions">
+                        {' '}
+                        {i18next.t('terms')}
+                      </a>
                     </Link>
                   </span>
                   <input
@@ -171,7 +176,9 @@ const SignupPage: FC = () => {
                   <span>
                     I agree with the
                     <Link href={{ pathname: '/privacy-policy' }} passHref>
-                      <a href="/privacy-policy"> Privacy Policy</a>
+                      <a href="/privacy-policy">
+                        {i18next.t('privacy')}
+                      </a>
                     </Link>
                   </span>
                   <input

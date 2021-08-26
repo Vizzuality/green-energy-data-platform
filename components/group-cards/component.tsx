@@ -4,6 +4,7 @@ import cx from 'classnames';
 import Link from 'next/link';
 
 import { useDefaultIndicator } from 'hooks/indicators';
+import i18next from 'i18next';
 
 interface GroupProps {
   description: string,
@@ -39,7 +40,7 @@ const GroupCard: FC<GroupCardProps> = ({
         <h4 className="text-2.5xl text-color1 pb-2 text-bold leading-loose">{subtitle}</h4>
         <p className="text-sm leading-7 my-9 cursor-pointer">{description}</p>
         <Link href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} passHref>
-          <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="py-3 px-6 text-sm text-white rounded-full bg-gradient-color1">Discover</a>
+          <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="py-3 px-6 text-sm text-white rounded-full bg-gradient-color1">{i18next.t('discover')}</a>
         </Link>
       </div>
       <img src={`/images/landing/${slug}.png`} alt={slug} className="rounded-4xl bg-shadow max-w-md m-16" />

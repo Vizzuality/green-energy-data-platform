@@ -14,7 +14,7 @@ import dynamic from 'next/dynamic';
 // hooks
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-// import { useGroups } from 'hooks/groups';
+
 import { useSubgroup } from 'hooks/subgroups';
 import {
   useIndicator,
@@ -41,6 +41,7 @@ import {
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
+import i18next from 'i18next';
 
 import ChartConfig from './config';
 
@@ -60,6 +61,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     region: false,
     unit: false,
   });
+
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const { year, region, unit } = useSelector((state) => state.indicator);
@@ -233,7 +235,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               interactive
               onClickOutside={() => closeDropdown('indicator')}
               content={(
-                <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                   {subgroup?.indicators?.map(
                     ({ name: groupName, id, slug }) => (
                       <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">
@@ -250,12 +252,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 </ul>
               )}
             >
+
               <button
                 type="button"
                 onClick={() => { toggleDropdown('indicator'); }}
                 className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
               >
-                <span>Change Indicator</span>
+                <span>{i18next.t('change')}</span>
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" />
               </button>
 
@@ -378,7 +381,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {/* region filter */}
                 {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
                   <div className="flex items-center">
-                    <span className="pr-2">Region:</span>
+                    <span className="pr-2">
+                      {i18next.t('region')}
+                      :
+                    </span>
                     <Tooltip
                       placement="bottom-start"
                       visible={dropdownVisibility.region}
