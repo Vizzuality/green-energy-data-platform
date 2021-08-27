@@ -9,8 +9,8 @@ import LoadingSpinner from 'components/loading-spinner';
 import Tooltip from 'components/tooltip';
 import Icon from 'components/icon';
 import VisualizationsNav from 'components/visualizations-nav';
-import Filters from 'components/filters';
-import Legend from 'components/legend';
+// import Filters from 'components/filters';
+// import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 
 // hooks
@@ -42,7 +42,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     title,
     type,
     visualizationTypes,
-    categories,
     data: indicatorData,
     description,
   } = selectedIndicator;
@@ -103,7 +102,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             <h2 className="text-gray1 font-bold">{title}</h2>
           </div>
           <p className="text-gray1 py-8">{description}</p>
-          {categories.length > 1 && <Filters categories={categories} className="mb-4" />}
+          {/* {categories.length > 1 && <Filters categories={categories} className="mb-4" />} */}
         </div>
 
         <div className="flex text-gray1 items-center">
@@ -134,7 +133,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           widgetConfig={chartConfig[active]}
         />
 
-        {categories.length > 1 && <Legend categories={[]} subcategories={[]} className="mb-4" />}
+        {/* {categories.length > 1 && <Legend categories={[]} subcategories={[]} className="mb-4" />} */}
         <DataSource type="horizontal" />
 
       </div>
