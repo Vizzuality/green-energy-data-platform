@@ -14,7 +14,7 @@ import LoadingSpinner from 'components/loading-spinner';
 const ComparePage: FC = () => {
   const { query } = useRouter();
   const {
-    gInd1, sgInd1, gInd2, sgInd2,
+    g1, sg1, ind1, g2, sg2, ind2,
   } = query;
 
   const router = useRouter();
@@ -24,21 +24,23 @@ const ComparePage: FC = () => {
     router.push(url, url, { shallow: true });
   };
 
-  if (!gInd1 || !sgInd1 || !sgInd2 || !sgInd2) return <LoadingSpinner />;
+  if (!g1 || !sg1 || !ind1 || !g2 || !sg2 || !ind2) return <LoadingSpinner />;
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
       <Header className="border-b border-white border-opacity-30" />
-      <section className="flex space-x-3">
+      <section className="w-full flex space-x-3 container">
         <Compare
-          groupSlug={gInd1}
-          subgroupSlug={sgInd1}
+          groupSlug={g1}
+          subgroupSlug={sg1}
+          indicatorSlug={ind1}
           onClose={handleClose}
         />
         <Compare
-          groupSlug={gInd2}
-          subgroupSlug={sgInd2}
+          groupSlug={g2}
+          subgroupSlug={sg2}
+          indicatorSlug={ind2}
           onClose={handleClose}
         />
       </section>
