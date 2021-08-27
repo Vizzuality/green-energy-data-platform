@@ -19,6 +19,7 @@ export const resources = {
       discover: 'Discover',
       'landing-title': 'Discover data insights for a sustainable future.',
       browse: 'Browse all data',
+      filters: 'Filters',
     },
   },
   zh_CN: {
@@ -32,6 +33,7 @@ export const resources = {
       discover: '发现',
       'landing-title': '发现数据见解，以实现可持续发展的未来',
       browse: '浏览所有数据',
+      filters: '过滤器',
     },
   },
 };
