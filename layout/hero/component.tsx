@@ -4,6 +4,7 @@ import React, {
 } from 'react';
 import cx from 'classnames';
 import Link from 'next/link';
+import i18next from 'i18next';
 
 // components
 import UserDropdown from 'components/user-dropdown';
@@ -42,7 +43,7 @@ const Hero: FC<HeroProps> = ({
           <UserDropdown className="mr-4" />
           <Link href="/indicators" passHref>
             <a href="/indicators" className="ml-3 bg-white border-white text-gray1 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm">
-              Browse all data
+              {i18next.t('browse')}
             </a>
           </Link>
         </div>

@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import cx from 'classnames';
+import i18next from 'i18next';
 
 // components
 import Icon from 'components/icon';
@@ -32,7 +33,12 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
         className={cx('flex justify-between flex-grow border-b-gray',
           { [className]: !!className })}
       >
-        {!mobile && (<p className="pt-4">Select Visualization:</p>)}
+        {!mobile && (
+        <p className="pt-4">
+          {i18next.t('visualization')}
+          :
+        </p>
+        )}
         {VisualizationsOptions?.map(({
           icon, label, id, slug,
         }) => (
