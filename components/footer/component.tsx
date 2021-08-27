@@ -3,6 +3,7 @@ import Link from 'next/link';
 import cx from 'classnames';
 
 import LanguageSelect from 'components/language-select';
+import i18next from 'i18next';
 
 interface FooterProps {
   className?: string,
@@ -23,10 +24,10 @@ const Footer: FC<FooterProps> = ({
       </Link>
       <div className="flex divide-x">
         <Link href="/privacy-policy" passHref>
-          <a href="/privacy-policy" className="px-4 cursor-pointer">Privacy Policy</a>
+          <a href="/privacy-policy" className="px-4 cursor-pointer">{i18next.t('privacy')}</a>
         </Link>
         <Link href="/terms-conditions" passHref>
-          <a href="/terms-conditions" className="px-4 cursor-pointer">Terms of Service</a>
+          <a href="/terms-conditions" className="px-4 cursor-pointer">{i18next.t('terms')}</a>
         </Link>
       </div>
       <>
