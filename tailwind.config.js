@@ -7,6 +7,9 @@ module.exports = {
       after: 'after',
       'not-first': 'not(:first-child)',
     },
+    maxWidth: {
+      xs: '13rem',
+    },
     extend: {
       colors: {
         color1: '#009DCD',
@@ -34,9 +37,6 @@ module.exports = {
         6.5: '1.563rem',
         7.5: '1.875rem',
         13: '3.125rem',
-      },
-      maxWidth: {
-        xs: '15.5rem',
       },
       minHeight: {
         '1/4': '25vh',

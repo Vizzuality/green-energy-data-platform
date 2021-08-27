@@ -34,8 +34,7 @@ const Hero: FC<HeroProps> = ({
 }: HeroProps) => (
   <div className={cx(`${THEME[theme]}`,
     { 'pb-44': !rounded },
-    { 'rounded-2xl': !!rounded },
-    { [className]: !!className })}
+    { 'rounded-t-2xl': !!rounded })}
   >
     {header && (
       <Header>
@@ -49,7 +48,7 @@ const Hero: FC<HeroProps> = ({
         </div>
       </Header>
     )}
-    <div className={cx('max-w-6xl container m-auto lg:px-32 md:px-20',
+    <div className={cx('max-w-6xl container m-auto',
       { [className]: !!className })}
     >
       {children}

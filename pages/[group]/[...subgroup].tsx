@@ -75,7 +75,7 @@ const GroupPage: FC = () => {
   return (
     <LayoutPage className="text-white bg-gradient-gray1 pb-20">
       <Head title={`${data?.group?.name} analysis`} />
-      <Hero>
+      <Hero className="lg:px-32 md:px-20">
         <Nav className="pt-10" />
         <Tooltip
           placement="bottom-start"
