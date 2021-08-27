@@ -38,11 +38,15 @@ import {
   getUnitsFromRecords,
   getRegionsFromRecords,
   getCategoriesFromRecords,
+  getSubcategoriesFromRecords,
 } from 'utils';
+
+import { RootState } from 'store/store';
 
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
+import Filters from 'components/filters';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
@@ -60,11 +64,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     year: false,
     region: false,
     unit: false,
+    category: { label: 'category_1', value: null },
   });
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const { year, region, unit } = useSelector((state) => state.indicator);
+  const {
+    year, region, unit, category,
+  } = useSelector((state: RootState) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -134,7 +141,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     year,
     region,
     unit,
-  }), [year, region, unit]);
+    category,
+  }), [year, region, unit, category]);
 
   const {
     data,
@@ -177,17 +185,20 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const defaultYear = useMemo(() => years?.[0], [years]);
   const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
   const defaultUnit = useMemo(() => units?.[0], [units]);
+  const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const subcategories = useMemo(() => getSubcategoriesFromRecords(filteredRecords), [filteredRecords]);
 
+  const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(categories)[visualizationType],
-    [visualizationType, categories],
+    () => ChartConfig(widgetDataKeys)[visualizationType],
+    [visualizationType, widgetDataKeys],
   );
 
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filteredRecords),
-    [visualizationType, filteredRecords],
+    () => getGroupedValues(visualizationType, filters, filteredRecords),
+    [visualizationType, filters, filteredRecords],
   );
 
   useEffect(() => {
@@ -209,8 +220,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ...defaultYear && { year: defaultYear },
       ...defaultRegion && { region: defaultRegion },
       ...defaultUnit && { unit: defaultUnit },
+      ...defaultCategory && { category: { label: defaultCategory } },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit]);
+  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
   return (
@@ -342,6 +354,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {['bar', 'pie'].includes(visualizationType) && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
+                    {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
+                    {years.length > 1 && (
                     <Tooltip
                       placement="bottom-start"
                       visible={dropdownVisibility.year}
@@ -375,6 +389,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                       </button>
                     </Tooltip>
+                    )}
                   </div>
                 )}
 
@@ -391,15 +406,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       interactive
                       onClickOutside={() => closeDropdown('region')}
                       content={(
-                        <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
+                        <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                           {regions.map((_region) => (
                             <li
                               key={_region}
-                              className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
+                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
                             >
                               <button
                                 type="button"
                                 onClick={() => handleRegionChange(_region)}
+                                className="flex items-center py-2 w-full last:border-b-0 px-5"
                               >
                                 {_region}
                               </button>
@@ -414,12 +430,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
                         <span>{region || 'Select a region'}</span>
-                        <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                       </button>
                     </Tooltip>
                   </div>
                 )}
-                {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4">China</span>}
+                {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
               </div>
               <div className="flex h-full w-full min-h-1/2">
                 {isFetchingRecords && (
@@ -446,7 +461,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                           {units.map((_unit) => (
                             <li
                               key={_unit}
-                              className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
+                              className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
                             >
                               <button
                                 type="button"
@@ -463,7 +478,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       <button
                         type="button"
                         onClick={() => { toggleDropdown('unit'); }}
-                        className="flex items-center cursor-pointer text-color1 hover:bg-color1 hover:rounded-full hover:text-white py-0.5 px-4 mr-4"
+                        className="text-sm flex items-center cursor-pointer text-gray1 text-opacity-50"
                       >
                         <span>{unit}</span>
                       </button>
@@ -478,10 +493,21 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               </div>
             </section>
           </div>
+
           <div className="flex h-full">
             <section className="flex flex-col justify-between h-full ml-8">
-              {/* {categories?.length > 1 && <Filters categories={categories} className="mb-4" />} */}
-              {categories.length > 0 && <Legend categories={categories} className="overflow-y-auto mb-4" />}
+              {categories.length > 0 && (
+              <Filters
+                categories={categories}
+                className="overflow-y-auto mb-4"
+              />
+              )}
+              {categories.length > 0 && (
+                <Legend
+                  categories={category.label === 'category_1' ? categories : subcategories}
+                  className="overflow-y-auto mb-4"
+                />
+              )}
               <DataSource />
             </section>
           </div>

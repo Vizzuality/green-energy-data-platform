@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { colors } from '../../constants';
 
 interface LegendProps {
-  categories: string[]
+  categories: string[],
   className?: string,
 }
 
@@ -16,16 +16,16 @@ const Legend: FC<LegendProps> = ({
     { [className]: className })}
   >
     <ul className="flex flex-col items-center my-2.5 py-2.5">
-      {categories.map((category, index) => (
+      {categories.map((item, index) => (
         <li
-          key={category}
+          key={item}
           className="flex items-center w-full active:bg-color1 rounded-md focus:bg-blue text-left text-sm"
         >
           <span
             className="w-4 h-4 ml-3 rounded-full"
             style={{ backgroundColor: colors[index] }}
           />
-          <span className="flex-1 py-1 pl-6">{category}</span>
+          <span className="flex-1 py-1 pl-6 text-left">{item}</span>
         </li>
       ))}
     </ul>
