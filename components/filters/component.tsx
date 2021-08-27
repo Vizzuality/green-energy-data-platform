@@ -1,5 +1,6 @@
 import React, { FC, useState, useCallback } from 'react';
 import cx from 'classnames';
+import i18next from 'i18next';
 
 // components
 import Icon from 'components/icon';
@@ -45,7 +46,10 @@ const Filters: FC<FiltersProps> = ({
       <div className="flex justify-start py-3.5 px-6 ">
         <div className="flex">
           <Icon ariaLabel="filters" name="filter" size="lg" className="mr-5" />
-          <p>Filters:</p>
+          <p>
+            {i18next.t('filters')}
+            :
+          </p>
         </div>
       </div>
       <div className="flex flex-col">

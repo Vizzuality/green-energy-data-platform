@@ -31,7 +31,7 @@ const LanguageSelect = () => {
         {...getToggleButtonProps()}
       >
         <Icon className="text-white" ariaLabel="world ball" name="language" size="lg" />
-        <span className="px-3">Select language</span>
+        <span className="px-3">{i18n.t('language')}</span>
         <Icon
           className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
           ariaLabel="arrow"
