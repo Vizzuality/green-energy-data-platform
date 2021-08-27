@@ -5,6 +5,8 @@ import Tooltip from 'components/widgets/tooltip';
 type PayloadObject = {
   name: string,
   value: number,
+  color: string,
+  fill: string,
 };
 
 interface TickProps {
@@ -59,13 +61,11 @@ const ChartConfig = (categories) => {
   const getLines = () => {
     if (categories.length) {
       return categories.map((category) => ({
-        type: 'monotone',
         dataKey: category,
         strokeWidth: 2,
       }));
     }
     return ([{
-      type: 'monotone',
       dataKey: 'Total',
       strokeWidth: 2,
     }]);
@@ -142,6 +142,7 @@ const ChartConfig = (categories) => {
       tooltip: {
         isAnimationActive: false,
         content: TooltipContent,
+
       },
     },
     bar: {
