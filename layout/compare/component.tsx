@@ -81,8 +81,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     category: { label: 'category_1', value: null },
   });
 
-  console.log(dropdownVisibility);
-
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const {
@@ -97,14 +95,17 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const router = useRouter();
   const { query } = router;
 
-  const handleSubgroupChange = useCallback((sg1, ind1) => {
+  const handleSubgroupChange = useCallback((sg, ind) => {
     setDropdownVisibility((prevDropdownVisibility) => ({
       ...prevDropdownVisibility,
       subgroup: !prevDropdownVisibility.subgroup,
     }));
+
     router.push({
       query: {
-        ...query, [`sg${compareIndex}`]: sg1, ind1,
+        ...query,
+        [`sg${compareIndex}`]: sg,
+        [`ind${compareIndex}`]: ind,
       },
     });
   }, [router, query, compareIndex]);
@@ -261,6 +262,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, compareIndex]);
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
+
   return (
     <div className="py-20 text-gray1" key={compareIndex}>
       <Hero
