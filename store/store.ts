@@ -3,11 +3,13 @@ import type { ReducersMapObject } from '@reduxjs/toolkit';
 import group from './slices/group';
 import subgroup from './slices/subgroup';
 import indicator from './slices/indicator';
+import indicator_compare from './slices/indicator_compare';
 
 const staticReducers = {
   group,
   subgroup,
   indicator,
+  indicator_compare,
 };
 
 const asyncReducers = {};

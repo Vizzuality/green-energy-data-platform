@@ -33,6 +33,7 @@ import {
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
+import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
 import { useQueryClient } from 'react-query';
@@ -47,6 +48,7 @@ import {
   useIndicatorRecords,
 } from 'hooks/indicators';
 
+import indicators from 'services/indicators';
 import ChartConfig from '../indicator-data/config';
 
 interface CompareLayoutProps {
@@ -80,20 +82,42 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     category: { label: 'category_1', value: null },
   });
 
+  const [compareDropdownVisibility, setCompareDropdownVisibility] = useState({
+    subgroup: false,
+    indicator: false,
+    year: false,
+    region: false,
+    unit: false,
+    category: { label: 'category_1', value: null },
+  });
+
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const {
-    year, region, unit, category,
-  } = useSelector((state: RootState) => state.indicator);
+    year,
+    region,
+    unit,
+    category,
+  } = useSelector(
+    (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
+  );
 
   const router = useRouter();
   const { query } = router;
 
   const handleSubgroupChange = useCallback((sg1, ind1) => {
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      subgroup: false,
-    });
+    if (compareIndex === 1) {
+      setDropdownVisibility({
+        ...dropdownVisibility,
+        subgroup: false,
+      });
+    } else {
+      setCompareDropdownVisibility({
+        ...dropdownVisibility,
+        subgroup: false,
+      });
+    }
+
     router.push({
       query: {
         ...query, [`sg${compareIndex}`]: sg1, ind1,
@@ -111,7 +135,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         ...query, [`ind${compareIndex}`]: url,
       },
     });
-
   }, [router, query, dropdownVisibility, compareIndex]);
 
   const toggleDropdown = useCallback((key) => {
@@ -122,38 +145,34 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   }, [dropdownVisibility]);
 
   const closeDropdown = useCallback((key) => {
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      [key]: false,
-    });
-  }, [dropdownVisibility]);
+    if (compareIndex === 1) {
+      setDropdownVisibility({
+        ...dropdownVisibility,
+        [key]: false,
+      });
+    } else {
+      setCompareDropdownVisibility({
+        ...compareDropdownVisibility,
+        [key]: false,
+      });
+    }
+  }, [dropdownVisibility, compareIndex, compareDropdownVisibility]);
 
-  const handleYearChange = useCallback((_year) => {
-    dispatch(setFilters({ year: _year }));
-
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      year: false,
-    });
-  }, [dispatch, dropdownVisibility]);
-
-  const handleRegionChange = useCallback((_region) => {
-    dispatch(setFilters({ region: _region }));
-
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      region: false,
-    });
-  }, [dispatch, dropdownVisibility]);
-
-  const handleUnitChange = useCallback((_unit) => {
-    dispatch(setFilters({ unit: _unit }));
-
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      unit: false,
-    });
-  }, [dispatch, dropdownVisibility]);
+  const handleChange = useCallback((key, _value) => {
+    if (compareIndex === 1) {
+      dispatch(setFilters({ [key]: _value }));
+      setDropdownVisibility({
+        ...dropdownVisibility,
+        [key]: false,
+      });
+    } else {
+      dispatch(setCompareFilters({ [key]: _value }));
+      setCompareDropdownVisibility({
+        ...compareDropdownVisibility,
+        [key]: false,
+      });
+    }
+  }, [dispatch, compareIndex, dropdownVisibility, compareDropdownVisibility]);
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
@@ -250,13 +269,22 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const { name: groupName } = group;
 
   useEffect(() => {
-    dispatch(setFilters({
-      ...defaultYear && { year: defaultYear },
-      ...defaultRegion && { region: defaultRegion },
-      ...defaultUnit && { unit: defaultUnit },
-      ...defaultCategory && { category: { label: defaultCategory } },
-    }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit]);
+    if (compareIndex === 1) {
+      dispatch(setFilters({
+        ...defaultYear && { year: defaultYear },
+        ...defaultRegion && { region: defaultRegion },
+        ...defaultUnit && { unit: defaultUnit },
+        ...defaultCategory && { category: { label: defaultCategory } },
+      }));
+    } else {
+      dispatch(setCompareFilters({
+        ...defaultYear && { year: defaultYear },
+        ...defaultRegion && { region: defaultRegion },
+        ...defaultUnit && { unit: defaultUnit },
+        ...defaultCategory && { category: { label: defaultCategory } },
+      }));
+    }
+  }, [dispatch, defaultYear, defaultRegion, defaultUnit, compareIndex]);
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
   return (
@@ -284,7 +312,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           <Tooltip
             placement="bottom-start"
             className=""
-            visible={dropdownVisibility.subgroup}
+            visible={compareIndex === 1 ? dropdownVisibility.subgroup
+              : compareDropdownVisibility.subgroup}
             interactive
             onClickOutside={() => { closeDropdown('subgroup'); }}
             content={(
@@ -308,12 +337,12 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   </li>
                 ))}
               </ul>
-          )}
+            )}
           >
             <button
               type="button"
               className="flex items-center pt-3"
-              onClick={() => { toggleDropdown('subgroup'); }}
+              onClick={() => { toggleDropdown(`subgroup_${compareIndex}`); }}
             >
               <h1 className="text-3.5xl text-left">
                 {data?.subgroup?.name}
@@ -348,29 +377,29 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 placement="bottom-end"
                 visible={dropdownVisibility.indicator}
                 interactive
-                onClickOutside={() => closeDropdown('indicator')}
+                onClickOutside={() => closeDropdown(`indicator_${compareIndex}`)}
                 content={(
                   <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                     {subgroup?.indicators?.map(
-                      ({ name: groupName, id, slug }) => (
+                      ({ name: group_name, id, slug }) => (
                         <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">
                           <button
                             type="button"
                             className="flex items-center py-2 w-full last:border-b-0"
                             onClick={() => handleIndicatorChange(slug)}
                           >
-                            {groupName}
+                            {group_name}
                           </button>
                         </li>
                       ),
                     )}
                   </ul>
-            )}
+                )}
               >
 
                 <button
                   type="button"
-                  onClick={() => { toggleDropdown('indicator'); }}
+                  onClick={() => { toggleDropdown(`indicator_${compareIndex}`); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full text-sm"
                 >
                   <span>{i18next.t('change')}</span>
@@ -387,7 +416,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           <p className="text-sm text-justify py-7.5">
             {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
           </p>
-          {categories?.length > 1 && <Filters categories={categories} className="mb-4" />}
+          {categories?.length > 1 && (
+            <Filters
+              categories={categories}
+              className="mb-4"
+              onClick={compareIndex === 1 ? setFilters : setCompareFilters}
+            />
+          )}
 
           <div className="flex justify-between">
             <div className="flex flex-col h-full w-full">
@@ -395,150 +430,150 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 <div className="flex">
                   {/* year filter */}
                   {['bar', 'pie'].includes(visualizationType) && (
-                  <div className="flex items-center">
-                    <span className="pr-2">Showing for:</span>
-                    <Tooltip
-                      placement="bottom-start"
-                      visible={dropdownVisibility.year}
-                      interactive
-                      onClickOutside={() => closeDropdown('year')}
-                      content={(
-                        <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                          {years.map((_year) => (
-                            <li
-                              key={_year}
-                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
-                            >
-                              <button
-                                type="button"
-                                className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                onClick={() => { handleYearChange(_year); }}
+                    <div className="flex items-center">
+                      <span className="pr-2">Showing for:</span>
+                      <Tooltip
+                        placement="bottom-start"
+                        visible={dropdownVisibility[`year${compareIndex}`]}
+                        interactive
+                        onClickOutside={() => closeDropdown('year')}
+                        content={(
+                          <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                            {years.map((_year) => (
+                              <li
+                                key={_year}
+                                className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
                               >
-                                {_year}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                    )}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => { toggleDropdown('year'); }}
-                        className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                                <button
+                                  type="button"
+                                  className="flex items-center py-2 w-full last:border-b-0 px-5"
+                                  onClick={() => { handleChange('year', _year); }}
+                                >
+                                  {_year}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       >
-                        <span>{year || 'Select dates'}</span>
-                        <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                      </button>
-                    </Tooltip>
+                        <button
+                          type="button"
+                          onClick={() => { toggleDropdown('year'); }}
+                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                        >
+                          <span>{year || 'Select dates'}</span>
+                          <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                        </button>
+                      </Tooltip>
 
-                  </div>
+                    </div>
                   )}
 
                   {/* region filter */}
                   {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
-                  <div className="flex items-center">
-                    <span className="pr-2">
-                      {i18next.t('region')}
-                      :
-                    </span>
-                    <Tooltip
-                      placement="bottom-start"
-                      visible={dropdownVisibility.region}
-                      interactive
-                      onClickOutside={() => closeDropdown('region')}
-                      content={(
-                        <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
-                          {regions.map((_region) => (
-                            <li
-                              key={_region}
-                              className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
-                            >
-                              <button
-                                type="button"
-                                onClick={() => handleRegionChange(_region)}
+                    <div className="flex items-center">
+                      <span className="pr-2">
+                        {i18next.t('region')}
+                        :
+                      </span>
+                      <Tooltip
+                        placement="bottom-start"
+                        visible={dropdownVisibility.region}
+                        interactive
+                        onClickOutside={() => closeDropdown(`region_${compareIndex}`)}
+                        content={(
+                          <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
+                            {regions.map((_region) => (
+                              <li
+                                key={_region}
+                                className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
                               >
-                                {_region}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                    )}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => { toggleDropdown('region'); }}
-                        className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                                <button
+                                  type="button"
+                                  onClick={() => handleChange('region', _region)}
+                                >
+                                  {_region}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       >
-                        <span>{region || 'Select a region'}</span>
-                        <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                      </button>
-                    </Tooltip>
-                  </div>
+                        <button
+                          type="button"
+                          onClick={() => { toggleDropdown(`region_${compareIndex}`); }}
+                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                        >
+                          <span>{region || 'Select a region'}</span>
+                          <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                        </button>
+                      </Tooltip>
+                    </div>
                   )}
                   {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4">China</span>}
                 </div>
                 <div className="flex h-full w-full min-h-1/2">
                   {isFetchingRecords && (
-                  <LoadingSpinner />
+                    <LoadingSpinner />
                   )}
 
                   {!isFetchingRecords && !filteredRecords.length && (
-                  <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                    <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-                    <p>Data not found</p>
-                  </div>
+                    <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
+                      <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                      <p>Data not found</p>
+                    </div>
                   )}
 
                   {(!!filteredRecords.length && !isFetchingRecords) && (
-                  <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-                    <div className="flex items-center">
-                      <Tooltip
-                        placement="bottom-start"
-                        visible={dropdownVisibility.unit}
-                        interactive
-                        onClickOutside={() => closeDropdown('unit')}
-                        content={(
-                          <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                            {units.map((_unit) => (
-                              <li
-                                key={_unit}
-                                className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
-                              >
-                                <button
-                                  type="button"
-                                  className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                  onClick={() => { handleUnitChange(_unit); }}
+                    <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                      <div className="flex items-center">
+                        <Tooltip
+                          placement="bottom-start"
+                          visible={dropdownVisibility[`unit_${compareIndex}`]}
+                          interactive
+                          onClickOutside={() => closeDropdown(`unit_${compareIndex}`)}
+                          content={(
+                            <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                              {units.map((_unit) => (
+                                <li
+                                  key={_unit}
+                                  className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
                                 >
-                                  {_unit}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                    )}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => { toggleDropdown('unit'); }}
-                          className="flex items-center cursor-pointer text-color1 hover:bg-color1 hover:rounded-full hover:text-white py-0.5 px-4 mr-4"
+                                  <button
+                                    type="button"
+                                    className="flex items-center py-2 w-full last:border-b-0 px-5"
+                                    onClick={() => { handleChange('unit', _unit); }}
+                                  >
+                                    {_unit}
+                                  </button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                         >
-                          <span>{unit}</span>
-                        </button>
-                      </Tooltip>
+                          <button
+                            type="button"
+                            onClick={() => { toggleDropdown(`unit_${compareIndex}`); }}
+                            className="flex items-center cursor-pointer text-color1 hover:bg-color1 hover:rounded-full hover:text-white py-0.5 px-4 mr-4"
+                          >
+                            <span>{unit}</span>
+                          </button>
+                        </Tooltip>
+                      </div>
+                      <div className="w-96">
+                        <DynamicChart
+                          widgetData={widgetData}
+                          widgetConfig={widgetConfig}
+                        />
+                      </div>
+                      {categories.length > 0 && (
+                        <Legend
+                          categories={category.label === 'category_1' ? categories : subcategories}
+                          className="overflow-y-auto mb-4"
+                        />
+                      )}
+                      <DataSource type="horizontal" indicatorSlug={indicatorSlug} />
                     </div>
-                    <div className="w-96">
-                      <DynamicChart
-                        widgetData={widgetData}
-                        widgetConfig={widgetConfig}
-                      />
-                    </div>
-                    {categories.length > 0 && (
-                    <Legend
-                      categories={category.label === 'category_1' ? categories : subcategories}
-                      className="overflow-y-auto mb-4"
-                    />
-                    )}
-                    <DataSource type="horizontal" indicatorSlug={indicatorSlug} />
-                  </div>
                   )}
                 </div>
               </section>
