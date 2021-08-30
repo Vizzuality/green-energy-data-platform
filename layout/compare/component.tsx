@@ -29,6 +29,7 @@ import {
   getUnitsFromRecords,
   getRegionsFromRecords,
   getCategoriesFromRecords,
+  getSubcategoriesFromRecords,
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
@@ -52,8 +53,9 @@ interface CompareLayoutProps {
   groupSlug: string,
   subgroupSlug: string,
   indicatorSlug: string,
-  onClose: (groupSlug: string, subgroupSlug: string) => void,
+  onClose: (groupSlug: string, subgroupSlug: string, indicatorSlug: string) => void,
   className?: string,
+  compareIndex: number,
 }
 
 type ChartProps = {
@@ -67,27 +69,50 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   indicatorSlug,
   className,
   onClose,
+  compareIndex,
 }: CompareLayoutProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
+    subgroup: false,
     indicator: false,
     year: false,
     region: false,
     unit: false,
+    category: { label: 'category_1', value: null },
   });
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const { year, region, unit } = useSelector((state: RootState) => state.indicator);
+  const {
+    year, region, unit, category,
+  } = useSelector((state: RootState) => state.indicator);
+
   const router = useRouter();
+  const { query } = router;
+
+  const handleSubgroupChange = useCallback((sg1, ind1) => {
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      subgroup: false,
+    });
+    router.push({
+      query: {
+        ...query, [`sg${compareIndex}`]: sg1, ind1,
+      },
+    });
+  }, [router, query, dropdownVisibility, compareIndex]);
 
   const handleIndicatorChange = useCallback((url) => {
     setDropdownVisibility({
       ...dropdownVisibility,
       indicator: false,
     });
+    router.push({
+      query: {
+        ...query, [`ind${compareIndex}`]: url,
+      },
+    });
 
-    router.push(url);
-  }, [router, dropdownVisibility]);
+  }, [router, query, dropdownVisibility, compareIndex]);
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
@@ -138,7 +163,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     year,
     region,
     unit,
-  }), [year, region, unit]);
+    category,
+  }), [year, region, unit, category]);
 
   const {
     data,
@@ -181,17 +207,22 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const defaultYear = useMemo(() => years?.[0], [years]);
   const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
   const defaultUnit = useMemo(() => units?.[0], [units]);
+  const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
+  );
 
+  const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(categories)[visualizationType],
-    [visualizationType, categories],
+    () => ChartConfig(widgetDataKeys)[visualizationType],
+    [visualizationType, widgetDataKeys],
   );
 
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filteredRecords),
-    [visualizationType, filteredRecords],
+    () => getGroupedValues(visualizationType, filters, filteredRecords),
+    [visualizationType, filters, filteredRecords],
   );
 
   useEffect(() => {
@@ -211,27 +242,25 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const { data: group } = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
     placeholderData: {
+      name: null,
       subgroups: [],
     },
   });
 
-  const handleSubgroupChange = useCallback((url) => {
-    setDropdownVisibility(false);
-
-    router.push(url);
-  }, [router]);
+  const { name: groupName } = group;
 
   useEffect(() => {
     dispatch(setFilters({
       ...defaultYear && { year: defaultYear },
       ...defaultRegion && { region: defaultRegion },
       ...defaultUnit && { unit: defaultUnit },
+      ...defaultCategory && { category: { label: defaultCategory } },
     }));
   }, [dispatch, defaultYear, defaultRegion, defaultUnit]);
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
   return (
-    <div className="py-20 text-gray1">
+    <div className="py-20 text-gray1" key={compareIndex}>
       <Hero
         header={false}
         rounded
@@ -240,7 +269,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         <button
           type="button"
           className="absolute left-0 top-0 bg-gray1 rounded-tl-2xl rounded-br-2xl flex divide-x divide-white items-center"
-          onClick={() => onClose(groupSlug, subgroupSlug)}
+          onClick={() => onClose(groupSlug, subgroupSlug, indicatorSlug)}
         >
           <Icon
             ariaLabel="close"
@@ -251,13 +280,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           <span className="px-8 py-1 text-sm">Don´t compare</span>
         </button>
         <div className="py-5">
-          <h2 className="text-white font-bold pt-10">{name}</h2>
+          <h2 className="text-white font-bold pt-10">{groupName}</h2>
           <Tooltip
             placement="bottom-start"
             className=""
-            visible={dropdownVisibility}
+            visible={dropdownVisibility.subgroup}
             interactive
-            onClickOutside={() => { setDropdownVisibility(false); }}
+            onClickOutside={() => { closeDropdown('subgroup'); }}
             content={(
               <ul
                 className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
@@ -272,7 +301,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     <button
                       type="button"
                       className="px-5 cursor-pointer w-full py-2 flex"
-                      onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${_indicatorSlug}`)}
+                      onClick={() => handleSubgroupChange(sgSlug, _indicatorSlug)}
                     >
                       {sgName}
                     </button>
@@ -284,9 +313,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             <button
               type="button"
               className="flex items-center pt-3"
-              onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
+              onClick={() => { toggleDropdown('subgroup'); }}
             >
-              <h1 className="text-3.5xl">
+              <h1 className="text-3.5xl text-left">
                 {data?.subgroup?.name}
               </h1>
               <Icon
@@ -328,7 +357,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           <button
                             type="button"
                             className="flex items-center py-2 w-full last:border-b-0"
-                            onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${slug}`)}
+                            onClick={() => handleIndicatorChange(slug)}
                           >
                             {groupName}
                           </button>
@@ -353,13 +382,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   />
                 </button>
               </Tooltip>
-              {categories?.length > 1 && <Filters categories={categories} className="mb-4" />}
-
             </div>
           </div>
           <p className="text-sm text-justify py-7.5">
             {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
           </p>
+          {categories?.length > 1 && <Filters categories={categories} className="mb-4" />}
+
           <div className="flex justify-between">
             <div className="flex flex-col h-full w-full">
               <section className="flex flex-col w-full">
@@ -502,16 +531,16 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         widgetConfig={widgetConfig}
                       />
                     </div>
+                    {categories.length > 0 && (
+                    <Legend
+                      categories={category.label === 'category_1' ? categories : subcategories}
+                      className="overflow-y-auto mb-4"
+                    />
+                    )}
+                    <DataSource type="horizontal" indicatorSlug={indicatorSlug} />
                   </div>
                   )}
                 </div>
-              </section>
-            </div>
-            <div className="flex h-full">
-              <section className="flex flex-col justify-between h-full ml-8">
-                {/* {categories?.length > 1 && <Filters categories={categories} className="mb-4" />} */}
-                {categories.length > 0 && <Legend categories={categories} className="overflow-y-auto mb-4" />}
-                {/* <DataSource /> */}
               </section>
             </div>
           </div>

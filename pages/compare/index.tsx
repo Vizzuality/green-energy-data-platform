@@ -19,8 +19,8 @@ const ComparePage: FC = () => {
 
   const router = useRouter();
 
-  const handleClose = (groupSlug, subgroupSlug) => {
-    const url = `${groupSlug}/${subgroupSlug}`;
+  const handleClose = (groupSlug, subgroupSlug, indicatorSlug) => {
+    const url = `${groupSlug}/${subgroupSlug}/${indicatorSlug}`;
     router.push(url, url, { shallow: true });
   };
 
@@ -36,12 +36,14 @@ const ComparePage: FC = () => {
           subgroupSlug={sg1}
           indicatorSlug={ind1}
           onClose={handleClose}
+          compareIndex={1}
         />
         <Compare
           groupSlug={g2}
           subgroupSlug={sg2}
           indicatorSlug={ind2}
           onClose={handleClose}
+          compareIndex={2}
         />
       </section>
     </LayoutPage>
