@@ -48,7 +48,6 @@ import {
   useIndicatorRecords,
 } from 'hooks/indicators';
 
-import indicators from 'services/indicators';
 import ChartConfig from '../indicator-data/config';
 
 interface CompareLayoutProps {
@@ -82,14 +81,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     category: { label: 'category_1', value: null },
   });
 
-  const [compareDropdownVisibility, setCompareDropdownVisibility] = useState({
-    subgroup: false,
-    indicator: false,
-    year: false,
-    region: false,
-    unit: false,
-    category: { label: 'category_1', value: null },
-  });
+  console.log(dropdownVisibility)
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -106,36 +98,28 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const { query } = router;
 
   const handleSubgroupChange = useCallback((sg1, ind1) => {
-    if (compareIndex === 1) {
-      setDropdownVisibility({
-        ...dropdownVisibility,
-        subgroup: false,
-      });
-    } else {
-      setCompareDropdownVisibility({
-        ...dropdownVisibility,
-        subgroup: false,
-      });
-    }
-
+    setDropdownVisibility((prevDropdownVisibility) => ({
+      ...prevDropdownVisibility,
+      subgroup: !prevDropdownVisibility.subgroup,
+    }));
     router.push({
       query: {
         ...query, [`sg${compareIndex}`]: sg1, ind1,
       },
     });
-  }, [router, query, dropdownVisibility, compareIndex]);
+  }, [router, query, compareIndex]);
 
   const handleIndicatorChange = useCallback((url) => {
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      indicator: false,
-    });
+    setDropdownVisibility((prevDropdownVisibility)=>({
+      ...prevDropdownVisibility,
+      indicator: !prevDropdownVisibility.subgroup,
+    }));
     router.push({
       query: {
         ...query, [`ind${compareIndex}`]: url,
       },
     });
-  }, [router, query, dropdownVisibility, compareIndex]);
+  }, [router, query, compareIndex]);
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
@@ -145,34 +129,24 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   }, [dropdownVisibility]);
 
   const closeDropdown = useCallback((key) => {
-    if (compareIndex === 1) {
-      setDropdownVisibility({
-        ...dropdownVisibility,
-        [key]: false,
-      });
-    } else {
-      setCompareDropdownVisibility({
-        ...compareDropdownVisibility,
-        [key]: false,
-      });
-    }
-  }, [dropdownVisibility, compareIndex, compareDropdownVisibility]);
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      [key]: false,
+    });
+  }, [dropdownVisibility]);
 
   const handleChange = useCallback((key, _value) => {
     if (compareIndex === 1) {
       dispatch(setFilters({ [key]: _value }));
-      setDropdownVisibility({
-        ...dropdownVisibility,
-        [key]: false,
-      });
     } else {
       dispatch(setCompareFilters({ [key]: _value }));
-      setCompareDropdownVisibility({
-        ...compareDropdownVisibility,
-        [key]: false,
-      });
     }
-  }, [dispatch, compareIndex, dropdownVisibility, compareDropdownVisibility]);
+
+    setDropdownVisibility({
+      ...dropdownVisibility,
+      [key]: false,
+    });
+  }, [dispatch, compareIndex, dropdownVisibility]);
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
@@ -312,8 +286,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           <Tooltip
             placement="bottom-start"
             className=""
-            visible={compareIndex === 1 ? dropdownVisibility.subgroup
-              : compareDropdownVisibility.subgroup}
+            visible={dropdownVisibility.subgroup}
             interactive
             onClickOutside={() => { closeDropdown('subgroup'); }}
             content={(
@@ -377,7 +350,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 placement="bottom-end"
                 visible={dropdownVisibility.indicator}
                 interactive
-                onClickOutside={() => closeDropdown(`indicator_${compareIndex}`)}
+                onClickOutside={() => closeDropdown('indicator')}
                 content={(
                   <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                     {subgroup?.indicators?.map(
@@ -399,7 +372,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
                 <button
                   type="button"
-                  onClick={() => { toggleDropdown(`indicator_${compareIndex}`); }}
+                  onClick={() => { toggleDropdown('indicator'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full text-sm"
                 >
                   <span>{i18next.t('change')}</span>
