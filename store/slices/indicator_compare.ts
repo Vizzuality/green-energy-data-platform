@@ -4,7 +4,7 @@ type CategoryObject = {
   label: string, value?: string
 };
 
-export type IndicatorFilters = {
+export type IndicatorCompareFilters = {
   year: number,
   region: string,
   unit: string,
@@ -13,14 +13,14 @@ export type IndicatorFilters = {
 
 const initialState = {
   year: null,
-} as IndicatorFilters;
+} as IndicatorCompareFilters;
 
 export const indicatorSlice = createSlice({
-  name: 'indicator-filters',
+  name: 'indicator-compare-filters',
   initialState,
   reducers: {
-    setFilters: (
-      state: IndicatorFilters,
+    setCompareFilters: (
+      state: IndicatorCompareFilters,
       action: PayloadAction<{ [key: string]: string | number | CategoryObject }>,
     ) => ({
       ...state,
@@ -30,7 +30,7 @@ export const indicatorSlice = createSlice({
 });
 
 export const {
-  setFilters,
+  setCompareFilters,
 } = indicatorSlice.actions;
 
 export default indicatorSlice.reducer;
