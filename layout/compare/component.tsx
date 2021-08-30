@@ -81,7 +81,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     category: { label: 'category_1', value: null },
   });
 
-  console.log(dropdownVisibility)
+  console.log(dropdownVisibility);
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -110,7 +110,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   }, [router, query, compareIndex]);
 
   const handleIndicatorChange = useCallback((url) => {
-    setDropdownVisibility((prevDropdownVisibility)=>({
+    setDropdownVisibility((prevDropdownVisibility) => ({
       ...prevDropdownVisibility,
       indicator: !prevDropdownVisibility.subgroup,
     }));
@@ -315,7 +315,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             <button
               type="button"
               className="flex items-center pt-3"
-              onClick={() => { toggleDropdown(`subgroup_${compareIndex}`); }}
+              onClick={() => { toggleDropdown('subgroup'); }}
             >
               <h1 className="text-3.5xl text-left">
                 {data?.subgroup?.name}
@@ -453,7 +453,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         placement="bottom-start"
                         visible={dropdownVisibility.region}
                         interactive
-                        onClickOutside={() => closeDropdown(`region_${compareIndex}`)}
+                        onClickOutside={() => closeDropdown('region')}
                         content={(
                           <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
                             {regions.map((_region) => (
@@ -474,7 +474,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                       >
                         <button
                           type="button"
-                          onClick={() => { toggleDropdown(`region_${compareIndex}`); }}
+                          onClick={() => { toggleDropdown('region'); }}
                           className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                         >
                           <span>{region || 'Select a region'}</span>
