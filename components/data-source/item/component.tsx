@@ -20,6 +20,7 @@ interface ItemProps {
   icon: string,
   name: string,
   links: LinkProps[],
+  indSlug?: string,
   className?: string,
 }
 
@@ -27,11 +28,12 @@ const Item: FC<ItemProps> = ({
   icon,
   name,
   links,
+  indSlug,
   className = '',
 }: ItemProps) => {
   const router = useRouter();
   const { subgroup } = router.query;
-  const indicatorSlug = subgroup[1];
+  const indicatorSlug = indSlug || subgroup?.[1];
 
   const [session] = useSession();
 

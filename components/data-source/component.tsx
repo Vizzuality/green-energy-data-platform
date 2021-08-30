@@ -5,7 +5,8 @@ import Item from './item';
 
 interface DataProps {
   className?: string,
-  type?: 'vertical' | 'horizontal'
+  type?: 'vertical' | 'horizontal',
+  indicatorSlug?: string
 }
 
 const downloadLinks = [
@@ -21,6 +22,7 @@ const dataSourceLinks = [
 const Card: FC<DataProps> = ({
   className = '',
   type = 'vertical',
+  indicatorSlug,
 }: DataProps) => (
   <div className={cx('flex divide-gray4 divide-opacity-90 text-center bg-gray5 text-gray1 rounded-2xl',
     { [className]: className },
@@ -34,6 +36,8 @@ const Card: FC<DataProps> = ({
       className={cx('p-6',
         { 'justify-center rounded-l-2xl': type === 'horizontal' },
         { 'justify-start rounded-t-2xl': type === 'vertical' })}
+      indSlug={indicatorSlug}
+
     />
     <Item
       icon="data"

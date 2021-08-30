@@ -189,7 +189,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
-  const subcategories = useMemo(() => getSubcategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
+  );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
