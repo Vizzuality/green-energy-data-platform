@@ -10,11 +10,11 @@ import Head from 'components/head';
 import Hero from 'layout/hero';
 import Compare from 'layout/compare';
 
-import { CompareProps } from './types';
+import { ComparePageProps } from 'types';
 
-const ComparePage: FC<CompareProps> = ({
+const ComparePage: FC<ComparePageProps> = ({
   g1, sg1, ind1, g2, sg2, ind2,
-}: CompareProps) => {
+}: ComparePageProps) => {
   const router = useRouter();
 
   const handleClose = (groupSlug, subgroupSlug, indicatorSlug) => {
