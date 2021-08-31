@@ -1,4 +1,4 @@
-export interface CompareProps {
+export interface ComparePageProps {
   g1: string,
   sg1: string,
   ind1: string,
