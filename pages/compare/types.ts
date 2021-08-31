@@ -1,4 +1,4 @@
-export default interface CompareProps {
+export interface CompareProps {
   g1: string,
   sg1: string,
   ind1: string,
