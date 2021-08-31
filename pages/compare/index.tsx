@@ -10,7 +10,7 @@ import Head from 'components/head';
 import Hero from 'layout/hero';
 import Compare from 'layout/compare';
 
-import CompareProps from './types';
+import { CompareProps } from './types';
 
 const ComparePage: FC<CompareProps> = ({
   g1, sg1, ind1, g2, sg2, ind2,
