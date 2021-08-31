@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 interface FiltersProps {
   categories: string[]
   className?: string,
-  onClick: (category: Object) => void,
+  onClick?: (category: Object) => void,
 }
 
 const Filters: FC<FiltersProps> = ({

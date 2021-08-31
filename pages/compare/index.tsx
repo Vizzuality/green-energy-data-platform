@@ -7,30 +7,25 @@ import { useRouter } from 'next/router';
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
-import Header from 'layout/header';
+import Hero from 'layout/hero';
 import Compare from 'layout/compare';
-import LoadingSpinner from 'components/loading-spinner';
 
-const ComparePage: FC = () => {
-  const { query } = useRouter();
-  const {
-    g1, sg1, ind1, g2, sg2, ind2,
-  } = query;
+import CompareProps from './types';
 
+const ComparePage: FC<CompareProps> = ({
+  g1, sg1, ind1, g2, sg2, ind2,
+}: CompareProps) => {
   const router = useRouter();
 
   const handleClose = (groupSlug, subgroupSlug, indicatorSlug) => {
     const url = `${groupSlug}/${subgroupSlug}/${indicatorSlug}`;
     router.push(url, url, { shallow: true });
   };
-
-  if (!g1 || !sg1 || !ind1 || !g2 || !sg2 || !ind2) return <LoadingSpinner />;
-
   return (
-    <LayoutPage className="text-white bg-gradient-gray1">
+    <LayoutPage className="text-white bg-gradient-gray1 flex flex-col">
       <Head title="Green Energy Data Platform" />
-      <Header className="border-b border-white border-opacity-30" />
-      <section className="w-full flex space-x-3 container">
+      <Hero theme="transparent" rounded />
+      <section className="w-full flex space-x-3 container m-auto">
         <Compare
           groupSlug={g1}
           subgroupSlug={sg1}
@@ -48,6 +43,18 @@ const ComparePage: FC = () => {
       </section>
     </LayoutPage>
   );
+};
+
+export const getServerSideProps = async ({ query }) => {
+  const {
+    g1, sg1, ind1, g2, sg2, ind2,
+  } = query;
+
+  return ({
+    props: {
+      g1, sg1, ind1, g2, sg2, ind2,
+    },
+  });
 };
 
 export default ComparePage;

@@ -50,14 +50,7 @@ import {
 
 import ChartConfig from '../indicator-data/config';
 
-interface CompareLayoutProps {
-  groupSlug: string,
-  subgroupSlug: string,
-  indicatorSlug: string,
-  onClose: (groupSlug: string, subgroupSlug: string, indicatorSlug: string) => void,
-  className?: string,
-  compareIndex: number,
-}
+import { CompareLayoutProps } from './types';
 
 type ChartProps = {
   widgetData: any,
@@ -264,11 +257,12 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
 
   return (
-    <div className="py-20 text-gray1" key={compareIndex}>
+    <div className="py-24 text-gray1" key={compareIndex}>
       <Hero
+        theme="light"
         header={false}
         rounded
-        className="relative bg-gradient-color2 pb-2 px-11 rounded-t-2xl text-white"
+        className="min-h-xs relative bg-gradient-color2 pb-2 px-11 rounded-t-2xl text-white"
       >
         <button
           type="button"
@@ -334,15 +328,15 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
         </div>
       </Hero>
-      <div className={cx('container m-auto p-11 bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
+      <div className={cx('container m-auto bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
         <VisualizationsNav
           active={visualizationType}
-          className="w-full"
+          className="w-full px-11 py-7"
           visualizationTypes={visualizationTypes}
           onClick={setVisualizationType}
           mobile
         />
-        <div className="flex flex-col py-11 w-full">
+        <div className="flex flex-col p-11 w-full">
           <div className="flex items-baseline w-full justify-between">
             <h2 className="flex max-w-xs font-bold">
               {name}
@@ -409,7 +403,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                       <span className="pr-2">Showing for:</span>
                       <Tooltip
                         placement="bottom-start"
-                        visible={dropdownVisibility[`year${compareIndex}`]}
+                        visible={dropdownVisibility.year}
                         interactive
                         onClickOutside={() => closeDropdown('year')}
                         content={(
@@ -417,7 +411,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                             {years.map((_year) => (
                               <li
                                 key={_year}
-                                className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
+                                className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:last:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
                               >
                                 <button
                                   type="button"
@@ -461,10 +455,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                             {regions.map((_region) => (
                               <li
                                 key={_region}
-                                className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
+                                className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:last:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
                               >
                                 <button
                                   type="button"
+                                  className="flex items-center py-2 w-full last:border-b-0 px-5"
                                   onClick={() => handleChange('region', _region)}
                                 >
                                   {_region}
@@ -504,9 +499,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                       <div className="flex items-center">
                         <Tooltip
                           placement="bottom-start"
-                          visible={dropdownVisibility[`unit_${compareIndex}`]}
+                          visible={dropdownVisibility.unit}
                           interactive
-                          onClickOutside={() => closeDropdown(`unit_${compareIndex}`)}
+                          onClickOutside={() => closeDropdown('unit')}
                           content={(
                             <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
                               {units.map((_unit) => (
@@ -528,14 +523,14 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         >
                           <button
                             type="button"
-                            onClick={() => { toggleDropdown(`unit_${compareIndex}`); }}
-                            className="flex items-center cursor-pointer text-color1 hover:bg-color1 hover:rounded-full hover:text-white py-0.5 px-4 mr-4"
+                            onClick={() => { toggleDropdown('unit'); }}
+                            className="flex items-center cursor-pointer opacity-50 hover:font-bold hover:cursor-pointer tracking-tight text-sm"
                           >
                             <span>{unit}</span>
                           </button>
                         </Tooltip>
                       </div>
-                      <div className="w-96">
+                      <div className="w-full flex justify-center pb-11">
                         <DynamicChart
                           widgetData={widgetData}
                           widgetConfig={widgetConfig}
@@ -547,7 +542,10 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           className="overflow-y-auto mb-4"
                         />
                       )}
-                      <DataSource type="horizontal" indicatorSlug={indicatorSlug} />
+                      <DataSource
+                        type="horizontal"
+                        indicatorSlug={indicatorSlug}
+                      />
                     </div>
                   )}
                 </div>
