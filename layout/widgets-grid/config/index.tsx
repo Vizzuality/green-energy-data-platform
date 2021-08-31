@@ -28,7 +28,7 @@ const CONFIG = (categories) => {
       height: 190,
       width: 300,
       margin: {
-        top: 20, right: 0, left: -10, bottom: 0,
+        top: 0, right: 0, left: -10, bottom: 0,
       },
       cartesianGrid: {
         vertical: false,
@@ -221,7 +221,7 @@ const CONFIG = (categories) => {
       height: 190,
       width: 300,
       margin: {
-        top: 20, right: 0, left: -30, bottom: 100,
+        top: 0, right: 0, left: -30, bottom: 100,
       },
       cartesianGrid: {
         vertical: false,
@@ -245,7 +245,7 @@ const CONFIG = (categories) => {
       height: 220,
       width: 300,
       margin: {
-        top: 20, right: 0, left: -30, bottom: 0,
+        top: 0, right: 0, left: -30, bottom: 0,
       },
       pies: [
         {

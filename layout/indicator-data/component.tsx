@@ -234,7 +234,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     >
       <VisualizationsNav
         active={visualizationType}
-        className="w-full"
+        className="w-full lg:px-32 md:px-24 sm:px-16"
         visualizationTypes={visualizationTypes}
         onClick={setVisualizationType}
       />
@@ -509,7 +509,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   className="overflow-y-auto mb-4"
                 />
               )}
-              <DataSource />
+              <DataSource indicatorSlug={indicatorSlug} />
             </section>
           </div>
         </div>

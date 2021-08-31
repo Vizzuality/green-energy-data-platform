@@ -13,7 +13,7 @@ import UserDropdown from 'components/user-dropdown';
 import Header from 'layout/header';
 
 interface HeroProps {
-  children: ReactNode,
+  children?: ReactNode,
   header?: boolean,
   rounded?: boolean,
   theme?: string,
@@ -23,25 +23,33 @@ interface HeroProps {
 const THEME = {
   light: 'bg-gradient-color2 text-white',
   dark: 'bg-gray1',
+  transparent: 'bg-transparent border-gray1 text-gray1 border-opacity-20',
 };
 
 const Hero: FC<HeroProps> = ({
   children,
   header = true,
   rounded = false,
-  theme = 'light',
   className,
+  theme = 'light',
 }: HeroProps) => (
-  <div className={cx(`${THEME[theme]}`,
+  <div className={cx(`w-full ${THEME[theme]}`,
     { 'pb-44': !rounded },
     { 'rounded-t-2xl': !!rounded })}
   >
     {header && (
-      <Header>
+      <Header theme={theme === 'transparent' ? 'dark' : 'light'}>
         <div className="flex items-center">
-          <UserDropdown className="mr-4" />
+          <UserDropdown theme={theme} className="mr-4" />
           <Link href="/indicators" passHref>
-            <a href="/indicators" className="ml-3 bg-white border-white text-gray1 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm">
+            <a
+              href="/indicators"
+              className={cx('ml-3 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm',
+                {
+                  'bg-gray1 text-white': theme === 'transparent',
+                  'bg-white text-gray1': theme !== 'transparent',
+                })}
+            >
               {i18next.t('browse')}
             </a>
           </Link>

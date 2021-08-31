@@ -13,11 +13,18 @@ import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 
 interface UserDropdownProps {
-  className?: string
+  className?: string,
+  theme?: string,
 }
+
+const THEME = {
+  light: 'border-white text-white border-opacity-30',
+  dark: 'border-gray1 text-gray1 border-opacity-20',
+};
 
 const UserDropdown: FC<UserDropdownProps> = ({
   className,
+  theme = 'light',
 }: UserDropdownProps) => {
   const [visible, setVisible] = useState(false);
   const toggleVisibility = () => {
@@ -60,7 +67,7 @@ const UserDropdown: FC<UserDropdownProps> = ({
       <button
         type="button"
         onClick={toggleVisibility}
-        className={cx('w-max inline-flex items-center text-sm border-box z-index-10',
+        className={cx(`w-max inline-flex items-center text-sm border-box z-index-10 ${THEME[theme]}`,
           { [className]: !!className })}
       >
         <div className="flex flex-col items-end text-base">
@@ -71,9 +78,11 @@ const UserDropdown: FC<UserDropdownProps> = ({
           ariaLabel={visible ? 'collapse dropdown' : 'expand dropdown'}
           name="triangle_border"
           size="xlg"
-          className={cx('ml-3 p-2 border-2 border-white border-opacity-30 text-white rounded-full',
-            { 'rotate-180': !!visible },
-            { 'transform -rotate-180 text-gray3': visible })}
+          className={cx(`ml-3 p-2 border-2 rounded-full ${THEME[theme]}`,
+            {
+              'rotate-180': !!visible,
+              'transform -rotate-180 text-gray3': visible,
+            })}
         />
       </button>
     </Tooltip>
