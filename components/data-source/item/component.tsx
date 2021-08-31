@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import cx from 'classnames';
 
 import { useSession } from 'next-auth/client';
-import { useRouter } from 'next/router';
 
 import { parseDataToDownload } from 'utils';
 
@@ -20,6 +19,7 @@ interface ItemProps {
   icon: string,
   name: string,
   links: LinkProps[],
+  indSlug: string,
   className?: string,
 }
 
@@ -27,19 +27,16 @@ const Item: FC<ItemProps> = ({
   icon,
   name,
   links,
+  indSlug,
   className = '',
 }: ItemProps) => {
-  const router = useRouter();
-  const { subgroup } = router.query;
-  const indicatorSlug = subgroup[1];
-
   const [session] = useSession();
 
   const handleDownload = (format) => {
     if (!session) return console.log('sign in to get data');
 
-    return fetchDataToDownload(`Bearer ${session.token}`, indicatorSlug, format)
-      .then((data) => parseDataToDownload(format, data, indicatorSlug));
+    return fetchDataToDownload(`Bearer ${session.token}`, indSlug, format)
+      .then((data) => parseDataToDownload(format, data, indSlug));
   };
 
   return (

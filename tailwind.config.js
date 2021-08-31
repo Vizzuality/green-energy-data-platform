@@ -35,13 +35,14 @@ module.exports = {
         7.5: '1.875rem',
         13: '3.125rem',
       },
-      maxWidth: {
-        xs: '15.5rem',
-      },
       minHeight: {
         '1/4': '25vh',
         '1/2': '50vh',
         '3/4': '75vh',
+        xs: '13.75rem',
+      },
+      maxWidth: {
+        xs: '13rem',
       },
       fontSize: {
         '2.5xl': '1.625rem',

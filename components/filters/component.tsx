@@ -4,17 +4,18 @@ import i18next from 'i18next';
 
 // components
 import Icon from 'components/icon';
-import { setFilters } from 'store/slices/indicator';
 import { useDispatch } from 'react-redux';
 
 interface FiltersProps {
   categories: string[]
   className?: string,
+  onClick?: (category: Object) => void,
 }
 
 const Filters: FC<FiltersProps> = ({
   categories,
   className = '',
+  onClick,
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
@@ -30,12 +31,12 @@ const Filters: FC<FiltersProps> = ({
   };
 
   const handleCategories = useCallback((value) => {
-    dispatch(setFilters({ category: { label: 'category_2', value } }));
+    dispatch(onClick({ category: { label: 'category_2', value } }));
     setActive(value);
-  }, [dispatch]);
+  }, [dispatch, onClick]);
 
   const handleRemoveCategory = () => {
-    dispatch(setFilters({ category: { label: 'category_1' } }));
+    dispatch(onClick({ category: { label: 'category_1' } }));
     setActive('');
   };
 

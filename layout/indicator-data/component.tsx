@@ -10,11 +10,12 @@ import {
 } from 'react-query';
 import cx from 'classnames';
 import dynamic from 'next/dynamic';
-
-// hooks
+import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
+// hooks
+import { useGroups } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
 import {
   useIndicator,
@@ -127,11 +128,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       unit: false,
     });
   }, [dispatch, dropdownVisibility]);
-  // todo: uncomment along with Compare select
-  // const { data: groups } = useGroups({
-  //   refetchOnWindowFocus: false,
-  //   placeholderData: [],
-  // });
+
+  const { data: groups } = useGroups({
+    refetchOnWindowFocus: false,
+    placeholderData: [],
+  });
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
@@ -188,7 +189,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
-  const subcategories = useMemo(() => getSubcategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
+  );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
@@ -231,7 +234,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     >
       <VisualizationsNav
         active={visualizationType}
-        className="px-32 w-full"
+        className="w-full lg:px-32 md:px-24 sm:px-16"
         visualizationTypes={visualizationTypes}
         onClick={setVisualizationType}
       />
@@ -275,10 +278,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               </button>
 
             </Tooltip>
-            {/*
-              // todo: hidden for the time being.
-            */}
-            {/* <Tooltip
+
+            <Tooltip
               trigger="click"
               placement="bottom-start"
               maxHeight={400}
@@ -312,7 +313,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                               query: {
                                 g1: groupSlug,
                                 sg1: subgroupSlug,
-                                ind1: 'agriculture',
+                                ind1: indicatorSlug,
                                 g2: slug,
                                 sg2: subgroupCompareSlug,
                                 ind2: compareIndicator.slug,
@@ -340,7 +341,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               >
                 Compare
               </button>
-            </Tooltip> */}
+            </Tooltip>
           </div>
         </div>
         <p className="text-sm py-7.5">
@@ -508,7 +509,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   className="overflow-y-auto mb-4"
                 />
               )}
-              <DataSource />
+              <DataSource indicatorSlug={indicatorSlug} />
             </section>
           </div>
         </div>
