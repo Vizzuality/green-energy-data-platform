@@ -65,19 +65,22 @@ const Search: FC = () => {
           && <span className="no-results">No results</span>}
         {isOpen && (
           <ul className="absolute bg-white px-10 w-full rounded-2xl">
-            {filteredOptions.map((item, index) => {
-              return (
-                <li
-                  className={cx('w-full',
-                    { 'bg-gray1 bg-opacity-5 m-2 rounded-2x shadow-sm rounded-lg': index === selectedIndex })}
-                  key={item}
+            {filteredOptions.map((item, index) => (
+              <li
+                className={cx('w-full',
+                  { 'bg-gray1 bg-opacity-5 m-2 rounded-2x shadow-sm rounded-lg': index === selectedIndex })}
+                key={item}
+              >
+                <button
+                  type="button"
+                  className="text-gray1 px-4 py-3"
                   onMouseEnter={() => { setSelectedIndex(index); }}
                   onMouseDown={() => handleItem(item)}
                 >
-                  <button className="text-gray1 px-4 py-3">{item}</button>
-                </li>
-              );
-            })}
+                  {item}
+                </button>
+              </li>
+            ))}
           </ul>
         )}
       </div>

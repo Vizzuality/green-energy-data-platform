@@ -30,7 +30,6 @@ const THEME = {
 const Hero: FC<HeroProps> = ({
   children,
   header = true,
-  search = false,
   rounded = false,
   className,
   theme = 'light',
@@ -55,14 +54,6 @@ const Hero: FC<HeroProps> = ({
               {i18next.t('browse')}
             </a>
           </Link>
-        </div>
-      </Header>
-    )}
-
-    {search && (
-      <Header theme={theme === 'transparent' ? 'dark' : 'light'}>
-        <div className="flex items-center flex-1">
-          <Search />
         </div>
       </Header>
     )}
