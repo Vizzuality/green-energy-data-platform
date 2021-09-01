@@ -7,7 +7,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   type?: 'reset' | 'button' | 'submit',
   onClick?: (evt: any | '') => void,
   size?: 'sm' | 'md' | 'lg' | 'xlg',
-  theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background-dark' | 'secondary-background-light' | 'warning' | 'border-light' | 'border-dark' | 'info'
+  theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background-dark' | 'secondary-background-light' | 'warning' | 'border-light' | 'border-dark' | 'active' | 'info'
   disabled?: boolean
 }
 
@@ -24,6 +24,7 @@ const THEME = {
   warning: 'border border-warning text-warning',
   'border-light': 'border border-color-white text-color-white',
   'border-dark': 'border border-color-gray1 text-color-gray1',
+  active: 'bg-gradient-color1',
   info: 'bg-color2 border-color2 text-white',
 };
 

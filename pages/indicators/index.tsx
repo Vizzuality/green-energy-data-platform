@@ -1,13 +1,15 @@
 import React, {
   FC,
+  useEffect,
   useState,
 } from 'react';
 import Link from 'next/link';
 import i18next from 'i18next';
+import cx from 'classnames';
 
 // layout
 import LayoutPage from 'layout';
-import Hero from 'layout/hero';
+import Hero from 'layout/hero-search';
 
 // components
 import Head from 'components/head';
@@ -17,7 +19,6 @@ import Button from 'components/button';
 import PreFooter from 'components/pre-footer/component';
 
 // utils
-
 import { Filter } from 'utils';
 
 import { useGroups } from 'hooks/groups';
@@ -27,32 +28,43 @@ const IndicatorsPage: FC = () => {
   const [disabledGroups, setActive] = useState([]);
 
   const handleGroups = (slug) => {
-    Filter(disabledGroups, slug);
-    setActive(disabledGroups);
+    console.log(slug, 'handle');
+    const disabledGroupsUpdate = Filter(disabledGroups, slug);
+    setActive(disabledGroupsUpdate);
   };
-
   if (isLoading) return <LoadingSpinner />;
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1 min-h-screen">
       <Head title="Green Energy Data Platform" />
-      <Hero className="lg:px-32 md:px-20" theme="dark">
-        <Search />
-
-        <div className="flex flex-wrap space-x-3 items-center py-6">
-          <p>
+      <Hero groups={groups}>
+        <div className="flex container m-auto py-6 px-32">
+          <p className="py-2 mr-5">
             {i18next.t('filterBy')}
             :
           </p>
-          {groups?.map(({ id, slug, name }) => (
+          <div className="flex flex-wrap flex-1">
+            {groups?.map(({ id, slug, name }) => (
+              <Button
+                key={id}
+                size="xlg"
+                // theme={disabledGroups.includes(slug) ? 'active' : 'primary'}
+                onClick={() => handleGroups(slug)}
+                className="mr-5 mb-5"
+              >
+                {name}
+              </Button>
+            ))}
             <Button
-              key={id}
+              key="id"
               size="xlg"
-              theme="primary-background"
-              onClick={() => handleGroups(slug)}
+                // theme={disabledGroups.includes(slug) ? 'active' : 'primary'}
+              onClick={() => handleGroups('slug')}
+              className="mr-5 mb-5"
             >
-              {name}
+              slug
             </Button>
-          ))}
+          </div>
         </div>
       </Hero>
       <main className="container m-auto py-6 px-32 text-gray1 divide-y divide-gray1 divide-opacity-20">
@@ -65,8 +77,10 @@ const IndicatorsPage: FC = () => {
           <div key={groupId} className="flex flex-col">
             <h2 className="text-3.5xl pt-2">{groupName}</h2>
             <div className="flex flex-col text-lg py-10">
-              {subgroups.map(({ id: subgroupId, name: subgroupName, slug: subgroupSlug }) => (
-                <Link key={subgroupId} href={`/${groupSlug}:${subgroupSlug}`}>{subgroupName}</Link>
+              {subgroups.map(({
+                id: subgroupId, name: subgroupName, slug: subgroupSlug, default_indicator: { slug: indicatorSlug },
+              }) => (
+                <Link key={subgroupId} href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>{subgroupName}</Link>
               ))}
             </div>
           </div>

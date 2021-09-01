@@ -25,8 +25,13 @@ export const initializeLanguage = () => i18n.init({
 });
 
 export const Filter = (arr: (string | number)[], param: number) => {
-  const index = arr.indexOf(param) !== -1;
-  return index ? arr.splice(param) : arr.push(param);
+  const index = arr.indexOf(param);
+  if (index !== -1) {
+    arr.splice(index, 1);
+  } else {
+    arr.push(param);
+  }
+  return arr;
 };
 
 export const getCategoriesFromRecords = (

@@ -8,13 +8,14 @@ import i18next from 'i18next';
 
 // components
 import UserDropdown from 'components/user-dropdown';
+import Search from 'components/search/component';
 
-// components
 import Header from 'layout/header';
 
 interface HeroProps {
   children?: ReactNode,
   header?: boolean,
+  search?: boolean,
   rounded?: boolean,
   theme?: string,
   className?: string,
@@ -29,6 +30,7 @@ const THEME = {
 const Hero: FC<HeroProps> = ({
   children,
   header = true,
+  search = false,
   rounded = false,
   className,
   theme = 'light',
@@ -53,6 +55,14 @@ const Hero: FC<HeroProps> = ({
               {i18next.t('browse')}
             </a>
           </Link>
+        </div>
+      </Header>
+    )}
+
+    {search && (
+      <Header theme={theme === 'transparent' ? 'dark' : 'light'}>
+        <div className="flex items-center flex-1">
+          <Search />
         </div>
       </Header>
     )}
