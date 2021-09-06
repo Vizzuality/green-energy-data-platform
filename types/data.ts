@@ -5,7 +5,11 @@ export type SubgroupProps = {
   slug: string;
   name: string;
   published: boolean,
+<<<<<<< HEAD
   default_indicator?: IndicatorProps,
+=======
+  default_indicator?: IndicatorsIdProps,
+>>>>>>> no data styles
 };
 
 export interface GroupProps {
@@ -44,7 +48,7 @@ interface CategoryFilters {
   [key: string]: string | number,
 }
 
-interface Group {
+interface DataIdProps {
   id: string,
   name: string,
   slug: string,
@@ -63,8 +67,14 @@ export interface IndicatorProps {
   start_date: number,
   visualizationTypes: string[],
   records: Record[],
-  group: Group,
-  subgroup: Group,
+  group: DataIdProps,
+  subgroup: DataIdProps,
+}
+
+export interface IndicatorsIdProps {
+  id: number;
+  name: string;
+  slug: string,
 }
 
 // pages

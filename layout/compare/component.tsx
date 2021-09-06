@@ -290,21 +290,24 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
               >
                 {group.subgroups.map(({
-                  slug: sgSlug, id, name: sgName, default_indicator: { slug: _indicatorSlug },
-                }) => (
-                  <li
-                    key={id}
-                    className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
-                  >
-                    <button
-                      type="button"
-                      className="px-5 cursor-pointer w-full py-2 flex"
-                      onClick={() => handleSubgroupChange(sgSlug, _indicatorSlug)}
+                  slug: sgSlug, id, name: sgName, default_indicator,
+                }) => {
+                  const indSlug = default_indicator.slug || group.subgroups[0];
+                  return (
+                    <li
+                      key={id}
+                      className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
                     >
-                      {sgName}
-                    </button>
-                  </li>
-                ))}
+                      <button
+                        type="button"
+                        className="px-5 cursor-pointer w-full py-2 flex"
+                        onClick={() => handleSubgroupChange(sgSlug, indSlug)}
+                      >
+                        {sgName}
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           >

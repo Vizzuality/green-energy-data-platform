@@ -12,7 +12,7 @@ const PrivacyPolicyPage: FC = () => (
     <Hero className="lg:px-32 md:px-20">
       <h1 className="text-5.5xl pt-3">{i18next.t('privacy')}</h1>
     </Hero>
-    <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
+    <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow -mt-40 divide-x flex px-10">
       <section className="lg:mx-28 md:mx-16 md:my-14 my-3 text-justify">
         <div className="py-1">
           <h2 className="text-2.5xl mt-3">

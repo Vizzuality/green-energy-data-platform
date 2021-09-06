@@ -43,7 +43,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
         return (
           <div
             key={id}
-            className={cx('cursor-pointer w-full h-72 bg-white rounded-2.5xl shadow-sm text-gray-900 px-7 py-4',
+            className={cx('cursor-pointer w-full h-72 bg-white rounded-2.5xl shadow text-gray-900 px-7 py-4',
               { [className]: className })}
           >
             <div>{name}</div>

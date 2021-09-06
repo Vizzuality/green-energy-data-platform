@@ -9,7 +9,7 @@ export const fetchGroups = (
   },
   params,
 })
-  .then(({ data }) => data);
+  .then((data) => data);
 
 export const fetchGroup = (
   id: string,

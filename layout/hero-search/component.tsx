@@ -9,16 +9,17 @@ import { useRouter } from 'next/router';
 // components
 import Search from 'components/search/component';
 import Icon from 'components/icon';
+import { GroupProps } from 'types/data';
 
 interface HeroProps {
   children?: ReactNode,
-  groups?: ReactNode,
+  items?: GroupProps[],
   className?: string,
 }
 
 const Hero: FC<HeroProps> = ({
   className,
-  groups,
+  items,
   children,
 }: HeroProps) => {
   const router = useRouter();
@@ -42,21 +43,22 @@ const Hero: FC<HeroProps> = ({
           </a>
         </Link>
 
-        <Search />
-
+        <Search items={items} />
         <button
           type="button"
-          className="flex items-center ml-13"
+          className="flex items-center pl-13 h-full"
           onClick={handleClose}
         >
-          <span>Close</span>
+          <span>{i18next.t('close')}</span>
           <Icon
             ariaLabel="close"
             name="close"
             size="2xlg"
             className="rounded-full bg-white text-gray1 fill-current p-2.5 ml-5"
           />
+
         </button>
+        <div className="bg-white bg-opacity-30 top-0 bottom-0 w-0.5 absolute right-48" />
       </div>
       <div>
         {children}
