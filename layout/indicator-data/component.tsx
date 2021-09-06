@@ -483,10 +483,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       </button>
                     </Tooltip>
                   </div>
-                  <DynamicChart
+                  {/* <DynamicChart
                     widgetData={widgetData}
                     widgetConfig={widgetConfig}
-                  />
+                  /> */}
+
+                  <div className="w-full h-96">
+                    <MapContainer />
+                  </div>
                 </div>
                 )}
               </div>
