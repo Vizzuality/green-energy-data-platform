@@ -24,7 +24,7 @@ const Legend: FC<LegendProps> = ({
   };
 
   return (
-    <div className={cx('absolute text-left bottom-2 left-2 w-3/6 border-gray5 rounded-3xl text-sm text-white',
+    <div className={cx('absolute text-left bottom-2 left-2 w-3/6 bg-gray1 rounded-3xl text-sm text-white',
       {
         'divide-y divide-white divide-opacity-30': isCollapse,
         [className]: !!className,
