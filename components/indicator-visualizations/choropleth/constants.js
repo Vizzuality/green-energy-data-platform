@@ -66,13 +66,35 @@ export const ACTIVE_LAYERS = [
     type: 'geojson',
     source: {
       type: 'geojson',
+      promoteId: 'cartodb_id',
       data: '/power-plants.geojson',
     },
     render: {
       layers: [
         {
+          type: 'fill',
+          paint: {
+            // 'fill-color': '#00ffff',
+            // 'circle-opacity': 0.5,
+            'fill-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'capacity_mw'],
+              0,
+              'blue',
+              50,
+              'yellow',
+              100,
+              'green',
+              200,
+              'pink',
+            ],
+          },
+        },
+        {
           type: 'circle',
           paint: {
+            // 'fill-color': '#00ffff',
             'circle-opacity': 0.5,
             'circle-radius': [
               'interpolate',
@@ -87,15 +109,74 @@ export const ACTIVE_LAYERS = [
               property: 'source',
               type: 'categorical',
               stops: [
-                ['Baike', 'rgb(255, 106, 47)'],
-                ['Wiki-Solar', 'rgb(197, 22, 67)'],
-                ['communal', '#00382B'],
+                ['Baike', 'red'],
+                ['Wiki-Solar', 'yellow'],
+                ['communal', 'blue'],
               ],
-              default: '#007A5E',
             },
           },
         },
+        // {
+        //   type: 'fill',
+        //   filter: ['all', ['==', 'capacity_mw', 'Polygon']],
+        //   paint: {
+        //     'fill-color': 'red',
+        //     'fill-outline-color': 'blue',
+        //     'fill-opacity': 0.5,
+        //   },
+        // },
       ],
+    },
+  },
+  {
+    id: 'power-2',
+    type: 'geojson',
+    source: {
+      type: 'geojson',
+      data: '/power-plants.geojson',
+    },
+    render: {
+      layers: [
+        {
+          type: 'fill',
+          paint: {
+            'fill-color': 'red',
+            'fill-opacity': 0.5,
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 'wri-rw',
+    type: 'geojson',
+    source: {
+      type: 'geojson',
+      data: 'SELECT gid_0 as iso, name_0 as name, coastal, the_geom_webmercator FROM gadm36_0 where coastal is true',
+      promoteId: 'iso',
+    },
+    render: {
+      layers: {
+        type: 'fill',
+        paint: {
+          'fill-color': [
+            'case',
+            [
+              'boolean',
+              [
+                'feature-state',
+                'hover',
+              ],
+              false,
+            ],
+            '#fab72e',
+            '#217098',
+          ],
+          'fill-opacity': 1,
+          'fill-outline-color': '#15527f',
+        },
+        'source-layer': 'layer0',
+      },
     },
   },
 ];
