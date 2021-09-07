@@ -23,7 +23,6 @@ import {
 } from 'hooks/indicators';
 
 // components
-import LoadingSpinner from 'components/loading-spinner';
 import VisualizationsNav from 'components/visualizations-nav';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
@@ -161,6 +160,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       group: null,
       subgroup: null,
     },
+    keepPreviousData: true,
     refetchOnWindowFocus: false,
   }));
 
