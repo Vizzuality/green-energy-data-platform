@@ -54,6 +54,7 @@ const MapContainer: FC<MapContainerProps> = (
         height="100%"
         viewport={viewport}
         onMapViewportChange={handleViewportChange}
+        onClick={(e) => console.log(e)}
       >
         {(map) => (
           <LayerManager map={map} plugin={PluginMapboxGl}>
