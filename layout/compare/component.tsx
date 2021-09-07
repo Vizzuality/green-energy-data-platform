@@ -27,6 +27,7 @@ import DataSource from 'components/data-source';
 import {
   filterRecords,
   getGroupedValues,
+  getGeojsons,
   getYearsFromRecords,
   getUnitsFromRecords,
   getRegionsFromRecords,
@@ -230,6 +231,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     () => getGroupedValues(visualizationType, filters, filteredRecords),
     [visualizationType, filters, filteredRecords],
   );
+
+ console.log(widgetData)
+
+ const hola = useMemo(
+  () => getGeojsons(widgetData),
+  [widgetData],
+);
 
   useEffect(() => {
     const {
