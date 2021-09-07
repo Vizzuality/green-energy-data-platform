@@ -1,4 +1,5 @@
 import React, { FC, useRef, useState } from 'react';
+import Link from 'next/link';
 import cx from 'classnames';
 
 // components
@@ -16,7 +17,7 @@ const Search: FC<SearchProps> = ({
   const inputRef = useRef();
   const [searchValue, setSearchValue] = useState('');
   const [isOpen, toggleMenu] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState({ index: 0, subIndex: 0 });
 
   const updateSearch = (e) => {
     setSearchValue(e.currentTarget.value);
@@ -25,8 +26,8 @@ const Search: FC<SearchProps> = ({
   const handleClearSearch = () => setSearchValue('');
 
   const handleMenu = () => toggleMenu(!isOpen);
-
-  const results = useSearch(items, searchValue);
+  const searchResults = useSearch(items, searchValue);
+  const results = searchValue === '' ? items : searchResults;
   const noResults = !results.length;
 
   return (
@@ -76,21 +77,23 @@ const Search: FC<SearchProps> = ({
           >
             <span className="uppercase text-sm tracking-tight box-border m-2">{name}</span>
             <ul className="space-y-1">
-              {subgroups.map(({ name: sgName, slug: sgSlug }) => (
+              {subgroups.map(({
+                name: sgName, id: sgId, slug: sgSlug, default_indicator,
+              }, subIndex) => (
                 <li
-                  className={cx('box-border',
-                    { 'bg-gray1 bg-opacity-5 rounded-2x shadow-sm rounded-lg': index === selectedIndex })}
+                  className={cx('box-border px-5 py-2 hover:bg-gray1 hover:bg-opacity-5 rounded-2x hover:shadow-sm rounded-lg',
+                    { 'bg-gray1 bg-opacity-5 shadow-sm': index === selectedIndex.index && subIndex === selectedIndex.subIndex })}
                   key={sgSlug}
                 >
-
-                  <button
-                    type="button"
-                    className="text-gray1 px-5 py-2"
-                    onMouseEnter={() => { setSelectedIndex(index); }}
-                    onMouseDown={() => handleItem(item)}
-                  >
-                    {sgName}
-                  </button>
+                  <Link key={sgId} href={`/${slug}/${sgSlug}/${default_indicator.slug}`}>
+                    <a
+                      href={`/${slug}/${sgSlug}/${default_indicator.slug}`}
+                      className="text-gray1"
+                      onMouseEnter={() => { setSelectedIndex({ index, subIndex }); }}
+                    >
+                      {sgName}
+                    </a>
+                  </Link>
                 </li>
               ))}
             </ul>

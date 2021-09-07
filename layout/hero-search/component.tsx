@@ -6,6 +6,7 @@ import cx from 'classnames';
 import Link from 'next/link';
 import i18next from 'i18next';
 import { useRouter } from 'next/router';
+
 // components
 import Search from 'components/search/component';
 import Icon from 'components/icon';

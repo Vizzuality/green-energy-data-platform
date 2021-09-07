@@ -61,7 +61,11 @@ export interface IndicatorProps {
   description: string;
   end_date: number,
   id: number;
+<<<<<<< HEAD
   slug: string,
+=======
+  slug: string;
+>>>>>>> filtered results in search
   name: string;
   published: boolean,
   start_date: number,
