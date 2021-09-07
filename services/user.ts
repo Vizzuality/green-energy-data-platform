@@ -60,13 +60,9 @@ export const passwordRecovery = (
   }).then((response) => console.log(params, response));
 
 export const passwordChangeToRecover = (
-  params = {},
   recoveryToken: string,
   headers = {},
 ) => API.get('/users/change_password',
-  {
-    ...params,
-  },
   {
     headers: {
       Authentication: recoveryToken,
