@@ -124,6 +124,130 @@ export const filterRelatedIndicators = (
   return recordsByFilters;
 };
 
+export const getGeojsons = (
+  records: Record[],
+) => (records.map((record) => ({
+  geojson: {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {
+
+        },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [
+                84.153702,
+                20.882551,
+              ],
+              [
+
+                90.067764,
+                44.655466,
+              ],
+              [
+                60.153702,
+                80.882551,
+              ],
+              [
+                44.067764,
+                18.655466,
+              ],
+            ],
+          ],
+        },
+      },
+    ],
+  },
+  layerConfig: {
+    id: 'coal-power-plants',
+    type: 'geojson',
+    source: {
+      type: 'geojson',
+      promoteId: 'cartodb_id',
+      data: '/power-plants.geojson',
+    },
+    render: {
+      layers: [
+        {
+          type: 'fill',
+          paint: {
+            'fill-color': [
+              'let',
+              'density',
+              ['all', ['get', 'capacity_mw']],
+              [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                8,
+                [
+                  'interpolate',
+                  ['linear'],
+                  ['var', 'density'],
+                  274,
+                  ['to-color', '#edf8e9'],
+                  1551,
+                  ['to-color', '#006d2c'],
+                ],
+                10,
+                [
+                  'interpolate',
+                  ['linear'],
+                  ['var', 'density'],
+                  274,
+                  ['to-color', '#eff3ff'],
+                  1551,
+                  ['to-color', '#08519c'],
+                ],
+              ],
+            ],
+            'fill-opacity': 0.7,
+          },
+        },
+        {
+          type: 'circle',
+          paint: {
+            // 'fill-color': '#00ffff',
+            'circle-opacity': 0.5,
+            'circle-radius': [
+              'interpolate',
+              ['linear'],
+              ['get', 'capacity_mw'],
+              0,
+              10,
+              1000,
+              20,
+            ],
+            'circle-color': {
+              property: 'source',
+              type: 'categorical',
+              stops: [
+                ['Baike', 'red'],
+                ['Wiki-Solar', 'yellow'],
+                ['communal', 'blue'],
+              ],
+            },
+          },
+        },
+        // {
+        //   type: 'fill',
+        //   filter: ['all', ['==', 'capacity_mw', 'Polygon']],
+        //   paint: {
+        //     'fill-color': 'red',
+        //     'fill-outline-color': 'blue',
+        //     'fill-opacity': 0.5,
+        //   },
+        // },
+      ],
+    },
+  },
+}))
+);
+
 export const getGroupedValues = (
   visualization: string,
   filters: IndicatorFilters,
