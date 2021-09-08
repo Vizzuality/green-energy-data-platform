@@ -16,9 +16,13 @@ const PrivacyPolicyPage: FC = () => (
       <section className="lg:mx-28 md:mx-16 md:my-14 my-3 text-justify">
         <div className="py-1">
           <h2 className="text-2.5xl mt-3">
-            The Energy Foundation’s privacy statement
+            {i18next.t('energyFoundation')}
           </h2>
-          <h3 className="font-bold py-3">Updated March 12, 2021</h3>
+          <h3 className="font-bold py-3">
+            {i18next.t('updated')}
+            {' '}
+            March 12, 2021
+          </h3>
           <p className="text-sm leading-7 py-5">
             {/* eslint-disable-next-line */}
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -26,7 +30,7 @@ const PrivacyPolicyPage: FC = () => (
         </div>
         <div className="py-1">
           <h2 className="text-2.5xl mt-3">
-            Personal Information we collect
+            {i18next.t('personalInformation')}
           </h2>
           <p className="text-sm leading-7 py-5">
             {/* eslint-disable-next-line */}

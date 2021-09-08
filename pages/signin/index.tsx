@@ -12,6 +12,8 @@ import {
 } from 'next-auth/client';
 import cx from 'classnames';
 
+import i18next from 'i18next';
+
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
@@ -133,7 +135,7 @@ const SigninPage: FC<SigninProps> = ({
                 theme="secondary-background-dark"
                 size="xlg"
               >
-                Access with this account
+                {i18next.t('accessAccount')}
               </Button>
             </form>
           </section>

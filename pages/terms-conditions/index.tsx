@@ -16,7 +16,7 @@ const TermsAndConditionsPage: FC = () => (
       <section className="lg:mx-28 md:mx-16 md:my-14 my-3 text-justify">
         <div className="py-1">
           <h2 className="text-2.5xl mt-3">
-            Legal disclousure and terms of use
+            {i18next.t('legalDisclosure')}
           </h2>
           <p className="text-sm leading-7 py-5">
             March 12, 2021
@@ -24,7 +24,7 @@ const TermsAndConditionsPage: FC = () => (
         </div>
         <div className="py-1">
           <h2 className="text-2.5xl mt-3">
-            Please read this agreement carefully; This is a binding contract
+            {i18next.t('pleaseRead')}
           </h2>
           <p className="text-sm leading-7 py-5">
             {/* eslint-disable-next-line */}
@@ -33,7 +33,7 @@ const TermsAndConditionsPage: FC = () => (
         </div>
         <div className="py-1">
           <h2 className="text-2.5xl mt-3">
-            About the information in this site
+            {i18next.t('aboutInfo')}
           </h2>
           <p className="text-sm leading-7 py-5">
             {/* eslint-disable-next-line */}
@@ -41,7 +41,7 @@ const TermsAndConditionsPage: FC = () => (
           </p>
         </div>
         <aside className="border-t border-gray1 border-opacity-20 mt-5 py-2">
-          <span className="font-bold">Copyright © 2021 Energy Foundation. All rights reserved.</span>
+          <span className="font-bold">{i18next.t('copyright')}</span>
         </aside>
       </section>
     </div>

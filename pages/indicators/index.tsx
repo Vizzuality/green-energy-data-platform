@@ -3,7 +3,7 @@ import React, {
   useState,
 } from 'react';
 import Link from 'next/link';
-// import cx from 'classnames';
+import i18next from 'i18next';
 
 // layout
 import LayoutPage from 'layout';
@@ -38,7 +38,10 @@ const IndicatorsPage: FC = () => {
         <Search />
 
         <div className="flex flex-wrap space-x-3 items-center py-6">
-          <p>Filter by:</p>
+          <p>
+            {i18next.t('filterBy')}
+            :
+          </p>
           {groups?.map(({ id, slug, name }) => (
             <Button
               key={id}
