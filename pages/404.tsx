@@ -8,7 +8,7 @@ import Head from 'components/head';
 import Button from 'components/button';
 import i18next from 'i18next';
 
-const ProfilePage: FC = () => (
+const NotFoundPage: FC = () => (
   <LayoutPage className="text-white bg-color1">
     <Head title="Page not found" />
     <main className="flex flex-col h-full w-full m-auto flex-grow">
@@ -37,4 +37,4 @@ const ProfilePage: FC = () => (
   </LayoutPage>
 );
 
-export default ProfilePage;
+export default NotFoundPage;
