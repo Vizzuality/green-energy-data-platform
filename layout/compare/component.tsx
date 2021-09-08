@@ -33,7 +33,7 @@ import {
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
-import { setCompareFilters } from 'store/slices/indicator_compare';
+import { setCompareFilters } from 'store/slices/indicator-compare';
 import i18next from 'i18next';
 
 import { useQueryClient } from 'react-query';
@@ -82,7 +82,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     unit,
     category,
   } = useSelector(
-    (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
+    (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicatorCompare),
   );
 
   const router = useRouter();

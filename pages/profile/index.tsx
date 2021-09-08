@@ -163,18 +163,6 @@ const ProfilePage: FC = () => {
                 keep the following in mind: Your profile will be permenantly
                 deleted, Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               </p>
-              <Button
-                type="button"
-                aria-label="delete account"
-                className="text-sm"
-                theme="warning"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  console.log('deleting account');
-                }}
-              >
-                Delete account
-              </Button>
               <div className="w-full">
                 <Button
                   type="button"

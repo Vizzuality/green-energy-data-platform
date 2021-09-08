@@ -7,7 +7,7 @@ import LayoutPage from 'layout';
 import Head from 'components/head';
 import Button from 'components/button';
 
-const ProfilePage: FC = () => (
+const ErrorPage: FC = () => (
   <LayoutPage className="text-white bg-color1">
     <Head title="Page not found" />
     <main className="flex flex-col h-full w-full m-auto flex-grow">
@@ -36,4 +36,4 @@ const ProfilePage: FC = () => (
   </LayoutPage>
 );
 
-export default ProfilePage;
+export default ErrorPage;

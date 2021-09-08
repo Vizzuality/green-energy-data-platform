@@ -1,12 +1,12 @@
 import map from './map';
 import subgroup from './subgroup';
 import indicator from './indicator';
-import indicator_compare from './indicator_compare';
+import indicatorCompare from './indicator-compare';
 
 export const rootReducer = {
   subgroup,
   map,
   indicator,
-  indicator_compare,
+  indicatorCompare,
 };
 export default rootReducer;
