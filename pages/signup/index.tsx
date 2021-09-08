@@ -81,7 +81,7 @@ const SignupPage: FC = () => {
                     <input
                       id="username"
                       name="username"
-                      type="name"
+                      type="text"
                       placeholder="Write your name account"
                       className={cx(
                         'w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
