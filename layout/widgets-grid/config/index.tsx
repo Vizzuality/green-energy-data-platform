@@ -8,6 +8,11 @@ const DefaultTick = {
   fontSize: '12px',
 };
 
+const DefaultLayout = {
+  height: 200,
+  width: 300,
+};
+
 const CONFIG = (categories) => {
   const getLines = () => {
     if (categories.length) {
@@ -25,10 +30,11 @@ const CONFIG = (categories) => {
   };
   return ({
     line: {
-      height: 190,
-      width: 300,
+      ...DefaultLayout,
       margin: {
-        top: 0, right: 0, left: -10, bottom: 0,
+        top: 30,
+        left: -10,
+        right: 10,
       },
       cartesianGrid: {
         vertical: false,
@@ -242,10 +248,11 @@ const CONFIG = (categories) => {
       },
     },
     pie: {
-      height: 220,
-      width: 300,
+      ...DefaultLayout,
       margin: {
-        top: 0, right: 0, left: -30, bottom: 0,
+        top: 30,
+        left: 20,
+        right: 20,
       },
       pies: [
         {
@@ -258,7 +265,7 @@ const CONFIG = (categories) => {
     choropleth: {
       hadLegend: false,
       margin: {
-        top: 20,
+        top: 30,
       },
     },
   });

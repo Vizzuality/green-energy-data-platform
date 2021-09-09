@@ -7,6 +7,8 @@ import React, {
 
 import cx from 'classnames';
 
+import { useQueryClient } from 'react-query';
+
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
@@ -16,9 +18,11 @@ import Icon from 'components/icon';
 import { useRouter } from 'next/router';
 
 // services
-import { passwordChangeToRecover } from 'services/user';
+import { updateUser } from 'services/user';
 
 const NewPasswordPage: FC = () => {
+  const queryClient = useQueryClient();
+
   const { query: { token } } = useRouter();
 
   const [passwordView, setPasswordVisibility] = useState({
@@ -29,6 +33,8 @@ const NewPasswordPage: FC = () => {
     password: '',
     confirmation: '',
   });
+
+  const [passwordMismatch, setPasswordsMismatchMessage] = useState(false);
 
   const handleChange = (type: string, e: ChangeEvent<HTMLInputElement>): void => {
     setCredentials({
@@ -43,13 +49,31 @@ const NewPasswordPage: FC = () => {
       [e]: !passwordView[e],
     });
   };
+
   const handleSubmit = useCallback(async (evt) => {
     evt.preventDefault();
-    passwordChangeToRecover(null, token);
-  }, [token]);
+
+    const {
+      password,
+      confirmation,
+    } = credentials;
+
+    if (password !== confirmation) {
+      setPasswordsMismatchMessage(true);
+      setTimeout(() => setPasswordsMismatchMessage(false), 3000);
+      throw new Error('Your password confirmation did not match your password');
+    }
+
+    try {
+      await updateUser({ password, password_confirmation: confirmation }, token);
+      queryClient.invalidateQueries('me');
+    } catch (e) {
+      throw new Error(`something went wrong updating user: ${e.message}`);
+    }
+  }, [credentials, queryClient, token]);
 
   return (
-    <LayoutPage className="max-w-6xl m-auto bg-gradient-color1">
+    <LayoutPage className="m-auto bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
       <main className="min-h-screen flex flex-col h-full w-full m-auto pb-20">
         <Header />
@@ -118,6 +142,9 @@ const NewPasswordPage: FC = () => {
                   { 'bg-gradient-color1': credentials.confirmation.length })}
                 />
               </label>
+              {passwordMismatch && (
+                <p className="mb-14 text-warning">Your password confirmation did not match your password</p>
+              )}
             </fieldset>
             <Button
               type="submit"

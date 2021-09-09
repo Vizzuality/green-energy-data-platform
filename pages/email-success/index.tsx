@@ -3,25 +3,16 @@ import React, {
 } from 'react';
 import Link from 'next/link';
 
-import cx from 'classnames';
-
 // components
 import LayoutPage from 'layout';
 import Head from 'components/head';
 import Header from 'layout/header';
-import Button from 'components/button';
 import Icon from 'components/icon';
 
-type SuccessEmailPageProps = {
-};
-
-const SuccessEmailPage: FC<SuccessEmailPageProps> = ({
-
-}: SuccessEmailPageProps) => (
+const SuccessEmailPage: FC = () => (
   <LayoutPage className="m-auto bg-gradient-color1">
     <Head title="Welcome to Green Energy Data Platform" />
-    <main className="
-     flex flex-col h-full w-full m-auto">
+    <main className="flex flex-col h-full w-full m-auto min-h-screen">
       <Header />
       <div className="flex flex-col items-center text-center max-w-md text-white m-auto pb-20">
         <h2>Check your email</h2>

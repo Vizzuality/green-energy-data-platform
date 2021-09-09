@@ -22,6 +22,7 @@ import Button from 'components/button';
 import Icon from 'components/icon';
 import { passwordRecovery } from 'services/user';
 import router from 'next/router';
+import { validateEmail } from 'utils';
 
 type SigninProps = {
   csrfToken?: string,
@@ -37,6 +38,7 @@ const SigninPage: FC<SigninProps> = ({
   });
 
   const [recoveryEmail, setRecoveryEmail] = useState('');
+  const [isValid, setEmailVerification] = useState(false);
 
   const [isRecovery, setRecovery] = useState(false);
 
@@ -61,6 +63,8 @@ const SigninPage: FC<SigninProps> = ({
   }, [credentials]);
 
   const handleRecoveryEmail = (e: FormEvent<HTMLInputElement>): void => {
+    const verificationEmail = validateEmail(e.currentTarget.value);
+    setEmailVerification(verificationEmail);
     setRecoveryEmail(e.currentTarget.value);
   };
 
@@ -68,7 +72,7 @@ const SigninPage: FC<SigninProps> = ({
     setRecovery(!isRecovery);
   };
 
-  const handleReset = async () => {
+  const handleRequestResetLink = async () => {
     await passwordRecovery(recoveryEmail);
     router.push('email-success');
   };
@@ -174,12 +178,12 @@ const SigninPage: FC<SigninProps> = ({
                     you to recover your password.
                   </p>
                   <div className="py-6">
-                    <label htmlFor="password" className="text-2.5xl font-bold">
+                    <label htmlFor="email" className="text-2.5xl font-bold">
                       <div className="relative mb-10 sm:mb-4 font-normal">
                         <input
-                          id="password"
-                          name="password"
-                          type="password"
+                          id="email"
+                          name="email"
+                          type="email"
                           placeholder="Write your email"
                           className={cx('w-full placeholder-gray1 placeholder-opacity-20',
                             { 'placeholder-opacity-100': recoveryEmail.length })}
@@ -195,13 +199,14 @@ const SigninPage: FC<SigninProps> = ({
                   </div>
 
                 </div>
+
                 <Button
                   type="button"
                   aria-label="Log in"
-                  theme="border-dark"
+                  theme={isValid ? 'secondary-background-dark' : 'border-dark'}
                   size="xlg"
-                  disabled={!recoveryEmail.length}
-                  onClick={handleReset}
+                  disabled={!isValid}
+                  onClick={handleRequestResetLink}
                 >
                   Request reset link
                 </Button>

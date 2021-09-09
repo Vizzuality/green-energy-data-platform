@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import { useQueryClient } from 'react-query';
 import cx from 'classnames';
-import { getSession } from 'next-auth/client';
+import { getSession, signOut } from 'next-auth/client';
 
 import i18next from 'i18next';
 
@@ -18,6 +18,7 @@ import { useMe } from 'hooks/auth';
 import {
   updateUser,
   passwordRecovery,
+  deleteUser,
 } from 'services/user';
 
 // components
@@ -27,22 +28,43 @@ import Hero from 'layout/hero';
 import Icon from 'components/icon';
 import Button from 'components/button';
 
+// util
+import { validateEmail } from 'utils';
+
 const ProfilePage: FC = () => {
   const queryClient = useQueryClient();
-  const { data: user } = useMe();
+  const { data: user } = useMe({
+    refetchOnWindowFocus: false,
+    placeholderData: {
+      email: '',
+      username: '',
+    },
+  });
+
+  const { email, username } = user;
   const [passwordView, setPasswordVisibility] = useState({
     new: false,
     confirmation: false,
   });
+
   const [credentials, setCredentials] = useState({
-    username: '',
-    email: '',
+    username,
+    email,
     password: '',
-    new: '',
+    newPassword: '',
     confirmation: '',
   });
 
+  const { password, newPassword, confirmation } = credentials;
+
+  const [passwordMismatch, setPasswordsMismatchMessage] = useState(false);
+  const [isValid, setEmailVerification] = useState(false);
+
   const handleChange = (type: string, e: ChangeEvent<HTMLInputElement>): void => {
+    if (type === 'email') {
+      const verificationEmail = validateEmail(e.currentTarget.value);
+      setEmailVerification(verificationEmail);
+    }
     setCredentials({
       ...credentials,
       [type]: e.currentTarget.value,
@@ -56,11 +78,11 @@ const ProfilePage: FC = () => {
     });
   };
 
-  const handleSubmit = useCallback(async (evt) => {
+  const handleSave = useCallback(async (evt) => {
     evt.preventDefault();
 
     const {
-      username,
+      username: name,
     } = credentials;
 
     const {
@@ -68,15 +90,50 @@ const ProfilePage: FC = () => {
     } = user;
 
     try {
-      await updateUser({ username }, token);
+      await updateUser({ username: name }, token);
       queryClient.invalidateQueries('me');
     } catch (e) {
       throw new Error(`something went wrong updating user: ${e.message}`);
     }
   }, [credentials, user, queryClient]);
 
+  const handlePasswordChange = useCallback(async (evt) => {
+    evt.preventDefault();
+
+    const {
+      token,
+    } = user;
+
+    try {
+      if (newPassword !== confirmation) {
+        setPasswordsMismatchMessage(true);
+        setTimeout(() => setPasswordsMismatchMessage(false), 3000);
+      }
+      await updateUser({ username }, token);
+      queryClient.invalidateQueries('me');
+    } catch (e) {
+      throw new Error(`something went wrong updating user: ${e.message}`);
+    }
+  }, [username, newPassword, confirmation, user, queryClient]);
+
+  const handleDelete = useCallback(async (evt) => {
+    evt.preventDefault();
+
+    const {
+      token,
+    } = user;
+
+    try {
+      await deleteUser(token);
+      queryClient.invalidateQueries('me');
+      signOut({ callbackUrl: '/signup' });
+    } catch (e) {
+      throw new Error(`something went wrong deleting account: ${e.message}`);
+    }
+  }, [user, queryClient]);
+
   const handleRecover = () => {
-    passwordRecovery(credentials.email);
+    passwordRecovery(email);
   };
 
   return (
@@ -88,7 +145,7 @@ const ProfilePage: FC = () => {
       <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
         <section className="flex flex-col w-1/2">
           <div className="p-16 flex-1 flex flex-col justify-between">
-            <form onSubmit={handleSubmit} className="flex flex-col items-start">
+            <form onSubmit={handleSave} className="flex flex-col items-start">
               <label
                 htmlFor="name"
                 className="w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
@@ -101,7 +158,7 @@ const ProfilePage: FC = () => {
                     type="text"
                     defaultValue={user?.username}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
-                      { 'text-grayProfile text-opacity-100': credentials.username.length })}
+                      { 'text-grayProfile text-opacity-100': username.length })}
                     onChange={(e) => handleChange('username', e)}
                   />
                   <Icon
@@ -115,7 +172,7 @@ const ProfilePage: FC = () => {
               <label htmlFor="email" className="w-full text-xs pb-2 tracking-tight text-grayProfile text-opacity-50">
                 {i18next.t('email')}
                 <div className={cx('relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50',
-                  { 'text-grayProfile text-opacity-100': credentials.email.length })}
+                  { 'text-grayProfile text-opacity-100': isValid })}
                 >
                   <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold" />
                   <input
@@ -126,7 +183,7 @@ const ProfilePage: FC = () => {
                     placeholder="Write your email account"
                     defaultValue={user?.email}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
-                      { 'text-grayProfile text-opacity-100': credentials.email.length })}
+                      { 'text-grayProfile text-opacity-100': isValid })}
                     onChange={(e) => handleChange('email', e)}
                   />
 
@@ -137,6 +194,7 @@ const ProfilePage: FC = () => {
                 aria-label="Sign in"
                 theme="secondary"
                 className="py-20 bg-gray1 border-gray1 text-white text-sm"
+                disabled={isValid}
               >
                 {i18next.t('save')}
               </Button>
@@ -148,12 +206,9 @@ const ProfilePage: FC = () => {
               <Button
                 type="button"
                 aria-label="delete account"
-                className="text-sm"
                 theme="warning"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  console.log('deleting account');
-                }}
+                className="flex justify-left text-sm w-max"
+                onClick={handleDelete}
               >
                 {i18next.t('delete')}
 
@@ -163,7 +218,7 @@ const ProfilePage: FC = () => {
         </section>
         <section className="flex flex-col w-1/2">
           <div className="p-16 flex-1 flex flex-col justify-between">
-            <form method="post" className="flex flex-col items-start">
+            <form onSubmit={handlePasswordChange} className="flex flex-col items-start">
               <h2 className="text-3.5xl font-bold">Change password</h2>
               <label
                 htmlFor="password"
@@ -177,7 +232,7 @@ const ProfilePage: FC = () => {
                     name="password"
                     type="password"
                     className={cx('w-full overflow-ellipsis text-sm',
-                      { 'text-grayProfile text-opacity-100': credentials.password.length })}
+                      { 'text-grayProfile text-opacity-100': password.length })}
                     onChange={(e) => handleChange('password', e)}
                   />
 
@@ -200,8 +255,8 @@ const ProfilePage: FC = () => {
                       name="new-password"
                       type={passwordView.new ? 'text' : 'password'}
                       className={cx('w-full overflow-ellipsis text-sm',
-                        { 'text-grayProfile text-opacity-50': !credentials.new.length })}
-                      onChange={(e) => handleChange('new', e)}
+                        { 'text-grayProfile text-opacity-50': !newPassword.length })}
+                      onChange={(e) => handleChange('newPassword', e)}
                     />
                     <Icon
                       ariaLabel="new password"
@@ -209,21 +264,25 @@ const ProfilePage: FC = () => {
                       onClick={() => handlePasswordView('new')}
                       size="lg"
                       className={cx('absolute right-4 transform -translate-y-1/2 top-1/2 font-bold',
-                        { 'text-grayProfile text-opacity-50': !credentials.new.length })}
+                        { 'text-grayProfile text-opacity-50': !newPassword.length })}
                     />
                   </div>
                 </label>
-                <label htmlFor="confirm-password" className="w-full text-xs py-10 tracking-tight text-grayProfile">
-
+                <label
+                  htmlFor="confirm-password"
+                  className="w-full text-xs pt-10 tracking-tight text-grayProfile"
+                >
                   {i18next.t('passwordConfirm')}
-                  <div className="relative mb-8 my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
+                  <div className={cx('relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50',
+                    { 'mb-8 ': !passwordMismatch })}
+                  >
                     <input
                       id="confirm-password"
                       name="password"
                       type={passwordView.confirmation ? 'text' : 'password'}
                       className={cx('w-full overflow-ellipsis text-sm text-opacity-0',
-                        { 'text-grayProfile text-opacity-50': !credentials.confirmation.length })}
-                      onChange={(e) => handleChange('password', e)}
+                        { 'text-grayProfile text-opacity-50': !confirmation.length })}
+                      onChange={(e) => handleChange('confirmation', e)}
                     />
                     <Icon
                       ariaLabel="confirm password"
@@ -231,20 +290,21 @@ const ProfilePage: FC = () => {
                       onClick={() => handlePasswordView('confirmation')}
                       size="lg"
                       className={cx('absolute right-4 transform -translate-y-1/2 top-1/2 font-bold',
-                        { 'text-grayProfile text-opacity-50': !credentials.confirmation.length })}
+                        { 'text-grayProfile text-opacity-50': !confirmation.length })}
                     />
                   </div>
                 </label>
+                {passwordMismatch && (
+                <p className="mb-8 text-warning">Your password confirmation did not match your password</p>
+                )}
               </fieldset>
               <Button
                 type="submit"
                 aria-label="Sign in"
                 theme="secondary"
-                className="py-20 bg-gray1 border-gray1 text-white text-sm"
-                onClick={(evt) => {
-                  evt.preventDefault();
-                  console.log('Changing password');
-                }}
+                className={cx('py-20 bg-gray1 border-gray1 text-white text-sm',
+                  { 'opacity-50': !password.length || !newPassword.length || !confirmation.length })}
+                disabled={!password.length || !newPassword.length || !confirmation.length}
               >
                 {i18next.t('changePassword')}
               </Button>

@@ -40,8 +40,7 @@ const UserDropdown: FC<UserDropdownProps> = ({
   if (!user) {
     return (
       <Link href="/signin" passHref>
-        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <a>
+        <a href="/signin">
           <Icon ariaLabel="sign in" className="cursor-pointer" name="profile" size="xlg" />
         </a>
       </Link>

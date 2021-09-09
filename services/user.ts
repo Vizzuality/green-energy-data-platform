@@ -38,6 +38,7 @@ export const signUp = (
     },
   }).then(({ data, status }) => ({ data, status }));
 
+// Upades user details
 export const updateUser = (
   params = {},
   userToken: string,
@@ -52,24 +53,29 @@ export const updateUser = (
     },
   }).then(({ data }) => data);
 
+// Sends and email with restore password link
 export const passwordRecovery = (
+  email: string,
   params = {},
-) => API.get('/users/recover_password_token',
+) => API.get('/users/recover-password-token',
   {
-    ...params,
-  }).then((response) => console.log(params, response));
+    params: {
+      email,
+      ...params,
+    },
+  }).then(({ data, status, statusText }) => {
+  if (status >= 300) {
+    throw new Error(`Error happened while requesting email. Error - ${status}: ${statusText}`);
+  }
+  return data;
+});
 
-export const passwordChangeToRecover = (
-  params = {},
-  recoveryToken: string,
-  headers = {},
-) => API.get('/users/change_password',
-  {
-    ...params,
-  },
+export const deleteUser = (
+  userToken: string,
+) => API.delete('/users/me',
   {
     headers: {
-      Authentication: recoveryToken,
-      ...headers,
+      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
+      Authentication: `Bearer ${userToken}`,
     },
-  }).then((response) => console.log(response));
+  });
