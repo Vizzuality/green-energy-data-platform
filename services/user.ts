@@ -41,7 +41,7 @@ export const signUp = (
 // Upades user details
 export const updateUser = (
   params = {},
-  userToken: string,
+  userToken: string | string[],
 ) => API.put('/users/me',
   {
     ...params,
