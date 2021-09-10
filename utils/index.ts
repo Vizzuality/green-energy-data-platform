@@ -81,6 +81,7 @@ export const filterRecords = (
   return recordsByFilters;
 };
 
+// Get indicators related to the main indicator displayed
 export const filterRelatedIndicators = (
   records: Record[],
   filters: IndicatorFilters,

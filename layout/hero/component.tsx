@@ -8,14 +8,12 @@ import i18next from 'i18next';
 
 // components
 import UserDropdown from 'components/user-dropdown';
-import Search from 'components/search/component';
 
 import Header from 'layout/header';
 
 interface HeroProps {
   children?: ReactNode,
   header?: boolean,
-  search?: boolean,
   rounded?: boolean,
   theme?: string,
   className?: string,

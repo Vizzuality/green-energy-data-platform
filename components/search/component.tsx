@@ -2,28 +2,41 @@ import React, { FC, useRef, useState } from 'react';
 import Link from 'next/link';
 import cx from 'classnames';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store/store';
+
 // components
 import Icon from 'components/icon';
-import { GroupProps } from 'types/data';
-import { useSearch } from 'hooks/search';
 
-type SearchProps = {
+// types
+import { GroupProps } from 'types/data';
+
+import { useSearch } from 'hooks/search';
+import { setSearchValue } from 'store/slices/search';
+
+interface SearchProps {
   items: GroupProps[]
-};
+}
 
 const Search: FC<SearchProps> = ({
   items,
 }: SearchProps) => {
   const inputRef = useRef();
-  const [searchValue, setSearchValue] = useState('');
   const [isOpen, toggleMenu] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState({ index: 0, subIndex: 0 });
+  const dispatch = useDispatch();
+
+  const {
+    searchValue,
+  } = useSelector(
+    (state: RootState) => (state.search),
+  );
 
   const updateSearch = (e) => {
-    setSearchValue(e.currentTarget.value);
+    dispatch(setSearchValue(e.currentTarget.value));
   };
 
-  const handleClearSearch = () => setSearchValue('');
+  const handleClearSearch = () => dispatch(setSearchValue(''));
 
   const handleMenu = () => toggleMenu(!isOpen);
   const searchResults = useSearch(items, searchValue);
@@ -70,13 +83,19 @@ const Search: FC<SearchProps> = ({
           )}
       {isOpen && !noResults && (
       <ul className="absolute top-8 left-1/2 transform -translate-x-1/2 right-0 bg-white px-10 rounded-2xl box-border space-y-1 w-max">
-        {results.map(({ name, slug, subgroups }, index) => (
+        {results.map((
+          {
+            name,
+            slug,
+            subgroups,
+          }, index,
+        ) => (
           <li
             className="w-full text-gray1 box-border pt-8"
             key={slug}
           >
             <span className="uppercase text-sm tracking-tight box-border m-2">{name}</span>
-            <ul className="space-y-1">
+            <ul className="space-y-1 pb-4">
               {subgroups.map(({
                 name: sgName, id: sgId, slug: sgSlug, default_indicator,
               }, subIndex) => (

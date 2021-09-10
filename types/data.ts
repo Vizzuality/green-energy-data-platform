@@ -5,22 +5,18 @@ export type SubgroupProps = {
   slug: string;
   name: string;
   published: boolean,
-<<<<<<< HEAD
-  default_indicator?: IndicatorProps,
-=======
-  default_indicator?: IndicatorsIdProps,
->>>>>>> no data styles
+  default_indicator?: DataIdProps,
 };
 
 export interface GroupProps {
-  id: number;
-  slug: string;
-  name: string;
-  subtitle: string;
-  status: string;
-  description: string;
+  id: number,
+  slug: string,
+  name: string,
+  subtitle: string,
+  status: string,
+  description: string,
   default_subgroup: string,
-  subgroups: SubgroupProps[];
+  subgroups: SubgroupProps[],
 }
 
 interface Region {
@@ -33,10 +29,12 @@ interface Unit {
   id: string,
   name: string,
 }
+
 export interface Record {
   category_1?: string,
   category_2?: string,
   id: string,
+  slug: string,
   value: number,
   unit: Unit,
   region: Region,
@@ -48,7 +46,7 @@ interface CategoryFilters {
   [key: string]: string | number,
 }
 
-interface DataIdProps {
+export interface DataIdProps {
   id: string,
   name: string,
   slug: string,
@@ -61,11 +59,7 @@ export interface IndicatorProps {
   description: string;
   end_date: number,
   id: number;
-<<<<<<< HEAD
   slug: string,
-=======
-  slug: string;
->>>>>>> filtered results in search
   name: string;
   published: boolean,
   start_date: number,
@@ -73,12 +67,6 @@ export interface IndicatorProps {
   records: Record[],
   group: DataIdProps,
   subgroup: DataIdProps,
-}
-
-export interface IndicatorsIdProps {
-  id: number;
-  name: string;
-  slug: string,
 }
 
 // pages
