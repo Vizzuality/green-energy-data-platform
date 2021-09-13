@@ -123,140 +123,17 @@ export const filterRelatedIndicators = (
   });
   return recordsByFilters;
 };
-
-export const getGeojsons = (
-  records: Record[],
-) => (records.map((record) => ({
-  geojson: {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        properties: {
-
-        },
-        geometry: {
-          type: 'Polygon',
-          coordinates: [
-            [
-              [
-                84.153702,
-                20.882551,
-              ],
-              [
-
-                90.067764,
-                44.655466,
-              ],
-              [
-                60.153702,
-                80.882551,
-              ],
-              [
-                44.067764,
-                18.655466,
-              ],
-            ],
-          ],
-        },
-      },
-    ],
-  },
-  layerConfig: {
-    id: 'coal-power-plants',
-    type: 'geojson',
-    source: {
-      type: 'geojson',
-      promoteId: 'cartodb_id',
-      data: '/power-plants.geojson',
-    },
-    render: {
-      layers: [
-        {
-          type: 'fill',
-          paint: {
-            'fill-color': [
-              'let',
-              'density',
-              ['all', ['get', 'capacity_mw']],
-              [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                8,
-                [
-                  'interpolate',
-                  ['linear'],
-                  ['var', 'density'],
-                  274,
-                  ['to-color', '#edf8e9'],
-                  1551,
-                  ['to-color', '#006d2c'],
-                ],
-                10,
-                [
-                  'interpolate',
-                  ['linear'],
-                  ['var', 'density'],
-                  274,
-                  ['to-color', '#eff3ff'],
-                  1551,
-                  ['to-color', '#08519c'],
-                ],
-              ],
-            ],
-            'fill-opacity': 0.7,
-          },
-        },
-        {
-          type: 'circle',
-          paint: {
-            // 'fill-color': '#00ffff',
-            'circle-opacity': 0.5,
-            'circle-radius': [
-              'interpolate',
-              ['linear'],
-              ['get', 'capacity_mw'],
-              0,
-              10,
-              1000,
-              20,
-            ],
-            'circle-color': {
-              property: 'source',
-              type: 'categorical',
-              stops: [
-                ['Baike', 'red'],
-                ['Wiki-Solar', 'yellow'],
-                ['communal', 'blue'],
-              ],
-            },
-          },
-        },
-        // {
-        //   type: 'fill',
-        //   filter: ['all', ['==', 'capacity_mw', 'Polygon']],
-        //   paint: {
-        //     'fill-color': 'red',
-        //     'fill-outline-color': 'blue',
-        //     'fill-opacity': 0.5,
-        //   },
-        // },
-      ],
-    },
-  },
-}))
-);
-
 export const getGroupedValues = (
   visualization: string,
   filters: IndicatorFilters,
   records: Record[],
+  regions,
 ) => {
   const { category } = filters;
   const label = category?.label;
   const value2 = category?.value;
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === value2) : records;
+
   let data;
   if (visualization === 'pie') {
     data = chain(filteredData)
@@ -315,7 +192,6 @@ export const getGroupedValues = (
           }))
         .value()))
       .value());
-
     const dataByProvince = groupBy(data, 'province');
     return Object.keys(dataByProvince).map((province) => dataByProvince[province]
       .reduce((acc, next) => {
@@ -328,6 +204,99 @@ export const getGroupedValues = (
       }, {
         province,
       }));
+  }
+
+  if (visualization === 'choropleth') {
+    data = flatten(chain(filteredData)
+      .groupBy('region.name')
+      .map((value) => flatten(chain(value)
+        .groupBy(label)
+        .map((res, key) => {
+          const geometry = regions?.find((r) => res[0].region.id === r.id);
+          const keyValue = res.reduce(
+            (previous, current) => (current.value || 0) + previous, 0,
+          );
+          return (
+            {
+              [key !== 'null' ? key : 'Total']: keyValue,
+              geometry,
+              province: res[0].region.name,
+              id: key,
+
+            });
+        })
+        .value()))
+      .value());
+
+    const dataByProvince = groupBy(data, 'province');
+    const final = Object.keys(dataByProvince).map((province) => dataByProvince[province]
+      .reduce((acc, next) => {
+        const { province: currentGeometry, ...rest } = next;
+        return ({
+          ...acc,
+          ...rest,
+        });
+      }, {
+        province,
+      }));
+    //
+    return ({
+      id: 'geometry.id',
+      type: 'geojson',
+      source: {
+        type: 'geojson',
+        data: final.map((props) => console.log(props, 'props') || ({
+
+          // type: 'FeatureCollection',
+          // features: [{
+          //   type: 'Feature',
+          //   geometry: geometry.geometry,
+          //   properties: {
+          //     ...d,
+          //   },
+          // }],
+        })),
+      },
+      render: {
+        layers: [
+          {
+            type: 'circle',
+            paint: {
+              // 'fill-color': '#00ffff',
+              'circle-opacity': 0.5,
+              'circle-radius': [
+                'interpolate',
+                ['linear'],
+                ['get', 'Total'],
+                0,
+                10, // 10 y 20 tamaño min y máxim del radio
+                1000, // 0 y 1000 maximo y minimo de los valores
+                20,
+              ],
+              'circle-color': {
+                property: 'source',
+                type: 'categorical',
+                stops: [
+                  ['Baike', 'red'], // aqui irían todas mis categorías con la rampa de colores de chroma.scale(['#fafa6e','#2A4858'])
+                  // .mode('lch').colors(6)
+                  ['Wiki-Solar', 'yellow'],
+                  ['communal', 'blue'],
+                ],
+              },
+            },
+          },
+          // {
+          //   type: 'fill',
+          //   filter: ['all', ['==', 'capacity_mw', 'Polygon']],
+          //   paint: {
+          //     'fill-color': 'red',
+          //     'fill-outline-color': 'blue',
+          //     'fill-opacity': 0.5,
+          //   },
+          // },
+        ],
+      },
+    });
   }
 
   return data;

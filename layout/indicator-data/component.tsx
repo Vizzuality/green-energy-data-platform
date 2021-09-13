@@ -29,6 +29,8 @@ import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
+import MapContainer from 'components/indicator-visualizations/choropleth/component';
+import LoadingSpinner from 'components/loading-spinner';
 
 // utils
 import {
@@ -46,6 +48,7 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
+import { useRegions } from 'hooks/regions';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
@@ -132,6 +135,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     placeholderData: [],
   });
 
+  const { data: regionsGeojson } = useRegions(indicatorSlug, {
+    refetchOnWindowFocus: false,
+  });
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
   });
@@ -196,10 +202,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     () => ChartConfig(widgetDataKeys)[visualizationType],
     [visualizationType, widgetDataKeys],
   );
-
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords),
-    [visualizationType, filters, filteredRecords],
+    () => getGroupedValues(visualizationType, filters, filteredRecords, regionsGeojson),
+    [visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -226,6 +231,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
+
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
@@ -350,7 +356,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             <section className="flex flex-col w-full">
               <div className="flex">
                 {/* year filter */}
-                {['bar', 'pie'].includes(visualizationType) && (
+                {['bar', 'pie', 'choropleth'].includes(visualizationType) && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
                     {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
@@ -436,7 +442,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
               </div>
               <div className="flex h-full w-full min-h-1/2">
-                {/* {isFetchingRecords && (
+                {isFetchingRecords && (
                   <LoadingSpinner />
                 )}
 
@@ -483,15 +489,18 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       </button>
                     </Tooltip>
                   </div>
-                  {/* <DynamicChart
+                  <DynamicChart
                     widgetData={widgetData}
                     widgetConfig={widgetConfig}
-                  /> */}
-
-
+                  />
+                  {visualizationType === 'choropleth' && (
                   <div className="w-full h-96">
-                    <MapContainer />
+                    <MapContainer layers={widgetData} />
                   </div>
+                  )}
+
+                </div>
+                )}
               </div>
             </section>
           </div>
