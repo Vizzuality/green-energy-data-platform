@@ -27,7 +27,7 @@ import LoadingSpinner from 'components/loading-spinner';
 import VisualizationsNav from 'components/visualizations-nav';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
-// import Filters from 'components/filters';
+import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 
@@ -47,7 +47,6 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
-import Filters from 'components/filters';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
