@@ -46,7 +46,6 @@ const GroupPage: FC = () => {
 
   const handleSubgroupChange = useCallback((url) => {
     setDropdownVisibility(false);
-
     router.push(url);
   }, [router]);
 

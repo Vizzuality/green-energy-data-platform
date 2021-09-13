@@ -1,66 +1,66 @@
 export const ACTIVE_LAYERS = [
 
   // GEOJSON DATA LAYER
-  {
-    id: 'multipolygon',
-    type: 'geojson',
-    source: {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'Polygon',
-              coordinates: [
-                [
-                  [
-                    82.153702,
-                    20.882551,
-                  ],
-                  [
+  // {
+  //   id: 'multipolygon',
+  //   type: 'geojson',
+  //   source: {
+  //     type: 'geojson',
+  //     data: {
+  //       type: 'FeatureCollection',
+  //       features: [
+  //         {
+  //           type: 'Feature',
+  //           properties: {},
+  //           geometry: {
+  //             type: 'Polygon',
+  //             coordinates: [
+  //               [
+  //                 [
+  //                   82.153702,
+  //                   20.882551,
+  //                 ],
+  //                 [
 
-                    90.067764,
-                    44.655466,
-                  ],
-                  [
-                    60.153702,
-                    80.882551,
-                  ],
-                  [
-                    44.067764,
-                    20.655466,
-                  ],
-                ],
-              ],
-            },
-          },
-        ],
-      },
-    },
-    render: {
-      layers: [
-        {
-          type: 'fill',
-          //  'source-layer': 'layer0',
-          paint: {
-            'fill-color': 'green',
-            'fill-opacity': 1,
-          },
-        },
-        {
-          type: 'line',
-          //  'source-layer': 'layer0',
-          paint: {
-            'line-color': '#000000',
-            'line-opacity': 0.1,
-          },
-        },
-      ],
-    },
-  },
+  //                   90.067764,
+  //                   44.655466,
+  //                 ],
+  //                 [
+  //                   60.153702,
+  //                   80.882551,
+  //                 ],
+  //                 [
+  //                   44.067764,
+  //                   20.655466,
+  //                 ],
+  //               ],
+  //             ],
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   render: {
+  //     layers: [
+  //       {
+  //         type: 'fill',
+  //         //  'source-layer': 'layer0',
+  //         paint: {
+  //           'fill-color': 'green',
+  //           'fill-opacity': 1,
+  //         },
+  //       },
+  //       {
+  //         type: 'line',
+  //         //  'source-layer': 'layer0',
+  //         paint: {
+  //           'line-color': '#000000',
+  //           'line-opacity': 0.1,
+  //         },
+  //       },
+  //     ],
+  //   },
+  // },
   {
     id: 'coal-power-plants',
     type: 'geojson',
@@ -121,15 +121,24 @@ export const ACTIVE_LAYERS = [
               1000,
               20,
             ],
-            'circle-color': {
-              property: 'source',
-              type: 'categorical',
-              stops: [
-                ['Baike', 'red'],
-                ['Wiki-Solar', 'yellow'],
-                ['communal', 'blue'],
-              ],
-            },
+            'circle-color': [
+              'interpolate',
+              ['exponential', 0.5],
+              ['zoom'],
+              3,
+              '#e2714b',
+              6,
+              '#eee695',
+            ],
+            // {
+            //   property: 'source',
+            //   type: 'categorical',
+            //   stops: [
+            //     ['Baike', 'red'],
+            //     ['Wiki-Solar', 'yellow'],
+            //     ['communal', 'blue'],
+            //   ],
+            // },
           },
         },
         // {
@@ -144,57 +153,58 @@ export const ACTIVE_LAYERS = [
       ],
     },
   },
-  {
-    id: 'power-2',
-    type: 'geojson',
-    source: {
-      type: 'geojson',
-      data: '/power-plants.geojson',
-    },
-    render: {
-      layers: [
-        {
-          type: 'fill',
-          paint: {
-            'fill-color': 'red',
-            'fill-opacity': 0.5,
-          },
-        },
-      ],
-    },
-  },
-  {
-    id: 'wri-rw',
-    type: 'geojson',
-    source: {
-      type: 'geojson',
-      data: 'SELECT gid_0 as iso, name_0 as name, coastal, the_geom_webmercator FROM gadm36_0 where coastal is true',
-      promoteId: 'iso',
-    },
-    render: {
-      layers: {
-        type: 'fill',
-        paint: {
-          'fill-color': [
-            'case',
-            [
-              'boolean',
-              [
-                'feature-state',
-                'hover',
-              ],
-              false,
-            ],
-            '#fab72e',
-            '#217098',
-          ],
-          'fill-opacity': 1,
-          'fill-outline-color': '#15527f',
-        },
-        'source-layer': 'layer0',
-      },
-    },
-  },
+  // {
+  //   id: 'power-2',
+  //   type: 'geojson',
+  //   source: {
+  //     type: 'geojson',
+  //     data: '/power-plants.geojson',
+  //   },
+  //   render: {
+  //     layers: [
+  //       {
+  //         type: 'fill',
+  //         paint: {
+  //           'fill-color': 'red',
+  //           'fill-opacity': 0.5,
+  //         },
+  //       },
+  //     ],
+  //   },
+  // },
+  // {
+  //   id: 'wri-rw',
+  //   type: 'geojson',
+  //   source: {
+  //     type: 'geojson',
+  //     data: 'SELECT gid_0 as iso, name_0 as name, coastal, the_geom_webmercator
+  // FROM gadm36_0 where coastal is true',
+  //     promoteId: 'iso',
+  //   },
+  //   render: {
+  //     layers: {
+  //       type: 'fill',
+  //       paint: {
+  //         'fill-color': [
+  //           'case',
+  //           [
+  //             'boolean',
+  //             [
+  //               'feature-state',
+  //               'hover',
+  //             ],
+  //             false,
+  //           ],
+  //           '#fab72e',
+  //           '#217098',
+  //         ],
+  //         'fill-opacity': 1,
+  //         'fill-outline-color': '#15527f',
+  //       },
+  //       'source-layer': 'layer0',
+  //     },
+  //   },
+  // },
 ];
 
 export const DEFAULT_VIEWPORT = {

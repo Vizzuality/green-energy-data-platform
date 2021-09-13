@@ -21,23 +21,28 @@ import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from './constants';
 // components
 import Map from './map';
 
+interface MapLayersProps {
+// TO DO
+  id: string,
+}
+
 interface MapContainerProps {
+  layers: MapLayersProps[],
   hasLegend?: boolean,
   style?: Object,
 }
 
 const MapContainer: FC<MapContainerProps> = (
   {
+    layers,
     hasLegend = true,
     style = {},
   }: MapContainerProps,
 ) => {
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
-
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
   }, []);
-
   // const handleZoomChange = useCallback(
   //   (zoom) => {
   //     setViewport({
@@ -49,6 +54,21 @@ const MapContainer: FC<MapContainerProps> = (
   // );
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
+      <Map
+        width="100%"
+        height="100%"
+        viewport={viewport}
+        onMapViewportChange={handleViewportChange}
+        onClick={(e) => console.log(e)}
+      >
+        {(map) => (
+          <LayerManager map={map} plugin={PluginMapboxGl}>
+            {layers.map((l) => (
+              <Layer key={l.id} {...l} />
+            ))}
+          </LayerManager>
+        )}
+      </Map>
       <Map
         width="100%"
         height="100%"

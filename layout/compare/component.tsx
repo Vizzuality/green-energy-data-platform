@@ -232,13 +232,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     [visualizationType, filters, filteredRecords],
   );
 
- console.log(widgetData)
-
- const hola = useMemo(
-  () => getGeojsons(widgetData),
-  [widgetData],
-);
-
   useEffect(() => {
     const {
       default_visualization: defaultVisualization,
