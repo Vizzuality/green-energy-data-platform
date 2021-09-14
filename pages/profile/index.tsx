@@ -4,7 +4,7 @@ import React, {
   useCallback,
   ChangeEvent,
 } from 'react';
-import { useQueryClient } from 'react-query';
+import { useQueryClient, useMutation } from 'react-query';
 import cx from 'classnames';
 import { getSession, signOut } from 'next-auth/client';
 
@@ -41,14 +41,14 @@ const ProfilePage: FC = () => {
     },
   });
 
-  const { email, username } = user;
+  const { email, username: userName } = user;
   const [passwordView, setPasswordVisibility] = useState({
     new: false,
     confirmation: false,
   });
 
   const [credentials, setCredentials] = useState({
-    username,
+    username: userName,
     email,
     password: '',
     newPassword: '',
@@ -78,24 +78,32 @@ const ProfilePage: FC = () => {
     });
   };
 
-  const handleSave = useCallback(async (evt) => {
-    evt.preventDefault();
+  const {
+    username: name,
+  } = credentials;
 
-    const {
-      username: name,
-    } = credentials;
+  const submitNewDetails = async ({ username, token }) => updateUser({ username }, token);
 
-    const {
-      token,
-    } = user;
-
-    try {
-      await updateUser({ username: name }, token);
+  const { mutate } = useMutation(submitNewDetails, {
+    onSuccess: () => {
       queryClient.invalidateQueries('me');
-    } catch (e) {
-      throw new Error(`something went wrong updating user: ${e.message}`);
-    }
-  }, [credentials, user, queryClient]);
+    },
+    onError: () => {
+      throw new Error('something went wrong updating user');
+    },
+  });
+
+  const handleSave = (evt) => {
+    evt.preventDefault();
+    const { token } = user;
+    mutate({ username: name, token });
+    // try {
+    //   await updateUser({ username: name }, token);
+    //   queryClient.invalidateQueries('me');
+    // } catch (e) {
+    //   throw new Error(`something went wrong updating user: ${e.message}`);
+    // }
+  };
 
   const handlePasswordChange = useCallback(async (evt) => {
     evt.preventDefault();
