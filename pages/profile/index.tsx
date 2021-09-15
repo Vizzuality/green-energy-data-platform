@@ -3,6 +3,7 @@ import React, {
   useState,
   useCallback,
   ChangeEvent,
+  useEffect,
 } from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 import cx from 'classnames';
@@ -31,9 +32,16 @@ import Button from 'components/button';
 // util
 import { validateEmail } from 'utils';
 
+interface NewDetailProps {
+  username?: string,
+  email?: string,
+  token: string,
+  password?: string,
+  passwordConfirmation?: string
+}
 const ProfilePage: FC = () => {
   const queryClient = useQueryClient();
-  const { data: user } = useMe({
+  const { isLoading, data: user } = useMe({
     refetchOnWindowFocus: false,
     placeholderData: {
       email: '',
@@ -41,23 +49,36 @@ const ProfilePage: FC = () => {
     },
   });
 
-  const { email, username: userName } = user;
+  const { email: userEmail, username: userName, token: userToken } = user;
+
   const [passwordView, setPasswordVisibility] = useState({
     new: false,
-    confirmation: false,
+    password_confirmation: false,
   });
 
   const [credentials, setCredentials] = useState({
     username: userName,
-    email,
+    email: userEmail,
+    token: userToken,
     password: '',
     newPassword: '',
-    confirmation: '',
+    password_confirmation: '',
   });
 
-  const { password, newPassword, confirmation } = credentials;
+  useEffect(() => {
+    if (!isLoading) {
+      setCredentials({
+        username: userName,
+        email: userEmail,
+        token: userToken,
+        password: '',
+        newPassword: '',
+        password_confirmation: '',
+      });
+    }
+  }, [isLoading, userName, userEmail, userToken]);
 
-  const [passwordMismatch, setPasswordsMismatchMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [isValid, setEmailVerification] = useState(false);
 
   const handleChange = (type: string, e: ChangeEvent<HTMLInputElement>): void => {
@@ -65,6 +86,7 @@ const ProfilePage: FC = () => {
       const verificationEmail = validateEmail(e.currentTarget.value);
       setEmailVerification(verificationEmail);
     }
+
     setCredentials({
       ...credentials,
       [type]: e.currentTarget.value,
@@ -78,58 +100,70 @@ const ProfilePage: FC = () => {
     });
   };
 
+  const submitNewDetails = async (
+    {
+      username, email, token, password, passwordConfirmation,
+    }: NewDetailProps,
+  ) => updateUser({
+    username, email, password, password_confirmation: passwordConfirmation,
+  }, token);
+
   const {
-    username: name,
+    username, email, token, password, newPassword, password_confirmation: passwordConfirmation,
   } = credentials;
 
-  const submitNewDetails = async ({ username, token }) => updateUser({ username }, token);
-
-  const { mutate } = useMutation(submitNewDetails, {
+  const { mutate: mutateUserDetails } = useMutation(submitNewDetails, {
     onSuccess: () => {
       queryClient.invalidateQueries('me');
     },
-    onError: () => {
+    onError: (error) => {
+      if (newPassword !== passwordConfirmation) {
+        setErrorMessage('Your password confirmation did not match your password');
+      }
+      if (newPassword === passwordConfirmation) {
+        setErrorMessage('Your password must be at least 6 characters long');
+      }
+
+      console.log(error);
+      setTimeout(() => setErrorMessage(''), 3000);
+
       throw new Error('something went wrong updating user');
     },
   });
 
   const handleSave = (evt) => {
     evt.preventDefault();
-    const { token } = user;
-    mutate({ username: name, token });
-    // try {
-    //   await updateUser({ username: name }, token);
-    //   queryClient.invalidateQueries('me');
-    // } catch (e) {
-    //   throw new Error(`something went wrong updating user: ${e.message}`);
-    // }
+    setCredentials({
+      token: userToken,
+      username,
+      email,
+      ...credentials,
+    });
+
+    if (token) {
+      mutateUserDetails({
+        username, token, email,
+      });
+    }
   };
 
   const handlePasswordChange = useCallback(async (evt) => {
     evt.preventDefault();
+    setCredentials({
+      token: userToken,
+      password,
+      newPassword,
+      password_confirmation: passwordConfirmation,
+      ...credentials,
+    });
 
-    const {
-      token,
-    } = user;
-
-    try {
-      if (newPassword !== confirmation) {
-        setPasswordsMismatchMessage(true);
-        setTimeout(() => setPasswordsMismatchMessage(false), 3000);
-      }
-      await updateUser({ username }, token);
-      queryClient.invalidateQueries('me');
-    } catch (e) {
-      throw new Error(`something went wrong updating user: ${e.message}`);
-    }
-  }, [username, newPassword, confirmation, user, queryClient]);
+    mutateUserDetails({
+      token: userToken, password: newPassword, passwordConfirmation,
+    });
+  }, [credentials, userToken, password, passwordConfirmation, newPassword, mutateUserDetails]);
 
   const handleDelete = useCallback(async (evt) => {
     evt.preventDefault();
-
-    const {
-      token,
-    } = user;
 
     try {
       await deleteUser(token);
@@ -138,7 +172,7 @@ const ProfilePage: FC = () => {
     } catch (e) {
       throw new Error(`something went wrong deleting account: ${e.message}`);
     }
-  }, [user, queryClient]);
+  }, [queryClient, token]);
 
   const handleRecover = () => {
     passwordRecovery(email);
@@ -187,7 +221,6 @@ const ProfilePage: FC = () => {
                     id="email"
                     name="email"
                     type="email"
-                    disabled
                     placeholder="Write your email account"
                     defaultValue={user?.email}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
@@ -282,28 +315,28 @@ const ProfilePage: FC = () => {
                 >
                   {i18next.t('passwordConfirm')}
                   <div className={cx('relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50',
-                    { 'mb-8 ': !passwordMismatch })}
+                    { 'mb-8 ': !errorMessage?.length })}
                   >
                     <input
                       id="confirm-password"
                       name="password"
-                      type={passwordView.confirmation ? 'text' : 'password'}
+                      type={passwordView.password_confirmation ? 'text' : 'password'}
                       className={cx('w-full overflow-ellipsis text-sm text-opacity-0',
-                        { 'text-grayProfile text-opacity-50': !confirmation.length })}
-                      onChange={(e) => handleChange('confirmation', e)}
+                        { 'text-grayProfile text-opacity-50': !passwordConfirmation.length })}
+                      onChange={(e) => handleChange('password_confirmation', e)}
                     />
                     <Icon
                       ariaLabel="confirm password"
-                      name={passwordView.confirmation ? 'view' : 'hide'}
-                      onClick={() => handlePasswordView('confirmation')}
+                      name={passwordView.password_confirmation ? 'view' : 'hide'}
+                      onClick={() => handlePasswordView('password_confirmation')}
                       size="lg"
                       className={cx('absolute right-4 transform -translate-y-1/2 top-1/2 font-bold',
-                        { 'text-grayProfile text-opacity-50': !confirmation.length })}
+                        { 'text-grayProfile text-opacity-50': !passwordConfirmation.length })}
                     />
                   </div>
                 </label>
-                {passwordMismatch && (
-                <p className="mb-8 text-warning">Your password confirmation did not match your password</p>
+                {!!errorMessage?.length && (
+                  <p className="mb-8 text-warning">{errorMessage}</p>
                 )}
               </fieldset>
               <Button
@@ -311,8 +344,8 @@ const ProfilePage: FC = () => {
                 aria-label="Sign in"
                 theme="secondary"
                 className={cx('py-20 bg-gray1 border-gray1 text-white text-sm',
-                  { 'opacity-50': !password.length || !newPassword.length || !confirmation.length })}
-                disabled={!password.length || !newPassword.length || !confirmation.length}
+                  { 'opacity-50': !password.length || !newPassword.length || !passwordConfirmation.length })}
+                disabled={!password.length || !newPassword.length || !passwordConfirmation.length}
               >
                 {i18next.t('changePassword')}
               </Button>
