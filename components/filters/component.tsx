@@ -5,19 +5,21 @@ import i18next from 'i18next';
 // components
 import Icon from 'components/icon';
 import { useDispatch } from 'react-redux';
-import { setFilters } from 'store/slices/indicator';
 
 interface FiltersProps {
   categories: string[]
   className?: string,
+  onClick: (category: Record<string, unknown>) => void,
 }
 
 const Filters: FC<FiltersProps> = ({
   categories,
   className = '',
+  onClick,
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
+
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
     if (direction === 'up' && index > 0) {
@@ -30,9 +32,9 @@ const Filters: FC<FiltersProps> = ({
   };
 
   const handleCategories = useCallback((value) => {
-    dispatch(setFilters({ category: { label: 'category_2', value } }));
+    dispatch(onClick({ category: { label: 'category_2', value } }));
     setActive(value);
-  }, [dispatch, setFilters]);
+  }, [dispatch, onClick]);
 
   const handleRemoveCategory = () => {
     dispatch(onClick({ category: { label: 'category_1' } }));

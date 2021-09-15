@@ -500,6 +500,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               <Filters
                 categories={categories}
                 className="overflow-y-auto mb-4"
+                onClick={setFilters}
               />
               )}
               {categories.length > 0 && (
