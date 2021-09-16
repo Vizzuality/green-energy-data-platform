@@ -6,6 +6,8 @@ import { signOut } from 'next-auth/client';
 import Button from 'components/button';
 import Icon from 'components/icon';
 
+import i18next from 'i18next';
+
 interface SignInProps {
   className?: string
 }
@@ -25,7 +27,7 @@ const SignIn: FC<SignInProps> = ({
       className={cx('w-max inline-flex items-center text-sm border-box z-index-10',
         { [className]: !!className })}
     >
-      Sign in
+      {i18next.t('signin')}
       <Icon
         ariaLabel="sign-in"
         name="profile"

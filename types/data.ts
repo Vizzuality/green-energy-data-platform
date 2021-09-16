@@ -1,11 +1,11 @@
 export type SubgroupProps = {
   description: string,
   id: number;
-  indicators: IndicatorsProps[],
+  indicators: IndicatorProps[],
   slug: string;
   name: string;
   published: boolean,
-  default_indicator?: IndicatorsProps,
+  default_indicator?: IndicatorProps,
 };
 
 export interface GroupProps {
@@ -50,13 +50,14 @@ interface Group {
   slug: string,
 }
 
-export interface IndicatorsProps {
+export interface IndicatorProps {
   categories: [],
   category_filters: CategoryFilters,
   default_visualization: string,
   description: string;
   end_date: number,
   id: number;
+  slug: string,
   name: string;
   published: boolean,
   start_date: number,

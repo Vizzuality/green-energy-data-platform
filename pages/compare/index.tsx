@@ -4,11 +4,14 @@ import React, {
 
 import { useRouter } from 'next/router';
 
-// components
+// layout
 import LayoutPage from 'layout';
-import Head from 'components/head';
 import Hero from 'layout/hero';
 import Compare from 'layout/compare';
+
+// components
+import Head from 'components/head';
+import PreFooter from 'components/pre-footer/component';
 
 import { ComparePageProps } from 'types';
 
@@ -22,7 +25,7 @@ const ComparePage: FC<ComparePageProps> = ({
     router.push(url, url, { shallow: true });
   };
   return (
-    <LayoutPage className="text-white bg-gradient-gray1 flex flex-col">
+    <LayoutPage className="text-white bg-gradient-gray1 flex flex-col flex-1 max-w-max">
       <Head title="Green Energy Data Platform" />
       <Hero theme="transparent" rounded />
       <section className="w-full flex space-x-3 container m-auto">
@@ -40,6 +43,9 @@ const ComparePage: FC<ComparePageProps> = ({
           onClose={handleClose}
           compareIndex={2}
         />
+      </section>
+      <section className="flex pb-21">
+        <PreFooter />
       </section>
     </LayoutPage>
   );

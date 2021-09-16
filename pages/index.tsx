@@ -18,20 +18,23 @@ import i18next from 'i18next';
 const HomePage: FC = () => {
   const { data: groups, isLoading } = useGroups();
   return (
-    <LayoutPage className="h-full pb-48">
+    <LayoutPage className="h-full">
       <Head title="Welcome to Green Energy Data Platform" />
       <Hero className="flex flex-col text-center py-24 sm:py-3">
-        <h1 className="text-5.5xl pb-14">{i18next.t('landing-title')}</h1>
+        <h1 className="text-5.5xl pb-14">{i18next.t('landingTitle')}</h1>
         <h3 className="text-lg">Longer description about the site and benefits, lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.</h3>
       </Hero>
       {isLoading
         ? <LoadingSpinner />
         : groups?.map((group, index) => (
-          <div key={group.id} className="container m-auto">
+          <div key={group.id} className="container m-auto pb-28">
             <GroupCard group={group} className={cx('flex justify-around', { 'flex-row-reverse': index % 2 !== 0 })} />
           </div>
         ))}
-      <PreFooter />
+
+      <section className="flex pb-23">
+        <PreFooter />
+      </section>
     </LayoutPage>
   );
 };

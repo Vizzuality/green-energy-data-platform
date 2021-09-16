@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useGroup } from 'hooks/groups';
 
+import { AxiosRequestConfig } from 'axios';
+
 import GridItem from './item';
 
 interface WidgetsGridProps {
@@ -16,15 +18,15 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
   className,
 }: WidgetsGridProps) => {
   const router = useRouter();
-  const { query: { group: groupQuery } } = router;
-  const { data: group } = useGroup(groupQuery, {
+  const { query: { group: groupSlug } } = router;
+  const { data: group }: AxiosRequestConfig = useGroup(groupSlug as '', {
     refetchOnWindowFocus: false,
     placeholderData: {
       subgroups: [],
     },
   });
 
-  const { slug: groupSlug, subgroups } = group;
+  const { subgroups } = group;
 
   return (
     <section className="grid grid-cols-3 grid-flow gap-x-3 gap-y-6.5 py-11">

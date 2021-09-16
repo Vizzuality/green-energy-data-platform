@@ -54,10 +54,12 @@ const SignupPage: FC = () => {
         <Header />
         <div className="flex items-center h-full flex-grow justify-center p-12 md:p-4 max-w-5xl m-auto">
           <section className="flex flex-col justify-start max-w-xs text-white mx-20">
-            <h1 className="text-5.5xl font-bold py-7 tracking-tight">Sign up</h1>
-            <p className="text-lg pb-20">Create an account to explore more about GEDP data insights</p>
+            <h1 className="text-5.5xl font-bold py-7 tracking-tight">{i18next.t('signup')}</h1>
+            <p className="text-lg pb-20">
+              {i18next.t('createAccountLong')}
+            </p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
-            <p className="py-4">Already registered?</p>
+            <p className="py-4">{i18next.t('registered')}</p>
             <Link href={{ pathname: '/signin' }} passHref>
               <a href="/signin" className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black flex items-center justify-center text-center rounded-full focus:outline-none">Sign in</a>
             </Link>
@@ -66,7 +68,8 @@ const SignupPage: FC = () => {
             <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
                 <label htmlFor="name" className="text-2.5xl font-bold">
-                  Your name is:
+                  {i18next.t('yourName')}
+                  :
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon
                       ariaLabel="profile"
@@ -93,7 +96,8 @@ const SignupPage: FC = () => {
                   </div>
                 </label>
                 <label htmlFor="email" className="text-2.5xl font-bold">
-                  Your email is:
+                  {i18next.t('yourEmail')}
+                  :
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
                     <input
@@ -113,7 +117,7 @@ const SignupPage: FC = () => {
                   </div>
                 </label>
                 <label htmlFor="password" className="text-2.5xl pb-10 font-bold">
-                  Enter your password:
+                  {i18next.t('enterPassword')}
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
                     <input
@@ -134,7 +138,8 @@ const SignupPage: FC = () => {
                   </div>
                 </label>
                 <label htmlFor="password_confirmation" className="text-2.5xl pb-10 font-bold">
-                  Repeat password:
+                  {i18next.t('repeatPassword')}
+                  :
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon ariaLabel="password-confirmation-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
                     <input
@@ -156,7 +161,8 @@ const SignupPage: FC = () => {
                 </label>
                 <label htmlFor="terms-conditions" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
                   <span>
-                    I agree with the
+                    {i18next.t('agreement')}
+
                     <Link href={{ pathname: '/terms-conditions' }} passHref>
                       <a href="/terms-conditions">
                         {' '}
@@ -174,7 +180,7 @@ const SignupPage: FC = () => {
                 </label>
                 <label htmlFor="privacy-policy" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
                   <span>
-                    I agree with the
+                    {i18next.t('agreement')}
                     <Link href={{ pathname: '/privacy-policy' }} passHref>
                       <a href="/privacy-policy">
                         {i18next.t('privacy')}
@@ -196,7 +202,7 @@ const SignupPage: FC = () => {
                 theme="secondary-background-dark"
                 size="xlg"
               >
-                Create account
+                {i18next.t('createAccountShort')}
               </Button>
             </form>
           </section>

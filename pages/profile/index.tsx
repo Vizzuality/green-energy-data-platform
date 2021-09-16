@@ -8,6 +8,8 @@ import { useQueryClient } from 'react-query';
 import cx from 'classnames';
 import { getSession } from 'next-auth/client';
 
+import i18next from 'i18next';
+
 // authentication
 import { withAuthentication, withUser } from 'hoc/auth';
 import { useMe } from 'hooks/auth';
@@ -76,7 +78,7 @@ const ProfilePage: FC = () => {
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
       <Hero className="lg:px-32 md:px-20">
-        <h1 className="text-5.5xl pt-3">Profile</h1>
+        <h1 className="text-5.5xl pt-3">{i18next.t('profile')}</h1>
       </Hero>
       <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
         <section className="flex flex-col w-1/2">
@@ -86,7 +88,7 @@ const ProfilePage: FC = () => {
                 htmlFor="name"
                 className="w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
               >
-                NAME
+                {i18next.t('name')}
                 <div className="relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                   <input
                     id="username"
@@ -106,7 +108,7 @@ const ProfilePage: FC = () => {
                 </div>
               </label>
               <label htmlFor="email" className="w-full text-xs pb-2 tracking-tight text-grayProfile text-opacity-50">
-                YOUR EMAIL IS
+                {i18next.t('email')}
                 <div className={cx('relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50',
                   { 'text-grayProfile text-opacity-100': credentials.email.length })}
                 >
@@ -131,14 +133,12 @@ const ProfilePage: FC = () => {
                 theme="secondary"
                 className="py-20 bg-gray1 border-gray1 text-white text-sm"
               >
-                Save Changes
+                {i18next.t('save')}
               </Button>
             </form>
             <>
               <p className="text-grayProfile text-opacity-50 pb-10 text-sm">
-                If you delete your account, please
-                keep the following in mind: Your profile will be permenantly
-                deleted, Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                {i18next.t('deleteWarning')}
               </p>
               <Button
                 type="button"
@@ -149,7 +149,8 @@ const ProfilePage: FC = () => {
                   console.log('deleting account');
                 }}
               >
-                Delete account
+                {i18next.t('delete')}
+
               </Button>
             </>
           </div>
@@ -162,7 +163,8 @@ const ProfilePage: FC = () => {
                 htmlFor="password"
                 className="w-full pt-10 tracking-tight text-grayProfile text-xs"
               >
-                ENTER YOUR PASSWORD
+                {i18next.t('enterPassword')}
+
                 <div className="relative my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                   <input
                     id="password"
@@ -176,10 +178,13 @@ const ProfilePage: FC = () => {
                 </div>
               </label>
               {/* TO - DO change href when it's ready */}
-              <a href="/" className="underline pb-10 text-xs">I don&apos;t remember my password</a>
+              <a href="/" className="underline pb-10 text-xs">
+                {i18next.t('dontRememberPassword')}
+              </a>
               <fieldset className="w-full text-xs">
                 <label htmlFor="new-password" className="pb-10 tracking-tight text-grayProfile">
-                  NEW PASSWORD
+                  {i18next.t('newPassword')}
+
                   <div className="relative mb-8 my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                     <input
                       id="new-password"
@@ -200,7 +205,8 @@ const ProfilePage: FC = () => {
                   </div>
                 </label>
                 <label htmlFor="confirm-password" className="w-full text-xs py-10 tracking-tight text-grayProfile">
-                  CONFIRM NEW PASSWORD
+
+                  {i18next.t('passwordConfirm')}
                   <div className="relative mb-8 my-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                     <input
                       id="confirm-password"
@@ -231,7 +237,7 @@ const ProfilePage: FC = () => {
                   console.log('Changing password');
                 }}
               >
-                Change password
+                {i18next.t('changePassword')}
               </Button>
             </form>
           </div>

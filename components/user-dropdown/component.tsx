@@ -9,8 +9,9 @@ import { signOut } from 'next-auth/client';
 import { useMe } from 'hooks/auth';
 
 import Icon from 'components/icon';
-
 import Tooltip from 'components/tooltip';
+
+import i18next from 'i18next';
 
 interface UserDropdownProps {
   className?: string,
@@ -59,7 +60,7 @@ const UserDropdown: FC<UserDropdownProps> = ({
           </Link>
 
           <button className="flex relative px-12 py-2 rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-b-x" type="button" onClick={handleClick}>
-            Log out
+            {i18next.t('logout')}
             <Icon ariaLabel="Log out" className="absolute right-4" name="logout" size="lg" />
           </button>
         </div>
@@ -72,7 +73,11 @@ const UserDropdown: FC<UserDropdownProps> = ({
           { [className]: !!className })}
       >
         <div className="flex flex-col items-end text-base">
-          <span>Welcome, </span>
+          <span>
+            {i18next.t('welcome')}
+            ,
+            {' '}
+          </span>
           <span className="font-bold">{user.username}</span>
         </div>
         <Icon
