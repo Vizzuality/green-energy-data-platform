@@ -28,7 +28,7 @@ import { RootState } from 'store/store';
 import CONFIG from '../config';
 
 interface GridItemProps {
-  group: string,
+  group: string | string[],
   subgroup: string,
   indicator: string,
   visualization: string,

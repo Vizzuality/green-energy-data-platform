@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import Link from 'next/link';
 import cx from 'classnames';
+import { useGroups, useGroupsDefaults } from 'hooks/groups';
 
 interface PreFooterProps {
   className?: string,
@@ -8,22 +9,29 @@ interface PreFooterProps {
 
 const PreFooter: FC<PreFooterProps> = ({
   className = '',
-}: PreFooterProps) => (
-  <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10 absolute bottom-18 left-0 right-0',
-    { [className]: className })}
-  >
-    <div className="text-xl flex w-full justify-center">
-      <Link href="/energy" passHref>
-        <a className="p-12" href="/energy">Energy</a>
-      </Link>
-      <Link href="/socio-economic" passHref>
-        <a className="p-12" href="/socio-economic">Socio-economic</a>
-      </Link>
-      <Link href="/coal-power-plant" passHref>
-        <a className="p-12" href="/coal-power-plant">Coal Power Plants</a>
-      </Link>
+}: PreFooterProps) => {
+  const { data: groups } = useGroups({
+    refetchOnWindowFocus: false,
+    placeholderData: [],
+  });
+
+  const defaultGroupSlugs = useGroupsDefaults(groups);
+
+  return (
+    <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10 w-full relative',
+      { [className]: className })}
+    >
+      <div className="text-xl flex w-full justify-center">
+        {defaultGroupSlugs?.map(({
+          name, groupSlug, subgroupSlug, indicatorSlug,
+        }) => (
+          <Link key={groupSlug} href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`} passHref>
+            <a className="p-12" href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>{name}</a>
+          </Link>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default PreFooter;

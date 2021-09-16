@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { useMemo } from 'react';
 
 import {
-  IndicatorsProps,
+  IndicatorProps,
   Record,
 } from 'types/data';
 
@@ -39,7 +39,7 @@ export function useIndicator(
   indicatorId,
   queryOptions = {},
 ) {
-  return useQuery<IndicatorsProps, Error>(`indicator-${indicatorId}`,
+  return useQuery<IndicatorProps, Error>(`indicator-${indicatorId}`,
     () => fetchIndicator(groupId, subgroupId, indicatorId), {
       placeholderData: {
         records: [],
@@ -49,6 +49,7 @@ export function useIndicator(
         description: null,
         end_date: null,
         id: null,
+        slug: null,
         name: null,
         published: false,
         start_date: null,

@@ -34,6 +34,7 @@ module.exports = {
         6.5: '1.563rem',
         7.5: '1.875rem',
         13: '3.125rem',
+        23: '5.65rem',
       },
       minHeight: {
         '1/4': '25vh',

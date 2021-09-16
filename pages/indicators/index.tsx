@@ -14,6 +14,7 @@ import Head from 'components/head';
 import Search from 'components/search';
 import LoadingSpinner from 'components/loading-spinner';
 import Button from 'components/button';
+import PreFooter from 'components/pre-footer/component';
 
 // utils
 
@@ -71,6 +72,7 @@ const IndicatorsPage: FC = () => {
           </div>
         ))}
       </main>
+      <PreFooter />
     </LayoutPage>
   );
 };

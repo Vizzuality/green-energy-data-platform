@@ -16,6 +16,7 @@ import Head from 'components/head';
 import Nav from 'components/nav';
 import Tooltip from 'components/tooltip';
 import Icon from 'components/icon';
+import PreFooter from 'components/pre-footer/component';
 
 // services
 import { fetchIndicator } from 'services/indicators';
@@ -30,11 +31,14 @@ import WidgetsGrid from 'layout/widgets-grid';
 import { useGroup } from 'hooks/groups';
 import { useIndicator } from 'hooks/indicators';
 
+// types
+import { AxiosRequestConfig } from 'axios';
+
 const GroupPage: FC = () => {
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { query: { group: groupQuery, subgroup: subgroupQuery } } = router;
+  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
 
@@ -44,7 +48,7 @@ const GroupPage: FC = () => {
     router.push(url);
   }, [router]);
 
-  const { data: group } = useGroup(groupQuery, {
+  const { data: group } = useGroup(groupSlug as '', {
     refetchOnWindowFocus: false,
     placeholderData: {
       subgroups: [],
@@ -53,7 +57,7 @@ const GroupPage: FC = () => {
 
   const {
     data,
-  } = useIndicator(groupQuery, subgroupSlug, indicatorSlug, ({
+  }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
     placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
       records: [],
       categories: [],
@@ -73,8 +77,8 @@ const GroupPage: FC = () => {
   }));
 
   return (
-    <LayoutPage className="text-white bg-gradient-gray1 pb-20">
-      <Head title={`${data?.group?.name} analysis`} />
+    <LayoutPage className="text-white bg-gradient-gray1">
+      <Head title={`${data?.name} analysis`} />
       <Hero className="lg:px-32 md:px-20">
         <Nav className="pt-10" />
         <Tooltip
@@ -124,13 +128,16 @@ const GroupPage: FC = () => {
           </button>
         </Tooltip>
       </Hero>
-      <div className="container m-auto">
+      <div className="container m-auto pb-20">
         <section className="max-w-6xl m-auto -mt-40 ">
           <IndicatorData />
           <WidgetsGrid />
         </section>
       </div>
 
+      <section className="flex pb-23">
+        <PreFooter />
+      </section>
     </LayoutPage>
   );
 };
