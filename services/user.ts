@@ -36,7 +36,7 @@ export const signUp = (
     headers: {
       'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
     },
-  }).then(({ data, status }) => ({ data, status }));
+  });
 
 // Upades user details
 export const updateUser = (

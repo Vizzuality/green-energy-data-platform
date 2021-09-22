@@ -29,6 +29,9 @@ const SignupPage: FC = () => {
     password: '',
     password_confirmation: '',
   });
+
+  const [errorMessage, setErrorMessage] = useState('');
+
   const passwordInputRef = useRef(null);
   const passwordConfirmationInputRef = useRef(null);
   const handleChange = (type: string, e: FormEvent<HTMLInputElement>): void => {
@@ -40,14 +43,24 @@ const SignupPage: FC = () => {
   const handleSubmit = useCallback((evt) => {
     evt.preventDefault();
 
+    if (passwordInputRef?.current?.value.length < 6) {
+      setErrorMessage('Your password must be at least 6 characters long');
+      setTimeout(() => setErrorMessage(''), 3000);
+    }
+
     if (passwordInputRef?.current?.value !== passwordConfirmationInputRef?.current?.value) {
-      passwordConfirmationInputRef.current.setCustomValidity("Passwords Don't Match");
+      setErrorMessage("Passwords Don't Match");
+      setTimeout(() => setErrorMessage(''), 3000);
     } else {
       signUp(credentials).then(({ data, status }) => {
-        if (!!data || status === 201) {
+        if (!!data && status === 201) {
           router.push('signin');
         }
-      });
+      })
+        .catch(({ response: { data: { error } } }) => {
+          setErrorMessage(error);
+          setTimeout(() => setErrorMessage(''), 3000);
+        });
     }
   }, [credentials]);
 
@@ -144,7 +157,9 @@ const SignupPage: FC = () => {
                 <label htmlFor="password_confirmation" className="text-2.5xl pb-10 font-bold">
                   {i18next.t('repeatPassword')}
                   :
-                  <div className="relative mb-10 sm:mb-4 font-normal">
+                  <div className={cx('relative font-normal',
+                    { 'mb-10 sm:mb-4': errorMessage.length })}
+                  >
                     <Icon ariaLabel="password-confirmation-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
                     <input
                       ref={passwordConfirmationInputRef}
@@ -163,6 +178,9 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
+                {!!errorMessage?.length && (
+                  <p className="mb-8 text-warning">{errorMessage}</p>
+                )}
                 <label htmlFor="terms-conditions" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
                   <span>
                     {i18next.t('agreement')}

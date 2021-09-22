@@ -108,6 +108,8 @@ const ProfilePage: FC = () => {
     username, email, password, password_confirmation: passwordConfirmation,
   }, token);
 
+  const deletUserAccount = async ({ token }) => deleteUser(token);
+
   const {
     username, email, token, password, newPassword, password_confirmation: passwordConfirmation,
   } = credentials;
@@ -116,18 +118,24 @@ const ProfilePage: FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries('me');
     },
-    onError: (error) => {
+    onError: () => {
       if (newPassword !== passwordConfirmation) {
         setErrorMessage('Your password confirmation did not match your password');
       }
       if (newPassword === passwordConfirmation) {
         setErrorMessage('Your password must be at least 6 characters long');
       }
-
-      console.log(error);
-      setTimeout(() => setErrorMessage(''), 3000);
-
       throw new Error('something went wrong updating user');
+    },
+  });
+
+  const { mutate: mutateUserAccount } = useMutation(deletUserAccount, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('me');
+      signOut({ callbackUrl: '/signup' });
+    },
+    onError: (error) => {
+      throw new Error(`something went wrong deleting account: ${error}`);
     },
   });
 
@@ -164,15 +172,8 @@ const ProfilePage: FC = () => {
 
   const handleDelete = useCallback(async (evt) => {
     evt.preventDefault();
-
-    try {
-      await deleteUser(token);
-      queryClient.invalidateQueries('me');
-      signOut({ callbackUrl: '/signup' });
-    } catch (e) {
-      throw new Error(`something went wrong deleting account: ${e.message}`);
-    }
-  }, [queryClient, token]);
+    mutateUserAccount({ token });
+  }, [token, mutateUserAccount]);
 
   const handleRecover = () => {
     passwordRecovery(email);
