@@ -36,11 +36,12 @@ export const signUp = (
     headers: {
       'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
     },
-  }).then(({ data }) => data);
+  });
 
+// Upades user details
 export const updateUser = (
   params = {},
-  userToken: string,
+  userToken: string | string[],
 ) => API.put('/users/me',
   {
     ...params,
@@ -51,3 +52,30 @@ export const updateUser = (
       Authentication: `Bearer ${userToken}`,
     },
   }).then(({ data }) => data);
+
+// Sends and email with restore password link
+export const passwordRecovery = (
+  email: string,
+  params = {},
+) => API.get('/users/recover-password-token',
+  {
+    params: {
+      email,
+      ...params,
+    },
+  }).then(({ data, status, statusText }) => {
+  if (status >= 300) {
+    throw new Error(`Error happened while requesting email. Error - ${status}: ${statusText}`);
+  }
+  return data;
+});
+
+export const deleteUser = (
+  userToken: string,
+) => API.delete('/users/me',
+  {
+    headers: {
+      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
+      Authentication: `Bearer ${userToken}`,
+    },
+  });

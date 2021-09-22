@@ -4,10 +4,10 @@ import { useSession } from 'next-auth/client';
 // services
 import { fetchUserMe } from 'services/user';
 
-export function useMe() {
+export function useMe(queryConfig = {}) {
   const [session, loading] = useSession();
 
-  return useQuery('me',
+  return useQuery(['me', session],
     () => fetchUserMe(`Bearer ${session.accessToken}`)
       .then((data) => ({
         ...data,
@@ -15,6 +15,7 @@ export function useMe() {
       })),
     {
       enabled: !!session && !loading,
+      ...queryConfig,
     });
 }
 

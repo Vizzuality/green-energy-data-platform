@@ -7,7 +7,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   type?: 'reset' | 'button' | 'submit',
   onClick?: (evt: any | '') => void,
   size?: 'sm' | 'md' | 'lg' | 'xlg',
-  theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background-dark' | 'secondary-background-light' | 'info'
+  theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background-dark' | 'secondary-background-light' | 'warning' | 'border-light' | 'border-dark' | 'info'
+  disabled?: boolean
 }
 
 const THEME = {
@@ -15,9 +16,14 @@ const THEME = {
     'border border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black',
   'primary-background': 'bg-white border-white text-gray1',
   secondary:
-    'border-gray2 hover:bg-gray2 hover:text-white',
+    'border border-gray2 hover:bg-gray2 hover:text-white',
   'secondary-background-dark': 'bg-gray1 text-white',
   'secondary-background-light': 'bg-white',
+
+  // border
+  warning: 'border border-warning text-warning',
+  'border-light': 'border border-color-white text-color-white',
+  'border-dark': 'border border-color-gray1 text-color-gray1',
   info: 'bg-color2 border-color2 text-white',
 };
 
@@ -33,19 +39,21 @@ const Button: FC<ButtonProps> = ({
   className,
   theme = 'primary-background',
   size = 'md',
-  disabled,
+  disabled = false,
   onClick,
   type = 'button',
 }: ButtonProps) => (
   <button
     type={type}
-    className={cx(`flex items-center justify-center text-center rounded-full focus:outline-none
+    className={cx(`cursor-auto flex items-center justify-center text-center rounded-full focus:outline-none
     ${THEME[theme]}
     ${SIZE[size]}`,
     { 'font-bold': size === 'sm' && theme === 'primary' },
     { 'border-opacity-50 text-opacity-50': disabled },
+    { 'cursor-pointer': !disabled },
     { [className]: className })}
     onClick={onClick}
+    disabled={disabled}
   >
     {children}
   </button>

@@ -33,7 +33,7 @@ const IndicatorsPage: FC = () => {
 
   if (isLoading) return <LoadingSpinner />;
   return (
-    <LayoutPage className="text-white bg-gradient-gray1">
+    <LayoutPage className="text-white bg-gradient-gray1 min-h-screen">
       <Head title="Green Energy Data Platform" />
       <Hero className="lg:px-32 md:px-20" theme="dark">
         <Search />

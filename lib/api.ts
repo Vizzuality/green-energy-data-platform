@@ -5,12 +5,12 @@ export const API = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-export const APInext = axios.create({
-  baseURL: '/api',
-  headers: { 'Content-Type': 'application/json' },
-});
+const onResponseSuccess = (response) => response;
 
-export default {
-  API,
-  APInext,
-};
+// Any status codes that falls outside the range of 2xx cause this function to trigger
+// Do something with response error
+const onResponseError = (error) => Promise.reject(error);
+
+API.interceptors.response.use(onResponseSuccess, onResponseError);
+
+export default API;
