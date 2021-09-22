@@ -4,12 +4,14 @@ import group from './slices/group';
 import subgroup from './slices/subgroup';
 import indicator from './slices/indicator';
 import indicator_compare from './slices/indicator_compare';
+import search from './slices/search';
 
 const staticReducers = {
   group,
   subgroup,
   indicator,
   indicator_compare,
+  search,
 };
 
 const asyncReducers = {};

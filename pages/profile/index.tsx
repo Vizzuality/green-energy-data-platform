@@ -185,7 +185,7 @@ const ProfilePage: FC = () => {
       <Hero className="lg:px-32 md:px-20">
         <h1 className="text-5.5xl pt-3">{i18next.t('profile')}</h1>
       </Hero>
-      <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow-sm -mt-40 divide-x flex px-10">
+      <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow -mt-40 divide-x flex px-10">
         <section className="flex flex-col w-1/2">
           <div className="p-16 flex-1 flex flex-col justify-between">
             <form onSubmit={handleSave} className="flex flex-col items-start">

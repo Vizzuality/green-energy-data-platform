@@ -19,7 +19,7 @@ const THEME = {
 };
 
 const Header: FC<HeaderProps> = ({ children, className, theme = 'light' }: HeaderProps) => (
-  <div className={cx('flex justify-between items-center px-12 py-2 border-b border-white border-opacity-30',
+  <div className={cx('flex justify-between items-center px-12 py-2 border-b border-white border-opacity-30 relative',
     { [className]: !!className })}
   >
     <Link href="/" passHref>

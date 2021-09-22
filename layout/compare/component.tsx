@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import dynamic from 'next/dynamic';
 
+import { AxiosRequestConfig } from 'axios';
+
 import cx from 'classnames';
 
 import { RootState } from 'store/store';
@@ -48,9 +50,10 @@ import {
   useIndicatorRecords,
 } from 'hooks/indicators';
 
-import ChartConfig from '../indicator-data/config';
-
+import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
+
+import ChartConfig from '../indicator-data/config';
 
 type ChartProps = {
   widgetData: any,
@@ -153,10 +156,26 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     category,
   }), [year, region, unit, category]);
 
+  // export interface UseScenariosFiltersProps {
+  //   search?: string;
+  // }
+
+  // export interface UseSaveScenarioProps {
+  //   requestConfig?: AxiosRequestConfig
+  // }
+
+  // export interface SaveScenarioProps {
+  //   id?: string,
+  //   data: any
+  // }
+
+  // export interface UseDeleteScenarioProps {
+  //   requestConfig?: AxiosRequestConfig
+  // }
   const {
-    data,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
-    placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
+    data: indicatorData,
+  }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+    placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
       default_visualization: null,
@@ -173,7 +192,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(data.default_visualization);
+  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
 
   const {
     data: records,
@@ -215,16 +234,16 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   useEffect(() => {
     const {
       default_visualization: defaultVisualization,
-    } = data;
+    } = indicatorData;
 
     setVisualizationType(defaultVisualization);
-  }, [data]);
+  }, [indicatorData]);
 
   const {
     visualizationTypes,
     name,
     description,
-  } = data;
+  }: IndicatorProps = indicatorData;
 
   const { data: group } = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
@@ -290,21 +309,24 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
               >
                 {group.subgroups.map(({
-                  slug: sgSlug, id, name: sgName, default_indicator: { slug: _indicatorSlug },
-                }) => (
-                  <li
-                    key={id}
-                    className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
-                  >
-                    <button
-                      type="button"
-                      className="px-5 cursor-pointer w-full py-2 flex"
-                      onClick={() => handleSubgroupChange(sgSlug, _indicatorSlug)}
+                  slug: sgSlug, id, name: sgName, default_indicator,
+                }) => {
+                  const indSlug = default_indicator.slug || group.subgroups[0];
+                  return (
+                    <li
+                      key={id}
+                      className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
                     >
-                      {sgName}
-                    </button>
-                  </li>
-                ))}
+                      <button
+                        type="button"
+                        className="px-5 cursor-pointer w-full py-2 flex"
+                        onClick={() => handleSubgroupChange(sgSlug, indSlug)}
+                      >
+                        {sgName}
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           >
@@ -314,7 +336,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               onClick={() => { toggleDropdown('subgroup'); }}
             >
               <h1 className="text-3.5xl text-left">
-                {data?.subgroup?.name}
+                {indicatorData?.subgroup?.name}
               </h1>
               <Icon
                 ariaLabel="collapse dropdown"
@@ -430,7 +452,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           onClick={() => { toggleDropdown('year'); }}
                           className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                         >
-                          <span>{year || 'Select dates'}</span>
+                          <span>{year || i18next.t('dates')}</span>
                           <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                         </button>
                       </Tooltip>

@@ -9,7 +9,6 @@ import i18next from 'i18next';
 // components
 import UserDropdown from 'components/user-dropdown';
 
-// components
 import Header from 'layout/header';
 
 interface HeroProps {

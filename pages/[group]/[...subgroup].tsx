@@ -92,21 +92,24 @@ const GroupPage: FC = () => {
               className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
             >
               {group.subgroups.map(({
-                slug: sgSlug, id, name, default_indicator: { slug: _indicatorSlug },
-              }) => (
-                <li
-                  key={id}
-                  className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
-                >
-                  <button
-                    type="button"
-                    className="px-5 cursor-pointer w-full py-2 flex"
-                    onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${_indicatorSlug}`)}
+                slug: sgSlug, id, name, default_indicator,
+              }) => {
+                const indSlug = default_indicator || group.subgroups[0];
+                return (
+                  <li
+                    key={id}
+                    className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
                   >
-                    {name}
-                  </button>
-                </li>
-              ))}
+                    <button
+                      type="button"
+                      className="px-5 cursor-pointer w-full py-2 flex"
+                      onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${indSlug}`)}
+                    >
+                      {name}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           )}
         >
@@ -121,7 +124,7 @@ const GroupPage: FC = () => {
             <Icon
               ariaLabel="collapse dropdown"
               name="triangle_border"
-              size="2xlg"
+              size="3xlg"
               className={cx('ml-3 border-2 text-white border-white border-opacity-30 hover:bg-color1 rounded-full p-4',
                 { 'transform -rotate-180': false })}
             />

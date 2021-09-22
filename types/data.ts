@@ -5,18 +5,18 @@ export type SubgroupProps = {
   slug: string;
   name: string;
   published: boolean,
-  default_indicator?: IndicatorProps,
+  default_indicator?: DataIdProps,
 };
 
 export interface GroupProps {
-  id: number;
-  slug: string;
-  name: string;
-  subtitle: string;
-  status: string;
-  description: string;
+  id: number,
+  slug: string,
+  name: string,
+  subtitle: string,
+  status: string,
+  description: string,
   default_subgroup: string,
-  subgroups: SubgroupProps[];
+  subgroups: SubgroupProps[],
 }
 
 interface Region {
@@ -29,10 +29,12 @@ interface Unit {
   id: string,
   name: string,
 }
+
 export interface Record {
   category_1?: string,
   category_2?: string,
   id: string,
+  slug: string,
   value: number,
   unit: Unit,
   region: Region,
@@ -44,7 +46,7 @@ interface CategoryFilters {
   [key: string]: string | number,
 }
 
-interface Group {
+export interface DataIdProps {
   id: string,
   name: string,
   slug: string,
@@ -63,6 +65,16 @@ export interface IndicatorProps {
   start_date: number,
   visualizationTypes: string[],
   records: Record[],
-  group: Group,
-  subgroup: Group,
+  group: DataIdProps,
+  subgroup: DataIdProps,
+}
+
+// pages
+export interface ComparePageProps {
+  g1: string,
+  sg1: string,
+  ind1: string,
+  g2: string,
+  sg2: string,
+  ind2: string
 }

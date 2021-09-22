@@ -13,7 +13,7 @@ import Compare from 'layout/compare';
 import Head from 'components/head';
 import PreFooter from 'components/pre-footer/component';
 
-import { ComparePageProps } from 'types';
+import { ComparePageProps } from 'types/data';
 
 const ComparePage: FC<ComparePageProps> = ({
   g1, sg1, ind1, g2, sg2, ind2,

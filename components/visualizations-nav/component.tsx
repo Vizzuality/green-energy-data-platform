@@ -30,7 +30,7 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
     <nav>
       <ul
         role="menu"
-        className={cx('flex justify-between flex-grow border-b-gray',
+        className={cx('flex justify-between flex-grow border-b border-b-gray',
           { [className]: !!className })}
       >
         {!mobile && (

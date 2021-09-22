@@ -145,9 +145,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   }), [year, region, unit, category]);
 
   const {
-    data,
+    data: indicatorData,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
-    placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
+    placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
       default_visualization: null,
@@ -164,7 +164,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(data.default_visualization);
+  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
 
   const {
     data: records,
@@ -206,16 +206,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   useEffect(() => {
     const {
       default_visualization: defaultVisualization,
-    } = data;
+    } = indicatorData;
 
     setVisualizationType(defaultVisualization);
-  }, [data]);
+  }, [indicatorData]);
 
   const {
     visualizationTypes,
     name,
     description,
-  } = data;
+  } = indicatorData;
 
   useEffect(() => {
     dispatch(setFilters({
@@ -228,7 +228,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
   return (
-    <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow-sm',
+    <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
     >
       <VisualizationsNav
@@ -385,7 +385,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         onClick={() => { toggleDropdown('year'); }}
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
-                        <span>{year || 'Select dates'}</span>
+                        <span>{year || i18next.t('dates')}</span>
                         <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                       </button>
                     </Tooltip>

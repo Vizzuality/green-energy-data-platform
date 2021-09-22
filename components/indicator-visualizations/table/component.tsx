@@ -13,7 +13,7 @@ interface TableItems {
 
 interface TableProps {
   widgetConfig: {
-    headers: (string|number)[],
+    headers: (string | number)[],
     items: TableItems[]
   }
 }
