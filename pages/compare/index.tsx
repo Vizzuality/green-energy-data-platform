@@ -25,10 +25,10 @@ const ComparePage: FC<ComparePageProps> = ({
     router.push(url, url, { shallow: true });
   };
   return (
-    <LayoutPage className="text-white bg-gradient-gray1 flex flex-col flex-1 max-w-max">
+    <LayoutPage className="text-white bg-gradient-gray1 flex flex-col flex-1">
       <Head title="Green Energy Data Platform" />
       <Hero theme="transparent" rounded />
-      <section className="w-full flex space-x-3 container m-auto">
+      <section className="w-full flex space-x-3 container m-auto max-w-7xl">
         <Compare
           groupSlug={g1}
           subgroupSlug={sg1}
