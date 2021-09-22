@@ -12,6 +12,7 @@ interface GroupProps {
   name: string,
   slug: string,
   subtitle: string,
+  header_image: string,
 }
 
 interface GroupCardProps {
@@ -28,6 +29,7 @@ const GroupCard: FC<GroupCardProps> = ({
     name,
     subtitle,
     description,
+    header_image: headerImage,
   } = group;
 
   const defaultData = useDefaultIndicator(group);
@@ -43,7 +45,7 @@ const GroupCard: FC<GroupCardProps> = ({
           <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="py-3 px-6 text-sm text-white rounded-full bg-gradient-color1">{i18next.t('discover')}</a>
         </Link>
       </div>
-      <img src={`/images/landing/${slug}.png`} alt={slug} className="rounded-4xl bg-shadow max-w-md m-16" />
+      <img src={headerImage} alt={slug} className="rounded-4xl bg-shadow max-w-md m-16" />
     </div>
 
   );
