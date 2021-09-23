@@ -15,7 +15,7 @@ module.exports = {
         gray4: '#C4C4C4',
         gray5: '#EAEFF3',
         grayProfile: '#35373E', // TO DO - change name when adapting colors
-        'color-red': '#FF472E',
+        warning: '#FF472E',
         // chart colors
         color4: '#A880FF',
         color5: '#29C2DA',
@@ -34,9 +34,16 @@ module.exports = {
         6.5: '1.563rem',
         7.5: '1.875rem',
         13: '3.125rem',
+        23: '5.65rem',
+      },
+      minHeight: {
+        '1/4': '25vh',
+        '1/2': '50vh',
+        '3/4': '75vh',
+        xs: '13.75rem',
       },
       maxWidth: {
-        xs: '15.5rem',
+        xs: '13rem',
       },
       fontSize: {
         '2.5xl': '1.625rem',
@@ -71,7 +78,6 @@ module.exports = {
         'gradient-color2': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%)',
         'gradient-gray1': 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
         'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
-
       },
       inset: {
         17: '4.75rem',
@@ -80,5 +86,9 @@ module.exports = {
     },
   },
   variants: {
+    borderRadius: ['responsive', 'hover', 'first', 'last'],
+    extend: {
+      fontWeight: ['hover', 'focus'],
+    },
   },
 };

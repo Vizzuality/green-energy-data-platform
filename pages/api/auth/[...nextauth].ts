@@ -1,48 +1,55 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 
-import { fetchUsers } from 'services/user';
+// services
+import { logIn } from 'services/user';
 
-// interface ProviderCredentialsOptions {
-//   name: string,
-//   credentials: {},
-//   id: string,
-//   authorize: unknown
-// }
+// time the session will be active if the user is inactive.
+const MAX_AGE = 12 * 60 * 60; // 12 hours
 
-type OptionsProps = {
-  pages: {
-    signIn: string;
-  };
-  providers: any; // TO - DO change type once it's finished
-};
-
-const options: OptionsProps = {
+export default NextAuth({
   pages: {
     signIn: '/signin',
+  },
+  session: {
+    jwt: true,
+    maxAge: MAX_AGE,
   },
   // Configure one or more authentication providers
   providers: [
     // We will expect credentials as argument
-
     Providers.Credentials({
-      id: 'credentials',
-      credentials: {
-      },
-      name: 'credentials',
-      async authorize() {
-        const user = await fetchUsers(); // TO - DO add credentials as argument
+      id: 'email-password',
+      name: 'email + password',
+      async authorize(credentials) {
+        let user = null;
+        try {
+          user = await logIn(credentials);
+        } catch (e) {
+          throw new Error(`error signin: ${e.message}`);
+        }
 
         // Any object returned will be saved in `user` property of the JWT
-        if (user) {
-          return user;
-        }
+        if (user) return user;
 
         return null;
       },
     }),
   ],
-};
-
-export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options);
+  callbacks: {
+    async jwt(token, user) {
+      return ({
+        ...token,
+        ...user?.jwt_token && {
+          accessToken: user.jwt_token,
+        },
+      });
+    },
+    async session(session, token) {
+      return ({
+        ...session,
+        accessToken: token.accessToken,
+      });
+    },
+  },
+});

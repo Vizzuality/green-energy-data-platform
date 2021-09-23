@@ -5,7 +5,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
     {
       id: 2,
       email: 'henrique.mendoza@test.com',
-      name: 'Henri Mendoza',
+      username: 'Henri Mendoza',
     },
   );
 };

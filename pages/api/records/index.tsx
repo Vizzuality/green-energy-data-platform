@@ -11,7 +11,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
         coal: ['coal1', 'coal2'],
         Coke: ['coke1', 'coke2'],
         'Crude Oil': ['crude1', 'crude2'],
-        'Diesel Oil': ['diesel1', 'disel2'],
+        'Diesel Oil': ['diesel1', 'diesel2'],
         'Fuel Oil': ['fuel1', 'fuel1'],
         Kerosene: ['kerosene1', 'kerosene2'],
         LPG: ['lgp1', 'lgp2'],
@@ -381,53 +381,6 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
                   value: 63,
                 },
               ],
-            },
-          ],
-        },
-        bar: {
-          margin: {
-            top: 20, right: 0, left: 0, bottom: 100,
-          },
-          cartesianGrid: {
-            vertical: false,
-          },
-          bars: [
-            {
-              dataKey: 'value1',
-              stackId: 'a',
-            },
-            {
-              dataKey: 'value2',
-              stackId: 'a',
-            },
-          ],
-          yAxis: {
-            domain: [0, 1000],
-            tick: {
-              fill: '#C4C4C4',
-              fontSize: '14px',
-            },
-          },
-          xAxis: {
-            type: 'category',
-            dataKey: 'province',
-            interval: 0,
-            tick: 'Tick',
-            label: {
-              content: 'LabelContent',
-            },
-          },
-        },
-        pie: {
-          margin: {
-            top: 20, right: 0, left: 0, bottom: 0,
-          },
-          pies: [
-            {
-              dataKey: 'value',
-              cx: '50%',
-              cy: '50%',
-              outerRadius: 80,
             },
           ],
         },

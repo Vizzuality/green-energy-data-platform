@@ -13,7 +13,7 @@ interface TableItems {
 
 interface TableProps {
   widgetConfig: {
-    headers: (string|number)[],
+    headers: (string | number)[],
     items: TableItems[]
   }
 }
@@ -39,7 +39,7 @@ const Table: FC<TableProps> = ({ widgetConfig }: TableProps) => {
         </tr>
       </thead>
       <tbody>
-        {items.map((item) => (
+        {items?.map((item) => (
           <tr key={item.label}>
             <td className="flex flex-grow">{item.label}</td>
             {item.value.map((i) => (

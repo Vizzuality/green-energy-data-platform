@@ -1,37 +1,18 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import { useSelect } from 'downshift';
 import cx from 'classnames';
+
+// language utils
+import i18n from 'i18next';
+import { languages } from 'utils/translations';
 
 // components
 import Icon from 'components/icon';
 
 const LanguageSelect = () => {
-  const [languages, setLanguages] = useState([]);
-  const items = languages;
-
-  const { Transifex } = (window as any);
-
-  const getAllLanguages = useCallback(() => new Promise((resolve, reject) => {
-    Transifex.live.onError((err) => reject(err));
-    Transifex.live.onFetchLanguages((lan) => resolve(lan));
-  }), [Transifex]);
-
-  useEffect(() => {
-    if (Transifex && typeof Transifex !== 'undefined') {
-      Transifex.live.onReady(() => {
-        const langCode = Transifex.live.detectLanguage();
-        const { code } = Transifex.live.getSourceLanguage();
-        Transifex.live.translateTo(langCode);
-        Transifex.live.translateTo(code);
-      });
-      getAllLanguages()
-        .then((lan: object[]) => setLanguages(lan))
-        .catch((err) => err);
-    }
-  }, [Transifex, getAllLanguages]);
-
   const onSelectedItemChange = (item) => {
-    Transifex.live.translateTo(item.selectedItem.code);
+    const { selectedItem: { code } } = item;
+    i18n.changeLanguage(code);
   };
 
   const {
@@ -40,7 +21,7 @@ const LanguageSelect = () => {
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({ items, onSelectedItemChange });
+  } = useSelect({ items: languages, onSelectedItemChange });
 
   return (
     <div className="flex items-center relative">
@@ -50,7 +31,7 @@ const LanguageSelect = () => {
         {...getToggleButtonProps()}
       >
         <Icon className="text-white" ariaLabel="world ball" name="language" size="lg" />
-        <span className="px-3">Select language</span>
+        <span className="px-3">{i18n.t('language')}</span>
         <Icon
           className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
           ariaLabel="arrow"
@@ -58,26 +39,28 @@ const LanguageSelect = () => {
           size="sm"
         />
       </button>
+      {isOpen && (
       <ul
-        className="flex-col bg-gray1 absolute bottom-7 w-full pl-8"
+        className="flex-col bg-gray1 absolute bottom-11 w-full rounded-xl border border-white border-opacity-25 divide-y divide-white divide-opacity-10"
         {...getMenuProps()}
       >
-        {isOpen && (
-          items.map((item, index) => (
-            <li
-              data-code={item.code}
-              style={
+        {languages.map((item, index) => (
+          <li
+            data-code={item.code}
+            style={
                 highlightedIndex === index
-                  ? { backgroundColor: '#bde4ff' }
+                  ? { backgroundColor: 'rgba(78, 82, 106, 0.95)' }
                   : {}
               }
-              key={`${item.code}`}
-              {...getItemProps({ item: item.name, index })}
-            >
-              {item.name}
-            </li>
-          )))}
+            key={`${item.code}`}
+            {...getItemProps({ item, index })}
+            className="pl-8 p-2 first:rounded-t-xl last:rounded-b-xl "
+          >
+            {item.name}
+          </li>
+        ))}
       </ul>
+      )}
     </div>
   );
 };

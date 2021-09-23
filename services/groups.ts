@@ -1,15 +1,15 @@
 import { API } from 'lib/api';
 
 export const fetchGroups = (
-  params = {},
   headers = {},
+  params = {},
 ) => API.get('/groups', {
   headers: {
     ...headers,
   },
   params,
 })
-  .then(({ data }) => data);
+  .then((data) => data);
 
 export const fetchGroup = (
   id: string,

@@ -1,4 +1,6 @@
-import React, { FC } from 'react';
+import React, {
+  FC,
+} from 'react';
 import {
   ResponsiveContainer,
   CartesianGrid,
@@ -16,8 +18,7 @@ import {
 import { colors } from '../../../constants';
 
 type Object = {
-  label: string | number,
-  value: string | number,
+  [key: string]: string | number | (() => void),
 };
 
 interface ConfigProps {
@@ -26,14 +27,14 @@ interface ConfigProps {
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  tooltip: Object,
+  tooltip?: Object,
+  height: number,
 }
 
 interface ChartProps {
   widgetData: Object[],
   widgetConfig: ConfigProps,
   color?: string,
-  indicatorId: string
 }
 
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
@@ -44,11 +45,13 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     yAxis,
     lines,
     tooltip,
+    height,
+    ...rest
   } = widgetConfig;
 
   return (
-    <ResponsiveContainer width="100%" height={500}>
-      <LineChart width={400} height={200} data={widgetData}>
+    <ResponsiveContainer height={height || 400}>
+      <LineChart {...rest} data={widgetData}>
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
@@ -56,7 +59,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
         {lines && Object.keys(lines).map((line, index) => (
           <Line key={line} {...lines[line]} stroke={colors[index]} />
         ))}
-        {tooltip && (<Tooltip />)}
+        {tooltip && (<Tooltip {...tooltip} />)}
       </LineChart>
     </ResponsiveContainer>
   );

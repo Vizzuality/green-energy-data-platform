@@ -1,42 +1,3 @@
-import React, { FC } from 'react';
-
-type PayloadObject = {
-  value: number,
-};
-
-interface TickProps {
-  x: number,
-  y: number,
-  payload: PayloadObject
-}
-
-const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
-  const { value } = payload;
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text
-        x={0}
-        y={-10}
-        dy={14}
-        textAnchor="end"
-        fill="#C4C4C4"
-        transform="rotate(270)"
-        fontSize="14px"
-      >
-        {value}
-      </text>
-    </g>
-  );
-});
-
-const LabelContent = () => (
-  <g>
-    <text x="50%" y={480} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
-      Region
-    </text>
-  </g>
-);
-
 export const layers = [
   { id: 'layer1', label: 'layer1' },
   { id: 'layer2', label: 'layer2' },
@@ -44,7 +5,6 @@ export const layers = [
   { id: 'layer4', label: 'layer4' },
 ];
 
-export const relatedIndicators = ['widget1', 'widget2', 'widget3', 'widget4', 'widget5'];
 export const selectedIndicator = {
   id: 1,
   type: 'pie',
@@ -260,6 +220,8 @@ export const selectedIndicator = {
   },
   config: {
     line: {
+      height: 400,
+      width: '100%',
       margin: {
         top: 20, right: 0, left: 0, bottom: 0,
       },
@@ -272,14 +234,6 @@ export const selectedIndicator = {
         {
           type: 'monotone',
           dataKey: 'value',
-        },
-        {
-          type: 'monotone',
-          dataKey: 'value2',
-        },
-        {
-          type: 'monotone',
-          dataKey: 'value3',
         },
       ],
       gradients: [
@@ -300,11 +254,9 @@ export const selectedIndicator = {
         },
       ],
       xAxis: {
-        dataKey: 'label',
+        dataKey: 'year',
       },
-      yAxis: {
-
-      },
+      yAxis: {},
       tooltip: {
 
       },
@@ -464,76 +416,68 @@ export const selectedIndicator = {
         },
       ],
     },
-    bar: {
+    // bar: {
+    //   margin: {
+    //     top: 20, right: 0, left: 0, bottom: 100,
+    //   },
+    //   cartesianGrid: {
+    //     vertical: false,
+    //   },
+    //   bars: [
+    //     {
+    //       dataKey: 'value',
+    //     },
+    //   ],
+    //   yAxis: {
+    //     tick: {
+    //       fill: '#C4C4C4',
+    //       fontSize: '14px',
+    //     },
+    //   },
+    //   xAxis: {
+    //     type: 'category',
+    //     dataKey: 'province',
+    //     interval: 0,
+    //     tick: Tick,
+    //     label: {
+    //       content: LabelContent,
+    //     },
+    //   },
+    // },
+    pie: {
       margin: {
-        top: 20, right: 0, left: 0, bottom: 100,
+        // top: 20, right: 0, left: 0, bottom: 0,
       },
       cartesianGrid: {
         vertical: false,
       },
-      bars: [
-        {
-          dataKey: 'value1',
-          stackId: 'a',
-        },
-        {
-          dataKey: 'value2',
-          stackId: 'a',
-        },
-      ],
-      yAxis: {
-        domain: [0, 1000],
-        tick: {
-          fill: '#C4C4C4',
-          fontSize: '14px',
-        },
-      },
-      xAxis: {
-        type: 'category',
-        dataKey: 'province',
-        interval: 0,
-        tick: Tick,
-        label: {
-          content: LabelContent,
-        },
-      },
-    },
-    pie: {
-      margin: {
-        top: 20, right: 0, left: 0, bottom: 0,
-      },
       pies: [
         {
+          nameKey: 'name',
           dataKey: 'value',
           cx: '50%',
           cy: '50%',
-          outerRadius: 80,
+          outerRadius: 90,
+          innerRadius: 70,
         },
       ],
     },
   },
 };
 
-export const indicatorsList = [
-  { id: 1, name: 'indicator1' },
-  { id: 2, name: 'indicator2' },
-  { id: 3, name: 'indicator3' },
-  { id: 4, name: 'indicator4' },
+export const colors = [
+  '#1B5183',
+  '#1E6D86',
+  '#2A8FAF',
+  '#C9E6E8',
+  '#929292',
+  '#766964',
+  '#F8981C',
+  '#760015',
 ];
-export const datesList = [
-  { id: 1, name: '1990' },
-  { id: 2, name: '2000' },
-  { id: 3, name: '2010' },
-  { id: 4, name: '2020' },
-];
-
-export const colors = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
 
 export const filtersList = ['Total Energy Consumption', 'Total Energy Available for consumption'];
 export default {
-  relatedIndicators,
-  indicatorsList,
-  datesList,
   layers,
   colors,
   selectedIndicator,

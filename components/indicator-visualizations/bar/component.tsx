@@ -15,20 +15,23 @@ import {
 
 import { colors } from '../../../constants';
 
+type Object = {
+  [key: string]: string | number | (() => void),
+};
+
 interface ConfigProps {
   bars: BarProps,
   cartesianAxis?: Object,
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
   yAxis?: YAxisProps,
-  tooltip: Object,
+  tooltip?: Object,
 }
 
 interface ChartProps {
   widgetData: any[],
   widgetConfig: ConfigProps,
   color?: string,
-  indicatorId: string
 }
 
 const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
@@ -41,6 +44,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
     tooltip,
     ...rest
   } = widgetConfig;
+
   return (
     <ResponsiveContainer width="100%" height={500} {...rest}>
       <BarChart width={400} height={500} data={widgetData} {...rest}>
@@ -52,7 +56,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
           Object.keys(bars)
             .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={colors[index]} />
             )))}
-        {tooltip && (<Tooltip />)}
+        {!!tooltip && (<Tooltip {...tooltip} />)}
       </BarChart>
     </ResponsiveContainer>
   );

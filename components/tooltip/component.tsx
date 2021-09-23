@@ -4,6 +4,7 @@ import Tippy, { TippyProps } from '@tippyjs/react/headless';
 
 interface TooltipProps extends TippyProps {
   children: ReactElement,
+  maxHeight?: number,
 }
 
 const Tooltip: FC<TooltipProps> = ({
@@ -14,12 +15,14 @@ const Tooltip: FC<TooltipProps> = ({
   <Tippy
     {...props}
     interactive
-    render={() => (
-      <div className="relative">
-        {content}
-      </div>
-    )}
+    // render={() => (
+    //   <div className="relative">
+    //     {content}
+    //   </div>
+    // )}
+    render={() => content}
   >
+
     {children}
   </Tippy>
 );

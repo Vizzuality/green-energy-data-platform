@@ -4,48 +4,50 @@ import cx from 'classnames';
 
 // hooks
 import { useRouter } from 'next/router';
-
-import { GroupProps } from 'types/data';
+import { useGroups, useGroupsDefaults } from 'hooks/groups';
 
 export interface NavProps {
-  items: Array<GroupProps>;
   className?: string;
 }
 
 export const Nav: React.FC<NavProps> = ({
-  items,
   className,
 }: NavProps) => {
   const router = useRouter();
   const { group } = router.query;
+  const { data: groups } = useGroups({
+    placeholderData: [],
+    refetchOnWindowFocus: false,
+  });
 
+  const defaultGroupSlugs = useGroupsDefaults(groups);
   return (
     <nav>
       <ul className={cx('flex flex-grow text-white divide-x',
         { [className]: !!className })}
       >
-        {items.map(({
-          id,
-          title,
-          slug,
-          defaultSubgroup,
+        {defaultGroupSlugs?.map(({
+          name,
+          groupSlug,
+          subgroupSlug,
+          indicatorSlug,
         }, index) => (
           <li
-            key={id}
+            key={groupSlug}
             className={cx('relative px-4 mb-4 focus:outline-none text-opacity-50 text-sm box-content',
               { 'pl-0': index === 0 },
-              { 'font-bold': slug === group })}
+              { 'font-bold': groupSlug === group })}
           >
             <Link
               href="/[group]/[subgroup]"
-              as={`/${slug}/${defaultSubgroup}`}
+              as={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}
             >
-              {title}
+              {name}
             </Link>
             <div className={cx(
-              { 'absolute right-4 -bottom-4 rounded-2xl h-1 bg-current': slug === group },
-              { 'left-0': slug === group && index === 0 },
-              { 'left-4 ': slug === group && index !== 0 },
+              { 'absolute right-4 -bottom-4 rounded-2xl h-1 bg-current': groupSlug === group },
+              { 'left-0': groupSlug === group && index === 0 },
+              { 'left-4 ': groupSlug === group && index !== 0 },
             )}
             />
           </li>
