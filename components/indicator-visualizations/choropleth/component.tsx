@@ -13,6 +13,8 @@ import { withAuthentication } from 'hoc/auth';
 
 // Controls
 // import ZoomControl from './zoom';
+import { chartDefaultColors } from 'constants';
+
 import Legend from './legend';
 
 // Map
@@ -20,7 +22,6 @@ import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from './constants';
 
 // components
 import Map from './map';
-import { chartDefaultColors } from 'constants';
 
 interface MapLayersProps {
 // TO DO
