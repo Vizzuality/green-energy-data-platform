@@ -8,7 +8,7 @@ import Link from 'next/link';
 import BarChart from 'components/indicator-visualizations/bar';
 import LineChart from 'components/indicator-visualizations/line';
 import PieChart from 'components/indicator-visualizations/pie';
-import MapContainer from 'components/indicator-visualizations/map/component';
+import MapContainer from 'components/indicator-visualizations/choropleth/component';
 import LoadingSpinner from 'components/loading-spinner/component';
 
 // hooks
