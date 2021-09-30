@@ -14,4 +14,5 @@ export interface CompareLayoutProps {
 export type ChartProps = {
   widgetData: any,
   widgetConfig: any
+  colors: string[]
 };

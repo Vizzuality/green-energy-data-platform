@@ -44,23 +44,23 @@ const Filters: FC<FiltersProps> = ({
   };
 
   return (
-    <div className={cx('inline-flex flex-col justify-center text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1',
+    <div className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1',
       { [className]: className })}
     >
       <div className="flex justify-start py-3.5 px-6 ">
         <div className="flex">
-          <Icon ariaLabel="filters" name="filter" size="lg" className="mr-5" />
+          <Icon ariaLabel="filter s" name="filter" size="lg" className="mr-5" />
           <p>
             {i18next.t('filters')}
             :
           </p>
         </div>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col max-h-36 overflow-y-auto items-start">
         {categories.map((category) => (
           <div
             key={category}
-            className={cx('flex justify-between cursor-pointer  items-center w-full mb-1.5 bg-white active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
+            className={cx('flex justify-between cursor-pointer items-center w-full mb-1.5 bg-white active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
               { 'bg-color1 text-white': active === category })}
           >
             <button

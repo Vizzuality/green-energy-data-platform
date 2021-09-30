@@ -8,7 +8,9 @@ import React, {
 import {
   useQueryClient,
 } from 'react-query';
+
 import cx from 'classnames';
+
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
@@ -49,13 +51,16 @@ import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
 import { useRegions } from 'hooks/regions';
+import { useColors } from 'hooks/utils';
+
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
 
 type ChartProps = {
   widgetData: any,
-  widgetConfig: any
+  widgetConfig: any,
+  colors: string[]
 };
 
 const IndicatorData: FC<IndicatorDataProps> = ({
@@ -207,6 +212,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
+  const colors = useColors(categories.length);
+
   useEffect(() => {
     const {
       default_visualization: defaultVisualization,
@@ -230,7 +237,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     }));
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
 
-  const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
+  const DynamicChart = useMemo(() => {
+    if (visualizationType) {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    }
+    return () => {};
+  }, [visualizationType]);
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
@@ -492,12 +504,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   <DynamicChart
                     widgetData={widgetData}
                     widgetConfig={widgetConfig}
+                    colors={colors}
                   />
-                  {visualizationType === 'choropleth' && (
+                  {/* {visualizationType === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer layers={widgetData} />
                   </div>
-                  )}
+                  )} */}
 
                 </div>
                 )}
@@ -505,8 +518,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             </section>
           </div>
 
-          <div className="flex h-full">
-            <section className="flex flex-col justify-between h-full ml-8">
+          <div className="flex">
+            <section className="flex flex-col justify-between ml-8">
               {categories.length > 0 && (
               <Filters
                 categories={categories}
@@ -518,7 +531,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               {categories.length > 0 && (
                 <Legend
                   categories={category.label === 'category_1' ? categories : subcategories}
-                  className="overflow-y-auto mb-4"
+                  className="max-h-72 overflow-y-auto mb-4"
+                  colors={colors}
                 />
               )}
               <DataSource indicatorSlug={indicatorSlug} />

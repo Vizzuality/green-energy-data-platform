@@ -26,6 +26,7 @@ import {
 import { RootState } from 'store/store';
 
 import CONFIG from '../config';
+import { useColors } from 'hooks/utils';
 
 interface GridItemProps {
   group: string | string[],
@@ -64,6 +65,7 @@ const GridItem: FC<GridItemProps> = ({
   );
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const colors = useColors(categories.length);
 
   const widgetConfig = useMemo(
     () => CONFIG(categories)[visualization],
@@ -93,22 +95,25 @@ const GridItem: FC<GridItemProps> = ({
           <PieChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
+            colors={colors}
           />
           )}
           {visualization === 'line' && (
           <LineChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
+            colors={colors}
           />
           )}
           {visualization === 'bar' && (
           <BarChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
+            colors={colors}
           />
           )}
           {visualization === 'choropleth' && (
-          <MapContainer hasLegend={false} style={{ marginTop: 30 }} />
+          <MapContainer hasLegend={false} style={{ marginTop: 30 }} layers={[]} />
           )}
         </a>
       </Link>

@@ -5,10 +5,11 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
+
+import chroma from 'chroma-js';
 import dynamic from 'next/dynamic';
 
 import { AxiosRequestConfig } from 'axios';
-
 import cx from 'classnames';
 
 import { RootState } from 'store/store';
@@ -50,6 +51,7 @@ import {
   useIndicator,
   useIndicatorRecords,
 } from 'hooks/indicators';
+import { useColors } from 'hooks/utils';
 
 import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
@@ -58,7 +60,8 @@ import ChartConfig from '../indicator-data/config';
 
 type ChartProps = {
   widgetData: any,
-  widgetConfig: any
+  widgetConfig: any,
+  colors: string[]
 };
 
 const CompareLayout: FC<CompareLayoutProps> = ({
@@ -217,6 +220,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
+  const colors = useColors(categories.length);
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
@@ -228,8 +233,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   );
 
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords),
-    [visualizationType, filters, filteredRecords],
+    () => getGroupedValues(visualizationType, filters, filteredRecords, regions),
+    [visualizationType, filters, filteredRecords, regions],
   );
 
   useEffect(() => {
@@ -558,12 +563,14 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         <DynamicChart
                           widgetData={widgetData}
                           widgetConfig={widgetConfig}
+                          colors={colors}
                         />
                       </div>
                       {categories.length > 0 && (
                         <Legend
                           categories={category.label === 'category_1' ? categories : subcategories}
                           className="overflow-y-auto mb-4"
+                          colors={colors}
                         />
                       )}
                       <DataSource
