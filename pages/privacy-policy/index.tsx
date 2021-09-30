@@ -10,7 +10,7 @@ const PrivacyPolicyPage: FC = () => (
   <LayoutPage className="text-white text-justify bg-gradient-gray1 pb-48">
     <Head title="Green Energy Data Platform" />
     <Hero className="lg:px-32 md:px-20">
-      <h1 className="text-5.5xl pt-3">{i18next.t('privacy')}</h1>
+      <h1 className="text-5.5xl pt-3 text-left">{i18next.t('privacy')}</h1>
     </Hero>
     <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow -mt-40 divide-x flex px-10">
       <section className="lg:mx-28 md:mx-16 md:my-14 my-3 text-justify">
