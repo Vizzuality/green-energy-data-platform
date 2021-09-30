@@ -25,8 +25,9 @@ import {
 
 import { RootState } from 'store/store';
 
-import CONFIG from '../config';
 import { useColors } from 'hooks/utils';
+
+import CONFIG from '../config';
 
 interface GridItemProps {
   group: string | string[],
