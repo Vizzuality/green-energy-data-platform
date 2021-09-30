@@ -20,6 +20,7 @@ import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from './constants';
 
 // components
 import Map from './map';
+import { chartDefaultColors } from 'constants';
 
 interface MapLayersProps {
 // TO DO
@@ -54,7 +55,7 @@ const MapContainer: FC<MapContainerProps> = (
   // );
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
-      <Map
+      {/* <Map
         width="100%"
         height="100%"
         viewport={viewport}
@@ -68,7 +69,7 @@ const MapContainer: FC<MapContainerProps> = (
             ))}
           </LayerManager>
         )}
-      </Map>
+      </Map> */}
       <Map
         width="100%"
         height="100%"
@@ -90,7 +91,7 @@ const MapContainer: FC<MapContainerProps> = (
         viewport={viewport}
         onZoomChange={handleZoomChange}
       /> */}
-      {hasLegend && <Legend />}
+      {hasLegend && <Legend colors={chartDefaultColors} />}
     </div>
   );
 };

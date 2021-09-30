@@ -216,13 +216,13 @@ export const getGroupedValues = (
           const keyValue = res.reduce(
             (previous, current) => (current.value || 0) + previous, 0,
           );
+
           return (
             {
               [key !== 'null' ? key : 'Total']: keyValue,
               geometry,
-              province: res[0].region.name,
+              province: geometry,
               id: key,
-
             });
         })
         .value()))
@@ -237,25 +237,22 @@ export const getGroupedValues = (
           ...rest,
         });
       }, {
-        province,
       }));
-    //
+
     return ({
       id: 'geometry.id',
       type: 'geojson',
       source: {
         type: 'geojson',
-        data: final.map((props) => console.log(props, 'props') || ({
-
-          // type: 'FeatureCollection',
-          // features: [{
-          //   type: 'Feature',
-          //   geometry: geometry.geometry,
-          //   properties: {
-          //     ...d,
-          //   },
-          // }],
-        })),
+        // data: final.map(({
+        //   geometry,
+        //   id,
+        //   province,
+        //   ...categories
+        // }) => ({
+        //   geometry: geometry.geometry,
+        //   ...categories,
+        // })),
       },
       render: {
         layers: [

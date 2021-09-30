@@ -34,7 +34,7 @@ export const Nav: React.FC<NavProps> = ({
         }, index) => (
           <li
             key={groupSlug}
-            className={cx('relative px-4 mb-4 focus:outline-none text-opacity-50 text-sm box-content',
+            className={cx('max-h relative px-4 mb-4 focus:outline-none text-opacity-50 text-sm box-content',
               { 'pl-0': index === 0 },
               { 'font-bold': groupSlug === group })}
           >

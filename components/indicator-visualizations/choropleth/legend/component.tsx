@@ -3,14 +3,16 @@ import cx from 'classnames';
 
 import Icon from 'components/icon';
 
-import { layers, colors } from '../../../../constants';
+import { layers } from '../../../../constants';
 
 interface LegendProps {
-  className?: string
+  className?: string,
+  colors: string[]
 }
 
 const Legend: FC<LegendProps> = ({
   className,
+  colors,
 }: LegendProps) => {
   const [isCollapse, toggleCollapse] = useState(true);
   const [visibility, setVisibility] = useState(true);

@@ -38,9 +38,10 @@ interface ConfigProps {
 interface ChartProps {
   widgetData: any[],
   widgetConfig: ConfigProps,
+  colors: string[]
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
+const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps) => {
   if (!widgetConfig || !widgetData) return null;
   const {
     gradients,
@@ -68,7 +69,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
         {yAxis && (<YAxis {...yAxis} />)}
-        {areas && Object.keys(areas).map((area) => (<Area key={area} {...areas[area]} strokeWidth="3px" fill="url(#area-color)" />))}
+        {areas && Object.keys(areas).map((area, index) => (<Area key={area} {...areas[area]} strokeWidth="3px" fill={colors[index]} />))}
       </AreaChart>
     </ResponsiveContainer>
   );
