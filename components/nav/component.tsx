@@ -39,7 +39,7 @@ export const Nav: React.FC<NavProps> = ({
               { 'font-bold': groupSlug === group })}
           >
             <Link
-              href="/[group]/[subgroup]"
+              href="/[group]/[...subgroup]"
               as={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}
             >
               {name}
