@@ -410,6 +410,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           {categories?.length > 1 && (
             <Filters
               categories={categories}
+              hasSubcategories={!!subcategories.length}
               className="mb-4"
               onClick={compareIndex === 1 ? setFilters : setCompareFilters}
             />

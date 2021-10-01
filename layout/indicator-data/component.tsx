@@ -232,11 +232,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     >
       <VisualizationsNav
         active={visualizationType}
-        className="w-full lg:px-32 md:px-24 sm:px-16"
+        className="w-full lg:px-32 md:px-24 sm:px-16 px-8"
         visualizationTypes={visualizationTypes}
         onClick={setVisualizationType}
       />
-      <div className="flex flex-col lg:px-32 md:px-24 sm:px-16 py-11 w-full">
+      <div className="flex flex-col lg:px-32 md:px-24 px-16 py-11 w-full">
         <div className="flex items-center w-full justify-between">
           <h2 className="flex text-3.5xl max-w-6xl">
             {name}
