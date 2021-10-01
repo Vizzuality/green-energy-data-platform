@@ -8,12 +8,14 @@ import { useDispatch } from 'react-redux';
 
 interface FiltersProps {
   categories: string[]
+  hasSubcategories: boolean,
   className?: string,
   onClick: (category: Record<string, unknown>) => void,
 }
 
 const Filters: FC<FiltersProps> = ({
   categories,
+  hasSubcategories,
   className = '',
   onClick,
 }: FiltersProps) => {
@@ -64,8 +66,10 @@ const Filters: FC<FiltersProps> = ({
             <button
               name={category}
               type="button"
-              className="items-center py-3 pl-6 "
+              className={cx('items-center py-3 pl-6',
+                { 'cursor-auto': !hasSubcategories })}
               onClick={() => handleCategories(category)}
+              disabled={!hasSubcategories}
             >
               <span className="flex-1">{category}</span>
             </button>

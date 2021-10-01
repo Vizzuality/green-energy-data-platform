@@ -191,7 +191,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
-
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[visualizationType],
@@ -499,6 +498,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               {categories.length > 0 && (
               <Filters
                 categories={categories}
+                hasSubcategories={!!subcategories.length}
                 className="overflow-y-auto mb-4"
                 onClick={setFilters}
               />
