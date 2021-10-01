@@ -37,7 +37,7 @@ const GroupCard: FC<GroupCardProps> = ({
 
   return (
     <div className={cx('w-full', { [className]: className })}>
-      <div className="m-16 max-w-md">
+      <div className="my-16 max-w-md">
         <h3 className="text-3.5xl text-gray3">{name}</h3>
         <h4 className="text-2.5xl text-color1 pb-2 text-bold leading-loose">{subtitle}</h4>
         <p className="text-sm leading-7 my-9 cursor-pointer">{description}</p>
@@ -45,7 +45,7 @@ const GroupCard: FC<GroupCardProps> = ({
           <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="py-3 px-6 text-sm text-white rounded-full bg-gradient-color1">{i18next.t('discover')}</a>
         </Link>
       </div>
-      <img src={headerImage} alt={slug} className="rounded-4xl bg-shadow max-w-md m-16" />
+      <img src={headerImage} alt={slug} className="rounded-4xl bg-shadow max-w-md my-16" />
     </div>
 
   );
