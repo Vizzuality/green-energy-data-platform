@@ -64,7 +64,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
     <LayoutPage className="text-white bg-gradient-gray1 overflow-y-auto">
       <Head title="Green Energy Data Platform" />
       <Hero items={groupsFiltered}>
-        <div className="flex container m-auto py-6 px-32">
+        <div className="flex container m-auto py-6 lg:px-32 md:px-24 px-16">
           <p className="py-2 mr-5">Filter by:</p>
           <div className="flex flex-wrap flex-1">
             {groups.map(({ id, slug, name }) => (
@@ -82,7 +82,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
           </div>
         </div>
       </Hero>
-      <main className="container m-auto pt-6 pb-40 px-32 text-gray1 divide-y divide-gray1 divide-opacity-20">
+      <main className="container m-auto pt-6 pb-40 lg:px-32 md:px-24 px-16 text-gray1 divide-y divide-gray1 divide-opacity-20">
         {results.length && results.map(({
           id: groupId,
           name: groupName,

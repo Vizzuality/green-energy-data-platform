@@ -1,0 +1,78 @@
+import React, { FC, useState } from 'react';
+import Link from 'next/link';
+import cx from 'classnames';
+
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
+
+// types
+import { GroupProps } from 'types/data';
+
+import { useSearch } from 'hooks/search';
+
+interface MenuProps {
+  items: GroupProps[],
+  isHeader?: boolean
+}
+
+const Menu: FC<MenuProps> = ({
+  items,
+  isHeader,
+}: MenuProps) => {
+  const [selectedIndex, setSelectedIndex] = useState({ index: 0, subIndex: 0 });
+
+  const {
+    searchValue,
+  } = useSelector(
+    (state: RootState) => (state.search),
+  );
+
+  const searchResults = useSearch(items, searchValue);
+  const results = searchValue === '' ? items : searchResults;
+  return (
+    <ul className={cx('overflow-y-auto max-h-128 z-10 absolute left-1/2 transform -translate-x-1/2 right-0 bg-white px-10 box-border space-y-1 w-full shadow-sm',
+      {
+        'top-23 border-t rounded-b-2xl': !isHeader,
+        'top-10 rounded-2xl ': isHeader,
+      })}
+    >
+      {results.map((
+        {
+          name,
+          slug,
+          subgroups,
+        }, index,
+      ) => (
+        <li
+          className="w-full text-gray1 box-border pt-8"
+          key={slug}
+        >
+          <span className="uppercase text-sm tracking-tight box-border">{name}</span>
+          <ul className="space-y-1 pb-4">
+            {subgroups.map(({
+              name: sgName, id: sgId, slug: sgSlug, default_indicator,
+            }, subIndex) => (
+              <li
+                className={cx('box-border px-5 py-2 bg-gray6 bg-opacity-10 hover:bg-opacity-5 shadow-lg rounded-lg',
+                  { 'bg-gray1 bg-opacity-5': index === selectedIndex.index && subIndex === selectedIndex.subIndex })}
+                key={sgSlug}
+              >
+                <Link key={sgId} href={`/${slug}/${sgSlug}/${default_indicator.slug}`}>
+                  <a
+                    href={`/${slug}/${sgSlug}/${default_indicator.slug}`}
+                    className="text-gray1"
+                    onMouseEnter={() => { setSelectedIndex({ index, subIndex }); }}
+                  >
+                    {sgName}
+                  </a>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default Menu;
