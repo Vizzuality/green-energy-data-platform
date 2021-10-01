@@ -17,7 +17,7 @@ import { fitBounds } from '@math.gl/web-mercator';
 
 import { easeCubic } from 'd3-ease';
 
-import { DEFAULT_VIEWPORT } from 'components/indicator-visualizations/map/constants';
+import { DEFAULT_VIEWPORT } from '../constants';
 
 export interface MapProps extends InteractiveMapProps {
   /** A function that returns the map instance */
