@@ -45,11 +45,11 @@ const Legend: FC<LegendProps> = ({
           name="triangle_border"
           className={cx(
             'absolute right-5 top-1/2 transform -translate-y-1/2',
-            { 'transform rotate-180': !isCollapse },
+            { 'transform rotate-180': isCollapse },
           )}
         />
       </button>
-      <div className={cx('py-1.5 px-4', { hidden: !isCollapse })}>
+      <div className={cx('py-1.5 px-4', { hidden: isCollapse })}>
         <div className="flex justify-between py-2">
           <p className="font-bold">Title</p>
           <div className="flex">

@@ -71,42 +71,42 @@ export const ACTIVE_LAYERS = [
     },
     render: {
       layers: [
-        {
-          type: 'fill',
-          paint: {
-            'fill-color': [
-              'let',
-              'density',
-              ['all', ['get', 'capacity_mw']],
-              [
-                'interpolate',
-                ['linear'],
-                ['zoom'],
-                8,
-                [
-                  'interpolate',
-                  ['linear'],
-                  ['var', 'density'],
-                  274,
-                  ['to-color', '#edf8e9'],
-                  1551,
-                  ['to-color', '#006d2c'],
-                ],
-                10,
-                [
-                  'interpolate',
-                  ['linear'],
-                  ['var', 'density'],
-                  274,
-                  ['to-color', '#eff3ff'],
-                  1551,
-                  ['to-color', '#08519c'],
-                ],
-              ],
-            ],
-            'fill-opacity': 0.7,
-          },
-        },
+        // {
+        //   type: 'fill',
+        //   paint: {
+        //     'fill-color': [
+        //       'let',
+        //       'density',
+        //       ['all', ['get', 'capacity_mw']],
+        //       [
+        //         'interpolate',
+        //         ['linear'],
+        //         ['zoom'],
+        //         8,
+        //         [
+        //           'interpolate',
+        //           ['linear'],
+        //           ['var', 'density'],
+        //           274,
+        //           ['to-color', '#edf8e9'],
+        //           1551,
+        //           ['to-color', '#006d2c'],
+        //         ],
+        //         10,
+        //         [
+        //           'interpolate',
+        //           ['linear'],
+        //           ['var', 'density'],
+        //           274,
+        //           ['to-color', '#eff3ff'],
+        //           1551,
+        //           ['to-color', '#08519c'],
+        //         ],
+        //       ],
+        //     ],
+        //     'fill-opacity': 0.7,
+        //   },
+        // },
         {
           type: 'circle',
           paint: {
