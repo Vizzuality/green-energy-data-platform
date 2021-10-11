@@ -6,7 +6,6 @@ import React, {
   useCallback,
 } from 'react';
 
-import chroma from 'chroma-js';
 import dynamic from 'next/dynamic';
 
 import { AxiosRequestConfig } from 'axios';
@@ -28,10 +27,12 @@ import DataSource from 'components/data-source';
 import {
   filterRecords,
   getGroupedValues,
-  getGeojsons,
   getYearsFromRecords,
+  getDefaultYearFromRecords,
   getUnitsFromRecords,
+  getDefaultUnitFromRecords,
   getRegionsFromRecords,
+  getDefaultRegionFromRecords,
   getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
@@ -210,13 +211,26 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     [records, filters, visualizationType],
   );
 
-  const years = useMemo(() => getYearsFromRecords(records), [records]);
-  const regions = useMemo(() => getRegionsFromRecords(records), [records]);
-  const units = useMemo(() => getUnitsFromRecords(records), [records]);
+  const defaultYear = useMemo(
+    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
+  );
+  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
+    [records, visualizationType, unit]);
 
-  const defaultYear = useMemo(() => years?.[0], [years]);
-  const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
-  const defaultUnit = useMemo(() => units?.[0], [units]);
+  const regionsWithVisualization = useMemo(
+    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
+  );
+  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
+
+  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
+    [records, visualizationType, region, unit]);
+
+  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
+    [records, visualizationType, region, year]);
+
+  const defaultUnit = useMemo(
+    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
+  );
   const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
@@ -570,7 +584,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         <Legend
                           categories={category.label === 'category_1' ? categories : subcategories}
                           className="overflow-y-auto mb-4"
-                          colors={colors}
                         />
                       )}
                       <DataSource

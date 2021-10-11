@@ -3,16 +3,16 @@ import cx from 'classnames';
 
 import Icon from 'components/icon';
 
-import { layers } from '../../../../constants';
+import { useColors } from 'hooks/utils';
 
 interface LegendProps {
   className?: string,
-  colors: string[]
+  categories: string[]
 }
 
 const Legend: FC<LegendProps> = ({
   className,
-  colors,
+  categories,
 }: LegendProps) => {
   const [isCollapse, toggleCollapse] = useState(true);
   const [visibility, setVisibility] = useState(true);
@@ -24,6 +24,8 @@ const Legend: FC<LegendProps> = ({
   const handleVisibility = () => {
     setVisibility(!visibility);
   };
+
+  const colors = useColors(categories.length);
 
   return (
     <div className={cx('absolute text-left bottom-2 left-2 w-3/6 bg-gray1 rounded-3xl text-sm text-white',
@@ -58,10 +60,10 @@ const Legend: FC<LegendProps> = ({
           </div>
         </div>
         <ul>
-          {layers.map(({ id, label }, index) => (
-            <li key={id} className="flex items-center pb-3">
+          {categories.map((category, index) => (
+            <li key={category} className="flex items-center pb-3">
               <span className="w-3.75 h-3.75 rounded-full mr-3" style={{ backgroundColor: colors[index] }} />
-              <span>{label}</span>
+              <span>{category}</span>
             </li>
           ))}
         </ul>

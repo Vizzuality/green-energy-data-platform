@@ -1,4 +1,4 @@
-import { chartDefaultColors } from 'constants';
+import chartDefaultColors from 'constants';
 import chroma from 'chroma-js';
 
 export const useColors = (
