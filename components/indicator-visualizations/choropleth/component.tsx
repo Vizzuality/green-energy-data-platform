@@ -13,12 +13,11 @@ import { withAuthentication } from 'hoc/auth';
 
 // Controls
 // import ZoomControl from './zoom';
-import { chartDefaultColors } from 'constants';
 
 import Legend from './legend';
 
 // Map
-import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from './constants';
+import { DEFAULT_VIEWPORT } from './constants';
 
 // components
 import Map from './map';
@@ -32,6 +31,7 @@ interface MapContainerProps {
   layers: MapLayersProps[],
   hasLegend?: boolean,
   style?: Object,
+  categories: string[]
 }
 
 const MapContainer: FC<MapContainerProps> = (
@@ -39,12 +39,14 @@ const MapContainer: FC<MapContainerProps> = (
     layers,
     hasLegend = true,
     style = {},
+    categories = [],
   }: MapContainerProps,
 ) => {
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
   }, []);
+
   // const handleZoomChange = useCallback(
   //   (zoom) => {
   //     setViewport({
@@ -92,7 +94,7 @@ const MapContainer: FC<MapContainerProps> = (
         viewport={viewport}
         onZoomChange={handleZoomChange}
       /> */}
-      {hasLegend && <Legend colors={chartDefaultColors} />}
+      {hasLegend && <Legend categories={categories} />}
     </div>
   );
 };

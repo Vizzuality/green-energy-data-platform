@@ -97,7 +97,6 @@ export const filterRelatedIndicators = (
 ) => {
   const { region, category } = filters;
   const label = category?.label;
-  const categorySelected = category?.value || 'Total';
   const categories = getCategoriesFromRecords(records).filter((c) => c !== 'Total');
 
   const results = records.filter((r) => {
@@ -137,7 +136,6 @@ export const getGroupedValues = (
   filters: IndicatorFilters,
   records: Record[],
   regions,
-  colors: string[],
 ) => {
   const { category } = filters;
   const label = category?.label;
@@ -149,7 +147,7 @@ export const getGroupedValues = (
   if (visualization === 'pie') {
     data = chain(filteredData)
       .groupBy(label)
-      .map((value, key) => console.log(value) ||(
+      .map((value, key) => (
         {
           name: key,
           value: value.reduce(
@@ -532,8 +530,11 @@ export const getDefaultRegionFromRecords = (
 export const getUnitsFromRecords = (
   records: Record[],
   visualizationType: string,
+  region: string,
+  year: number,
 ) => compact(uniq(records
-  .filter((r) => r.visualizationTypes.includes(visualizationType))
+  .filter((r) => r.visualizationTypes.includes(visualizationType)
+  && r.region.name === region && r.year === year)
   .map((d) => d.unit.name))).sort();
 
 export const getDefaultUnitFromRecords = (

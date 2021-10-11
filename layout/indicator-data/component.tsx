@@ -194,7 +194,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const defaultYear = useMemo(
     () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
   );
-  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit, year), [records, visualizationType, unit, year]);
+  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
+    [records, visualizationType, unit]);
+
   const regionsWithVisualization = useMemo(
     () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
   );
@@ -223,8 +225,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [visualizationType, widgetDataKeys],
   );
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords, regionsGeojson, colors),
-    [visualizationType, filters, filteredRecords, regionsGeojson, colors],
+    () => getGroupedValues(visualizationType, filters, filteredRecords, regionsGeojson),
+    [visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -531,7 +533,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   )}
                   {visualizationType === 'choropleth' && (
                   <div className="w-full h-96">
-                    <MapContainer layers={widgetData.layers} />
+                    <MapContainer
+                      layers={widgetData.layers}
+                      categories={categories}
+                    />
                   </div>
                   )}
 
@@ -555,7 +560,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 <Legend
                   categories={category.label === 'category_1' ? categories : subcategories}
                   className="max-h-72 overflow-y-auto mb-4"
-                  colors={colors}
                 />
               )}
               <DataSource indicatorSlug={indicatorSlug} />
