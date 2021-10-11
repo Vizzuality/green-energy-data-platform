@@ -31,7 +31,7 @@ import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
-import MapContainer from 'components/indicator-visualizations/choropleth/component';
+import MapContainer from 'components/indicator-visualizations/choropleth';
 import LoadingSpinner from 'components/loading-spinner';
 
 // utils
@@ -39,8 +39,11 @@ import {
   filterRecords,
   getGroupedValues,
   getYearsFromRecords,
+  getDefaultYearFromRecords,
   getUnitsFromRecords,
+  getDefaultUnitFromRecords,
   getRegionsFromRecords,
+  getDefaultRegionFromRecords,
   getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
@@ -175,8 +178,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
-
   const {
     data: records,
     isFetching: isFetchingRecords,
@@ -184,35 +185,47 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, visualizationType),
     [records, filters, visualizationType],
   );
 
-  const years = useMemo(() => getYearsFromRecords(records), [records]);
-  const regions = useMemo(() => getRegionsFromRecords(records), [records]);
-  const units = useMemo(() => getUnitsFromRecords(records), [records]);
+  const defaultYear = useMemo(
+    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
+  );
+  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit, year), [records, visualizationType, unit, year]);
+  const regionsWithVisualization = useMemo(
+    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
+  );
+  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
 
-  const defaultYear = useMemo(() => years?.[0], [years]);
-  const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
-  const defaultUnit = useMemo(() => units?.[0], [units]);
+  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
+    [records, visualizationType, region, unit]);
+
+  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
+    [records, visualizationType, region, year]);
+
+  const defaultUnit = useMemo(
+    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
+  );
+
   const defaultCategory = 'category_1';
-
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
+
+  const colors = useColors(categories.length);
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[visualizationType],
     [visualizationType, widgetDataKeys],
   );
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords, regionsGeojson),
-    [visualizationType, filters, filteredRecords, regionsGeojson],
+    () => getGroupedValues(visualizationType, filters, filteredRecords, regionsGeojson, colors),
+    [visualizationType, filters, filteredRecords, regionsGeojson, colors],
   );
-
-  const colors = useColors(categories.length);
 
   useEffect(() => {
     const {
@@ -220,13 +233,15 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     } = indicatorData;
 
     setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+  }, [indicatorData, widgetData]);
 
   const {
-    visualizationTypes,
     name,
+    visualizationTypes: visualizationTypesIndicator,
     description,
   } = indicatorData;
+
+  // TO DO - improve line using kooks
 
   useEffect(() => {
     dispatch(setFilters({
@@ -251,7 +266,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       <VisualizationsNav
         active={visualizationType}
         className="w-full lg:px-32 md:px-24 sm:px-16 px-8"
-        visualizationTypes={visualizationTypes}
+        visualizationTypes={visualizationTypesIndicator}
         onClick={setVisualizationType}
       />
       <div className="flex flex-col lg:px-32 md:px-24 px-16 py-11 w-full">
@@ -287,7 +302,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               <button
                 type="button"
                 onClick={() => { toggleDropdown('indicator'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
                 <span>{i18next.t('change')}</span>
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" />
@@ -417,6 +432,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       {i18next.t('region')}
                       :
                     </span>
+                    {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]}</span>)}
+                    {regions.length > 1 && (
                     <Tooltip
                       placement="bottom-start"
                       visible={dropdownVisibility.region}
@@ -449,6 +466,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         <span>{region || 'Select a region'}</span>
                       </button>
                     </Tooltip>
+                    )}
                   </div>
                 )}
                 {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
@@ -501,16 +519,21 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       </button>
                     </Tooltip>
                   </div>
-                  <DynamicChart
-                    widgetData={widgetData}
-                    widgetConfig={widgetConfig}
-                    colors={colors}
-                  />
-                  {/* {visualizationType === 'choropleth' && (
+                  {visualizationType !== 'choropleth'
+                  && (
+                    <div className="w-full h-96">
+                      <DynamicChart
+                        widgetData={widgetData}
+                        widgetConfig={widgetConfig}
+                        colors={colors}
+                      />
+                    </div>
+                  )}
+                  {visualizationType === 'choropleth' && (
                   <div className="w-full h-96">
-                    <MapContainer layers={widgetData} />
+                    <MapContainer layers={widgetData.layers} />
                   </div>
-                  )} */}
+                  )}
 
                 </div>
                 )}

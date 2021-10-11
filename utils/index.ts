@@ -4,6 +4,7 @@ import {
   chain,
   flatten,
   groupBy,
+  sortedUniq,
 } from 'lodash';
 
 import i18n from 'i18next';
@@ -53,27 +54,34 @@ export const filterRecords = (
     unit,
   } = filters;
 
-  const categories = getCategoriesFromRecords(records).filter((c) => c !== 'Total');
+  const categories = getCategoriesFromRecords(records);
 
-  const results = records.filter((r) => {
-    if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
-    return r;
-  });
-
-  const recordsByFilters = results.filter((d) => {
+  const recordsByFilters = records.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
-      if ((d.region.name === region || (d.region.name === null))
-        && d.unit.name === unit) return true;
+      if (
+        (d.region.name === region || (d.region.name === null)
+        )
+        && d.unit.name === unit
+        && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
+        || categories.length === 1)) return true;
     }
 
     if (visualizationType === 'pie') {
       if ((d.region.name === region || (d.region.name === null))
-        && d.unit.name === unit && year === d.year) return true;
+        && d.unit.name === unit && year === d.year
+        && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
+        || categories.length === 1)) return true;
     }
 
-    if (visualizationType === 'bar' || visualizationType === 'choropleth') {
+    if (visualizationType === 'choropleth') {
       if (year === d.year && d.unit.name === unit) return true;
+    }
+
+    if (visualizationType === 'bar') {
+      if (year === d.year && d.unit.name === unit
+      && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
+        || categories.length === 1) && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a') return true;
     }
 
     return false;
@@ -89,6 +97,7 @@ export const filterRelatedIndicators = (
 ) => {
   const { region, category } = filters;
   const label = category?.label;
+  const categorySelected = category?.value || 'Total';
   const categories = getCategoriesFromRecords(records).filter((c) => c !== 'Total');
 
   const results = records.filter((r) => {
@@ -128,23 +137,27 @@ export const getGroupedValues = (
   filters: IndicatorFilters,
   records: Record[],
   regions,
+  colors: string[],
 ) => {
   const { category } = filters;
   const label = category?.label;
-  const value2 = category?.value;
-  const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === value2) : records;
+  const categorySelected = category?.value || 'Total';
+  const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
+  const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
   let data;
   if (visualization === 'pie') {
     data = chain(filteredData)
       .groupBy(label)
-      .map((value, key) => (
+      .map((value, key) => console.log(value) ||(
         {
           name: key,
           value: value.reduce(
             (previous, current) => (current.value || 0) + previous, 0,
           ),
+          region: value[0].region.name,
           year: value[0].year,
+          visualizationTypes: value[0].visualizationTypes,
         }))
       .value();
   }
@@ -160,6 +173,7 @@ export const getGroupedValues = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
+            visualizationTypes: value[0].visualizationTypes,
           }))
         .value()))
       .value());
@@ -189,6 +203,7 @@ export const getGroupedValues = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             province: res[0].region.name,
+            visualizationTypes: value[0].visualizationTypes,
           }))
         .value()))
       .value());
@@ -207,95 +222,195 @@ export const getGroupedValues = (
   }
 
   if (visualization === 'choropleth') {
-    data = flatten(chain(filteredData)
-      .groupBy('region.name')
-      .map((value) => flatten(chain(value)
-        .groupBy(label)
-        .map((res, key) => {
-          const geometry = regions?.find((r) => res[0].region.id === r.id);
-          const keyValue = res.reduce(
-            (previous, current) => (current.value || 0) + previous, 0,
-          );
+    const dataWithGeometries = filteredData.map(({ id, ...d }) => {
+      const geometry = filteredRegions?.find((r) => d.region.id === r.id);
+      return ({
+        visualizationTypes: d.visualizationTypes,
+        geometry,
+        [d.category_1]: d.value,
+      });
+    });
 
-          return (
-            {
-              [key !== 'null' ? key : 'Total']: keyValue,
-              geometry,
-              province: geometry,
-              id: key,
-            });
-        })
-        .value()))
-      .value());
+    const mapValues = dataWithGeometries
+      .filter((d) => d[categorySelected])
+      .map((d) => d[categorySelected]);
 
-    const dataByProvince = groupBy(data, 'province');
-    const final = Object.keys(dataByProvince).map((province) => dataByProvince[province]
-      .reduce((acc, next) => {
-        const { province: currentGeometry, ...rest } = next;
-        return ({
-          ...acc,
-          ...rest,
-        });
-      }, {
-      }));
-
-    return ({
-      id: 'geometry.id',
-      type: 'geojson',
-      source: {
+    const minValue = Math.min(...mapValues);
+    const maxValue = Math.max(...mapValues);
+    data = {
+      visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
+      layers: [{
+        id: 'regions',
         type: 'geojson',
-        // data: final.map(({
-        //   geometry,
-        //   id,
-        //   province,
-        //   ...categories
-        // }) => ({
-        //   geometry: geometry.geometry,
-        //   ...categories,
-        // })),
-      },
-      render: {
-        layers: [
-          {
-            type: 'circle',
-            paint: {
-              // 'fill-color': '#00ffff',
-              'circle-opacity': 0.5,
-              'circle-radius': [
-                'interpolate',
-                ['linear'],
-                ['get', 'Total'],
-                0,
-                10, // 10 y 20 tamaño min y máxim del radio
-                1000, // 0 y 1000 maximo y minimo de los valores
-                20,
-              ],
-              'circle-color': {
-                property: 'source',
-                type: 'categorical',
-                stops: [
-                  ['Baike', 'red'], // aqui irían todas mis categorías con la rampa de colores de chroma.scale(['#fafa6e','#2A4858'])
-                  // .mode('lch').colors(6)
-                  ['Wiki-Solar', 'yellow'],
-                  ['communal', 'blue'],
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...categories }) => ({
+              type: 'Feature',
+              geometry: geometry?.geometry,
+              properties: categories,
+            })),
+          },
+        },
+        render: {
+          layers: [
+            {
+              type: 'fill',
+              paint: {
+                'fill-color': [
+                  'interpolate',
+                  ['linear'],
+                  ['get', categorySelected],
+                  minValue === maxValue ? 0 : minValue,
+                  'red',
+                  maxValue,
+                  'blue',
                 ],
+                // 'fill-outline-color': 'blue',
+                // 'fill-opacity': 0.5,
               },
             },
-          },
-          // {
-          //   type: 'fill',
-          //   filter: ['all', ['==', 'capacity_mw', 'Polygon']],
-          //   paint: {
-          //     'fill-color': 'red',
-          //     'fill-outline-color': 'blue',
-          //     'fill-opacity': 0.5,
-          //   },
-          // },
-        ],
-      },
-    });
-  }
+            // {
+            //   type: 'circle',
+            //   paint: {
+            //     // 'fill-color': '#00ffff',
+            //     'circle-opacity': 0.5,
+            //     'circle-radius': [
+            //       'interpolate',
+            //       ['linear'],
+            //       categoriesGeojeson,
+            //       0,
+            //       5,
+            //       mapMinValue,
+            //       10, // 10 y 20 tamaño min y máxim del radio
+            //       mapMaxValue, // 0 y 1000 maximo y minimo de los valores
+            //       20,
+            //     ],
+            //     'circle-color': [
+            //       'interpolate',
+            //       ['exponential', 0.5],
+            //       ['zoom'],
+            //       3,
+            //       '#e2714b',
+            //       6,
+            //       '#eee695',
+            //     ],
+            //   },
+            // },
+          ],
+        },
+      }],
+    };
+    // data = flatten(chain(filteredData)
+    //   .groupBy('region.name')
+    //   .map((value) => flatten(chain(value)
+    //     .groupBy(label)
+    //     .map((res, key) => {
+    //       const geometry = regions?.find((r) => value[0].region.id === r.id);
+    //       const keyValue = res.reduce(
+    //         (previous, current) => (current.value || 0) + previous, 0,
+    //       );
 
+    //       return (
+    //         {
+    //           [key !== 'null' ? key : 'Total']: keyValue,
+    //           geometry,
+    //           province: geometry,
+    //           id: key,
+    //         });
+    //     })
+    //     .value()))
+    //   .value());
+
+    // const dataByProvince = groupBy(data, 'province');
+    // console.log({ dataByProvince });
+    // console.log({ data });
+    // const final = Object.keys(dataByProvince).map((province) => dataByProvince[province]
+    //   .reduce((acc, next) => {
+    //     const { province: currentGeometry, ...rest } = next;
+    //     return ({
+    //       ...acc,
+    //       ...rest,
+    //     });
+    //   }, {
+    //   })).filter((g) => g.geometry !== null);
+
+    // const mapData = final.map(({
+    //   geometry,
+    //   id,
+    //   province,
+    //   ...categories
+    // }) => ({
+    //   geometry,
+    //   ...categories,
+    // }));
+
+    // const mapValues = final.map((m) => Object.values(m))[0] || [];
+    // const categoriesMap = uniq(mapData.map((m) => Object.keys(m))[0]) || [];
+    // const mapMaxValue = Math.max(...mapValues);
+    // const mapMinValue = Math.min(...mapValues);
+    // const categoriesGeojeson = ['get'].concat(categoriesMap);
+
+    // const stops = categoriesMap.map((c, index) => (
+    //   [c, colors[index]]));
+
+    // data = [{
+    //   id: 'geometry.id',
+    //   type: 'geojson',
+    //   source: {
+    //     type: 'geojson',
+    //     data: {
+    //       type: 'FeatureCollection',
+    //       features: final.map(({ geometry, ...categories }) => ({
+    //         type: 'Feature',
+    //         geometry: geometry?.geometry,
+    //         properties: categories,
+    //       })),
+    //     },
+    //   },
+    //   render: {
+    //     layers: [
+    //       {
+    //         type: 'circle',
+    //         paint: {
+    //           // 'fill-color': '#00ffff',
+    //           'circle-opacity': 0.5,
+    //           'circle-radius': [
+    //             'interpolate',
+    //             ['linear'],
+    //             categoriesGeojeson,
+    //             0,
+    //             5,
+    //             mapMinValue,
+    //             10, // 10 y 20 tamaño min y máxim del radio
+    //             mapMaxValue, // 0 y 1000 maximo y minimo de los valores
+    //             20,
+    //           ],
+    //           'circle-color': [
+    //             'interpolate',
+    //             ['exponential', 0.5],
+    //             ['zoom'],
+    //             3,
+    //             '#e2714b',
+    //             6,
+    //             '#eee695',
+    //           ],
+    //         },
+    //       },
+    //       // {
+    //       //   type: 'fill',
+    //       //   filter: ['all', ['==', 'State-Owned', 'Polygon']],
+    //       //   paint: {
+    //       //     'fill-color': 'red',
+    //       //     'fill-outline-color': 'blue',
+    //       //     'fill-opacity': 0.5,
+    //       //   },
+    //       // },
+    //     ],
+    //   },
+    // }];
+  }
   return data;
 };
 
@@ -381,15 +496,53 @@ export const getGroupedValuesRelatedIndicators = (
 
 export const getYearsFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => d.year))).sort();
+  visualizationType: string,
+  region: string,
+  unit: string,
+) => compact(uniq(records
+  .filter((r) => r.visualizationTypes.includes(visualizationType)
+    && r.region.name === region && r.unit.name === unit)
+  .map((d) => d.year))).sort();
+
+export const getDefaultYearFromRecords = (
+  records: Record[],
+  visualizationType: string,
+) => compact(sortedUniq(records.map((r) => {
+  if (!r.visualizationTypes.includes(visualizationType)) return null;
+  return r.year;
+})))[0];
 
 export const getRegionsFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => d.region.name))).sort();
+  visualizationType: string,
+  unit: string,
+) => compact(uniq(records
+  .filter((r) => r.visualizationTypes.includes(visualizationType)
+    && r.unit.name === unit)
+  .map((d) => d.region.name))).sort();
+
+export const getDefaultRegionFromRecords = (
+  records: Record[],
+  visualizationType: string,
+) => compact(uniq(records.map((r) => {
+  if (!r.visualizationTypes.includes(visualizationType)) return null;
+  return r.region.name;
+})));
 
 export const getUnitsFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => d.unit.name))).sort();
+  visualizationType: string,
+) => compact(uniq(records
+  .filter((r) => r.visualizationTypes.includes(visualizationType))
+  .map((d) => d.unit.name))).sort();
+
+export const getDefaultUnitFromRecords = (
+  records: Record[],
+  visualizationType: string,
+) => compact(sortedUniq(records.map((r) => {
+  if (!r.visualizationTypes.includes(visualizationType)) return null;
+  return r.unit.name;
+})))[0];
 
 export const getTodaysDate = () => {
   const today = new Date();

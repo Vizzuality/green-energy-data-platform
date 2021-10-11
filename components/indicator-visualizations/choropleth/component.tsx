@@ -24,7 +24,7 @@ import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from './constants';
 import Map from './map';
 
 interface MapLayersProps {
-// TO DO
+  // TO DO
   id: string,
 }
 
@@ -56,7 +56,7 @@ const MapContainer: FC<MapContainerProps> = (
   // );
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
-      {/* <Map
+      <Map
         width="100%"
         height="100%"
         viewport={viewport}
@@ -65,13 +65,13 @@ const MapContainer: FC<MapContainerProps> = (
       >
         {(map) => (
           <LayerManager map={map} plugin={PluginMapboxGl}>
-            {layers.map((l) => (
+            {layers?.map((l) => (
               <Layer key={l.id} {...l} />
             ))}
           </LayerManager>
         )}
-      </Map> */}
-      <Map
+      </Map>
+      {/* <Map
         width="100%"
         height="100%"
         viewport={viewport}
@@ -85,7 +85,7 @@ const MapContainer: FC<MapContainerProps> = (
             ))}
           </LayerManager>
         )}
-      </Map>
+      </Map> */}
 
       {/* <ZoomControl
         className="absolute bottom-4 left-2 w-4 h-10"
