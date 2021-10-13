@@ -297,7 +297,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     if (visualizationType !== 'choropleth') {
       return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
     }
-    return () => {};
+    return null;
   }, [visualizationType]);
 
   return (
@@ -578,6 +578,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           </button>
                         </Tooltip>
                       </div>
+                      {visualizationType !== 'choropleth' && (
                       <div className="w-full flex justify-center pb-11">
                         <DynamicChart
                           widgetData={widgetData}
@@ -585,6 +586,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           colors={colors}
                         />
                       </div>
+                      )}
                       {categories.length > 0 && (
                         <Legend
                           categories={category.label === 'category_1' ? categories : subcategories}
