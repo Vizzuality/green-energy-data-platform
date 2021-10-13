@@ -294,10 +294,10 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, compareIndex]);
 
   const DynamicChart = useMemo(() => {
-    if (visualizationType) {
+    if (visualizationType !== 'choropleth') {
       return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
     }
-    return null;
+    return () => {};
   }, [visualizationType]);
 
   return (
