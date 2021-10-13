@@ -19,6 +19,14 @@ export interface GroupProps {
   subgroups: SubgroupProps[],
 }
 
+interface GeometryProps {
+  geometry: {
+    coordinates: number[],
+    type: string,
+  },
+  type: string,
+}
+
 interface Region {
   id: string,
   name: string,
@@ -38,7 +46,7 @@ export interface Record {
   value: number,
   unit: Unit,
   region: Region,
-  geometry?: number[],
+  geometry?: GeometryProps[]
   year: number,
   visualizationTypes: string[],
 }

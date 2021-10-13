@@ -64,10 +64,6 @@ import { CompareLayoutProps } from './types';
 
 import ChartConfig from '../indicator-data/config';
 
-type MapData = {
-  layers?: Record<string, string>,
-};
-
 type ChartProps = {
   widgetData: Record<string, string>[],
   widgetConfig: any,

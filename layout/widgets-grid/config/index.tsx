@@ -248,11 +248,10 @@ const CONFIG = (categories) => {
       },
     },
     pie: {
-      ...DefaultLayout,
+      width: 200,
       margin: {
         top: 30,
-        left: 20,
-        right: 20,
+        bottom: 10,
       },
       pies: [
         {
