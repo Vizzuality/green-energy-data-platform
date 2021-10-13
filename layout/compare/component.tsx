@@ -293,7 +293,12 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     }
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, compareIndex]);
 
-  const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
+  const DynamicChart = useMemo(() => {
+    if (visualizationType) {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    }
+    return null;
+  }, [visualizationType]);
 
   return (
     <div className="py-24 text-gray1" key={compareIndex}>

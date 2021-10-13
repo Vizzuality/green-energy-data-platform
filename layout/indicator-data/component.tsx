@@ -63,7 +63,7 @@ import IndicatorDataProps from './types';
 type ChartProps = {
   widgetData: any,
   widgetConfig: any,
-  colors: string[]
+  colors: string[],
 };
 
 const IndicatorData: FC<IndicatorDataProps> = ({
@@ -258,7 +258,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     if (visualizationType) {
       return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
     }
-    return () => {};
+    return null;
   }, [visualizationType]);
 
   return (
