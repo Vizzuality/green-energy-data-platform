@@ -114,7 +114,12 @@ const GridItem: FC<GridItemProps> = ({
           />
           )}
           {visualization === 'choropleth' && (
-          <MapContainer hasLegend={false} style={{ marginTop: 30 }} layers={widgetData} />
+          <MapContainer
+            hasLegend={false}
+            style={{ marginTop: 30 }}
+            layers={widgetData}
+            categories={categories}
+          />
           )}
         </a>
       </Link>

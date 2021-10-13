@@ -255,7 +255,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
 
   const DynamicChart = useMemo(() => {
-    if (visualizationType) {
+    if (visualizationType !== 'choropleth') {
       return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
     }
     return null;
