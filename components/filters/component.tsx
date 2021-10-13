@@ -49,7 +49,7 @@ const Filters: FC<FiltersProps> = ({
     >
       <div className="flex justify-start py-3.5 px-6 ">
         <div className="flex">
-          <Icon ariaLabel="filter s" name="filter" size="lg" className="mr-5" />
+          <Icon ariaLabel="filters" name="filter" size="lg" className="mr-5" />
           <p>
             {i18next.t('filters')}
             :

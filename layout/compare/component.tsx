@@ -231,9 +231,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const defaultUnit = useMemo(
     () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
   );
-  const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+console.log({categories})
+  const defaultCategory = { label: 'category_1', value: ;
+
 
   const colors = useColors(categories.length);
   const subcategories = useMemo(
@@ -281,7 +283,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         ...defaultYear && { year: defaultYear },
         ...defaultRegion && { region: defaultRegion },
         ...defaultUnit && { unit: defaultUnit },
-        ...defaultCategory && { category: { label: defaultCategory } },
+        ...defaultCategory && { category: { label: defaultCategory  } },
       }));
     } else {
       dispatch(setCompareFilters({
