@@ -52,15 +52,24 @@ import {
   useIndicator,
   useIndicatorRecords,
 } from 'hooks/indicators';
+
+import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
+
+// components
+import MapContainer from 'components/indicator-visualizations/choropleth';
 
 import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
 
 import ChartConfig from '../indicator-data/config';
 
+type MapData = {
+  layers?: Record<string, string>,
+};
+
 type ChartProps = {
-  widgetData: any,
+  widgetData: Record<string, string>[],
   widgetConfig: any,
   colors: string[]
 };
@@ -161,22 +170,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     category,
   }), [year, region, unit, category]);
 
-  // export interface UseScenariosFiltersProps {
-  //   search?: string;
-  // }
-
-  // export interface UseSaveScenarioProps {
-  //   requestConfig?: AxiosRequestConfig
-  // }
-
-  // export interface SaveScenarioProps {
-  //   id?: string,
-  //   data: any
-  // }
-
-  // export interface UseDeleteScenarioProps {
-  //   requestConfig?: AxiosRequestConfig
-  // }
   const {
     data: indicatorData,
   }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
@@ -206,6 +199,10 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const { data: regionsGeojson } = useRegions(indicatorSlug, {
+    refetchOnWindowFocus: false,
+  });
+
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, visualizationType),
     [records, filters, visualizationType],
@@ -231,11 +228,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const defaultUnit = useMemo(
     () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
   );
+  const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
-console.log({categories})
-  const defaultCategory = { label: 'category_1', value: ;
-
 
   const colors = useColors(categories.length);
   const subcategories = useMemo(
@@ -249,8 +244,8 @@ console.log({categories})
   );
 
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords, regions),
-    [visualizationType, filters, filteredRecords, regions],
+    () => getGroupedValues(visualizationType, filters, filteredRecords, regionsGeojson),
+    [visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -283,7 +278,7 @@ console.log({categories})
         ...defaultYear && { year: defaultYear },
         ...defaultRegion && { region: defaultRegion },
         ...defaultUnit && { unit: defaultUnit },
-        ...defaultCategory && { category: { label: defaultCategory  } },
+        ...defaultCategory && { category: { label: defaultCategory } },
       }));
     } else {
       dispatch(setCompareFilters({
@@ -589,7 +584,15 @@ console.log({categories})
                         />
                       </div>
                       )}
-                      {categories.length > 0 && (
+                      {visualizationType === 'choropleth' && (
+                      <div className="w-full flex justify-center pb-11">
+                        <MapContainer
+                          layers={widgetData.layers}
+                          categories={categories}
+                        />
+                      </div>
+                      )}
+                      {categories.length > 0 && visualizationType !== 'choropleth' && (
                         <Legend
                           categories={category.label === 'category_1' ? categories : subcategories}
                           className="overflow-y-auto mb-4"

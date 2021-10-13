@@ -135,7 +135,7 @@ export const getGroupedValues = (
   visualization: string,
   filters: IndicatorFilters,
   records: Record[],
-  regions,
+  regions: Record[],
 ) => {
   const { category } = filters;
   const label = category?.label;
@@ -225,19 +225,16 @@ export const getGroupedValues = (
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
-        [d[label]]: d.value,
+        [d.category_1]: d.value,
       });
     });
 
     const mapValues = dataWithGeometries
-      .filter((d) => d[categorySelected]).map(m => Object.values(m[categorySelected]))
-
-
-      console.log(dataWithGeometries, mapValues, categorySelected)
+      .filter((d) => d[categorySelected]).map((r) => r[categorySelected]);
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
-    console.log({mapValues})
+
     data = {
       visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
       layers: [{
@@ -264,14 +261,22 @@ export const getGroupedValues = (
                   ['linear'],
                   ['get', categorySelected],
                   minValue === maxValue ? 0 : minValue,
-                  'red',
+                  '#C9E6E8',
                   maxValue,
-                  'blue',
+                  '#1B5183',
                 ],
-                // 'fill-outline-color': 'blue',
-                // 'fill-opacity': 0.5,
+                // 'fill-outline-color': '#35373E',
+                'fill-opacity': 0.3,
               },
             },
+            // ,
+            // '#1E6D86',
+            // '#2A8FAF',
+            // '#C9E6E8',
+            // '#929292',
+            // '#766964',
+            // '#F8981C',
+            // ,
             // {
             //   type: 'circle',
             //   paint: {
@@ -417,9 +422,15 @@ export const getGroupedValues = (
 
 export const getGroupedValuesRelatedIndicators = (
   visualization: string,
+  filters: IndicatorFilters,
   records: Record[],
+  regions,
 ) => {
   let data;
+
+  const { category } = filters;
+  const categorySelected = category?.value || 'Total';
+  const filteredRegions = regions?.filter((r) => r.geometry !== null);
   if (visualization === 'pie') {
     data = chain(records)
       .groupBy('category_1')
@@ -492,6 +503,61 @@ export const getGroupedValuesRelatedIndicators = (
       }));
   }
 
+  if (visualization === 'choropleth') {
+    const dataWithGeometries = records?.map(({ id, ...d }) => {
+      const geometry = filteredRegions?.find((r) => d.region.id === r.id);
+      return ({
+        visualizationTypes: d.visualizationTypes,
+        geometry,
+        [d.category_1]: d.value,
+      });
+    });
+
+    const mapValues = dataWithGeometries
+      .filter((d) => d[categorySelected]).map((r) => r[categorySelected]);
+
+    const minValue = Math.min(...mapValues);
+    const maxValue = Math.max(...mapValues);
+
+    data = {
+      visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
+      layers: [{
+        id: 'regions',
+        type: 'geojson',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...categories }) => ({
+              type: 'Feature',
+              geometry: geometry?.geometry,
+              properties: categories,
+            })),
+          },
+        },
+        render: {
+          layers: [
+            {
+              type: 'fill',
+              paint: {
+                'fill-color': [
+                  'interpolate',
+                  ['linear'],
+                  ['get', categorySelected],
+                  minValue === maxValue ? 0 : minValue,
+                  '#C9E6E8',
+                  maxValue,
+                  '#1B5183',
+                ],
+                // 'fill-outline-color': '#35373E',
+                'fill-opacity': 0.3,
+              },
+            },
+          ],
+        },
+      }],
+    };
+  }
   return data;
 };
 

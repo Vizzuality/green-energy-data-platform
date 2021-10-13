@@ -208,10 +208,10 @@ export const ACTIVE_LAYERS = [
 ];
 
 export const DEFAULT_VIEWPORT = {
-  zoom: 6,
+  zoom: 3,
   minZoom: 2,
   maxZoom: 12,
-  latitude: 35,
-  longitude: 104,
+  latitude: 35.8617,
+  longitude: 104.1954,
   transitionDuration: 500,
 };

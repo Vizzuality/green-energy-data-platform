@@ -12,7 +12,7 @@ import { PluginMapboxGl } from 'layer-manager';
 import { withAuthentication } from 'hoc/auth';
 
 // Controls
-// import ZoomControl from './zoom';
+import ZoomControl from './zoom';
 
 import Legend from './legend';
 
@@ -47,16 +47,16 @@ const MapContainer: FC<MapContainerProps> = (
     setViewport(v);
   }, []);
 
-  // const handleZoomChange = useCallback(
-  //   (zoom) => {
-  //     setViewport({
-  //       ...viewport,
-  //       zoom,
-  //     });
-  //   },
-  //   [viewport],
-  // );
-  console.log({layers})
+  const handleZoomChange = useCallback(
+    (zoom) => {
+      setViewport({
+        ...viewport,
+        zoom,
+      });
+    },
+    [viewport],
+  );
+
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
       <Map
@@ -74,27 +74,11 @@ const MapContainer: FC<MapContainerProps> = (
           </LayerManager>
         )}
       </Map>
-      {/* <Map
-        width="100%"
-        height="100%"
-        viewport={viewport}
-        onMapViewportChange={handleViewportChange}
-        onClick={(e) => console.log(e)}
-      >
-        {(map) => (
-          <LayerManager map={map} plugin={PluginMapboxGl}>
-            {ACTIVE_LAYERS.map((l) => (
-              <Layer key={l.id} {...l} />
-            ))}
-          </LayerManager>
-        )}
-      </Map> */}
-
-      {/* <ZoomControl
+      <ZoomControl
         className="absolute bottom-4 left-2 w-4 h-10"
         viewport={viewport}
         onZoomChange={handleZoomChange}
-      /> */}
+      />
       {hasLegend && <Legend categories={categories} />}
     </div>
   );
