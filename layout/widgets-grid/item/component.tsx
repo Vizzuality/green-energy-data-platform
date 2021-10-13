@@ -13,6 +13,7 @@ import LoadingSpinner from 'components/loading-spinner/component';
 
 // hooks
 import { useIndicatorRecords } from 'hooks/indicators';
+import { useRegions } from 'hooks/regions';
 import { useSelector } from 'react-redux';
 
 // utils
@@ -65,6 +66,10 @@ const GridItem: FC<GridItemProps> = ({
     [records, filters, visualization],
   );
 
+  const { data: regionsGeojson } = useRegions(indicator, {
+    refetchOnWindowFocus: false,
+  });
+
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
   const colors = useColors(categories.length);
 
@@ -73,8 +78,10 @@ const GridItem: FC<GridItemProps> = ({
     [visualization, categories],
   );
   const widgetData = useMemo(
-    () => getGroupedValuesRelatedIndicators(visualization, filteredRecords),
-    [visualization, filteredRecords],
+    () => getGroupedValuesRelatedIndicators(
+      visualization, filters, filteredRecords, regionsGeojson,
+    ),
+    [visualization, filters, filteredRecords, regionsGeojson],
   );
 
   return (
@@ -117,7 +124,7 @@ const GridItem: FC<GridItemProps> = ({
           <MapContainer
             hasLegend={false}
             style={{ marginTop: 30 }}
-            layers={widgetData}
+            layers={widgetData.layers}
             categories={categories}
           />
           )}

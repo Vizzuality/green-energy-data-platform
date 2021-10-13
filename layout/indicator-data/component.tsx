@@ -214,7 +214,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const defaultCategory = 'category_1';
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
-  console.log({categories})
+
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
@@ -532,7 +532,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       />
                     </div>
                   )}
-                  {console.log({visualizationType})}
                   {visualizationType === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer
@@ -558,7 +557,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 onClick={setFilters}
               />
               )}
-              {categories.length > 0 && (
+              {categories.length > 0 && visualizationType !== 'choropleth' && (
                 <Legend
                   categories={category.label === 'category_1' ? categories : subcategories}
                   className="max-h-72 overflow-y-auto mb-4"

@@ -38,6 +38,7 @@ export interface Record {
   value: number,
   unit: Unit,
   region: Region,
+  geometry?: number[],
   year: number,
   visualizationTypes: string[],
 }
