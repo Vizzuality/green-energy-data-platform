@@ -225,16 +225,19 @@ export const getGroupedValues = (
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
-        [d.category_1]: d.value,
+        [d[label]]: d.value,
       });
     });
 
     const mapValues = dataWithGeometries
-      .filter((d) => d[categorySelected])
-      .map((d) => d[categorySelected]);
+      .filter((d) => d[categorySelected]).map(m => Object.values(m[categorySelected]))
+
+
+      console.log(dataWithGeometries, mapValues, categorySelected)
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
+    console.log({mapValues})
     data = {
       visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
       layers: [{

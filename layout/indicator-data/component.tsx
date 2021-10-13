@@ -214,6 +214,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const defaultCategory = 'category_1';
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  console.log({categories})
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
@@ -235,7 +236,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     } = indicatorData;
 
     setVisualizationType(defaultVisualization);
-  }, [indicatorData, widgetData]);
+  }, [indicatorData]);
 
   const {
     name,
@@ -531,6 +532,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       />
                     </div>
                   )}
+                  {console.log({visualizationType})}
                   {visualizationType === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer

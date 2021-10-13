@@ -56,6 +56,7 @@ const MapContainer: FC<MapContainerProps> = (
   //   },
   //   [viewport],
   // );
+  console.log({layers})
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
       <Map
