@@ -38,11 +38,11 @@ export const Filter = (arr: (string | number)[], param: number) => {
 
 export const getCategoriesFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => d.category_1))).sort();
+) => compact(uniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1)))).sort();
 
 export const getSubcategoriesFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => d.category_2))).sort();
+) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_1)))).sort();
 
 export const filterRecords = (
   records: Record[],
@@ -56,10 +56,10 @@ export const filterRecords = (
   } = filters;
 
   const categories = getCategoriesFromRecords(records);
-
   const recordsByFilters = records.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
+
       if (
         (d.region.name === region || (d.region.name === null)
         )
@@ -133,6 +133,7 @@ export const filterRelatedIndicators = (
   return recordsByFilters;
 };
 export const getGroupedValues = (
+  categories: string[],
   visualization: string,
   filters: IndicatorFilters,
   records: Record[],
@@ -140,7 +141,8 @@ export const getGroupedValues = (
 ) => {
   const { category } = filters;
   const label = category?.label;
-  const categorySelected = category?.value || 'Total';
+  const hasTotal = categories.includes('Total');
+  const categorySelected = category?.value || hasTotal ? 'Total' : categories[0];
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 

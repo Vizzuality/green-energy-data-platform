@@ -228,8 +228,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [visualizationType, widgetDataKeys],
   );
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords, regionsGeojson),
-    [visualizationType, filters, filteredRecords, regionsGeojson],
+    () => getGroupedValues(categories, visualizationType, filters, filteredRecords, regionsGeojson),
+    [categories, visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -403,7 +403,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                           {years.map((_year) => (
                             <li
                               key={_year}
-                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
+                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl last:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3"
                             >
                               <button
                                 type="button"
