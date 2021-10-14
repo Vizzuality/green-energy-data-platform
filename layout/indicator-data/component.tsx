@@ -228,8 +228,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [visualizationType, widgetDataKeys],
   );
   const widgetData = useMemo(
-    () => getGroupedValues(categories, visualizationType, filters, filteredRecords, regionsGeojson),
-    [categories, visualizationType, filters, filteredRecords, regionsGeojson],
+    () => getGroupedValues(
+      groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
+    ), [groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {

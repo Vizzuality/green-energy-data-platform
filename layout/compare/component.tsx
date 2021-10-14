@@ -240,8 +240,10 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   );
 
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords, regionsGeojson),
-    [visualizationType, filters, filteredRecords, regionsGeojson],
+    () => getGroupedValues(
+      groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
+    ),
+    [groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
