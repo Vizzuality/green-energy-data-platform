@@ -18,6 +18,7 @@ import {
 import {
   IndicatorFilters,
 } from 'store/slices/indicator';
+
 import resources from 'utils/translations';
 
 export const initializeLanguage = () => i18n.init({
@@ -229,11 +230,12 @@ export const getGroupedValues = (
       });
     });
 
-    const mapValues = dataWithGeometries
-      .filter((d) => d[categorySelected]).map((r) => r[categorySelected]);
+    const MapValues = dataWithGeometries
+      .filter((d) => d[categorySelected])
+      .map((r) => r[categorySelected]) as number[];
 
-    const minValue = Math.min(...mapValues);
-    const maxValue = Math.max(...mapValues);
+    const minValue = Math.min(...MapValues);
+    const maxValue = Math.max(...MapValues);
 
     data = {
       visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
