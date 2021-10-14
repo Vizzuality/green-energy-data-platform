@@ -66,8 +66,9 @@ const GridItem: FC<GridItemProps> = ({
     [records, filters, visualization],
   );
 
-  const { data: regionsGeojson } = useRegions(indicator, {
+  const { data: regionsGeojson } = useRegions(indicator, visualization, {
     refetchOnWindowFocus: false,
+
   });
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
@@ -122,7 +123,7 @@ const GridItem: FC<GridItemProps> = ({
           )}
           {visualization === 'choropleth' && (
           <MapContainer
-            hasLegend={false}
+            hasIteraction={false}
             style={{ marginTop: 30 }}
             layers={widgetData.layers}
             categories={categories}

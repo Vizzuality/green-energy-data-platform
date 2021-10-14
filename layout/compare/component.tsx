@@ -195,7 +195,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, {
+  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
     refetchOnWindowFocus: false,
   });
 
