@@ -29,7 +29,7 @@ interface MapLayersProps {
 
 interface MapContainerProps {
   layers: MapLayersProps[],
-  hasLegend?: boolean,
+  hasIteraction?: boolean,
   style?: Object,
   categories: string[]
 }
@@ -37,7 +37,7 @@ interface MapContainerProps {
 const MapContainer: FC<MapContainerProps> = (
   {
     layers,
-    hasLegend = true,
+    hasIteraction = true,
     style = {},
     categories = [],
   }: MapContainerProps,
@@ -74,12 +74,14 @@ const MapContainer: FC<MapContainerProps> = (
           </LayerManager>
         )}
       </Map>
+      {hasIteraction && (
       <ZoomControl
-        className="absolute bottom-4 left-2 w-4 h-10"
+        // className="absolute bottom-4 left-2 w-4 h-10"
         viewport={viewport}
         onZoomChange={handleZoomChange}
       />
-      {hasLegend && <Legend categories={categories} />}
+      )}
+      {hasIteraction && <Legend categories={categories} />}
     </div>
   );
 };

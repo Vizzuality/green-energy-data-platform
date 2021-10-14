@@ -143,9 +143,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     placeholderData: [],
   });
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, {
-    refetchOnWindowFocus: false,
-  });
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
   });
@@ -178,6 +175,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
+  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
+
+  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
+    refetchOnWindowFocus: false,
+  });
+
   const {
     data: records,
     isFetching: isFetchingRecords,
@@ -185,7 +188,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, visualizationType),
     [records, filters, visualizationType],
