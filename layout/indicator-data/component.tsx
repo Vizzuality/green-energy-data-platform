@@ -59,6 +59,8 @@ import { useColors } from 'hooks/utils';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
+import { keysIn } from 'lodash';
+import DropdownContent from 'layout/dropdown-content';
 
 type ChartProps = {
   widgetData: any,
@@ -111,30 +113,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     });
   }, [dropdownVisibility]);
 
-  const handleYearChange = useCallback((_year) => {
-    dispatch(setFilters({ year: _year }));
+  const handleChange = useCallback((key, value) => {
+    dispatch(setFilters({ [key]: value }));
 
     setDropdownVisibility({
       ...dropdownVisibility,
-      year: false,
-    });
-  }, [dispatch, dropdownVisibility]);
-
-  const handleRegionChange = useCallback((_region) => {
-    dispatch(setFilters({ region: _region }));
-
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      region: false,
-    });
-  }, [dispatch, dropdownVisibility]);
-
-  const handleUnitChange = useCallback((_unit) => {
-    dispatch(setFilters({ unit: _unit }));
-
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      unit: false,
+      [key]: false,
     });
   }, [dispatch, dropdownVisibility]);
 
@@ -400,22 +384,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       interactive
                       onClickOutside={() => closeDropdown('year')}
                       content={(
-                        <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                          {years.map((_year) => (
-                            <li
-                              key={_year}
-                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl last:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3"
-                            >
-                              <button
-                                type="button"
-                                className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                onClick={() => { handleYearChange(_year); }}
-                              >
-                                {_year}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
+                        <DropdownContent
+                          list={years}
+                          key="year"
+                          onClick={handleChange}
+                        />
                       )}
                     >
                       <button
@@ -446,22 +419,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       interactive
                       onClickOutside={() => closeDropdown('region')}
                       content={(
-                        <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                          {regions.map((_region) => (
-                            <li
-                              key={_region}
-                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
-                            >
-                              <button
-                                type="button"
-                                onClick={() => handleRegionChange(_region)}
-                                className="flex items-center py-2 w-full last:border-b-0 px-5"
-                              >
-                                {_region}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
+                        <DropdownContent
+                          list={regions}
+                          key="region"
+                          onClick={handleChange}
+                        />
                       )}
                     >
                       <button
@@ -498,22 +460,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       interactive
                       onClickOutside={() => closeDropdown('unit')}
                       content={(
-                        <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                          {units.map((_unit) => (
-                            <li
-                              key={_unit}
-                              className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
-                            >
-                              <button
-                                type="button"
-                                className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                onClick={() => { handleUnitChange(_unit); }}
-                              >
-                                {_unit}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
+                        <DropdownContent
+                          list={units}
+                          key="unit"
+                          onClick={handleChange}
+                        />
                       )}
                     >
                       <button

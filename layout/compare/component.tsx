@@ -61,6 +61,7 @@ import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
 
 import ChartConfig from '../indicator-data/config';
+import DropdownContent from '../dropdown-content';
 
 type ChartProps = {
   widgetData: Record<string, string>[],
@@ -517,22 +518,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         interactive
                         onClickOutside={() => closeDropdown('year')}
                         content={(
-                          <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                            {years.map((_year) => (
-                              <li
-                                key={_year}
-                                className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:last:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
-                              >
-                                <button
-                                  type="button"
-                                  className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                  onClick={() => { handleChange('year', _year); }}
-                                >
-                                  {_year}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
+                          <DropdownContent
+                            list={years}
+                            key="year"
+                            onClick={handleChange}
+                          />
                         )}
                       >
                         <button
@@ -544,7 +534,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                         </button>
                       </Tooltip>
-
                     </div>
                   )}
 
@@ -561,22 +550,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         interactive
                         onClickOutside={() => closeDropdown('region')}
                         content={(
-                          <ul className="justify-center flex flex-col w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 max-h-48 overflow-y-auto">
-                            {regions.map((_region) => (
-                              <li
-                                key={_region}
-                                className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:last:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
-                              >
-                                <button
-                                  type="button"
-                                  className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                  onClick={() => handleChange('region', _region)}
-                                >
-                                  {_region}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
+                          <DropdownContent
+                            list={regions}
+                            key="region"
+                            onClick={handleChange}
+                          />
                         )}
                       >
                         <button
@@ -615,22 +593,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                             interactive
                             onClickOutside={() => closeDropdown('unit')}
                             content={(
-                              <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                                {units.map((_unit) => (
-                                  <li
-                                    key={_unit}
-                                    className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
-                                  >
-                                    <button
-                                      type="button"
-                                      className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                      onClick={() => { handleChange('unit', _unit); }}
-                                    >
-                                      {_unit}
-                                    </button>
-                                  </li>
-                                ))}
-                              </ul>
+                              <DropdownContent
+                                list={units}
+                                key="unit"
+                                onClick={handleChange}
+                              />
                             )}
                           >
                             <button
