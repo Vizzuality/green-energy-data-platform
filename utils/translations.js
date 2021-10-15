@@ -12,6 +12,7 @@ export const resources = {
     translation: {
       aboutInfo: 'About the information in this site',
       change: 'Change indicator',
+      compare: 'Compare',
       copyright: 'Copyright © 2021 Energy Foundation. All rights reserved.',
       region: 'Region',
       language: 'Select language',
@@ -63,6 +64,7 @@ export const resources = {
     translation: {
       aboutInfo: '关于本站信息',
       change: '变化指示器',
+      compare: '相比',
       copyright: '版权所有 © 2021 能源基金会。版权所有',
       region: '地区',
       language: '选择语言',

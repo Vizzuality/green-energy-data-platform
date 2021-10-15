@@ -5,10 +5,10 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
+
 import dynamic from 'next/dynamic';
 
 import { AxiosRequestConfig } from 'axios';
-
 import cx from 'classnames';
 
 import { RootState } from 'store/store';
@@ -28,8 +28,11 @@ import {
   filterRecords,
   getGroupedValues,
   getYearsFromRecords,
+  getDefaultYearFromRecords,
   getUnitsFromRecords,
+  getDefaultUnitFromRecords,
   getRegionsFromRecords,
+  getDefaultRegionFromRecords,
   getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
@@ -50,14 +53,21 @@ import {
   useIndicatorRecords,
 } from 'hooks/indicators';
 
+import { useRegions } from 'hooks/regions';
+import { useColors } from 'hooks/utils';
+
+// components
+import MapContainer from 'components/indicator-visualizations/choropleth';
+
 import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
 
 import ChartConfig from '../indicator-data/config';
 
 type ChartProps = {
-  widgetData: any,
-  widgetConfig: any
+  widgetData: Record<string, string>[],
+  widgetConfig: any,
+  colors: string[]
 };
 
 const CompareLayout: FC<CompareLayoutProps> = ({
@@ -156,22 +166,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     category,
   }), [year, region, unit, category]);
 
-  // export interface UseScenariosFiltersProps {
-  //   search?: string;
-  // }
-
-  // export interface UseSaveScenarioProps {
-  //   requestConfig?: AxiosRequestConfig
-  // }
-
-  // export interface SaveScenarioProps {
-  //   id?: string,
-  //   data: any
-  // }
-
-  // export interface UseDeleteScenarioProps {
-  //   requestConfig?: AxiosRequestConfig
-  // }
   const {
     data: indicatorData,
   }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
@@ -201,21 +195,40 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
+    refetchOnWindowFocus: false,
+  });
+
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, visualizationType),
     [records, filters, visualizationType],
   );
 
-  const years = useMemo(() => getYearsFromRecords(records), [records]);
-  const regions = useMemo(() => getRegionsFromRecords(records), [records]);
-  const units = useMemo(() => getUnitsFromRecords(records), [records]);
+  const defaultYear = useMemo(
+    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
+  );
+  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
+    [records, visualizationType, unit]);
 
-  const defaultYear = useMemo(() => years?.[0], [years]);
-  const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
-  const defaultUnit = useMemo(() => units?.[0], [units]);
+  const regionsWithVisualization = useMemo(
+    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
+  );
+  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
+
+  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
+    [records, visualizationType, region, unit]);
+
+  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
+    [records, visualizationType, region, year]);
+
+  const defaultUnit = useMemo(
+    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
+  );
   const defaultCategory = 'category_1';
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
+  const colors = useColors(categories.length);
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
@@ -227,8 +240,10 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   );
 
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords),
-    [visualizationType, filters, filteredRecords],
+    () => getGroupedValues(
+      groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
+    ),
+    [groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -273,7 +288,12 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     }
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, compareIndex]);
 
-  const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
+  const DynamicChart = useMemo(() => {
+    if (visualizationType !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    }
+    return null;
+  }, [visualizationType]);
 
   return (
     <div className="py-24 text-gray1" key={compareIndex}>
@@ -553,13 +573,24 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           </button>
                         </Tooltip>
                       </div>
+                      {visualizationType !== 'choropleth' && (
                       <div className="w-full flex justify-center pb-11">
                         <DynamicChart
                           widgetData={widgetData}
                           widgetConfig={widgetConfig}
+                          colors={colors}
                         />
                       </div>
-                      {categories.length > 0 && (
+                      )}
+                      {visualizationType === 'choropleth' && (
+                      <div className="w-full flex justify-center pb-11">
+                        <MapContainer
+                          layers={widgetData.layers}
+                          categories={categories}
+                        />
+                      </div>
+                      )}
+                      {categories.length > 0 && visualizationType !== 'choropleth' && (
                         <Legend
                           categories={category.label === 'category_1' ? categories : subcategories}
                           className="overflow-y-auto mb-4"

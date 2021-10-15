@@ -34,7 +34,7 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
           { [className]: !!className })}
       >
         {!mobile && (
-        <p className="pt-4">
+        <p className="pt-4 whitespace-nowrap">
           {i18next.t('visualization')}
           :
         </p>

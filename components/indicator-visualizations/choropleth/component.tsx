@@ -12,41 +12,51 @@ import { PluginMapboxGl } from 'layer-manager';
 import { withAuthentication } from 'hoc/auth';
 
 // Controls
-// import ZoomControl from './zoom';
+import ZoomControl from './zoom';
+
 import Legend from './legend';
 
 // Map
-import { ACTIVE_LAYERS, DEFAULT_VIEWPORT } from './constants';
+import { DEFAULT_VIEWPORT } from './constants';
 
 // components
 import Map from './map';
 
+interface MapLayersProps {
+  // TO DO
+  id: string,
+}
+
 interface MapContainerProps {
-  hasLegend?: boolean,
+  layers: MapLayersProps[],
+  hasIteraction?: boolean,
   style?: Object,
+  categories: string[]
 }
 
 const MapContainer: FC<MapContainerProps> = (
   {
-    hasLegend = true,
+    layers,
+    hasIteraction = true,
     style = {},
+    categories = [],
   }: MapContainerProps,
 ) => {
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
-
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
   }, []);
 
-  // const handleZoomChange = useCallback(
-  //   (zoom) => {
-  //     setViewport({
-  //       ...viewport,
-  //       zoom,
-  //     });
-  //   },
-  //   [viewport],
-  // );
+  const handleZoomChange = useCallback(
+    (zoom) => {
+      setViewport({
+        ...viewport,
+        zoom,
+      });
+    },
+    [viewport],
+  );
+
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
       <Map
@@ -54,22 +64,24 @@ const MapContainer: FC<MapContainerProps> = (
         height="100%"
         viewport={viewport}
         onMapViewportChange={handleViewportChange}
+        onClick={(e) => console.log(e)}
       >
         {(map) => (
           <LayerManager map={map} plugin={PluginMapboxGl}>
-            {ACTIVE_LAYERS.map((l) => (
+            {layers?.map((l) => (
               <Layer key={l.id} {...l} />
             ))}
           </LayerManager>
         )}
       </Map>
-
-      {/* <ZoomControl
-        className="absolute bottom-4 left-2 w-4 h-10"
+      {hasIteraction && (
+      <ZoomControl
+        // className="absolute bottom-4 left-2 w-4 h-10"
         viewport={viewport}
         onZoomChange={handleZoomChange}
-      /> */}
-      {hasLegend && <Legend />}
+      />
+      )}
+      {hasIteraction && <Legend categories={categories} />}
     </div>
   );
 };

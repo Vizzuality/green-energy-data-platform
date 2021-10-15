@@ -13,6 +13,7 @@ import LoadingSpinner from 'components/loading-spinner/component';
 
 // hooks
 import { useIndicatorRecords } from 'hooks/indicators';
+import { useRegions } from 'hooks/regions';
 import { useSelector } from 'react-redux';
 
 // utils
@@ -24,6 +25,8 @@ import {
 } from 'utils';
 
 import { RootState } from 'store/store';
+
+import { useColors } from 'hooks/utils';
 
 import CONFIG from '../config';
 
@@ -63,15 +66,23 @@ const GridItem: FC<GridItemProps> = ({
     [records, filters, visualization],
   );
 
+  const { data: regionsGeojson } = useRegions(indicator, visualization, {
+    refetchOnWindowFocus: false,
+
+  });
+
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const colors = useColors(categories.length);
 
   const widgetConfig = useMemo(
     () => CONFIG(categories)[visualization],
     [visualization, categories],
   );
   const widgetData = useMemo(
-    () => getGroupedValuesRelatedIndicators(visualization, filteredRecords),
-    [visualization, filteredRecords],
+    () => getGroupedValuesRelatedIndicators(
+      visualization, filters, filteredRecords, regionsGeojson,
+    ),
+    [visualization, filters, filteredRecords, regionsGeojson],
   );
 
   return (
@@ -93,22 +104,30 @@ const GridItem: FC<GridItemProps> = ({
           <PieChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
+            colors={colors}
           />
           )}
           {visualization === 'line' && (
           <LineChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
+            colors={colors}
           />
           )}
           {visualization === 'bar' && (
           <BarChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
+            colors={colors}
           />
           )}
           {visualization === 'choropleth' && (
-          <MapContainer hasLegend={false} style={{ marginTop: 30 }} />
+          <MapContainer
+            hasIteraction={false}
+            style={{ marginTop: 30 }}
+            layers={widgetData.layers}
+            categories={categories}
+          />
           )}
         </a>
       </Link>

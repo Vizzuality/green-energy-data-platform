@@ -46,7 +46,6 @@ const GroupPage: FC = () => {
 
   const handleSubgroupChange = useCallback((url) => {
     setDropdownVisibility(false);
-
     router.push(url);
   }, [router]);
 
@@ -170,7 +169,6 @@ export const getServerSideProps = async ({ query }) => {
   }
 
   const queryClient = new QueryClient();
-
   // prefetch indicator
   await queryClient.prefetchQuery(
     `indicator-${indicatorSlug}`,
