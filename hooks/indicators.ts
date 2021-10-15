@@ -74,7 +74,7 @@ export function useIndicatorRecords(
   indicatorId,
   queryOptions = {},
 ) {
-  return useQuery<Record[], Error>(`indicator-records-${indicatorId}`,
+  return useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId],
     () => fetchIndicatorRecords(groupId, subgroupId, indicatorId), {
       placeholderData: [],
       ...queryOptions,

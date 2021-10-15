@@ -99,7 +99,7 @@ const SigninPage: FC<SigninProps> = ({
               </Link>
             </div>
           </section>
-          <section className="flex flex-col flex-1 w-full justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 sm:px-16 min-w-70 shadow-sm">
+          <section className="flex flex-col flex-1 w-full justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 px-16 min-w-70 shadow-sm">
             {!isRecovery && (
               <form onSubmit={handleSubmit} className="inline-flex flex-col flex-1 w-full">
                 <input

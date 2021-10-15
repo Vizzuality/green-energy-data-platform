@@ -10,8 +10,6 @@ import {
   YAxisProps,
 } from 'recharts';
 
-import { colors } from '../../../constants';
-
 type Object = {
   label: string | number,
   value: string | number,
@@ -31,9 +29,10 @@ interface ChartProps {
   widgetData: Object[],
   widgetConfig: ConfigProps,
   color?: string,
+  colors: string[]
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
+const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps) => {
   const {
     pies,
     tooltip,

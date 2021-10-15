@@ -8,17 +8,20 @@ import { useDispatch } from 'react-redux';
 
 interface FiltersProps {
   categories: string[]
+  hasSubcategories: boolean,
   className?: string,
   onClick: (category: Record<string, unknown>) => void,
 }
 
 const Filters: FC<FiltersProps> = ({
   categories,
+  hasSubcategories,
   className = '',
   onClick,
 }: FiltersProps) => {
   const dispatch = useDispatch();
-  const [active, setActive] = useState('');
+  const hasTotal = categories.find((c) => c === 'Total');
+  const [active, setActive] = useState(hasTotal ? 'Total' : categories[0]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
@@ -42,7 +45,7 @@ const Filters: FC<FiltersProps> = ({
   };
 
   return (
-    <div className={cx('inline-flex flex-col justify-center text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1',
+    <div className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1',
       { [className]: className })}
     >
       <div className="flex justify-start py-3.5 px-6 ">
@@ -54,20 +57,22 @@ const Filters: FC<FiltersProps> = ({
           </p>
         </div>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col max-h-36 overflow-y-auto items-start">
         {categories.map((category) => (
           <div
             key={category}
-            className={cx('flex justify-between cursor-pointer  items-center w-full mb-1.5 bg-white active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
+            className={cx('flex justify-between cursor-pointer items-center w-full mb-1.5 bg-white active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
               { 'bg-color1 text-white': active === category })}
           >
             <button
               name={category}
               type="button"
-              className="items-center py-3 pl-6 "
+              className={cx('py-3 pl-6',
+                { 'cursor-auto': !hasSubcategories })}
               onClick={() => handleCategories(category)}
+              disabled={!hasSubcategories}
             >
-              <span className="flex-1">{category}</span>
+              <span className="flex-1 flex text-left">{category}</span>
             </button>
             {active === category && (
               <div className="h-full flex justify-center items-center border-l border-l-white py-3">

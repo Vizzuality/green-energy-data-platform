@@ -13,8 +13,6 @@ import {
   YAxisProps,
 } from 'recharts';
 
-import { colors } from '../../../constants';
-
 type Object = {
   [key: string]: string | number | (() => void),
 };
@@ -32,9 +30,10 @@ interface ChartProps {
   widgetData: any[],
   widgetConfig: ConfigProps,
   color?: string,
+  colors: string[],
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig }: ChartProps) => {
+const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps) => {
   const {
     cartesianGrid,
     cartesianAxis,

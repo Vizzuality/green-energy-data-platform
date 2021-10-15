@@ -31,6 +31,8 @@ import WidgetsGrid from 'layout/widgets-grid';
 import { useGroup } from 'hooks/groups';
 import { useIndicator } from 'hooks/indicators';
 
+import { InView } from 'react-intersection-observer';
+
 // types
 import { AxiosRequestConfig } from 'axios';
 
@@ -44,7 +46,6 @@ const GroupPage: FC = () => {
 
   const handleSubgroupChange = useCallback((url) => {
     setDropdownVisibility(false);
-
     router.push(url);
   }, [router]);
 
@@ -79,7 +80,7 @@ const GroupPage: FC = () => {
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${data?.name} analysis`} />
-      <Hero className="lg:px-32 md:px-20">
+      <Hero className="lg:px-32 md:px-24 px-16">
         <Nav className="pt-10" />
         <Tooltip
           placement="bottom-start"
@@ -118,7 +119,7 @@ const GroupPage: FC = () => {
             className="flex items-center"
             onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
           >
-            <h1 className="text-5.5xl pt-3">
+            <h1 className="text-5.5xl pt-3 text-left">
               {data?.subgroup?.name}
             </h1>
             <Icon
@@ -134,7 +135,14 @@ const GroupPage: FC = () => {
       <div className="container m-auto pb-20">
         <section className="max-w-6xl m-auto -mt-40 ">
           <IndicatorData />
-          <WidgetsGrid />
+          <InView>
+            {({ ref }) => (
+              <div ref={ref}>
+                <WidgetsGrid />
+              </div>
+            )}
+          </InView>
+
         </section>
       </div>
 
@@ -161,7 +169,6 @@ export const getServerSideProps = async ({ query }) => {
   }
 
   const queryClient = new QueryClient();
-
   // prefetch indicator
   await queryClient.prefetchQuery(
     `indicator-${indicatorSlug}`,

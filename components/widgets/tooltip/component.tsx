@@ -28,7 +28,7 @@ const Tooltip: FC<TooltipProps> = ({
 }: TooltipProps) => {
   if (!payload) return null;
   return (
-    <div className={cx('inline-flex flex-col justify-center text-center bg-gray1 rounded-2xl hover:opacity-90 px-5 py-2',
+    <div className={cx('inline-flex flex-col justify-center text-center bg-gray1 rounded-2xl hover:opacity-90 px-5 py-2 z-50',
       { [className]: className })}
     >
       <ul className="flex flex-col items-center text-white text-sm">

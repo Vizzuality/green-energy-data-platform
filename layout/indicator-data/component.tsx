@@ -8,7 +8,9 @@ import React, {
 import {
   useQueryClient,
 } from 'react-query';
+
 import cx from 'classnames';
+
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
@@ -23,21 +25,25 @@ import {
 } from 'hooks/indicators';
 
 // components
-import LoadingSpinner from 'components/loading-spinner';
 import VisualizationsNav from 'components/visualizations-nav';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
+import MapContainer from 'components/indicator-visualizations/choropleth';
+import LoadingSpinner from 'components/loading-spinner';
 
 // utils
 import {
   filterRecords,
   getGroupedValues,
   getYearsFromRecords,
+  getDefaultYearFromRecords,
   getUnitsFromRecords,
+  getDefaultUnitFromRecords,
   getRegionsFromRecords,
+  getDefaultRegionFromRecords,
   getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
@@ -47,13 +53,17 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
+import { useRegions } from 'hooks/regions';
+import { useColors } from 'hooks/utils';
+
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
 
 type ChartProps = {
   widgetData: any,
-  widgetConfig: any
+  widgetConfig: any,
+  colors: string[],
 };
 
 const IndicatorData: FC<IndicatorDataProps> = ({
@@ -161,10 +171,15 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       group: null,
       subgroup: null,
     },
+    keepPreviousData: true,
     refetchOnWindowFocus: false,
   }));
 
   const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
+
+  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
+    refetchOnWindowFocus: false,
+  });
 
   const {
     data: records,
@@ -178,29 +193,44 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [records, filters, visualizationType],
   );
 
-  const years = useMemo(() => getYearsFromRecords(records), [records]);
-  const regions = useMemo(() => getRegionsFromRecords(records), [records]);
-  const units = useMemo(() => getUnitsFromRecords(records), [records]);
+  const defaultYear = useMemo(
+    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
+  );
+  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
+    [records, visualizationType, unit]);
 
-  const defaultYear = useMemo(() => years?.[0], [years]);
-  const defaultRegion = useMemo(() => (regions.includes('China') ? 'China' : regions?.[0]), [regions]);
-  const defaultUnit = useMemo(() => units?.[0], [units]);
+  const regionsWithVisualization = useMemo(
+    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
+  );
+  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
+
+  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
+    [records, visualizationType, region, unit]);
+
+  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
+    [records, visualizationType, region, year]);
+
+  const defaultUnit = useMemo(
+    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
+  );
+
   const defaultCategory = 'category_1';
-
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
 
+  const colors = useColors(categories.length);
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[visualizationType],
     [visualizationType, widgetDataKeys],
   );
-
   const widgetData = useMemo(
-    () => getGroupedValues(visualizationType, filters, filteredRecords),
-    [visualizationType, filters, filteredRecords],
+    () => getGroupedValues(
+      groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
+    ), [groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -212,10 +242,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   }, [indicatorData]);
 
   const {
-    visualizationTypes,
     name,
+    visualizationTypes: visualizationTypesIndicator,
     description,
   } = indicatorData;
+
+  // TO DO - improve line using kooks
 
   useEffect(() => {
     dispatch(setFilters({
@@ -226,18 +258,24 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     }));
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
 
-  const DynamicChart = useMemo(() => dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`)), [visualizationType]);
+  const DynamicChart = useMemo(() => {
+    if (visualizationType !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    }
+    return null;
+  }, [visualizationType]);
+
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
     >
       <VisualizationsNav
         active={visualizationType}
-        className="w-full lg:px-32 md:px-24 sm:px-16"
-        visualizationTypes={visualizationTypes}
+        className="w-full lg:px-32 md:px-24 sm:px-16 px-8"
+        visualizationTypes={visualizationTypesIndicator}
         onClick={setVisualizationType}
       />
-      <div className="flex flex-col lg:px-32 md:px-24 sm:px-16 py-11 w-full">
+      <div className="flex flex-col lg:px-32 md:px-24 px-16 py-11 w-full">
         <div className="flex items-center w-full justify-between">
           <h2 className="flex text-3.5xl max-w-6xl">
             {name}
@@ -270,7 +308,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               <button
                 type="button"
                 onClick={() => { toggleDropdown('indicator'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
                 <span>{i18next.t('change')}</span>
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" />
@@ -351,7 +389,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             <section className="flex flex-col w-full">
               <div className="flex">
                 {/* year filter */}
-                {['bar', 'pie'].includes(visualizationType) && (
+                {['bar', 'pie', 'choropleth'].includes(visualizationType) && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
                     {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
@@ -366,7 +404,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                           {years.map((_year) => (
                             <li
                               key={_year}
-                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
+                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl last:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3"
                             >
                               <button
                                 type="button"
@@ -400,6 +438,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       {i18next.t('region')}
                       :
                     </span>
+                    {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]}</span>)}
+                    {regions.length > 1 && (
                     <Tooltip
                       placement="bottom-start"
                       visible={dropdownVisibility.region}
@@ -432,6 +472,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         <span>{region || 'Select a region'}</span>
                       </button>
                     </Tooltip>
+                    )}
                   </div>
                 )}
                 {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
@@ -484,29 +525,45 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       </button>
                     </Tooltip>
                   </div>
-                  <DynamicChart
-                    widgetData={widgetData}
-                    widgetConfig={widgetConfig}
-                  />
+                  {visualizationType !== 'choropleth'
+                  && (
+                    <div className="w-full h-96">
+                      <DynamicChart
+                        widgetData={widgetData}
+                        widgetConfig={widgetConfig}
+                        colors={colors}
+                      />
+                    </div>
+                  )}
+                  {visualizationType === 'choropleth' && (
+                  <div className="w-full h-96">
+                    <MapContainer
+                      layers={widgetData.layers}
+                      categories={categories}
+                    />
+                  </div>
+                  )}
+
                 </div>
                 )}
               </div>
             </section>
           </div>
 
-          <div className="flex h-full">
-            <section className="flex flex-col justify-between h-full ml-8">
+          <div className="flex">
+            <section className="flex flex-col justify-between ml-8">
               {categories.length > 0 && (
               <Filters
                 categories={categories}
+                hasSubcategories={!!subcategories.length}
                 className="overflow-y-auto mb-4"
                 onClick={setFilters}
               />
               )}
-              {categories.length > 0 && (
+              {categories.length > 0 && visualizationType !== 'choropleth' && (
                 <Legend
                   categories={category.label === 'category_1' ? categories : subcategories}
-                  className="overflow-y-auto mb-4"
+                  className="max-h-72 overflow-y-auto mb-4"
                 />
               )}
               <DataSource indicatorSlug={indicatorSlug} />

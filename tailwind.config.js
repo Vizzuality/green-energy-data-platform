@@ -14,6 +14,7 @@ module.exports = {
         gray3: '#2F3031',
         gray4: '#C4C4C4',
         gray5: '#EAEFF3',
+        gray6: '#0E3072',
         grayProfile: '#35373E', // TO DO - change name when adapting colors
         warning: '#FF472E',
         // chart colors
@@ -41,6 +42,9 @@ module.exports = {
         '1/2': '50vh',
         '3/4': '75vh',
         xs: '13.75rem',
+      },
+      maxHeight: {
+        128: '32rem',
       },
       maxWidth: {
         xs: '13rem',

@@ -44,7 +44,11 @@ const Hero: FC<HeroProps> = ({
           </a>
         </Link>
 
-        <Search items={items} />
+        <Search
+          items={items}
+          isHeader
+          className="bg-gray1"
+        />
         <button
           type="button"
           className="flex items-center pl-13 h-full"

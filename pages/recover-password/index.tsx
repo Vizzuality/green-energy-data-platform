@@ -77,7 +77,7 @@ const NewPasswordPage: FC = () => {
       <Head title="Welcome to Green Energy Data Platform" />
       <main className="min-h-screen flex flex-col h-full w-full m-auto pb-20">
         <Header />
-        <div className="m-auto max-w-2xl flex flex-col flex-1 w-full justify-start  my-20 py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 sm:px-16 min-w-70 shadow-sm">
+        <div className="m-auto max-w-2xl flex flex-col flex-1 w-full justify-start  my-20 py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 px-16 min-w-70 shadow-sm">
           <form onSubmit={handleSubmit} className="flex flex-col items-start">
             <h2 className="text-3.5xl font-bold">Create a new Password</h2>
             <p className="py-7">Your new password must be different from previous used passwords.</p>
