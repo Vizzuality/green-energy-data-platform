@@ -27,7 +27,7 @@ const ComparePage: FC<ComparePageProps> = ({
   return (
     <LayoutPage className="text-white bg-gradient-gray1 flex flex-col flex-1">
       <Head title="Green Energy Data Platform" />
-      <Hero theme="transparent" rounded />
+      <Hero theme="transparent" rounded className="lg:px-32 md:px-24 sm:px-16 px-8" />
       <section className="w-full flex space-x-3 container m-auto max-w-7xl">
         <Compare
           groupSlug={g1}

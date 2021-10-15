@@ -22,6 +22,7 @@ import Filters from 'components/filters';
 import LoadingSpinner from 'components/loading-spinner/component';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
+import MapContainer from 'components/indicator-visualizations/choropleth';
 
 // utils
 import {
@@ -46,7 +47,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 // hooks
-import { useGroup } from 'hooks/groups';
+import { useGroup, useGroups, useGroupsDefaults } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
 import {
   useIndicator,
@@ -55,9 +56,6 @@ import {
 
 import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
-
-// components
-import MapContainer from 'components/indicator-visualizations/choropleth';
 
 import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
@@ -79,6 +77,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   compareIndex,
 }: CompareLayoutProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
+    group: false,
     subgroup: false,
     indicator: false,
     year: false,
@@ -100,6 +99,29 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const router = useRouter();
   const { query } = router;
+
+  const { data: groups } = useGroups({
+    placeholderData: [],
+    refetchOnWindowFocus: false,
+  });
+
+  const defaultGroupSlugs = useGroupsDefaults(groups);
+
+  const handleGroupChange = useCallback((g, sg, ind) => {
+    setDropdownVisibility((prevDropdownVisibility) => ({
+      ...prevDropdownVisibility,
+      subgroup: !prevDropdownVisibility.subgroup,
+    }));
+
+    router.push({
+      query: {
+        ...query,
+        [`g${compareIndex}`]: g,
+        [`sg${compareIndex}`]: sg,
+        [`ind${compareIndex}`]: ind,
+      },
+    });
+  }, [router, query, compareIndex]);
 
   const handleSubgroupChange = useCallback((sg, ind) => {
     setDropdownVisibility((prevDropdownVisibility) => ({
@@ -317,12 +339,55 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           <span className="px-8 py-1 text-sm">Don´t compare</span>
         </button>
         <div className="py-5">
-          <h2 className="text-white font-bold pt-10">{groupName}</h2>
+          <Tooltip
+            placement="bottom-start"
+            className=""
+            visible={dropdownVisibility.group}
+            interactive
+            onClickOutside={() => { closeDropdown('group'); }}
+            content={(
+              <ul
+                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
+              >
+                {defaultGroupSlugs?.map(({
+                  name: defaultName,
+                  groupSlug: defaultGroupSlug,
+                  subgroupSlug: defaultSubgroupSlug,
+                  indicatorSlug: defaultIndicatorSlug,
+                }) => (
+                  <li
+                    key={defaultGroupSlug}
+                    className={cx('max-h relative px-4 focus:outline-none text-opacity-50 text-sm box-content items-center',
+                      { 'font-bold': defaultGroupSlug === group })}
+                  >
+                    <button
+                      type="button"
+                      className="px-5 cursor-pointer w-full py-2 flex pointer-events-all"
+                      onClick={() => handleGroupChange(
+                        defaultGroupSlug, defaultSubgroupSlug, defaultIndicatorSlug,
+                      )}
+                    >
+                      {defaultName}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          >
+            <button
+              type="button"
+              className="flex items-center pt-3"
+              onClick={() => { toggleDropdown('group'); }}
+            >
+              <h2 className="text-white font-bold pt-10">{groupName}</h2>
+            </button>
+          </Tooltip>
+
           <Tooltip
             placement="bottom-start"
             className=""
             visible={dropdownVisibility.subgroup}
-            interactive
+            interactive={dropdownVisibility.group}
             onClickOutside={() => { closeDropdown('subgroup'); }}
             content={(
               <ul
@@ -350,9 +415,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               </ul>
             )}
           >
+
             <button
               type="button"
               className="flex items-center pt-3"
+              disabled={dropdownVisibility.group}
               onClick={() => { toggleDropdown('subgroup'); }}
             >
               <h1 className="text-3.5xl text-left">
@@ -537,70 +604,72 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     </div>
                   )}
 
-                  {(!!filteredRecords.length && !isFetchingRecords) && (
-                    <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-                      <div className="flex items-center">
-                        <Tooltip
-                          placement="bottom-start"
-                          visible={dropdownVisibility.unit}
-                          interactive
-                          onClickOutside={() => closeDropdown('unit')}
-                          content={(
-                            <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                              {units.map((_unit) => (
-                                <li
-                                  key={_unit}
-                                  className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
-                                >
-                                  <button
-                                    type="button"
-                                    className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                    onClick={() => { handleChange('unit', _unit); }}
+                  {!['choropleth'].includes(visualizationType)
+                    && (!!filteredRecords.length
+                      && !isFetchingRecords) && (
+                      <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                        <div className="flex items-center">
+                          <Tooltip
+                            placement="bottom-start"
+                            visible={dropdownVisibility.unit}
+                            interactive
+                            onClickOutside={() => closeDropdown('unit')}
+                            content={(
+                              <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                                {units.map((_unit) => (
+                                  <li
+                                    key={_unit}
+                                    className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
                                   >
-                                    {_unit}
-                                  </button>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        >
-                          <button
-                            type="button"
-                            onClick={() => { toggleDropdown('unit'); }}
-                            className="flex items-center cursor-pointer opacity-50 hover:font-bold hover:cursor-pointer tracking-tight text-sm"
+                                    <button
+                                      type="button"
+                                      className="flex items-center py-2 w-full last:border-b-0 px-5"
+                                      onClick={() => { handleChange('unit', _unit); }}
+                                    >
+                                      {_unit}
+                                    </button>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           >
-                            <span>{unit}</span>
-                          </button>
-                        </Tooltip>
-                      </div>
-                      {visualizationType !== 'choropleth' && (
-                      <div className="w-full flex justify-center pb-11">
-                        <DynamicChart
-                          widgetData={widgetData}
-                          widgetConfig={widgetConfig}
-                          colors={colors}
+                            <button
+                              type="button"
+                              onClick={() => { toggleDropdown('unit'); }}
+                              className="flex items-center cursor-pointer opacity-50 hover:font-bold hover:cursor-pointer tracking-tight text-sm"
+                            >
+                              <span>{unit}</span>
+                            </button>
+                          </Tooltip>
+                        </div>
+                        {visualizationType !== 'choropleth' && (
+                          <div className="w-full flex justify-center pb-11">
+                            <DynamicChart
+                              widgetData={widgetData}
+                              widgetConfig={widgetConfig}
+                              colors={colors}
+                            />
+                          </div>
+                        )}
+                        {visualizationType === 'choropleth' && (
+                          <div className="w-full flex justify-center pb-11">
+                            <MapContainer
+                              layers={widgetData.layers}
+                              categories={categories}
+                            />
+                          </div>
+                        )}
+                        {categories.length > 0 && visualizationType !== 'choropleth' && (
+                          <Legend
+                            categories={category.label === 'category_1' ? categories : subcategories}
+                            className="overflow-y-auto mb-4"
+                          />
+                        )}
+                        <DataSource
+                          type="horizontal"
+                          indicatorSlug={indicatorSlug}
                         />
                       </div>
-                      )}
-                      {visualizationType === 'choropleth' && (
-                      <div className="w-full flex justify-center pb-11">
-                        <MapContainer
-                          layers={widgetData.layers}
-                          categories={categories}
-                        />
-                      </div>
-                      )}
-                      {categories.length > 0 && visualizationType !== 'choropleth' && (
-                        <Legend
-                          categories={category.label === 'category_1' ? categories : subcategories}
-                          className="overflow-y-auto mb-4"
-                        />
-                      )}
-                      <DataSource
-                        type="horizontal"
-                        indicatorSlug={indicatorSlug}
-                      />
-                    </div>
                   )}
                 </div>
               </section>

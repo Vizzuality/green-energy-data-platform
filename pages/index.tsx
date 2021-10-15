@@ -25,7 +25,7 @@ const HomePage: FC = () => {
   return (
     <LayoutPage className="h-full min-h-screen">
       <Head title="Welcome to Green Energy Data Platform" />
-      <Hero className="flex flex-col text-center py-24">
+      <Hero className="flex flex-col text-center py-24 lg:px-32 md:px-24 sm:px-16 px-8">
         <h1 className="text-5.5xl pb-14">{i18next.t('landingTitle')}</h1>
         <h3 className="text-lg">Longer description about the site and benefits, lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.</h3>
       </Hero>
