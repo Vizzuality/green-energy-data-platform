@@ -67,12 +67,12 @@ const Filters: FC<FiltersProps> = ({
             <button
               name={category}
               type="button"
-              className={cx('items-center py-3 pl-6',
+              className={cx('py-3 pl-6',
                 { 'cursor-auto': !hasSubcategories })}
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories}
             >
-              <span className="flex-1">{category}</span>
+              <span className="flex-1 flex text-left">{category}</span>
             </button>
             {active === category && (
               <div className="h-full flex justify-center items-center border-l border-l-white py-3">

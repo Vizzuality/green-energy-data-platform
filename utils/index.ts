@@ -133,6 +133,7 @@ export const filterRelatedIndicators = (
   return recordsByFilters;
 };
 export const getGroupedValues = (
+  groupSlug: string | string[],
   categories: string[],
   visualization: string,
   filters: IndicatorFilters,
@@ -228,7 +229,7 @@ export const getGroupedValues = (
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
-        [d.category_1]: d.value,
+        [d.category_1 || 'Total']: d.value,
       });
     });
 
@@ -239,187 +240,112 @@ export const getGroupedValues = (
     const minValue = Math.min(...MapValues);
     const maxValue = Math.max(...MapValues);
 
-    data = {
-      visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
-      layers: [{
-        id: 'regions',
-        type: 'geojson',
-        source: {
+    if (groupSlug !== 'coal-power-plants') {
+      data = {
+        visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
+        layers: [{
+          id: 'regions',
           type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...categories }) => ({
-              type: 'Feature',
-              geometry: geometry?.geometry,
-              properties: categories,
-            })),
-          },
-        },
-        render: {
-          layers: [
-            {
-              type: 'fill',
-              paint: {
-                'fill-color': [
-                  'interpolate',
-                  ['linear'],
-                  ['get', categorySelected],
-                  minValue === maxValue ? 0 : minValue,
-                  '#C9E6E8',
-                  maxValue,
-                  '#1B5183',
-                ],
-                // 'fill-outline-color': '#35373E',
-                'fill-opacity': 0.3,
-              },
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+                type: 'Feature',
+                geometry: geometry?.geometry,
+                properties: cat,
+              })),
             },
-            // ,
-            // '#1E6D86',
-            // '#2A8FAF',
-            // '#C9E6E8',
-            // '#929292',
-            // '#766964',
-            // '#F8981C',
-            // ,
-            // {
-            //   type: 'circle',
-            //   paint: {
-            //     // 'fill-color': '#00ffff',
-            //     'circle-opacity': 0.5,
-            //     'circle-radius': [
-            //       'interpolate',
-            //       ['linear'],
-            //       categoriesGeojeson,
-            //       0,
-            //       5,
-            //       mapMinValue,
-            //       10, // 10 y 20 tamaño min y máxim del radio
-            //       mapMaxValue, // 0 y 1000 maximo y minimo de los valores
-            //       20,
-            //     ],
-            //     'circle-color': [
-            //       'interpolate',
-            //       ['exponential', 0.5],
-            //       ['zoom'],
-            //       3,
-            //       '#e2714b',
-            //       6,
-            //       '#eee695',
-            //     ],
-            //   },
-            // },
-          ],
-        },
-      }],
-    };
-    // data = flatten(chain(filteredData)
-    //   .groupBy('region.name')
-    //   .map((value) => flatten(chain(value)
-    //     .groupBy(label)
-    //     .map((res, key) => {
-    //       const geometry = regions?.find((r) => value[0].region.id === r.id);
-    //       const keyValue = res.reduce(
-    //         (previous, current) => (current.value || 0) + previous, 0,
-    //       );
+          },
+          render: {
+            layers: [
+              {
+                type: 'fill',
+                paint: {
+                  'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', categorySelected],
+                    minValue === maxValue ? 0 : minValue,
+                    '#C9E6E8',
+                    maxValue,
+                    '#1B5183',
+                  ],
+                  // 'fill-outline-color': '#35373E',
+                  'fill-opacity': 0.3,
+                },
+              },
+            ],
+          },
+        }],
+      };
+    }
 
-    //       return (
-    //         {
-    //           [key !== 'null' ? key : 'Total']: keyValue,
-    //           geometry,
-    //           province: geometry,
-    //           id: key,
-    //         });
-    //     })
-    //     .value()))
-    //   .value());
-
-    // const dataByProvince = groupBy(data, 'province');
-    // console.log({ dataByProvince });
-    // console.log({ data });
-    // const final = Object.keys(dataByProvince).map((province) => dataByProvince[province]
-    //   .reduce((acc, next) => {
-    //     const { province: currentGeometry, ...rest } = next;
-    //     return ({
-    //       ...acc,
-    //       ...rest,
-    //     });
-    //   }, {
-    //   })).filter((g) => g.geometry !== null);
-
-    // const mapData = final.map(({
-    //   geometry,
-    //   id,
-    //   province,
-    //   ...categories
-    // }) => ({
-    //   geometry,
-    //   ...categories,
-    // }));
-
-    // const mapValues = final.map((m) => Object.values(m))[0] || [];
-    // const categoriesMap = uniq(mapData.map((m) => Object.keys(m))[0]) || [];
-    // const mapMaxValue = Math.max(...mapValues);
-    // const mapMinValue = Math.min(...mapValues);
-    // const categoriesGeojeson = ['get'].concat(categoriesMap);
-
-    // const stops = categoriesMap.map((c, index) => (
-    //   [c, colors[index]]));
-
-    // data = [{
-    //   id: 'geometry.id',
-    //   type: 'geojson',
-    //   source: {
-    //     type: 'geojson',
-    //     data: {
-    //       type: 'FeatureCollection',
-    //       features: final.map(({ geometry, ...categories }) => ({
-    //         type: 'Feature',
-    //         geometry: geometry?.geometry,
-    //         properties: categories,
-    //       })),
-    //     },
-    //   },
-    //   render: {
-    //     layers: [
-    //       {
-    //         type: 'circle',
-    //         paint: {
-    //           // 'fill-color': '#00ffff',
-    //           'circle-opacity': 0.5,
-    //           'circle-radius': [
-    //             'interpolate',
-    //             ['linear'],
-    //             categoriesGeojeson,
-    //             0,
-    //             5,
-    //             mapMinValue,
-    //             10, // 10 y 20 tamaño min y máxim del radio
-    //             mapMaxValue, // 0 y 1000 maximo y minimo de los valores
-    //             20,
-    //           ],
-    //           'circle-color': [
-    //             'interpolate',
-    //             ['exponential', 0.5],
-    //             ['zoom'],
-    //             3,
-    //             '#e2714b',
-    //             6,
-    //             '#eee695',
-    //           ],
-    //         },
-    //       },
-    //       // {
-    //       //   type: 'fill',
-    //       //   filter: ['all', ['==', 'State-Owned', 'Polygon']],
-    //       //   paint: {
-    //       //     'fill-color': 'red',
-    //       //     'fill-outline-color': 'blue',
-    //       //     'fill-opacity': 0.5,
-    //       //   },
-    //       // },
-    //     ],
-    //   },
-    // }];
+    if (groupSlug === 'coal-power-plants') {
+      data = {
+        visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
+        layers: [{
+          id: 'regions',
+          type: 'geojson',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+                type: 'Feature',
+                geometry: geometry?.geometry,
+                properties: cat,
+              })),
+            },
+          },
+          render: {
+            layers: [
+              {
+                type: 'fill',
+                paint: {
+                  'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', categorySelected],
+                    minValue === maxValue ? 0 : minValue,
+                    '#5A1846',
+                    maxValue,
+                    '#FFC300',
+                  ],
+                  // 'fill-outline-color': '#35373E',
+                  'fill-opacity': 0.3,
+                },
+              },
+              {
+                type: 'circle',
+                paint: {
+                  // 'fill-color': '#00ffff',
+                  'circle-opacity': 0.5,
+                  'circle-radius': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', categorySelected],
+                    minValue === maxValue ? 0 : minValue,
+                    10, // 10 y 20 tamaño min y máxim del radio
+                    maxValue, // 0 y 1000 maximo y minimo de los valores
+                    20,
+                  ],
+                  'circle-color': [
+                    'interpolate',
+                    ['exponential', 0.5],
+                    ['zoom'],
+                    4,
+                    '#e2714b',
+                    6,
+                    '#eee695',
+                  ],
+                },
+              },
+            ],
+          },
+        }],
+      };
+    }
   }
   return data;
 };
