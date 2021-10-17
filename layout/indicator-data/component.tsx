@@ -56,11 +56,10 @@ import i18next from 'i18next';
 import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
 
+import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
-import { keysIn } from 'lodash';
-import DropdownContent from 'layout/dropdown-content';
 
 type ChartProps = {
   widgetData: any,
@@ -77,6 +76,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+  });
+
+  const { data: groups } = useGroups({
+    refetchOnWindowFocus: false,
+    placeholderData: [],
+  });
+
+  const [compareMenuVisibility, setSubMenuVisibility] = useState({
+    menuVisibility: true,
+    id: '',
   });
 
   const queryClient = useQueryClient();
@@ -121,11 +130,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       [key]: false,
     });
   }, [dispatch, dropdownVisibility]);
-
-  const { data: groups } = useGroups({
-    refetchOnWindowFocus: false,
-    placeholderData: [],
-  });
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
@@ -231,8 +235,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     description,
   } = indicatorData;
 
-  // TO DO - improve line using kooks
-
   useEffect(() => {
     dispatch(setFilters({
       ...defaultYear && { year: defaultYear },
@@ -299,23 +301,45 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               </button>
 
             </Tooltip>
-
             <Tooltip
               trigger="click"
               placement="bottom-start"
               maxHeight={400}
+              onTrigger={() => setSubMenuVisibility({ menuVisibility: !dropdownVisibility.menuVisibility, id: '' })}
               content={(
                 <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
                   {groups?.map(({
                     name: groupName, id, subgroups: subgroupsCompare, slug,
                   }) => (
-                    <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
-                      <button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button" className="flex items-center py-2 w-full last:border-b-0">
+                    <li key={id} className="text-white first:rounded-t-xl last:rounded-b-xl divide-y divide-white divide-opacity-10">
+                      <button
+                        type="button"
+                        aria-haspopup="listbox"
+                        aria-labelledby="exp_elem exp_button"
+                        id="exp_button"
+                        className={cx('flex items-center w-full last:border-b-0 px-5 py-2',
+                          { hidden: id !== compareMenuVisibility.id && compareMenuVisibility.id !== '' })}
+                        onClick={() => setSubMenuVisibility({ menuVisibility: !compareMenuVisibility.menuVisibility, id: compareMenuVisibility.id ? '' : id })}
+
+                      >
                         <span>{groupName}</span>
                         {' '}
-                        <Icon ariaLabel="arrow" name="arrow" className="ml-2" />
+                        <Icon
+                          ariaLabel="arrow"
+                          name="arrow"
+                          className={cx('ml-2',
+                            { 'transform rotate-180': id === compareMenuVisibility.id })}
+                        />
                       </button>
-                      <ul id="exp_elem_list" tabIndex={-1} role="listbox" aria-labelledby="exp_elem" className="" aria-activedescendant="exp_elem_Pu">
+
+                      <ul
+                        id="exp_elem_list"
+                        tabIndex={-1}
+                        role="listbox"
+                        aria-labelledby="exp_elem"
+                        className={cx({ hidden: id !== compareMenuVisibility.id })}
+                        aria-activedescendant="exp_elem_Pu"
+                      >
                         {subgroupsCompare.map(({
                           name: subgroupName,
                           id: subgroupId,
@@ -326,7 +350,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                             key={subgroupName}
                             id={`exp-elem_${subgroupId}`}
                             role="option"
-                            className=""
+                            className="px-5 hover:bg-white hover:text-gray1"
                             aria-selected="true"
                           >
                             <Link href={{
@@ -342,7 +366,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                             }}
                             >
                               <a
-                                className="flex items-center py-2 w-full last:border-b-0"
+                                className="flex items-center py-2 w-full last:border-b-0 "
                                 href="/compare"
                               >
                                 {subgroupName}
