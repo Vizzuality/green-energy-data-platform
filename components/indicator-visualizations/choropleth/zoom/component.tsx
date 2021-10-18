@@ -38,7 +38,7 @@ export const ZoomControl = ({
       <button
         aria-label="max zoom"
         type="button"
-        className="font-bold p-0.5 rounded-t-4xl text-white bg-black focus:outline-none"
+        className="font-bold p-0.5 rounded-t-4xl text-white bg-gray1 focus:outline-none"
         disabled={zoom === maxZoom}
         onClick={increaseZoom}
       >
@@ -47,7 +47,7 @@ export const ZoomControl = ({
       <button
         aria-label="min zoom"
         type="button"
-        className="font-bold p-0.5 rounded-b-4xl text-white bg-black focus:outline-none"
+        className="font-bold p-0.5 rounded-b-4xl text-white bg-gray1 focus:outline-none"
         disabled={zoom === minZoom}
         onClick={decreaseZoom}
       >

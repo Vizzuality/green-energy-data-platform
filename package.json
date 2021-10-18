@@ -11,6 +11,7 @@
     "url": "https://vizzuality.com"
   },
   "dependencies": {
+    "@dnd-kit/core": "^4.0.0",
     "@math.gl/web-mercator": "^3.4.2",
     "@popperjs/core": "^2.9.0",
     "@react-aria/button": "^3.3.1",
@@ -18,7 +19,7 @@
     "@react-aria/interactions": "^3.3.4",
     "@react-aria/menu": "^3.2.0",
     "@react-aria/overlays": "^3.6.2",
-    "@react-aria/utils": "^3.7.0",
+    "@react-aria/utils": "^3.9.0",
     "@react-stately/collections": "^3.3.1",
     "@react-stately/menu": "^3.2.1",
     "@react-stately/overlays": "^3.1.1",
@@ -38,6 +39,7 @@
     "classnames": "^2.2.6",
     "d3-ease": "^2.0.0",
     "d3-format": "2.0.0",
+    "d3-scale": "^4.0.2",
     "deck.gl": "7.3.6",
     "downshift": "^6.1.0",
     "file-saver": "^2.0.5",

@@ -9,7 +9,7 @@ import i18next from 'i18next';
 const TermsAndConditionsPage: FC = () => (
   <LayoutPage className="text-white bg-gradient-gray1 pb-48">
     <Head title="Green Energy Data Platform" />
-    <Hero className="lg:px-32 md:px-24 px-16">
+    <Hero className="lg:px-32 md:px-24 sm:px-16 px-8">
       <h1 className="text-5.5xl pt-3 text-left">{i18next.t('terms')}</h1>
     </Hero>
     <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow -mt-40 divide-x flex px-10">

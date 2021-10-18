@@ -31,8 +31,6 @@ import WidgetsGrid from 'layout/widgets-grid';
 import { useGroup } from 'hooks/groups';
 import { useIndicator } from 'hooks/indicators';
 
-import { InView } from 'react-intersection-observer';
-
 // types
 import { AxiosRequestConfig } from 'axios';
 
@@ -80,7 +78,7 @@ const GroupPage: FC = () => {
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${data?.name} analysis`} />
-      <Hero className="lg:px-32 md:px-24 px-16">
+      <Hero className="lg:px-32 md:px-24 sm:px-16 px-8">
         <Nav className="pt-10" />
         <Tooltip
           placement="bottom-start"
@@ -90,7 +88,7 @@ const GroupPage: FC = () => {
           onClickOutside={() => { setDropdownVisibility(false); }}
           content={(
             <ul
-              className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
+              className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
             >
               {group.subgroups.map(({
                 slug: sgSlug, id, name, default_indicator,
@@ -135,14 +133,7 @@ const GroupPage: FC = () => {
       <div className="container m-auto pb-20">
         <section className="max-w-6xl m-auto -mt-40 ">
           <IndicatorData />
-          <InView>
-            {({ ref }) => (
-              <div ref={ref}>
-                <WidgetsGrid />
-              </div>
-            )}
-          </InView>
-
+          <WidgetsGrid />
         </section>
       </div>
 
