@@ -7,6 +7,8 @@ import {
   sortedUniq,
 } from 'lodash';
 
+//import { scaleLinear } from 'd3-scale';
+
 import i18n from 'i18next';
 
 import { saveAs } from 'file-saver';
@@ -143,8 +145,8 @@ export const getGroupedValues = (
   const { category } = filters;
 
   const label = category?.label;
-
-  const categorySelected = category?.value;
+  const hasTotal = categories?.find((c) => c === 'Total');
+  const categorySelected = category?.value || hasTotal ? 'Total' : categories[0];
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
@@ -482,6 +484,9 @@ export const getGroupedValuesRelatedIndicators = (
               },
             },
           ],
+        },
+        legendConfig: {
+
         },
       }],
     };

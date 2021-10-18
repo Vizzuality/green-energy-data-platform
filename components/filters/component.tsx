@@ -20,7 +20,6 @@ const Filters: FC<FiltersProps> = ({
   onClick,
 }: FiltersProps) => {
   const dispatch = useDispatch();
-  const hasTotal = categories.find((c) => c === 'Total');
   const [active, setActive] = useState('');
 
   const handleClick = (direction) => {

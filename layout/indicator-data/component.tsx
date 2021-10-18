@@ -539,7 +539,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               />
               )}
               {categories.length > 0 && visualizationType !== 'choropleth' && (
-                console.log(category.label === 'category_1' ? categories : subcategories, category) ||
                 <Legend
                   categories={category.label === 'category_1' ? categories : subcategories}
                   className="max-h-72 overflow-y-auto mb-4"
