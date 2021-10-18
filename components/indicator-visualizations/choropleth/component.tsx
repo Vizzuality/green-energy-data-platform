@@ -79,8 +79,8 @@ const MapContainer: FC<MapContainerProps> = (
           }
         }}
         onMouseLeave={() => {
-          // setHoverInteractions({});
-          // setLngLat(null);
+          setHoverInteractions({});
+          setLngLat(null);
         }}
 
       >
