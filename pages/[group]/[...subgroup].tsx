@@ -135,14 +135,7 @@ const GroupPage: FC = () => {
       <div className="container m-auto pb-20">
         <section className="max-w-6xl m-auto -mt-40 ">
           <IndicatorData />
-          <InView>
-            {({ ref }) => (
-              <div ref={ref}>
-                <WidgetsGrid />
-              </div>
-            )}
-          </InView>
-
+          <WidgetsGrid />
         </section>
       </div>
 

@@ -42,7 +42,7 @@ export const getCategoriesFromRecords = (
 
 export const getSubcategoriesFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_1)))).sort();
+) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2)))).sort();
 
 export const filterRecords = (
   records: Record[],
@@ -145,7 +145,6 @@ export const getGroupedValues = (
   const label = category?.label;
 
   const categorySelected = category?.value;
-  console.log(categorySelected)
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
