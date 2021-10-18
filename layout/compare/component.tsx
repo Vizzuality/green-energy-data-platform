@@ -348,7 +348,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             onClickOutside={() => { closeDropdown('group'); }}
             content={(
               <ul
-                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
+                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
               >
                 {defaultGroupSlugs?.map(({
                   name: defaultName,
@@ -392,7 +392,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             onClickOutside={() => { closeDropdown('subgroup'); }}
             content={(
               <ul
-                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
+                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
               >
                 {group.subgroups.map(({
                   slug: sgSlug, id, name: sgName, default_indicator,
@@ -520,7 +520,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         content={(
                           <DropdownContent
                             list={years}
-                            key="year"
+                            id="year"
                             onClick={handleChange}
                           />
                         )}
@@ -552,7 +552,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         content={(
                           <DropdownContent
                             list={regions}
-                            key="region"
+                            id="region"
                             onClick={handleChange}
                           />
                         )}
@@ -595,7 +595,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                             content={(
                               <DropdownContent
                                 list={units}
-                                key="unit"
+                                id="unit"
                                 onClick={handleChange}
                               />
                             )}

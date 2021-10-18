@@ -90,7 +90,7 @@ const GroupPage: FC = () => {
           onClickOutside={() => { setDropdownVisibility(false); }}
           content={(
             <ul
-              className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10"
+              className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
             >
               {group.subgroups.map(({
                 slug: sgSlug, id, name, default_indicator,

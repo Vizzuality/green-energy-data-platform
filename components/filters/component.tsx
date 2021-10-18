@@ -21,7 +21,7 @@ const Filters: FC<FiltersProps> = ({
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const hasTotal = categories.find((c) => c === 'Total');
-  const [active, setActive] = useState(hasTotal ? 'Total' : categories[0]);
+  const [active, setActive] = useState('');
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
