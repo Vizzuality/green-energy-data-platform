@@ -31,8 +31,6 @@ import WidgetsGrid from 'layout/widgets-grid';
 import { useGroup } from 'hooks/groups';
 import { useIndicator } from 'hooks/indicators';
 
-import { InView } from 'react-intersection-observer';
-
 // types
 import { AxiosRequestConfig } from 'axios';
 
