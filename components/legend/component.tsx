@@ -13,6 +13,7 @@ const Legend: FC<LegendProps> = ({
   className = '',
 }: LegendProps) => {
   const colors = useColors(categories.length);
+  console.log({categories}, 'legend')
   return (
     <div className={cx('inline-flex flex-col justify-start text-center bg-white rounded-md border-gray5 border-6 hover:opacity-90 px-1.5 text-gray1 max-h-64',
       { [className]: className })}

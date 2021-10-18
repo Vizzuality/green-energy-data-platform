@@ -227,7 +227,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     } = indicatorData;
 
     setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+  }, [indicatorData, widgetData, category]);
 
   const {
     name,
@@ -305,7 +305,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               trigger="click"
               placement="bottom-start"
               maxHeight={400}
-              onTrigger={() => setSubMenuVisibility({ menuVisibility: !dropdownVisibility.menuVisibility, id: '' })}
+              onTrigger={() => setSubMenuVisibility({ menuVisibility: !compareMenuVisibility.menuVisibility, id: '' })}
               content={(
                 <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
                   {groups?.map(({
@@ -410,7 +410,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={years}
-                          key="year"
+                          id="year"
                           onClick={handleChange}
                         />
                       )}
@@ -445,7 +445,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={regions}
-                          key="region"
+                          id="region"
                           onClick={handleChange}
                         />
                       )}
@@ -478,6 +478,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {(!!filteredRecords.length && !isFetchingRecords) && (
                 <div className="flex flex-col h-full w-full min-h-1/2 py-8">
                   <div className="flex items-center">
+                    {visualizationType !== 'choropleth'
+                  && (
                     <Tooltip
                       placement="bottom-start"
                       visible={dropdownVisibility.unit}
@@ -486,7 +488,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={units}
-                          key="unit"
+                          id="unit"
                           onClick={handleChange}
                         />
                       )}
@@ -499,6 +501,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         <span>{unit}</span>
                       </button>
                     </Tooltip>
+                  )}
                   </div>
                   {visualizationType !== 'choropleth'
                   && (
@@ -536,6 +539,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               />
               )}
               {categories.length > 0 && visualizationType !== 'choropleth' && (
+                console.log(category.label === 'category_1' ? categories : subcategories, category) ||
                 <Legend
                   categories={category.label === 'category_1' ? categories : subcategories}
                   className="max-h-72 overflow-y-auto mb-4"
