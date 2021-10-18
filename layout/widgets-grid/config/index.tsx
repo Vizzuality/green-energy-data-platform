@@ -250,10 +250,7 @@ const CONFIG = (categories) => {
     pie: {
       height: 200,
       width: 200,
-      margin: {
-        top: 30,
-        bottom: 10,
-      },
+      margin: 'auto',
       pies: [
         {
           dataKey: 'value',
