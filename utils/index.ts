@@ -145,8 +145,8 @@ export const getGroupedValues = (
   const { category } = filters;
 
   const label = category?.label;
-  const hasTotal = categories?.find((c) => c === 'Total');
-  const categorySelected = category?.value || hasTotal ? 'Total' : categories[0];
+  const categorySelected = category?.value || 'Total';
+  const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
@@ -236,8 +236,8 @@ export const getGroupedValues = (
     });
 
     const mapValues = dataWithGeometries
-      .filter((d) => d[categorySelected])
-      .map((r) => r[categorySelected]) as number[];
+      .filter((d) => d[mapCategorySelected])
+      .map((r) => r[mapCategorySelected]) as number[];
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
@@ -267,7 +267,7 @@ export const getGroupedValues = (
                   'fill-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', categorySelected],
+                    ['get', mapCategorySelected],
                     minValue === maxValue ? 0 : minValue,
                     '#C9E6E8',
                     maxValue,
@@ -313,7 +313,7 @@ export const getGroupedValues = (
                   'circle-stroke-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', categorySelected],
+                    ['get', mapCategorySelected],
                     minValue === maxValue ? 0 : minValue,
                     '#e2714b',
                     maxValue,
@@ -323,7 +323,7 @@ export const getGroupedValues = (
                   'circle-radius': [
                     'interpolate',
                     ['linear'],
-                    ['get', categorySelected],
+                    ['get', mapCategorySelected],
                     minValue === maxValue ? 0 : minValue,
                     10, // 10 y 20 tamaño min y máxim del radio
                     maxValue, // 0 y 1000 maximo y minimo de los valores
@@ -332,7 +332,7 @@ export const getGroupedValues = (
                   'circle-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', categorySelected],
+                    ['get', mapCategorySelected],
                     minValue === maxValue ? 0 : minValue,
                     '#e2714b',
                     maxValue,
