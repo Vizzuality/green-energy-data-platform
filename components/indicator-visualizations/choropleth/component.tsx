@@ -4,9 +4,12 @@ import React, {
   useCallback,
 } from 'react';
 
+import { format } from 'd3-format';
+
 // Layer manager
 import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
+import { Popup } from 'react-map-gl';
 
 // authentication
 import { withAuthentication } from 'hoc/auth';
@@ -34,6 +37,7 @@ interface MapContainerProps {
   categories: string[]
 }
 
+const numberFormat = format('.2s');
 const MapContainer: FC<MapContainerProps> = (
   {
     layers,
@@ -43,6 +47,8 @@ const MapContainer: FC<MapContainerProps> = (
   }: MapContainerProps,
 ) => {
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
+  const [hoverInteractions, setHoverInteractions] = useState({} || { regions: {} });
+  const [lngLat, setLngLat] = useState(null);
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
   }, []);
@@ -64,22 +70,48 @@ const MapContainer: FC<MapContainerProps> = (
         height="100%"
         viewport={viewport}
         onMapViewportChange={handleViewportChange}
-        onClick={(e) => console.log(e)}
+        onHover={(e) => {
+          if (e && e.features) {
+            e.features.forEach((f) => setHoverInteractions({
+              [f.source]: f.properties,
+            }));
+            setLngLat(e.lngLat);
+          }
+        }}
+        onMouseLeave={() => {
+          setHoverInteractions({});
+          setLngLat(null);
+        }}
+
       >
         {(map) => (
-          <LayerManager map={map} plugin={PluginMapboxGl}>
-            {layers?.map((l) => (
-              <Layer key={l.id} {...l} />
-            ))}
-          </LayerManager>
+          <>
+            <LayerManager map={map} plugin={PluginMapboxGl}>
+              {layers?.map((l) => (
+                <Layer key={l.id} {...l} />
+              ))}
+            </LayerManager>
+            {lngLat && hoverInteractions.regions && (
+              <Popup
+                latitude={lngLat[1]}
+                longitude={lngLat[0]}
+                closeButton={false}
+                className="rounded-2xl"
+              >
+                {Object.keys(hoverInteractions.regions)}
+                :
+                {' '}
+                {numberFormat(Object.values(hoverInteractions.regions))}
+              </Popup>
+            )}
+          </>
         )}
       </Map>
       {hasIteraction && (
-      <ZoomControl
-        // className="absolute bottom-4 left-2 w-4 h-10"
-        viewport={viewport}
-        onZoomChange={handleZoomChange}
-      />
+        <ZoomControl
+          viewport={viewport}
+          onZoomChange={handleZoomChange}
+        />
       )}
       {hasIteraction && <Legend categories={categories} />}
     </div>

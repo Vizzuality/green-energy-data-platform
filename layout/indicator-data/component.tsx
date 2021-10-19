@@ -56,6 +56,7 @@ import i18next from 'i18next';
 import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
 
+import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
@@ -75,6 +76,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+  });
+
+  const { data: groups } = useGroups({
+    refetchOnWindowFocus: false,
+    placeholderData: [],
+  });
+
+  const [compareMenuVisibility, setSubMenuVisibility] = useState({
+    menuVisibility: true,
+    id: '',
   });
 
   const queryClient = useQueryClient();
@@ -111,37 +122,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     });
   }, [dropdownVisibility]);
 
-  const handleYearChange = useCallback((_year) => {
-    dispatch(setFilters({ year: _year }));
+  const handleChange = useCallback((key, value) => {
+    dispatch(setFilters({ [key]: value }));
 
     setDropdownVisibility({
       ...dropdownVisibility,
-      year: false,
+      [key]: false,
     });
   }, [dispatch, dropdownVisibility]);
-
-  const handleRegionChange = useCallback((_region) => {
-    dispatch(setFilters({ region: _region }));
-
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      region: false,
-    });
-  }, [dispatch, dropdownVisibility]);
-
-  const handleUnitChange = useCallback((_unit) => {
-    dispatch(setFilters({ unit: _unit }));
-
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      unit: false,
-    });
-  }, [dispatch, dropdownVisibility]);
-
-  const { data: groups } = useGroups({
-    refetchOnWindowFocus: false,
-    placeholderData: [],
-  });
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
@@ -239,15 +227,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     } = indicatorData;
 
     setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+  }, [indicatorData, widgetData, category]);
 
   const {
     name,
     visualizationTypes: visualizationTypesIndicator,
     description,
   } = indicatorData;
-
-  // TO DO - improve line using kooks
 
   useEffect(() => {
     dispatch(setFilters({
@@ -315,23 +301,45 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               </button>
 
             </Tooltip>
-
             <Tooltip
               trigger="click"
               placement="bottom-start"
               maxHeight={400}
+              onTrigger={() => setSubMenuVisibility({ menuVisibility: !compareMenuVisibility.menuVisibility, id: '' })}
               content={(
                 <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
                   {groups?.map(({
                     name: groupName, id, subgroups: subgroupsCompare, slug,
                   }) => (
-                    <li key={id} className="px-5 text-white first:rounded-b-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10">
-                      <button type="button" aria-haspopup="listbox" aria-labelledby="exp_elem exp_button" id="exp_button" className="flex items-center py-2 w-full last:border-b-0">
+                    <li key={id} className="text-white first:rounded-t-xl last:rounded-b-xl divide-y divide-white divide-opacity-10">
+                      <button
+                        type="button"
+                        aria-haspopup="listbox"
+                        aria-labelledby="exp_elem exp_button"
+                        id="exp_button"
+                        className={cx('flex items-center w-full last:border-b-0 px-5 py-2',
+                          { hidden: id !== compareMenuVisibility.id && compareMenuVisibility.id !== '' })}
+                        onClick={() => setSubMenuVisibility({ menuVisibility: !compareMenuVisibility.menuVisibility, id: compareMenuVisibility.id ? '' : id })}
+
+                      >
                         <span>{groupName}</span>
                         {' '}
-                        <Icon ariaLabel="arrow" name="arrow" className="ml-2" />
+                        <Icon
+                          ariaLabel="arrow"
+                          name="arrow"
+                          className={cx('ml-2',
+                            { 'transform rotate-180': id === compareMenuVisibility.id })}
+                        />
                       </button>
-                      <ul id="exp_elem_list" tabIndex={-1} role="listbox" aria-labelledby="exp_elem" className="" aria-activedescendant="exp_elem_Pu">
+
+                      <ul
+                        id="exp_elem_list"
+                        tabIndex={-1}
+                        role="listbox"
+                        aria-labelledby="exp_elem"
+                        className={cx({ hidden: id !== compareMenuVisibility.id })}
+                        aria-activedescendant="exp_elem_Pu"
+                      >
                         {subgroupsCompare.map(({
                           name: subgroupName,
                           id: subgroupId,
@@ -342,7 +350,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                             key={subgroupName}
                             id={`exp-elem_${subgroupId}`}
                             role="option"
-                            className=""
+                            className="px-5 hover:bg-white hover:text-gray1"
                             aria-selected="true"
                           >
                             <Link href={{
@@ -358,7 +366,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                             }}
                             >
                               <a
-                                className="flex items-center py-2 w-full last:border-b-0"
+                                className="flex items-center py-2 w-full last:border-b-0 "
                                 href="/compare"
                               >
                                 {subgroupName}
@@ -400,22 +408,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       interactive
                       onClickOutside={() => closeDropdown('year')}
                       content={(
-                        <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                          {years.map((_year) => (
-                            <li
-                              key={_year}
-                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl last:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3"
-                            >
-                              <button
-                                type="button"
-                                className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                onClick={() => { handleYearChange(_year); }}
-                              >
-                                {_year}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
+                        <DropdownContent
+                          list={years}
+                          id="year"
+                          onClick={handleChange}
+                        />
                       )}
                     >
                       <button
@@ -446,22 +443,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       interactive
                       onClickOutside={() => closeDropdown('region')}
                       content={(
-                        <ul className="w-full z-10 rounded-xl  divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                          {regions.map((_region) => (
-                            <li
-                              key={_region}
-                              className="text-white last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-xl divide-y divide-white divide-opacity-10 bg-gray3"
-                            >
-                              <button
-                                type="button"
-                                onClick={() => handleRegionChange(_region)}
-                                className="flex items-center py-2 w-full last:border-b-0 px-5"
-                              >
-                                {_region}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
+                        <DropdownContent
+                          list={regions}
+                          id="region"
+                          onClick={handleChange}
+                        />
                       )}
                     >
                       <button
@@ -492,28 +478,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {(!!filteredRecords.length && !isFetchingRecords) && (
                 <div className="flex flex-col h-full w-full min-h-1/2 py-8">
                   <div className="flex items-center">
+                    {visualizationType !== 'choropleth'
+                  && (
                     <Tooltip
                       placement="bottom-start"
                       visible={dropdownVisibility.unit}
                       interactive
                       onClickOutside={() => closeDropdown('unit')}
                       content={(
-                        <ul className="w-full rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
-                          {units.map((_unit) => (
-                            <li
-                              key={_unit}
-                              className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-t divide-y divide-white divide-opacity-10 bg-gray3"
-                            >
-                              <button
-                                type="button"
-                                className="flex items-center py-2 w-full last:border-b-0 px-5"
-                                onClick={() => { handleUnitChange(_unit); }}
-                              >
-                                {_unit}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
+                        <DropdownContent
+                          list={units}
+                          id="unit"
+                          onClick={handleChange}
+                        />
                       )}
                     >
                       <button
@@ -524,6 +501,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         <span>{unit}</span>
                       </button>
                     </Tooltip>
+                  )}
                   </div>
                   {visualizationType !== 'choropleth'
                   && (

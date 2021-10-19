@@ -56,7 +56,12 @@
   }
 }
 
-@layer utilities {
+.mapboxgl-popup-content{
+  background-color: #3A3F59 !important;
+  color: white;
+}
+
+  @layer utilities {
   .bg-shadow-sm {
     @apply shadow;
   }

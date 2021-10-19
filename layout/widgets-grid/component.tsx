@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import cx from 'classnames';
 import Link from 'next/link';
+import { InView } from 'react-intersection-observer';
 
 // hooks
 import { useRouter } from 'next/router';
@@ -41,19 +42,26 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
           default_visualization: visualization,
         } = default_indicator;
         return (
-          <div
-            key={id}
-            className={cx('cursor-pointer w-full h-72 bg-white rounded-2.5xl shadow text-gray-900 px-7 py-4',
-              { [className]: className })}
-          >
-            <div>{name}</div>
-            <GridItem
-              group={groupSlug}
-              subgroup={subgroupSlug}
-              indicator={indicatorSlug}
-              visualization={visualization}
-            />
-          </div>
+          <InView key={id} triggerOnce>
+            {({ ref, inView }) => (
+              <div ref={ref}>
+                {(inView && (
+                  <div
+                    className={cx('cursor-pointer w-full h-72 bg-white rounded-2.5xl shadow text-gray-900 px-7 py-4',
+                      { [className]: className })}
+                  >
+                    <div>{name}</div>
+                    <GridItem
+                      group={groupSlug}
+                      subgroup={subgroupSlug}
+                      indicator={indicatorSlug}
+                      visualization={visualization}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </InView>
         );
       })}
       <div

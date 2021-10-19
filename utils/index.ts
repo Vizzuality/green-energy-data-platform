@@ -7,6 +7,8 @@ import {
   sortedUniq,
 } from 'lodash';
 
+//import { scaleLinear } from 'd3-scale';
+
 import i18n from 'i18next';
 
 import { saveAs } from 'file-saver';
@@ -42,7 +44,7 @@ export const getCategoriesFromRecords = (
 
 export const getSubcategoriesFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_1)))).sort();
+) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2)))).sort();
 
 export const filterRecords = (
   records: Record[],
@@ -141,9 +143,10 @@ export const getGroupedValues = (
   regions: Record[],
 ) => {
   const { category } = filters;
+
   const label = category?.label;
-  const hasTotal = categories.includes('Total');
-  const categorySelected = category?.value || hasTotal ? 'Total' : categories[0];
+  const categorySelected = category?.value || 'Total';
+  const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
@@ -193,7 +196,6 @@ export const getGroupedValues = (
         year,
       }));
   }
-
   if (visualization === 'bar') {
     data = flatten(chain(filteredData)
       .groupBy('region.name')
@@ -233,12 +235,12 @@ export const getGroupedValues = (
       });
     });
 
-    const MapValues = dataWithGeometries
-      .filter((d) => d[categorySelected])
-      .map((r) => r[categorySelected]) as number[];
+    const mapValues = dataWithGeometries
+      .filter((d) => d[mapCategorySelected])
+      .map((r) => r[mapCategorySelected]) as number[];
 
-    const minValue = Math.min(...MapValues);
-    const maxValue = Math.max(...MapValues);
+    const minValue = Math.min(...mapValues);
+    const maxValue = Math.max(...mapValues);
 
     if (groupSlug !== 'coal-power-plants') {
       data = {
@@ -265,7 +267,7 @@ export const getGroupedValues = (
                   'fill-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', categorySelected],
+                    ['get', mapCategorySelected],
                     minValue === maxValue ? 0 : minValue,
                     '#C9E6E8',
                     maxValue,
@@ -284,6 +286,8 @@ export const getGroupedValues = (
     if (groupSlug === 'coal-power-plants') {
       data = {
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
+        data: dataWithGeometries,
+        mapValues,
         layers: [{
           id: 'regions',
           type: 'geojson',
@@ -301,30 +305,25 @@ export const getGroupedValues = (
           render: {
             layers: [
               {
-                type: 'fill',
-                paint: {
-                  'fill-color': [
-                    'interpolate',
-                    ['linear'],
-                    ['get', categorySelected],
-                    minValue === maxValue ? 0 : minValue,
-                    '#5A1846',
-                    maxValue,
-                    '#FFC300',
-                  ],
-                  // 'fill-outline-color': '#35373E',
-                  'fill-opacity': 0.3,
-                },
-              },
-              {
                 type: 'circle',
                 paint: {
                   // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
+                  'circle-stroke-opacity': 0.7,
+                  'circle-stroke-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', mapCategorySelected],
+                    minValue === maxValue ? 0 : minValue,
+                    '#e2714b',
+                    maxValue,
+                    '#eee695',
+                  ],
+                  'circle-stroke-width': 1,
                   'circle-radius': [
                     'interpolate',
                     ['linear'],
-                    ['get', categorySelected],
+                    ['get', mapCategorySelected],
                     minValue === maxValue ? 0 : minValue,
                     10, // 10 y 20 tamaño min y máxim del radio
                     maxValue, // 0 y 1000 maximo y minimo de los valores
@@ -332,11 +331,11 @@ export const getGroupedValues = (
                   ],
                   'circle-color': [
                     'interpolate',
-                    ['exponential', 0.5],
-                    ['zoom'],
-                    4,
+                    ['linear'],
+                    ['get', mapCategorySelected],
+                    minValue === maxValue ? 0 : minValue,
                     '#e2714b',
-                    6,
+                    maxValue,
                     '#eee695',
                   ],
                 },
@@ -347,6 +346,7 @@ export const getGroupedValues = (
       };
     }
   }
+
   return data;
 };
 
@@ -484,6 +484,9 @@ export const getGroupedValuesRelatedIndicators = (
               },
             },
           ],
+        },
+        legendConfig: {
+
         },
       }],
     };
