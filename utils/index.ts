@@ -7,7 +7,7 @@ import {
   sortedUniq,
 } from 'lodash';
 
-//import { scaleLinear } from 'd3-scale';
+import { scaleLinear } from 'd3-scale';
 
 import i18n from 'i18next';
 
@@ -448,6 +448,8 @@ export const getGroupedValuesRelatedIndicators = (
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
+
+    const scale = scaleLinear([minValue, maxValue], [0, 100]);
 
     data = {
       visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
