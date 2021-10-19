@@ -14,7 +14,7 @@ export function useMe(queryConfig = {}) {
     (state: RootState) => (state.language),
   );
 
-  return useQuery(['me', session],
+  return useQuery(['me', session, current],
     () => fetchUserMe(`Bearer ${session.accessToken}`, { locale: current })
       .then((data) => ({
         ...data,

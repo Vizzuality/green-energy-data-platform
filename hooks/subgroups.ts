@@ -12,7 +12,7 @@ export function useSubgroup(group_id, subgroup_id, queryConfig = {}) {
     (state: RootState) => (state.language),
   );
 
-  return useQuery(['fetch-subgroup', group_id, subgroup_id],
+  return useQuery(['fetch-subgroup', group_id, subgroup_id, current],
     () => fetchSubgroup(group_id, subgroup_id, { locale: current })
       .then((data) => data),
     {

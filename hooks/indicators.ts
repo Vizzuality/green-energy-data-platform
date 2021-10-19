@@ -22,7 +22,7 @@ export function useIndicators(group_id, subgroup_id) {
   } = useSelector(
     (state: RootState) => (state.language),
   );
-  const query = useQuery('fetch-indicators',
+  const query = useQuery(['fetch-indicators', current],
     () => fetchIndicators(group_id, subgroup_id, { locale: current }));
 
   const {
@@ -48,11 +48,11 @@ export function useIndicator(
   queryOptions = {},
 ) {
   const {
-    language,
+    current,
   } = useSelector(
     (state: RootState) => (state.language),
   );
-  return useQuery<IndicatorProps, Error>(`indicator-${indicatorId}`,
+  return useQuery<IndicatorProps, Error>(['indicator', indicatorId, current],
     () => fetchIndicator(groupId, subgroupId, indicatorId, { locale: current }), {
       placeholderData: {
         records: [],
@@ -93,7 +93,7 @@ export function useIndicatorRecords(
     (state: RootState) => (state.language),
   );
 
-  return useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId],
+  return useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
     () => fetchIndicatorRecords(groupId, subgroupId, indicatorId, { locale: current }), {
       placeholderData: [],
       ...queryOptions,

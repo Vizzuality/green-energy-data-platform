@@ -67,7 +67,7 @@ export function withUser(getServerSidePropsFunc?: Function) {
     const {
       current,
     } = useSelector(
-      (state: RootState) => (state.current),
+      (state: RootState) => (state.language),
     );
 
     await queryClient.prefetchQuery('me',

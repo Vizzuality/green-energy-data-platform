@@ -11,7 +11,7 @@ export const useRegions = (id, visualizationType, queryConfig = {}) => {
   } = useSelector(
     (state: RootState) => (state.language),
   );
-  return useQuery(['fetch-regions', id],
+  return useQuery(['fetch-regions', id, current],
     () => fetchRegions(id, { locale: current })
       .then(({ data }) => data.filter((d) => d.geometry !== null)), {
     // keepPreviousData: true

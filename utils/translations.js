@@ -4,7 +4,7 @@ export const languages = [{
 },
 {
   name: 'Chinese',
-  code: 'zh_CN',
+  code: 'cn',
 }];
 
 export const resources = {
@@ -60,7 +60,7 @@ export const resources = {
       notFoundMessage: 'Either something went wrong or the page doesn’t exist anymore.',
     },
   },
-  zh_CN: {
+  cn: {
     translation: {
       aboutInfo: '关于本站信息',
       change: '变化指示器',

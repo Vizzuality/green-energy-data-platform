@@ -5,7 +5,7 @@ type LanguageProps = {
 };
 
 const initialState = {
-  current: 'cn',
+  current: 'en',
 } as LanguageProps;
 
 export const languageSlice = createSlice({

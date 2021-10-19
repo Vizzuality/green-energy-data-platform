@@ -164,7 +164,7 @@ export const getServerSideProps = async ({ query }) => {
   const queryClient = new QueryClient();
   // prefetch indicator
   await queryClient.prefetchQuery(
-    `indicator-${indicatorSlug}`,
+    ['indicator', indicatorSlug, current],
     () => fetchIndicator(groupSlug, subgroupSlug, indicatorSlug, { locale: current }),
   );
 

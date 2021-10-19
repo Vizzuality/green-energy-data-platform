@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppProps } from 'next/app';
 import { QueryClientProvider, QueryClient } from 'react-query';
-import { Provider as ReduxProvider, useDispatch } from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
 import { Hydrate } from 'react-query/hydration';
 import { Provider } from 'next-auth/client';
 
@@ -9,8 +9,6 @@ import { Provider } from 'next-auth/client';
 import { I18nextProvider, Translation } from 'react-i18next';
 import i18n from 'i18next';
 import { initializeLanguage } from 'utils';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import { setLanguage } from 'store/slices/language';
 
 import makeStore from 'store/store';
 
@@ -23,7 +21,7 @@ initializeLanguage();
 
 const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => {
   const queryClient = new QueryClient();
-  const { language } = i18n.use(LanguageDetector);
+
   return (
     <>
       <ReduxProvider store={makeStore}>

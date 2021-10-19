@@ -12,8 +12,8 @@ export const useGroups = (queryConfig = {}) => {
   } = useSelector(
     (state: RootState) => (state.language),
   );
-  return useQuery('fetch-groups',
-    () => fetchGroups({ locale: current }).then(({ data }) => data.filter((d) => d.id !== '9c0e0f67-d5d3-44ff-b663-cb54135fbe19')), {
+  return useQuery(['fetch-groups', current],
+    () => fetchGroups('', { locale: current }).then(({ data }) => data.filter((d) => d.id !== '9c0e0f67-d5d3-44ff-b663-cb54135fbe19')), { // currentlty hiding model intercomparison
     // keepPreviousData: true
       ...queryConfig,
     });
@@ -26,7 +26,7 @@ export const useGroup = (id: string, queryConfig = {}) => {
     (state: RootState) => (state.language),
   );
 
-  return useQuery(['fetch-group', id],
+  return useQuery(['fetch-group', id, current],
     () => fetchGroup(id, { locale: current })
       .then((data) => data),
     {
