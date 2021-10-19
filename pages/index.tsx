@@ -46,11 +46,14 @@ const HomePage: FC = () => {
       </div>
       {isLoading
         ? <LoadingSpinner />
-        : groups?.map((group, index) => (
-          <div key={group.id} className="container m-auto pb-28 lg:px-32 md:px-24 sm:px-16 px-8">
-            <GroupCard group={group} className={cx('flex justify-around', { 'flex-row-reverse': index % 2 !== 0 })} />
-          </div>
-        ))}
+        : groups?.map((group, index) => {
+          const textPosition = index % 2 !== 0 ? 'left' : 'right';
+          return (
+            <div key={group.id} className="container m-auto pb-28 lg:px-32 md:px-24 sm:px-16 px-8">
+              <GroupCard textPosition={textPosition} group={group} className={cx('flex justify-between', { 'flex-row-reverse': textPosition === 'left' })} />
+            </div>
+          );
+        })}
 
       <section className="flex pb-23">
         <PreFooter />

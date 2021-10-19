@@ -45,6 +45,7 @@
     "file-saver": "^2.0.5",
     "fuse.js": "^6.4.6",
     "i18next": "^20.4.0",
+    "i18next-browser-languagedetector": "^6.1.2",
     "layer-manager": "3.0.8",
     "lodash": "^4.17.20",
     "luma.gl": "7.3.2",

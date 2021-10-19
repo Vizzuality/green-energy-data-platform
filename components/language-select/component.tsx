@@ -2,16 +2,22 @@ import React from 'react';
 import { useSelect } from 'downshift';
 import cx from 'classnames';
 
+import { useDispatch } from 'react-redux';
+
 // language utils
 import i18n from 'i18next';
 import { languages } from 'utils/translations';
+import { setLanguage } from 'store/slices/language';
 
 // components
 import Icon from 'components/icon';
 
 const LanguageSelect = () => {
+  const dispatch = useDispatch();
+
   const onSelectedItemChange = (item) => {
     const { selectedItem: { code } } = item;
+    dispatch(setLanguage(code));
     i18n.changeLanguage(code);
   };
 

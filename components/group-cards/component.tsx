@@ -18,11 +18,13 @@ interface GroupProps {
 interface GroupCardProps {
   group: GroupProps,
   className?: string,
+  textPosition: string,
 }
 
 const GroupCard: FC<GroupCardProps> = ({
   group,
   className,
+  textPosition,
 }: GroupCardProps) => {
   const {
     slug,
@@ -45,9 +47,16 @@ const GroupCard: FC<GroupCardProps> = ({
           <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="py-3 px-6 text-sm text-white rounded-full bg-gradient-color1">{i18next.t('discover')}</a>
         </Link>
       </div>
-      <img src={headerImage} alt={slug} className="rounded-4xl bg-shadow max-w-md my-16" />
+      <img
+        src={headerImage || `/images/landing/${slug}.png`}
+        alt={slug}
+        className={cx('rounded-4xl max-w-sm my-16',
+          {
+            'shadow-md-left': textPosition === 'left',
+            'shadow-md-right': textPosition === 'right',
+          })}
+      />
     </div>
-
   );
 };
 
