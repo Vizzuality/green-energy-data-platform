@@ -7,7 +7,7 @@ import {
   sortedUniq,
 } from 'lodash';
 
-//import { scaleLinear } from 'd3-scale';
+import { scaleLinear } from 'd3-scale';
 
 import i18n from 'i18next';
 
@@ -242,6 +242,9 @@ export const getGroupedValues = (
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
 
+    const scale = scaleLinear([minValue, maxValue], ['#C9E6E8', '#1B5183']);
+    const width = scale(mapValues);
+    console.log(dataWithGeometries, width);
     if (groupSlug !== 'coal-power-plants') {
       data = {
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
@@ -258,6 +261,15 @@ export const getGroupedValues = (
                 properties: cat,
               })),
             },
+          },
+          legendConfig: {
+            type: 'basic',
+            items: [
+              {
+                name: 'Tree cover gain',
+                color: '#6D6DE5',
+              },
+            ],
           },
           render: {
             layers: [
@@ -341,6 +353,9 @@ export const getGroupedValues = (
                 },
               },
             ],
+          },
+          legendConfig: {
+
           },
         }],
       };
