@@ -51,7 +51,6 @@ const Search: FC<SearchProps> = ({
   const searchResults = useSearch(items, searchValue);
   const results = searchValue === '' ? items : searchResults;
   const noResults = !results?.length;
-
   return (
     <div className={cx('flex h-full relative', className,
       {
@@ -74,9 +73,9 @@ const Search: FC<SearchProps> = ({
           <input
             ref={inputRef}
             type="search"
-            className="search-input bg-transparent ml-6 w-56"
+            className="search-input bg-transparent ml-6 w-56 flex-1"
             placeholder="Search data indicator..."
-            value={searchValue || ''}
+            value={searchValue}
             onChange={updateSearch}
           />
           {searchValue && (
@@ -98,7 +97,11 @@ const Search: FC<SearchProps> = ({
       </button>
       {noResults && isOpen && searchValue.length > 1
           && (
-            <NoResults />
+            <NoResults className={cx({
+              'top-23 border-t px-10 box-border space-y-1 w-full rounded-b-2xl': !isHeader,
+              'top-8 box-border rounded-2xl': isHeader,
+            })}
+            />
           )}
       {isOpen && !noResults && (
         <Menu items={items} isHeader={isHeader} />
