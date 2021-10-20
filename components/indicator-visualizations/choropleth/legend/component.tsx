@@ -1,73 +1,64 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
+
 import cx from 'classnames';
 
-import Icon from 'components/icon';
+import { useId } from '@react-aria/utils';
 
-import { useColors } from 'hooks/utils';
+import SortableList from './sortable/list';
 
 interface LegendProps {
-  className?: string,
-  categories: string[]
+  className?: string;
+  children: React.ReactNode;
+  maxHeight?: string | number;
+  onChangeOrder: (id: string[]) => void;
 }
 
-const Legend: FC<LegendProps> = ({
-  className,
-  categories,
+export const Legend: FC<LegendProps> = ({
+  children,
+  className = '',
+  maxHeight,
+  onChangeOrder,
 }: LegendProps) => {
-  const [isCollapse, toggleCollapse] = useState(true);
-  const [visibility, setVisibility] = useState(true);
+  const [active, setActive] = useState(true);
 
-  const handleClick = () => {
-    toggleCollapse(!isCollapse);
-  };
+  const id = useId();
 
-  const handleVisibility = () => {
-    setVisibility(!visibility);
-  };
-
-  const colors = useColors(categories.length);
+  const onToggleActive = useCallback(() => {
+    setActive(!active);
+  }, [active]);
 
   return (
-    <div className={cx('absolute text-left bottom-2 left-2 w-3/6 bg-gray1 rounded-3xl text-sm text-white',
-      {
-        'divide-y divide-white divide-opacity-30': isCollapse,
+    <div
+      className={cx({
+        'absolute text-left bottom-2 left-2 w-3/6 bg-gray1 rounded-3xl text-sm text-white flex flex-col flex-grow': true,
         [className]: !!className,
       })}
     >
-
       <button
-        aria-label="expand/collapse"
         type="button"
-        onClick={handleClick}
-        className="text-left py-1.5 px-4 relative w-full focus:outline-none"
+        aria-expanded={active}
+        aria-controls={id}
+        className="relative flex items-center w-full px-5 py-3 space-x-2 text-xs text-white uppercase font-heading"
+        onClick={onToggleActive}
       >
-        Legend
-        <Icon
-          ariaLabel={isCollapse ? 'expand legend' : 'collapse legend'}
-          name="triangle_border"
-          className={cx(
-            'absolute right-5 top-1/2 transform -translate-y-1/2',
-            { 'transform rotate-180': isCollapse },
-          )}
-        />
+        <span>Legend</span>
+
       </button>
-      <div className={cx('py-1.5 px-4', { hidden: isCollapse })}>
-        <div className="flex justify-between py-2">
-          <p className="font-bold">Title</p>
-          <div className="flex">
-            <Icon ariaLabel="view layer" name={visibility ? 'view' : 'hide'} className="mr-3.75 text-white" onClick={handleVisibility} />
-            <Icon ariaLabel="layer opacity" name="opacity" className="text-white" />
+
+      {active && (
+        <div
+          className="relative flex flex-col flex-grow overflow-hidden rounded-3xl"
+          style={{
+            maxHeight,
+          }}
+        >
+          <div className="absolute top-0 left-0 z-10 w-full h-4 pointer-events-none bg-gradient-to-b from-gray1 via-gray1" />
+          <div className="overflow-x-hidden overflow-y-auto">
+            <SortableList onChangeOrder={onChangeOrder}>{children}</SortableList>
           </div>
+          <div className="absolute bottom-0 left-0 z-10 w-full h-3 pointer-events-none bg-gradient-to-t from-gray1 via-gray1" />
         </div>
-        <ul>
-          {categories.map((category, index) => (
-            <li key={category} className="flex items-center pb-3">
-              <span className="w-3.75 h-3.75 rounded-full mr-3" style={{ backgroundColor: colors[index] }} />
-              <span>{category}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      )}
     </div>
   );
 };

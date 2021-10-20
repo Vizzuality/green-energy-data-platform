@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
 export interface LegendItemProps {
-  id: number;
+  id?: number;
   name?: string;
   description?: string;
   icon?: ReactNode;

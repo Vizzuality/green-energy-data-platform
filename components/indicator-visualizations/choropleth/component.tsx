@@ -18,10 +18,10 @@ import { withAuthentication } from 'hoc/auth';
 // Controls
 import ZoomControl from './zoom';
 
-import Legend from './legend2';
-import LegendItem from './legend2/item';
-import LegendTypeChoropleth from './legend2/choropleth';
-import LegendTypeGradient from './legend2/gradient';
+import Legend from './legend';
+import LegendItem from './legend/item';
+import LegendTypeChoropleth from './legend/choropleth';
+import LegendTypeGradient from './legend/gradient';
 
 // Map
 import { DEFAULT_VIEWPORT } from './constants';
