@@ -52,7 +52,7 @@ export interface Record {
 }
 
 interface CategoryFilters {
-  [key: string]: string | number,
+  [key: string]: string,
 }
 
 export interface DataIdProps {
@@ -63,7 +63,7 @@ export interface DataIdProps {
 
 export interface IndicatorProps {
   categories: [],
-  category_filters: CategoryFilters,
+  category_filters: CategoryFilters | string[],
   default_visualization: string,
   description: string;
   end_date: number,

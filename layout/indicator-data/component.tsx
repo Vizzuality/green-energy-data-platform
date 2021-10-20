@@ -44,8 +44,6 @@ import {
   getDefaultUnitFromRecords,
   getRegionsFromRecords,
   getDefaultRegionFromRecords,
-  getCategoriesFromRecords,
-  getSubcategoriesFromRecords,
 } from 'utils';
 
 import { RootState } from 'store/store';
@@ -176,9 +174,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const {
+    name,
+    categories: categoriesIndicator,
+    category_filters: categoryFilters,
+    visualizationTypes: visualizationTypesIndicator,
+    description,
+  } = indicatorData;
+
+  const categories = categoriesIndicator.map((c) => (c === null ? 'Total' : c));
+
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType),
-    [records, filters, visualizationType],
+    () => filterRecords(records, filters, visualizationType, categories),
+    [records, filters, visualizationType, categories],
   );
 
   const defaultYear = useMemo(
@@ -203,12 +211,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   );
 
   const defaultCategory = 'category_1';
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
-  const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
-  );
-
+  const subcategories = categoryFilters[category?.value] || [];
   const colors = useColors(categories.length);
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
@@ -227,13 +231,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     } = indicatorData;
 
     setVisualizationType(defaultVisualization);
-  }, [indicatorData, widgetData, category]);
-
-  const {
-    name,
-    visualizationTypes: visualizationTypesIndicator,
-    description,
-  } = indicatorData;
+  }, [indicatorData, category]);
 
   useEffect(() => {
     dispatch(setFilters({
@@ -527,7 +525,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               </div>
             </section>
           </div>
-
           <div className="flex">
             <section className="flex flex-col justify-between ml-8">
               {categories.length > 0 && (
@@ -540,7 +537,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               )}
               {categories.length > 0 && visualizationType !== 'choropleth' && (
                 <Legend
-                  categories={category.label === 'category_1' ? categories : subcategories}
+                  categories={category?.label === 'category_1' ? categories : subcategories}
                   className="max-h-72 overflow-y-auto mb-4"
                 />
               )}

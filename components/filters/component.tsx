@@ -67,7 +67,7 @@ const Filters: FC<FiltersProps> = ({
               name={category}
               type="button"
               className={cx('py-3 pl-6',
-                { 'cursor-auto': !hasSubcategories })}
+                { 'cursor-none': !hasSubcategories })}
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories}
             >

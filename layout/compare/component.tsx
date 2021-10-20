@@ -34,8 +34,8 @@ import {
   getDefaultUnitFromRecords,
   getRegionsFromRecords,
   getDefaultRegionFromRecords,
-  getCategoriesFromRecords,
-  getSubcategoriesFromRecords,
+  // getCategoriesFromRecords,
+  // getSubcategoriesFromRecords,
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
@@ -222,9 +222,21 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const {
+    name,
+    categories: categoriesIndicator,
+    category_filters: categoryFilters,
+    visualizationTypes,
+    description,
+  }: IndicatorProps = indicatorData;
+
+  const categories = categoriesIndicator.map((c) => (c === null ? 'Total' : c));
+
+  const subcategories = categoryFilters[category?.value] as string[] || [];
+
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType),
-    [records, filters, visualizationType],
+    () => filterRecords(records, filters, visualizationType, categories),
+    [records, filters, visualizationType, categories],
   );
 
   const defaultYear = useMemo(
@@ -249,13 +261,12 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   );
   const defaultCategory = 'category_1';
 
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  // const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
   const colors = useColors(categories.length);
-  const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
-  );
-
+  // const subcategories = useMemo(
+  //   () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
+  // );
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[visualizationType],
@@ -276,12 +287,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
     setVisualizationType(defaultVisualization);
   }, [indicatorData]);
-
-  const {
-    visualizationTypes,
-    name,
-    description,
-  }: IndicatorProps = indicatorData;
 
   const { data: group } = useGroup(groupSlug, {
     refetchOnWindowFocus: false,

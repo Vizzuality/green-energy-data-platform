@@ -42,14 +42,16 @@ export const getCategoriesFromRecords = (
   records: Record[],
 ) => compact(uniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1)))).sort();
 
-export const getSubcategoriesFromRecords = (
-  records: Record[],
-) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2)))).sort();
+// export const getSubcategoriesFromRecords = (
+//   categories: {},
+//   value: StringChain,
+// ) => compact(uniq(categories[value]))
 
 export const filterRecords = (
   records: Record[],
   filters: IndicatorFilters,
   visualizationType: string,
+  categories: unknown[],
 ) => {
   const {
     year,
@@ -57,7 +59,6 @@ export const filterRecords = (
     unit,
   } = filters;
 
-  const categories = getCategoriesFromRecords(records);
   const recordsByFilters = records.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
@@ -66,14 +67,14 @@ export const filterRecords = (
         (d.region.name === region || (d.region.name === null)
         )
         && d.unit.name === unit
-        && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
+        && (((categories.length > 1) && d.category_1 !== 'Total')
         || categories.length === 1)) return true;
     }
 
     if (visualizationType === 'pie') {
       if ((d.region.name === region || (d.region.name === null))
         && d.unit.name === unit && year === d.year
-        && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
+        && (((categories.length > 1) && d.category_1 !== 'Total')
         || categories.length === 1)) return true;
     }
 
@@ -83,7 +84,7 @@ export const filterRecords = (
 
     if (visualizationType === 'bar') {
       if (year === d.year && d.unit.name === unit
-      && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
+      && (((categories.length > 1) && d.category_1 !== 'Total')
         || categories.length === 1) && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a') return true;
     }
 
