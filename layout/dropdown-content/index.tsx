@@ -15,7 +15,7 @@ const DropdownContent: FC<DrodownProps> = ({ list, id, onClick }: DrodownProps) 
       >
         <button
           type="button"
-          className="flex items-center py-2 w-full last:border-b-0 px-5"
+          className="flex items-center py-2 w-full last:border-b-0 px-5 whitespace-nowrap"
           onClick={() => onClick(id, list_element)}
         >
           {list_element}

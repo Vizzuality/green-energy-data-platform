@@ -1,6 +1,9 @@
 import { useQuery } from 'react-query';
 import { useMemo } from 'react';
 
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
+
 import {
   IndicatorProps,
   Record,
@@ -14,8 +17,13 @@ import {
 } from 'services/indicators';
 
 export function useIndicators(group_id, subgroup_id) {
-  const query = useQuery('fetch-indicators',
-    () => fetchIndicators(group_id, subgroup_id));
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+  const query = useQuery(['fetch-indicators', current],
+    () => fetchIndicators(group_id, subgroup_id, { locale: current }));
 
   const {
     data, status, error, isSuccess, isLoading,
@@ -39,8 +47,13 @@ export function useIndicator(
   indicatorId,
   queryOptions = {},
 ) {
-  return useQuery<IndicatorProps, Error>(`indicator-${indicatorId}`,
-    () => fetchIndicator(groupId, subgroupId, indicatorId), {
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+  return useQuery<IndicatorProps, Error>(['indicator', indicatorId, current],
+    () => fetchIndicator(groupId, subgroupId, indicatorId, { locale: current }), {
       placeholderData: {
         records: [],
         categories: [],
@@ -74,8 +87,14 @@ export function useIndicatorRecords(
   indicatorId,
   queryOptions = {},
 ) {
-  return useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId],
-    () => fetchIndicatorRecords(groupId, subgroupId, indicatorId), {
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+
+  return useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
+    () => fetchIndicatorRecords(groupId, subgroupId, indicatorId, { locale: current }), {
       placeholderData: [],
       ...queryOptions,
     });
