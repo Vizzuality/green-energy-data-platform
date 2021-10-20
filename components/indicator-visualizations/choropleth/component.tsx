@@ -2,6 +2,7 @@ import React, {
   FC,
   useState,
   useCallback,
+  useMemo,
 } from 'react';
 
 import { format } from 'd3-format';
@@ -11,13 +12,17 @@ import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
 import { Popup } from 'react-map-gl';
 
-// authentication
+// authentication,
 import { withAuthentication } from 'hoc/auth';
 
 // Controls
 import ZoomControl from './zoom';
 
-import Legend from './legend';
+import Legend2 from './legend2';
+import LegendItem from './legend2/item';
+import ITEMS from './legend2/mock';
+
+import LegendTypeChoropleth from './legend2/choropleth';
 
 // Map
 import { DEFAULT_VIEWPORT } from './constants';
@@ -29,6 +34,13 @@ interface MapLayersProps {
   // TO DO
   id: string,
 }
+
+// interface LegendProps {
+//   className?: string;
+//   children: React.ReactNode;
+//   maxHeight: string | number;
+//   onChangeOrder: (id: string[]) => void;
+// }
 
 interface MapContainerProps {
   layers: MapLayersProps[],
@@ -62,6 +74,19 @@ const MapContainer: FC<MapContainerProps> = (
     },
     [viewport],
   );
+
+  const [sortArray, setSortArray] = useState([]);
+
+  // Sorted
+  const sortedItems = useMemo(() => {
+    const itms = ITEMS.sort((a, b) => sortArray.indexOf(a.id) - sortArray.indexOf(b.id));
+    return itms;
+  }, [sortArray]);
+
+  // Callbacks
+  const onChangeOrder = useCallback((ids) => {
+    setSortArray(ids);
+  }, []);
 
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
@@ -113,7 +138,23 @@ const MapContainer: FC<MapContainerProps> = (
           onZoomChange={handleZoomChange}
         />
       )}
-      {hasIteraction && <Legend categories={categories} />}
+      {hasIteraction
+      && (
+      <Legend2 onChangeOrder={onChangeOrder}>
+        {sortedItems.map((i) => {
+          const { type, items } = i;
+          return (
+            <LegendItem key={i.id} {...i}>
+
+              {type === 'choropleth' && (
+              <LegendTypeChoropleth className="text-sm text-gray-300" items={items} />
+              )}
+
+            </LegendItem>
+          );
+        })}
+      </Legend2>
+      )}
     </div>
   );
 };

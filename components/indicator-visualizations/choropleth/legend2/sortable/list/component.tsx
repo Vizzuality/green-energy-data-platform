@@ -1,4 +1,6 @@
-import { Children, cloneElement, FC, isValidElement, useCallback, useMemo, useState } from 'react';
+import React, {
+  Children, cloneElement, FC, isValidElement, useCallback, useMemo, useState,
+} from 'react';
 
 import cx from 'classnames';
 
@@ -51,24 +53,23 @@ export const SortableList: FC<SortableListProps> = ({
   }, [children, activeId]);
 
   const itemsIds = useMemo(
-    () =>
-      Children.map(children, (Child) => {
-        if (isValidElement(Child)) {
-          const { props } = Child;
-          const { id } = props;
-          return id;
-        }
+    () => Children.map(children, (Child) => {
+      if (isValidElement(Child)) {
+        const { props } = Child;
+        const { id } = props;
+        return id;
+      }
 
-        return null;
-      }),
-    [children]
+      return null;
+    }),
+    [children],
   );
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragStart = useCallback((event) => {
@@ -89,7 +90,7 @@ export const SortableList: FC<SortableListProps> = ({
         if (onChangeOrder) onChangeOrder(arrayMove(itemsIds, oldIndex, newIndex));
       }
     },
-    [itemsIds, onChangeOrder]
+    [itemsIds, onChangeOrder],
   );
 
   return (

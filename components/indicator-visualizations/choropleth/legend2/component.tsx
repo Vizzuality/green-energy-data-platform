@@ -4,15 +4,21 @@ import cx from 'classnames';
 
 import { useId } from '@react-aria/utils';
 
-import Icon from 'components/icon';
-
-import LEGEND_SVG from 'svgs/map/legend.svg?sprite';
-import ARROW_DOWN_SVG from 'svgs/ui/arrow-down.svg?sprite';
-
 import SortableList from './sortable/list';
-import type { LegendProps } from './types';
 
-export const Legend: FC<LegendProps> = ({
+interface LegendProps {
+  className?: string;
+  children: React.ReactNode;
+  maxHeight: string | number;
+  onChangeOrder: (id: string[]) => void;
+}
+
+// type LegendTypeItem = {
+//   value: string;
+//   color: string;
+// };
+
+export const Legend2: FC<LegendProps> = ({
   children,
   className = '',
   maxHeight,
@@ -29,7 +35,7 @@ export const Legend: FC<LegendProps> = ({
   return (
     <div
       className={cx({
-        'bg-black rounded-3xl flex flex-col flex-grow': true,
+        'absolute text-left bottom-2 left-2 w-3/6 bg-gray1 rounded-3xl text-sm text-white flex flex-col flex-grow': true,
         [className]: !!className,
       })}
     >
@@ -40,17 +46,8 @@ export const Legend: FC<LegendProps> = ({
         className="relative flex items-center w-full px-5 py-3 space-x-2 text-xs text-white uppercase font-heading"
         onClick={onToggleActive}
       >
-        <Icon icon={LEGEND_SVG} className="w-4 h-4 text-gray-300" />
         <span>Legend</span>
 
-        <Icon
-          icon={ARROW_DOWN_SVG}
-          className={cx({
-            'absolute w-3 h-3 transition-transform transform -translate-y-1/2 text-blue-500 top-1/2 right-5':
-              true,
-            'rotate-180': active,
-          })}
-        />
       </button>
 
       {active && (
@@ -60,15 +57,15 @@ export const Legend: FC<LegendProps> = ({
             maxHeight,
           }}
         >
-          <div className="absolute top-0 left-0 z-10 w-full h-4 pointer-events-none bg-gradient-to-b from-black via-black" />
+          <div className="absolute top-0 left-0 z-10 w-full h-4 pointer-events-none bg-gradient-to-b from-gray1 via-gray1" />
           <div className="overflow-x-hidden overflow-y-auto">
             <SortableList onChangeOrder={onChangeOrder}>{children}</SortableList>
           </div>
-          <div className="absolute bottom-0 left-0 z-10 w-full h-3 pointer-events-none bg-gradient-to-t from-black via-black" />
+          <div className="absolute bottom-0 left-0 z-10 w-full h-3 pointer-events-none bg-gradient-to-t from-gray1 via-gray1" />
         </div>
       )}
     </div>
   );
 };
 
-export default Legend;
+export default Legend2;

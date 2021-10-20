@@ -7,7 +7,8 @@ import {
   sortedUniq,
 } from 'lodash';
 
-import { scaleLinear } from 'd3-scale';
+import chroma from 'chroma-js';
+import * as d3 from 'd3-scale';
 
 import i18n from 'i18next';
 
@@ -242,9 +243,21 @@ export const getGroupedValues = (
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
 
-    const scale = scaleLinear([minValue, maxValue], ['#C9E6E8', '#1B5183']);
-    const width = scale(mapValues);
-    console.log(dataWithGeometries, width);
+    const colors = chroma.scale(['#C9E6E8', '#1B5183']).colors(8);
+    const value = d3.scaleLinear([minValue, maxValue])
+    const color = d3.scaleLinear([minValue, maxValue], ['#C9E6E8', '#1B5183'])
+    const range = maxValue / 8;
+    console.log({mapCategorySelected, colors, hola})
+
+
+    const ITEMS = dataWithGeometries.map(d => ({
+      color: color(d[mapCategorySelected]),
+      value: value(d[mapCategorySelected]),
+    }))
+    console.log(ITEMS)
+
+    // const scale = scaleLinear([minValue, maxValue], ['#C9E6E8', '#1B5183']);
+
     if (groupSlug !== 'coal-power-plants') {
       data = {
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
@@ -463,6 +476,9 @@ export const getGroupedValuesRelatedIndicators = (
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
+    const colors = chroma.scale(['#C9E6E8', '#1B5183']).colors(8);
+    const hola = d3.scaleLinear([minValue, maxValue], ['#C9E6E8', '#1B5183'])
+    console.log({categorySelected, colors, hola})
 
     data = {
       visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
