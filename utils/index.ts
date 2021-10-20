@@ -8,7 +8,6 @@ import {
 } from 'lodash';
 
 import chroma from 'chroma-js';
-import * as d3 from 'd3-scale';
 
 import i18n from 'i18next';
 
@@ -242,21 +241,22 @@ export const getGroupedValues = (
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
+    const colors = chroma.scale(['#e2714b', '#eee695']).colors(8).reverse();
 
-    const colors = chroma.scale(['#C9E6E8', '#1B5183']).colors(8);
-    const value = d3.scaleLinear([minValue, maxValue])
-    const color = d3.scaleLinear([minValue, maxValue], ['#C9E6E8', '#1B5183'])
-    const range = maxValue / 8;
-    console.log({mapCategorySelected, colors, hola})
+    const ITEMS = colors.map((d, index) => {
+      let value;
+      if (index === 0) {
+        value = Math.floor(minValue);
+      } else if (index === colors.length - 1) {
+        value = Math.ceil(maxValue);
+      } else value = null;
 
-
-    const ITEMS = dataWithGeometries.map(d => ({
-      color: color(d[mapCategorySelected]),
-      value: value(d[mapCategorySelected]),
-    }))
-    console.log(ITEMS)
-
-    // const scale = scaleLinear([minValue, maxValue], ['#C9E6E8', '#1B5183']);
+      return ({
+        id: index,
+        color: d,
+        value,
+      });
+    });
 
     if (groupSlug !== 'coal-power-plants') {
       data = {
@@ -275,15 +275,47 @@ export const getGroupedValues = (
               })),
             },
           },
-          legendConfig: {
-            type: 'basic',
+          legendConfig: [{
+            id: 'gradient-example-1',
+            name: 'Gradient example 1',
+            icon: null,
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            type: 'choropleth',
             items: [
               {
-                name: 'Tree cover gain',
-                color: '#6D6DE5',
+                color: '#c9e6e8',
+                value: Math.floor(minValue),
+              },
+              {
+                color: '#b0d1da',
+                value: null,
+              },
+              {
+                color: '#97bbcb',
+                value: null,
+              },
+              {
+                color: '#7ea6bd',
+                value: null,
+              },
+              {
+                color: '#6691ae',
+                value: null,
+              },
+              {
+                color: '#4d7ca0',
+                value: null,
+              },
+              {
+                color: '#346691',
+                value: null,
+              },
+              {
+                color: '#1b5183',
+                value: Math.ceil(maxValue),
               },
             ],
-          },
+          }],
           render: {
             layers: [
               {
@@ -334,7 +366,7 @@ export const getGroupedValues = (
                 paint: {
                   // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
-                  'circle-stroke-opacity': 0.7,
+                  // 'circle-stroke-opacity': 0.7,
                   'circle-stroke-color': [
                     'interpolate',
                     ['linear'],
@@ -367,9 +399,14 @@ export const getGroupedValues = (
               },
             ],
           },
-          legendConfig: {
-
-          },
+          legendConfig: [{
+            id: 'gradient-example-1',
+            name: 'Gradient example 1',
+            icon: null,
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            type: 'gradient',
+            items: ITEMS,
+          }],
         }],
       };
     }
@@ -476,9 +513,6 @@ export const getGroupedValuesRelatedIndicators = (
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
-    const colors = chroma.scale(['#C9E6E8', '#1B5183']).colors(8);
-    const hola = d3.scaleLinear([minValue, maxValue], ['#C9E6E8', '#1B5183'])
-    console.log({categorySelected, colors, hola})
 
     data = {
       visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
@@ -515,9 +549,6 @@ export const getGroupedValuesRelatedIndicators = (
               },
             },
           ],
-        },
-        legendConfig: {
-
         },
       }],
     };

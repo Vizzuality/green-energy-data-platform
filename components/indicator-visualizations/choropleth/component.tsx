@@ -18,11 +18,10 @@ import { withAuthentication } from 'hoc/auth';
 // Controls
 import ZoomControl from './zoom';
 
-import Legend2 from './legend2';
+import Legend from './legend2';
 import LegendItem from './legend2/item';
-import ITEMS from './legend2/mock';
-
 import LegendTypeChoropleth from './legend2/choropleth';
+import LegendTypeGradient from './legend2/gradient';
 
 // Map
 import { DEFAULT_VIEWPORT } from './constants';
@@ -30,17 +29,23 @@ import { DEFAULT_VIEWPORT } from './constants';
 // components
 import Map from './map';
 
-interface MapLayersProps {
-  // TO DO
-  id: string,
-}
+type ItemProps = {
+  value: string,
+  color: string
+};
 
-// interface LegendProps {
-//   className?: string;
-//   children: React.ReactNode;
-//   maxHeight: string | number;
-//   onChangeOrder: (id: string[]) => void;
-// }
+type LegendConfigProps = {
+  id?: number,
+  type: string,
+  items: ItemProps[]
+};
+
+interface MapLayersProps {
+  id: string,
+  type: string,
+  name: string,
+  legendConfig: LegendConfigProps[]
+}
 
 interface MapContainerProps {
   layers: MapLayersProps[],
@@ -55,7 +60,6 @@ const MapContainer: FC<MapContainerProps> = (
     layers,
     hasIteraction = true,
     style = {},
-    categories = [],
   }: MapContainerProps,
 ) => {
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
@@ -79,9 +83,11 @@ const MapContainer: FC<MapContainerProps> = (
 
   // Sorted
   const sortedItems = useMemo(() => {
-    const itms = ITEMS.sort((a, b) => sortArray.indexOf(a.id) - sortArray.indexOf(b.id));
+    const itms = layers[0].legendConfig.sort(
+      (a, b) => sortArray.indexOf(a.id) - sortArray.indexOf(b.id),
+    );
     return itms;
-  }, [sortArray]);
+  }, [sortArray, layers]);
 
   // Callbacks
   const onChangeOrder = useCallback((ids) => {
@@ -140,7 +146,7 @@ const MapContainer: FC<MapContainerProps> = (
       )}
       {hasIteraction
       && (
-      <Legend2 onChangeOrder={onChangeOrder}>
+      <Legend onChangeOrder={onChangeOrder}>
         {sortedItems.map((i) => {
           const { type, items } = i;
           return (
@@ -150,10 +156,14 @@ const MapContainer: FC<MapContainerProps> = (
               <LegendTypeChoropleth className="text-sm text-gray-300" items={items} />
               )}
 
+              {type === 'gradient' && (
+              <LegendTypeGradient className="text-sm text-gray-300" items={items} />
+              )}
+
             </LegendItem>
           );
         })}
-      </Legend2>
+      </Legend>
       )}
     </div>
   );

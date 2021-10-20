@@ -9,14 +9,9 @@ import SortableList from './sortable/list';
 interface LegendProps {
   className?: string;
   children: React.ReactNode;
-  maxHeight: string | number;
+  maxHeight?: string | number;
   onChangeOrder: (id: string[]) => void;
 }
-
-// type LegendTypeItem = {
-//   value: string;
-//   color: string;
-// };
 
 export const Legend2: FC<LegendProps> = ({
   children,
