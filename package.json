@@ -39,7 +39,7 @@
     "classnames": "^2.2.6",
     "d3-ease": "^2.0.0",
     "d3-format": "2.0.0",
-    "d3-scale": "^4.0.2",
+    "d3-scale": "3.3.0",
     "deck.gl": "7.3.6",
     "downshift": "^6.1.0",
     "file-saver": "^2.0.5",
