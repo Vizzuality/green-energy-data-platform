@@ -4,8 +4,8 @@ import React, {
 import cx from 'classnames';
 import i18next from 'i18next';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/store';
+import { useDispatch } from 'react-redux';
+// import { RootState } from 'store/store';
 
 // components
 import Icon from 'components/icon';
@@ -27,11 +27,11 @@ const Filters: FC<FiltersProps> = ({
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
-  const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
+  // const {
+  //   current,
+  // } = useSelector(
+  //   (state: RootState) => (state.language),
+  // );
 
   // useEffect(() => {
   //   if (visualizationType === 'choropleth') {
@@ -49,10 +49,12 @@ const Filters: FC<FiltersProps> = ({
   // }, [dispatch, onClick, categories, visualizationType, current]);
 
   useEffect(() => {
-    const value = categories[0];
-    setActive(value);
-    dispatch(onClick({ category: { label: 'category_2', value } }));
-  }, [dispatch, onClick, categories]);
+    if (visualizationType === 'choropleth') {
+      const value = categories[0];
+      setActive(value);
+      dispatch(onClick({ category: { label: 'category_2', value } }));
+    }
+  }, [dispatch, onClick, categories, visualizationType]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
