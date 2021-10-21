@@ -76,6 +76,7 @@ export interface IndicatorProps {
   records: Record[],
   group: DataIdProps,
   subgroup: DataIdProps,
+  data_source: string,
 }
 
 // pages

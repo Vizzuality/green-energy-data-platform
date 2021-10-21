@@ -158,6 +158,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       visualizationTypes: [],
       group: null,
       subgroup: null,
+      data_source: null,
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
@@ -233,6 +234,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     name,
     visualizationTypes: visualizationTypesIndicator,
     description,
+    data_source: dataSource,
   } = indicatorData;
 
   useEffect(() => {
@@ -544,7 +546,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   className="max-h-72 overflow-y-auto mb-4"
                 />
               )}
-              <DataSource indicatorSlug={indicatorSlug} />
+              <DataSource dataSource={dataSource} indicatorSlug={indicatorSlug} />
             </section>
           </div>
         </div>

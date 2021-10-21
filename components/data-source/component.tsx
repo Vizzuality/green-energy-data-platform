@@ -9,6 +9,7 @@ interface DataProps {
   className?: string,
   type?: 'vertical' | 'horizontal',
   indicatorSlug: string,
+  dataSource: string,
 }
 
 const downloadLinks = [
@@ -17,14 +18,11 @@ const downloadLinks = [
   { label: 'JSON', format: 'json' },
 ];
 
-const dataSourceLinks = [
-  { label: 'Data Source', format: '' },
-];
-
 const Card: FC<DataProps> = ({
   className = '',
   type = 'vertical',
   indicatorSlug,
+  dataSource,
 }: DataProps) => {
   const router = useRouter();
   const { subgroup } = router.query;
@@ -47,9 +45,8 @@ const Card: FC<DataProps> = ({
       />
       <Item
         icon="data"
-        name="Data
-      Source"
-        links={dataSourceLinks}
+        name="Data Source"
+        source={dataSource}
         className={cx('p-6',
           { 'justify-center rounded-r-2xl': type === 'horizontal' },
           { 'justify-start rounded-b-2xl': type === 'vertical' })}

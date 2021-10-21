@@ -69,6 +69,7 @@ export function useIndicator(
         visualizationTypes: [],
         group: null,
         subgroup: null,
+        data_source: null,
       },
       ...queryOptions,
     });
