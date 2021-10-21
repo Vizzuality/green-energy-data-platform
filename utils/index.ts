@@ -149,7 +149,7 @@ export const getGroupedValues = (
 
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
-  const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
+  const mapCategorySelected = 'Total';
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
@@ -234,7 +234,7 @@ export const getGroupedValues = (
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
-        [d[label] || 'Total']: d.value,
+        ['Total']: d.value,
       });
     });
 
