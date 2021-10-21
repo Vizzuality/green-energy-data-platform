@@ -176,9 +176,22 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const {
+    name,
+    categories: categoriesIndicator,
+    visualizationTypes: visualizationTypesIndicator,
+    description,
+  } = indicatorData;
+
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType),
-    [records, filters, visualizationType],
+    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
+    [records, filters, visualizationType, categoriesIndicator],
+  );
+  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
+  const colors = useColors(categories.length);
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
 
   const defaultYear = useMemo(
@@ -203,13 +216,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   );
 
   const defaultCategory = 'category_1';
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
-  const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
-  );
-
-  const colors = useColors(categories.length);
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[visualizationType],
@@ -217,8 +224,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   );
   const widgetData = useMemo(
     () => getGroupedValues(
-      groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
-    ), [groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
+    ), [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -227,13 +234,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     } = indicatorData;
 
     setVisualizationType(defaultVisualization);
-  }, [indicatorData, widgetData, category]);
-
-  const {
-    name,
-    visualizationTypes: visualizationTypesIndicator,
-    description,
-  } = indicatorData;
+  }, [indicatorData]);
 
   useEffect(() => {
     dispatch(setFilters({
@@ -273,7 +274,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               interactive
               onClickOutside={() => closeDropdown('indicator')}
               content={(
-                <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full shadow-sm">
                   {subgroup?.indicators?.map(
                     ({ name: groupName, id, slug }) => (
                       <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">
@@ -307,7 +308,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               maxHeight={400}
               onTrigger={() => setSubMenuVisibility({ menuVisibility: !compareMenuVisibility.menuVisibility, id: '' })}
               content={(
-                <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
+                <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm">
                   {groups?.map(({
                     name: groupName, id, subgroups: subgroupsCompare, slug,
                   }) => (
@@ -337,7 +338,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         tabIndex={-1}
                         role="listbox"
                         aria-labelledby="exp_elem"
-                        className={cx({ hidden: id !== compareMenuVisibility.id })}
+                        className={cx('shadow-sm', { hidden: id !== compareMenuVisibility.id })}
                         aria-activedescendant="exp_elem_Pu"
                       >
                         {subgroupsCompare.map(({
@@ -527,11 +528,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               </div>
             </section>
           </div>
-
           <div className="flex">
             <section className="flex flex-col justify-between ml-8">
               {categories.length > 0 && (
               <Filters
+                visualizationType={visualizationType}
                 categories={categories}
                 hasSubcategories={!!subcategories.length}
                 className="overflow-y-auto mb-4"
@@ -540,7 +541,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               )}
               {categories.length > 0 && visualizationType !== 'choropleth' && (
                 <Legend
-                  categories={category.label === 'category_1' ? categories : subcategories}
+                  categories={category?.label === 'category_1' ? categories : subcategories}
                   className="max-h-72 overflow-y-auto mb-4"
                 />
               )}

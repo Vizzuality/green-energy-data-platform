@@ -1,12 +1,17 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, {
+  FC, useState, useEffect, useCallback,
+} from 'react';
 import cx from 'classnames';
 import i18next from 'i18next';
 
+import { useDispatch } from 'react-redux';
+// import { RootState } from 'store/store';
+
 // components
 import Icon from 'components/icon';
-import { useDispatch } from 'react-redux';
 
 interface FiltersProps {
+  visualizationType: string,
   categories: string[]
   hasSubcategories: boolean,
   className?: string,
@@ -14,6 +19,7 @@ interface FiltersProps {
 }
 
 const Filters: FC<FiltersProps> = ({
+  visualizationType,
   categories,
   hasSubcategories,
   className = '',
@@ -21,13 +27,44 @@ const Filters: FC<FiltersProps> = ({
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
+  // const {
+  //   current,
+  // } = useSelector(
+  //   (state: RootState) => (state.language),
+  // );
+
+  // useEffect(() => {
+  //   if (visualizationType === 'choropleth') {
+  //     const hasTotal = categories.includes('Total' || '全部的');
+  //     if (hasTotal) {
+  //       const value = current === 'cn' ? '全部的' : 'Total';
+  //       setActive(value);
+  //       dispatch(onClick({ category: { label: 'category_2', value } }));
+  //     } else {
+  //       const value = categories[0];
+  //       setActive(value);
+  //       dispatch(onClick({ category: { label: 'category_2', value } }));
+  //     }
+  //   }
+  // }, [dispatch, onClick, categories, visualizationType, current]);
+
+  useEffect(() => {
+    if (visualizationType === 'choropleth') {
+      const value = categories[0];
+      setActive(value);
+      dispatch(onClick({ category: { label: 'category_2', value } }));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, onClick, visualizationType]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
     if (direction === 'up' && index > 0) {
+      dispatch(onClick({ category: { label: 'category_2', value: categories[index - 1] } }));
       return setActive(categories[index - 1]);
     }
     if (direction === 'down' && index < categories.length - 1) {
+      dispatch(onClick({ category: { label: 'category_2', value: categories[index + 1] } }));
       return setActive(categories[index + 1]);
     }
     return setActive(categories[index]);
@@ -66,8 +103,8 @@ const Filters: FC<FiltersProps> = ({
             <button
               name={category}
               type="button"
-              className={cx('py-3 pl-6',
-                { 'cursor-auto': !hasSubcategories })}
+              className={cx('py-3 pl-6 flex-1',
+                { 'cursor-none': !hasSubcategories })}
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories}
             >

@@ -7,7 +7,7 @@ import {
   sortedUniq,
 } from 'lodash';
 
-//import { scaleLinear } from 'd3-scale';
+import chroma from 'chroma-js';
 
 import i18n from 'i18next';
 
@@ -50,6 +50,7 @@ export const filterRecords = (
   records: Record[],
   filters: IndicatorFilters,
   visualizationType: string,
+  categories: unknown[],
 ) => {
   const {
     year,
@@ -57,7 +58,6 @@ export const filterRecords = (
     unit,
   } = filters;
 
-  const categories = getCategoriesFromRecords(records);
   const recordsByFilters = records.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
@@ -66,14 +66,14 @@ export const filterRecords = (
         (d.region.name === region || (d.region.name === null)
         )
         && d.unit.name === unit
-        && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
+        && (((categories.length > 1) && d.category_1 !== 'Total')
         || categories.length === 1)) return true;
     }
 
     if (visualizationType === 'pie') {
       if ((d.region.name === region || (d.region.name === null))
         && d.unit.name === unit && year === d.year
-        && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
+        && (((categories.length > 1) && d.category_1 !== 'Total')
         || categories.length === 1)) return true;
     }
 
@@ -82,9 +82,10 @@ export const filterRecords = (
     }
 
     if (visualizationType === 'bar') {
-      if (year === d.year && d.unit.name === unit
-      && (((categories.length > 1) && d.category_1 !== 'Total' && d.category_2 !== 'Total')
-        || categories.length === 1) && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a') return true;
+      if (year === d.year
+        && d.unit.name === unit
+        && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
+        && d.region.name !== 'China') return true;
     }
 
     return false;
@@ -103,7 +104,7 @@ export const filterRelatedIndicators = (
   const categories = getCategoriesFromRecords(records).filter((c) => c !== 'Total');
 
   const results = records.filter((r) => {
-    if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
+    if (categories.length > 1) return r.category_1 !== 'Total';
 
     return r;
   });
@@ -111,15 +112,16 @@ export const filterRelatedIndicators = (
   const recordsByFilters = results.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
-      if (d.region.name === region || d.region.name === null) return true;
+      if ((categories.length > 1 && d.category_1 !== 'Total') || categories.length === 1) return true;
     }
 
     if (visualizationType === 'pie') {
-      if (d.region.name === region || d.region.name === null) return true;
+      if ((categories.length > 1 && d.category_1 !== 'Total')
+      || categories.length === 1) return true;
     }
 
     if (visualizationType === 'bar') {
-      if (d.region.name === region || d.region.name === null) return true;
+      if (d.region.name !== 'China') return true;
     }
 
     if (visualizationType === 'choropleth') {
@@ -129,12 +131,13 @@ export const filterRelatedIndicators = (
     if (label !== 'category_2') {
       return true;
     }
-
     return false;
   });
+
   return recordsByFilters;
 };
 export const getGroupedValues = (
+  name: string,
   groupSlug: string | string[],
   categories: string[],
   visualization: string,
@@ -142,11 +145,11 @@ export const getGroupedValues = (
   records: Record[],
   regions: Record[],
 ) => {
-  const { category } = filters;
+  const { category, unit } = filters;
 
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
-  const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
+  const mapCategorySelected = 'Total';
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
@@ -231,7 +234,7 @@ export const getGroupedValues = (
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
-        [d.category_1 || 'Total']: d.value,
+        ['Total']: d.value,
       });
     });
 
@@ -241,6 +244,22 @@ export const getGroupedValues = (
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
+    const colors = chroma.scale(['#e2714b', '#eee695']).colors(8).reverse();
+
+    const ITEMS = colors.map((d, index) => {
+      let value = 0;
+      if (index === 0) {
+        value = Math.floor(minValue);
+      } else if (index === colors.length - 1) {
+        value = Math.ceil(maxValue);
+      } else value = null;
+
+      return ({
+        id: index,
+        color: d,
+        value,
+      });
+    });
 
     if (groupSlug !== 'coal-power-plants') {
       data = {
@@ -259,6 +278,47 @@ export const getGroupedValues = (
               })),
             },
           },
+          legendConfig: [{
+            id: 'gradient-example-1',
+            name: `${name} (${unit})`,
+            icon: null,
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            type: 'choropleth',
+            items: [
+              {
+                color: '#c9e6e8',
+                value: Math.floor(minValue),
+              },
+              {
+                color: '#b0d1da',
+                value: null,
+              },
+              {
+                color: '#97bbcb',
+                value: null,
+              },
+              {
+                color: '#7ea6bd',
+                value: null,
+              },
+              {
+                color: '#6691ae',
+                value: null,
+              },
+              {
+                color: '#4d7ca0',
+                value: null,
+              },
+              {
+                color: '#346691',
+                value: null,
+              },
+              {
+                color: '#1b5183',
+                value: Math.ceil(maxValue),
+              },
+            ],
+          }],
           render: {
             layers: [
               {
@@ -271,7 +331,7 @@ export const getGroupedValues = (
                     minValue === maxValue ? 0 : minValue,
                     '#C9E6E8',
                     maxValue,
-                    '#1B5183',
+                    '#1C5183',
                   ],
                   // 'fill-outline-color': '#35373E',
                   'fill-opacity': 0.3,
@@ -309,7 +369,7 @@ export const getGroupedValues = (
                 paint: {
                   // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
-                  'circle-stroke-opacity': 0.7,
+                  // 'circle-stroke-opacity': 0.7,
                   'circle-stroke-color': [
                     'interpolate',
                     ['linear'],
@@ -342,6 +402,14 @@ export const getGroupedValues = (
               },
             ],
           },
+          legendConfig: [{
+            id: 'gradient-example-1',
+            name: `${name} (${unit})`,
+            icon: null,
+            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            type: 'gradient',
+            items: ITEMS,
+          }],
         }],
       };
     }
@@ -351,6 +419,7 @@ export const getGroupedValues = (
 };
 
 export const getGroupedValuesRelatedIndicators = (
+  categories: string[],
   visualization: string,
   filters: IndicatorFilters,
   records: Record[],
@@ -359,7 +428,8 @@ export const getGroupedValuesRelatedIndicators = (
   let data;
 
   const { category } = filters;
-  const categorySelected = category?.value || 'Total';
+  const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
+  const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
   if (visualization === 'pie') {
     data = chain(records)
@@ -402,7 +472,7 @@ export const getGroupedValuesRelatedIndicators = (
       }, {
         year,
       }));
-  }
+    }
 
   if (visualization === 'bar') {
     data = flatten(chain(records)
@@ -430,9 +500,8 @@ export const getGroupedValuesRelatedIndicators = (
         });
       }, {
         province,
-      }));
+      })).filter((p) => p.province !== 'China');
   }
-
   if (visualization === 'choropleth') {
     const dataWithGeometries = records?.map(({ id, ...d }) => {
       const geometry = filteredRegions?.find((r) => d.region.id === r.id);
@@ -444,8 +513,7 @@ export const getGroupedValuesRelatedIndicators = (
     });
 
     const mapValues = dataWithGeometries
-      .filter((d) => d[categorySelected]).map((r) => r[categorySelected]);
-
+      .filter((d) => d[mapCategorySelected]).map((r) => r[mapCategorySelected]);
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
 
@@ -458,10 +526,10 @@ export const getGroupedValuesRelatedIndicators = (
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...categories }) => ({
+            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
               type: 'Feature',
               geometry: geometry?.geometry,
-              properties: categories,
+              properties: cat,
             })),
           },
         },
@@ -484,9 +552,6 @@ export const getGroupedValuesRelatedIndicators = (
               },
             },
           ],
-        },
-        legendConfig: {
-
         },
       }],
     };

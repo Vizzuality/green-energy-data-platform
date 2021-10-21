@@ -93,9 +93,18 @@ export function useIndicatorRecords(
     (state: RootState) => (state.language),
   );
 
-  return useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
+  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
     () => fetchIndicatorRecords(groupId, subgroupId, indicatorId, { locale: current }), {
       placeholderData: [],
       ...queryOptions,
     });
+  const { data } = query;
+  return useMemo(() => ({
+    ...query,
+    data: data.map((d) => ({
+      ...d,
+      category_1: d.category_1 === null ? 'Total' : d.category_1,
+      category_2: d.category_2 === null ? 'Total' : d.category_2,
+    })),
+  }), [data, query]);
 }
