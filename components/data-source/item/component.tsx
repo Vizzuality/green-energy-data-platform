@@ -4,6 +4,8 @@ import cx from 'classnames';
 import { useSession } from 'next-auth/client';
 
 import { parseDataToDownload } from 'utils';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
 
 // services
 import { fetchDataToDownload } from 'services/indicators';
@@ -32,10 +34,16 @@ const Item: FC<ItemProps> = ({
 }: ItemProps) => {
   const [session] = useSession();
 
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+
   const handleDownload = (format) => {
     if (!session) return console.log('sign in to get data');
 
-    return fetchDataToDownload(`Bearer ${session.token}`, indSlug, format)
+    return fetchDataToDownload(`Bearer ${session.token}`, indSlug, format, { locale: current })
       .then((data) => parseDataToDownload(format, data, indSlug));
   };
 

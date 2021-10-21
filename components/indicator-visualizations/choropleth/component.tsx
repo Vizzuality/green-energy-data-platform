@@ -2,6 +2,7 @@ import React, {
   FC,
   useState,
   useCallback,
+  useMemo,
 } from 'react';
 
 import { format } from 'd3-format';
@@ -11,13 +12,16 @@ import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
 import { Popup } from 'react-map-gl';
 
-// authentication
+// authentication,
 import { withAuthentication } from 'hoc/auth';
 
 // Controls
 import ZoomControl from './zoom';
 
 import Legend from './legend';
+import LegendItem from './legend/item';
+import LegendTypeChoropleth from './legend/choropleth';
+import LegendTypeGradient from './legend/gradient';
 
 // Map
 import { DEFAULT_VIEWPORT } from './constants';
@@ -25,9 +29,22 @@ import { DEFAULT_VIEWPORT } from './constants';
 // components
 import Map from './map';
 
+type ItemProps = {
+  value: string,
+  color: string
+};
+
+type LegendConfigProps = {
+  id?: number,
+  type: string,
+  items: ItemProps[]
+};
+
 interface MapLayersProps {
-  // TO DO
   id: string,
+  type: string,
+  name: string,
+  legendConfig: LegendConfigProps[]
 }
 
 interface MapContainerProps {
@@ -43,7 +60,6 @@ const MapContainer: FC<MapContainerProps> = (
     layers,
     hasIteraction = true,
     style = {},
-    categories = [],
   }: MapContainerProps,
 ) => {
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
@@ -62,6 +78,21 @@ const MapContainer: FC<MapContainerProps> = (
     },
     [viewport],
   );
+
+  const [sortArray, setSortArray] = useState([]);
+
+  // Sorted
+  const sortedItems = useMemo(() => {
+    const itms = layers[0].legendConfig.sort(
+      (a, b) => sortArray.indexOf(a.id) - sortArray.indexOf(b.id),
+    );
+    return itms;
+  }, [sortArray, layers]);
+
+  // Callbacks
+  const onChangeOrder = useCallback((ids) => {
+    setSortArray(ids);
+  }, []);
 
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
@@ -113,7 +144,27 @@ const MapContainer: FC<MapContainerProps> = (
           onZoomChange={handleZoomChange}
         />
       )}
-      {hasIteraction && <Legend categories={categories} />}
+      {hasIteraction
+      && (
+      <Legend onChangeOrder={onChangeOrder}>
+        {sortedItems.map((i) => {
+          const { type, items } = i;
+          return (
+            <LegendItem key={i.id} {...i}>
+
+              {type === 'choropleth' && (
+              <LegendTypeChoropleth className="text-sm text-gray-300" items={items} />
+              )}
+
+              {type === 'gradient' && (
+              <LegendTypeGradient className="text-sm text-gray-300" items={items} />
+              )}
+
+            </LegendItem>
+          );
+        })}
+      </Legend>
+      )}
     </div>
   );
 };

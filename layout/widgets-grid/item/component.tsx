@@ -65,7 +65,6 @@ const GridItem: FC<GridItemProps> = ({
     () => filterRelatedIndicators(records, filters, visualization),
     [records, filters, visualization],
   );
-
   const { data: regionsGeojson } = useRegions(indicator, visualization, {
     refetchOnWindowFocus: false,
 
@@ -80,15 +79,17 @@ const GridItem: FC<GridItemProps> = ({
   );
   const widgetData = useMemo(
     () => getGroupedValuesRelatedIndicators(
-      visualization, filters, filteredRecords, regionsGeojson,
+      categories, visualization, filters, filteredRecords, regionsGeojson,
     ),
-    [visualization, filters, filteredRecords, regionsGeojson],
+    [categories, visualization, filters, filteredRecords, regionsGeojson],
   );
 
   return (
     <section className="w-hull h-48">
       {isFetchingRecords && (
-      <LoadingSpinner />
+        <div className="w-full h-full flex items-center justify-center">
+          <LoadingSpinner />
+        </div>
       )}
 
       {!isFetchingRecords && !filteredRecords.length && (
@@ -97,7 +98,7 @@ const GridItem: FC<GridItemProps> = ({
         <p>Data not found</p>
       </div>
       )}
-      {!isFetchingRecords && (
+      {!isFetchingRecords && !!filteredRecords.length && (
       <Link href={`/${group}/${subgroup}/${indicator}`} passHref>
         <a href={`/${group}/${subgroup}/${indicator}`}>
           {visualization === 'pie' && (

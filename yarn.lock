@@ -279,6 +279,22 @@
     "@dnd-kit/utilities" "^3.0.0"
     tslib "^2.0.0"
 
+"@dnd-kit/modifiers@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/modifiers/-/modifiers-4.0.0.tgz#d1577b806b2319f14a1a0a155f270e672cfca636"
+  integrity sha512-4OkNTamneH9u3YMJqG6yJ6cwFoEd/4yY9BF39TgmDh9vyMK2MoPZFVAV0vOEm193ZYsPczq3Af5tJFtJhR9jJQ==
+  dependencies:
+    "@dnd-kit/utilities" "^3.0.0"
+    tslib "^2.0.0"
+
+"@dnd-kit/sortable@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/sortable/-/sortable-5.0.0.tgz#33841fcbc2f2490aaae42906b7497a2033242faa"
+  integrity sha512-CvTuaTIqzvZe8r1Lt+2tPK7VZKfE0SQkFTcAMayf8jS6MFgX6TV5GAIb1tKvbqrGXkqqTZeA2EaeMzjFyyfqkQ==
+  dependencies:
+    "@dnd-kit/utilities" "^3.0.0"
+    tslib "^2.0.0"
+
 "@dnd-kit/utilities@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@dnd-kit/utilities/-/utilities-3.0.0.tgz#43b86e9d911b625ee54786e9daae5a521949b8a6"
@@ -2304,22 +2320,10 @@ d3-array@2, d3-array@^2.3.0:
   dependencies:
     internmap "^1.0.0"
 
-"d3-array@2 - 3", "d3-array@2.10.0 - 3":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-3.1.1.tgz#7797eb53ead6b9083c75a45a681e93fc41bc468c"
-  integrity sha512-33qQ+ZoZlli19IFiQx4QEpf2CBEayMRzhlisJHSCsSUbDXv6ZishqS1x7uFVClKG4Wr7rZVHvaAttoLow6GqdQ==
-  dependencies:
-    internmap "1 - 2"
-
 "d3-color@1 - 2":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-2.0.0.tgz#8d625cab42ed9b8f601a1760a389f7ea9189d62e"
   integrity sha512-SPXi0TSKPD4g9tw0NMZFnR95XVgUZiBH+uUTqQuDu1OsE2zomHU7ho0FISciaPvosimixwHFl3WHLGabv6dDgQ==
-
-"d3-color@1 - 3":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-3.0.1.tgz#03316e595955d1fcd39d9f3610ad41bb90194d0a"
-  integrity sha512-6/SlHkDOBLyQSJ1j1Ghs82OIUXpKWlR0hCsw0XrLSQhuUPuCSmLQ1QPH98vpnQxMUQM2/gfAkUEWsupVpd9JGw==
 
 d3-dsv@^1.0.8:
   version "1.2.0"
@@ -2340,11 +2344,6 @@ d3-ease@^2.0.0:
   resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-2.0.0.tgz#a10bcc0f986c372b729ba447382413aabf5b0767"
   integrity sha512-Ab3S6XuE/Q+flY96HXT0jOXcM4EAClYFnRGY5zsjRGNy6qCYrQsMffs7cV5Q9xejb35zxW5hf/guKw34kvIKsA==
 
-"d3-format@1 - 3":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-3.0.1.tgz#e41b81b2ab79277141ec1404aa5d05001da64084"
-  integrity sha512-hdL7+HBIohpgfolhBxr1KX47VMD6+vVD/oEFrxk5yhmzV2prk99EkFKYpXuhVkFpTgHdJ6/4bYcjdLPPXV4tIA==
-
 d3-hexbin@^0.2.1:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/d3-hexbin/-/d3-hexbin-0.2.2.tgz#9c5837dacfd471ab05337a9e91ef10bfc4f98831"
@@ -2357,19 +2356,12 @@ d3-hexbin@^0.2.1:
   dependencies:
     d3-color "1 - 2"
 
-"d3-interpolate@1.2.0 - 3":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-3.0.1.tgz#3c47aa5b32c5b3dfb56ef3fd4342078a632b400d"
-  integrity sha512-3bYs1rOD33uo8aqJfKP3JWPAibgw8Zm2+L9vBKEHJ2Rg+viTR7o5Mmv5mZcieN+FRYaAOWX5SJATX6k1PWz72g==
-  dependencies:
-    d3-color "1 - 3"
-
 "d3-path@1 - 2":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-2.0.0.tgz#55d86ac131a0548adae241eebfb56b4582dd09d8"
   integrity sha512-ZwZQxKhBnv9yHaiWd6ZU4x5BtCQ7pXszEV9CU6kRgwIQVQGLMv1oiL4M+MK/n79sYzsj+gcgpPQSctJUsLN7fA==
 
-d3-scale@^3.2.3:
+d3-scale@3.3.0, d3-scale@^3.2.3:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-3.3.0.tgz#28c600b29f47e5b9cd2df9749c206727966203f3"
   integrity sha512-1JGp44NQCt5d1g+Yy+GeOnZP7xHo0ii8zsQp6PGzd+C1/dl0KGsp9A7Mxwp+1D1o4unbTTxVdU/ZOIEBoeZPbQ==
@@ -2379,17 +2371,6 @@ d3-scale@^3.2.3:
     d3-interpolate "1.2.0 - 2"
     d3-time "^2.1.1"
     d3-time-format "2 - 3"
-
-d3-scale@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-4.0.2.tgz#82b38e8e8ff7080764f8dcec77bd4be393689396"
-  integrity sha512-GZW464g1SH7ag3Y7hXjf8RoUuAFIqklOAq3MRl4OaWabTFJY9PN/E1YklhXLh+OQ3fM9yS2nOkCoS+WLZ6kvxQ==
-  dependencies:
-    d3-array "2.10.0 - 3"
-    d3-format "1 - 3"
-    d3-interpolate "1.2.0 - 3"
-    d3-time "2.1.1 - 3"
-    d3-time-format "2 - 4"
 
 d3-shape@^2.0.0:
   version "2.1.0"
@@ -2405,26 +2386,12 @@ d3-shape@^2.0.0:
   dependencies:
     d3-time "1 - 2"
 
-"d3-time-format@2 - 4":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-4.0.0.tgz#930ded86a9de761702344760d8a25753467f28b7"
-  integrity sha512-nzaCwlj+ZVBIlFuVOT1RmU+6xb/7D5IcnhHzHQcBgS/aTa5K9fWZNN5LCXA27LgF5WxoSNJqKBbLcGMtM6Ca6A==
-  dependencies:
-    d3-time "1 - 3"
-
 "d3-time@1 - 2", d3-time@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/d3-time/-/d3-time-2.1.1.tgz#e9d8a8a88691f4548e68ca085e5ff956724a6682"
   integrity sha512-/eIQe/eR4kCQwq7yxi7z4c6qEXf2IYGcjoWB5OOQy4Tq9Uv39/947qlDcN2TLkiTzQWzvnsuYPB9TrWaNfipKQ==
   dependencies:
     d3-array "2"
-
-"d3-time@1 - 3", "d3-time@2.1.1 - 3":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/d3-time/-/d3-time-3.0.0.tgz#65972cb98ae2d4954ef5c932e8704061335d4975"
-  integrity sha512-zmV3lRnlaLI08y9IMRXSDshQb5Nj77smnfpnd2LrBa/2K281Jijactokeak14QacHs/kKq0AQ121nidNYlarbQ==
-  dependencies:
-    d3-array "2 - 3"
 
 damerau-levenshtein@^1.0.6:
   version "1.0.7"
@@ -3816,11 +3783,6 @@ internal-slot@^1.0.3:
     get-intrinsic "^1.1.0"
     has "^1.0.3"
     side-channel "^1.0.4"
-
-"internmap@1 - 2":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/internmap/-/internmap-2.0.3.tgz#6685f23755e43c524e251d29cbc97248e3061009"
-  integrity sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==
 
 internmap@^1.0.0:
   version "1.0.1"

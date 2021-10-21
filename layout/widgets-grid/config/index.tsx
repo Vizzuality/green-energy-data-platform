@@ -28,6 +28,19 @@ const CONFIG = (categories) => {
       dot: false,
     }]);
   };
+
+  const getBars = () => {
+    if (categories.length) {
+      return categories.map((category) => ({
+        stackId: 'a',
+        dataKey: category,
+      }));
+    }
+    return ([{
+      stackId: 'a',
+      dataKey: 'Total',
+    }]);
+  };
   return ({
     line: {
       ...DefaultLayout,
@@ -224,19 +237,17 @@ const CONFIG = (categories) => {
       ],
     },
     bar: {
-      height: 190,
-      width: 300,
+      ...DefaultLayout,
       margin: {
-        top: 0, right: 0, left: -30, bottom: 100,
+        top: 30,
+        left: -10,
+        right: 10,
       },
+
       cartesianGrid: {
         vertical: false,
       },
-      bars: [
-        {
-          dataKey: 'value',
-        },
-      ],
+      bars: getBars(),
       yAxis: {
         tick: DefaultTick,
       },

@@ -10,6 +10,7 @@ import {
 } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
 import { useRouter } from 'next/router';
+import store from 'store/store';
 
 // components
 import Head from 'components/head';
@@ -159,11 +160,12 @@ export const getServerSideProps = async ({ query }) => {
     });
   }
 
+  const { language: { current } } = store.getState();
   const queryClient = new QueryClient();
   // prefetch indicator
   await queryClient.prefetchQuery(
-    `indicator-${indicatorSlug}`,
-    () => fetchIndicator(groupSlug, subgroupSlug, indicatorSlug),
+    ['indicator', indicatorSlug, current],
+    () => fetchIndicator(groupSlug, subgroupSlug, indicatorSlug, { locale: current }),
   );
 
   return ({
