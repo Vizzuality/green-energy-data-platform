@@ -33,18 +33,26 @@ const Filters: FC<FiltersProps> = ({
     (state: RootState) => (state.language),
   );
 
+  // useEffect(() => {
+  //   if (visualizationType === 'choropleth') {
+  //     const hasTotal = categories.includes('Total' || '全部的');
+  //     if (hasTotal) {
+  //       const value = current === 'cn' ? '全部的' : 'Total';
+  //       setActive(value);
+  //       dispatch(onClick({ category: { label: 'category_2', value } }));
+  //     } else {
+  //       const value = categories[0];
+  //       setActive(value);
+  //       dispatch(onClick({ category: { label: 'category_2', value } }));
+  //     }
+  //   }
+  // }, [dispatch, onClick, categories, visualizationType, current]);
+
   useEffect(() => {
-    if (visualizationType === 'choropleth') {
-      const hasTotal = categories.includes('Total' || '全部的');
-      if (hasTotal) {
-        setActive(current === 'cn' ? '全部的' : 'Total');
-        dispatch(onClick({ category: { label: 'category_2', value: current === 'cn' ? '全部的' : 'Total' } }));
-      } else {
-        setActive(categories[0]);
-        dispatch(onClick({ category: { label: 'category_2', value: categories[0] } }));
-      }
-    }
-  }, [dispatch, onClick, categories, visualizationType, current]);
+    const value = categories[0];
+    setActive(value);
+    dispatch(onClick({ category: { label: 'category_2', value } }));
+  }, [dispatch, onClick, categories]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
