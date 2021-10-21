@@ -112,17 +112,12 @@ export const filterRelatedIndicators = (
   const recordsByFilters = results.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
-      if (
-        (d.region.name === region || (d.region.name === null)
-        )
-        && (((categories.length > 1) && d.category_1 !== 'Total')
-        || categories.length === 1)) return true;
+      if ((categories.length > 1 && d.category_1 !== 'Total') || categories.length === 1) return true;
     }
 
     if (visualizationType === 'pie') {
-      if ((d.region.name === region || (d.region.name === null))
-      && (((categories.length > 1) && d.category_1 !== 'Total')
-      || categories.length === 1)) return true;
+      if ((categories.length > 1 && d.category_1 !== 'Total')
+      || categories.length === 1) return true;
     }
 
     if (visualizationType === 'bar') {
@@ -138,6 +133,7 @@ export const filterRelatedIndicators = (
     }
     return false;
   });
+
   return recordsByFilters;
 };
 export const getGroupedValues = (
@@ -423,6 +419,7 @@ export const getGroupedValues = (
 };
 
 export const getGroupedValuesRelatedIndicators = (
+  categories: string[],
   visualization: string,
   filters: IndicatorFilters,
   records: Record[],
@@ -431,7 +428,8 @@ export const getGroupedValuesRelatedIndicators = (
   let data;
 
   const { category } = filters;
-  const categorySelected = category?.value || 'Total';
+  const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
+  const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
   if (visualization === 'pie') {
     data = chain(records)
@@ -474,7 +472,7 @@ export const getGroupedValuesRelatedIndicators = (
       }, {
         year,
       }));
-  }
+    }
 
   if (visualization === 'bar') {
     data = flatten(chain(records)
@@ -515,8 +513,7 @@ export const getGroupedValuesRelatedIndicators = (
     });
 
     const mapValues = dataWithGeometries
-      .filter((d) => d[categorySelected]).map((r) => r[categorySelected]);
-
+      .filter((d) => d[mapCategorySelected]).map((r) => r[mapCategorySelected]);
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
 
@@ -529,10 +526,10 @@ export const getGroupedValuesRelatedIndicators = (
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...categories }) => ({
+            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
               type: 'Feature',
               geometry: geometry?.geometry,
-              properties: categories,
+              properties: cat,
             })),
           },
         },

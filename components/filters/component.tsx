@@ -54,7 +54,8 @@ const Filters: FC<FiltersProps> = ({
       setActive(value);
       dispatch(onClick({ category: { label: 'category_2', value } }));
     }
-  }, [dispatch, onClick, categories, visualizationType]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, onClick, visualizationType]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);

@@ -79,10 +79,11 @@ const GridItem: FC<GridItemProps> = ({
   );
   const widgetData = useMemo(
     () => getGroupedValuesRelatedIndicators(
-      visualization, filters, filteredRecords, regionsGeojson,
+      categories, visualization, filters, filteredRecords, regionsGeojson,
     ),
-    [visualization, filters, filteredRecords, regionsGeojson],
+    [categories, visualization, filters, filteredRecords, regionsGeojson],
   );
+
   return (
     <section className="w-hull h-48">
       {isFetchingRecords && (
