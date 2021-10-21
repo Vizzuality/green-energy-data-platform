@@ -34,8 +34,8 @@ import {
   getDefaultUnitFromRecords,
   getRegionsFromRecords,
   getDefaultRegionFromRecords,
-  // getCategoriesFromRecords,
-  // getSubcategoriesFromRecords,
+  getCategoriesFromRecords,
+  getSubcategoriesFromRecords,
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
@@ -225,20 +225,21 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const {
     name,
     categories: categoriesIndicator,
-    category_filters: categoryFilters,
     visualizationTypes,
     description,
   }: IndicatorProps = indicatorData;
 
-  const categories = categoriesIndicator.map((c) => (c === null ? 'Total' : c));
-
-  const subcategories = categoryFilters[category?.value] as string[] || [];
-
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categories),
-    [records, filters, visualizationType, categories],
+    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
+    [records, filters, visualizationType, categoriesIndicator],
   );
 
+  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
+  const colors = useColors(categories.length);
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
+  );
   const defaultYear = useMemo(
     () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
   );
@@ -261,12 +262,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   );
   const defaultCategory = 'category_1';
 
-  // const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
-
-  const colors = useColors(categories.length);
-  // const subcategories = useMemo(
-  //   () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
-  // );
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[visualizationType],
@@ -275,9 +270,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
+      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
     ),
-    [groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+    [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -502,6 +497,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           </p>
           {categories?.length > 1 && (
             <Filters
+              visualizationType={visualizationType}
               categories={categories}
               hasSubcategories={!!subcategories.length}
               className="mb-4"

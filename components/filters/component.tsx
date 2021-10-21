@@ -1,12 +1,17 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, {
+  FC, useState, useEffect, useCallback,
+} from 'react';
 import cx from 'classnames';
 import i18next from 'i18next';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store/store';
+
 // components
 import Icon from 'components/icon';
-import { useDispatch } from 'react-redux';
 
 interface FiltersProps {
+  visualizationType: string,
   categories: string[]
   hasSubcategories: boolean,
   className?: string,
@@ -14,6 +19,7 @@ interface FiltersProps {
 }
 
 const Filters: FC<FiltersProps> = ({
+  visualizationType,
   categories,
   hasSubcategories,
   className = '',
@@ -21,13 +27,33 @@ const Filters: FC<FiltersProps> = ({
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+
+  useEffect(() => {
+    if (visualizationType === 'choropleth') {
+      const hasTotal = categories.includes('Total' || '全部的');
+      if (hasTotal) {
+        setActive(current === 'cn' ? '全部的' : 'Total');
+        dispatch(onClick({ category: { label: 'category_2', value: current === 'cn' ? '全部的' : 'Total' } }));
+      } else {
+        setActive(categories[0]);
+        dispatch(onClick({ category: { label: 'category_2', value: categories[0] } }));
+      }
+    }
+  }, [dispatch, onClick, categories, visualizationType, current]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
     if (direction === 'up' && index > 0) {
+      dispatch(onClick({ category: { label: 'category_2', value: categories[index - 1] } }));
       return setActive(categories[index - 1]);
     }
     if (direction === 'down' && index < categories.length - 1) {
+      dispatch(onClick({ category: { label: 'category_2', value: categories[index + 1] } }));
       return setActive(categories[index + 1]);
     }
     return setActive(categories[index]);
@@ -66,7 +92,7 @@ const Filters: FC<FiltersProps> = ({
             <button
               name={category}
               type="button"
-              className={cx('py-3 pl-6',
+              className={cx('py-3 pl-6 flex-1',
                 { 'cursor-none': !hasSubcategories })}
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories}

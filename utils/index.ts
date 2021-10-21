@@ -42,10 +42,9 @@ export const getCategoriesFromRecords = (
   records: Record[],
 ) => compact(uniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1)))).sort();
 
-// export const getSubcategoriesFromRecords = (
-//   categories: {},
-//   value: StringChain,
-// ) => compact(uniq(categories[value]))
+export const getSubcategoriesFromRecords = (
+  records: Record[],
+) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2)))).sort();
 
 export const filterRecords = (
   records: Record[],
@@ -83,9 +82,10 @@ export const filterRecords = (
     }
 
     if (visualizationType === 'bar') {
-      if (year === d.year && d.unit.name === unit
-      && (((categories.length > 1) && d.category_1 !== 'Total')
-        || categories.length === 1) && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a') return true;
+      if (year === d.year
+        && d.unit.name === unit
+        && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
+        && d.region.name !== 'China') return true;
     }
 
     return false;
@@ -104,7 +104,7 @@ export const filterRelatedIndicators = (
   const categories = getCategoriesFromRecords(records).filter((c) => c !== 'Total');
 
   const results = records.filter((r) => {
-    if (categories.length > 1) return r.category_1 !== 'Total' && r.category_2 !== 'Total';
+    if (categories.length > 1) return r.category_1 !== 'Total';
 
     return r;
   });
@@ -112,15 +112,21 @@ export const filterRelatedIndicators = (
   const recordsByFilters = results.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
-      if (d.region.name === region || d.region.name === null) return true;
+      if (
+        (d.region.name === region || (d.region.name === null)
+        )
+        && (((categories.length > 1) && d.category_1 !== 'Total')
+        || categories.length === 1)) return true;
     }
 
     if (visualizationType === 'pie') {
-      if (d.region.name === region || d.region.name === null) return true;
+      if ((d.region.name === region || (d.region.name === null))
+      && (((categories.length > 1) && d.category_1 !== 'Total')
+      || categories.length === 1)) return true;
     }
 
     if (visualizationType === 'bar') {
-      if (d.region.name === region || d.region.name === null) return true;
+      if (d.region.name !== 'China') return true;
     }
 
     if (visualizationType === 'choropleth') {
@@ -130,12 +136,12 @@ export const filterRelatedIndicators = (
     if (label !== 'category_2') {
       return true;
     }
-
     return false;
   });
   return recordsByFilters;
 };
 export const getGroupedValues = (
+  name: string,
   groupSlug: string | string[],
   categories: string[],
   visualization: string,
@@ -143,7 +149,7 @@ export const getGroupedValues = (
   records: Record[],
   regions: Record[],
 ) => {
-  const { category } = filters;
+  const { category, unit } = filters;
 
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
@@ -232,7 +238,7 @@ export const getGroupedValues = (
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
-        [d.category_1 || 'Total']: d.value,
+        [d[label] || 'Total']: d.value,
       });
     });
 
@@ -245,7 +251,7 @@ export const getGroupedValues = (
     const colors = chroma.scale(['#e2714b', '#eee695']).colors(8).reverse();
 
     const ITEMS = colors.map((d, index) => {
-      let value;
+      let value = 0;
       if (index === 0) {
         value = Math.floor(minValue);
       } else if (index === colors.length - 1) {
@@ -278,7 +284,7 @@ export const getGroupedValues = (
           },
           legendConfig: [{
             id: 'gradient-example-1',
-            name: 'Gradient example 1',
+            name: `${name} (${unit})`,
             icon: null,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'choropleth',
@@ -329,7 +335,7 @@ export const getGroupedValues = (
                     minValue === maxValue ? 0 : minValue,
                     '#C9E6E8',
                     maxValue,
-                    '#1B5183',
+                    '#1C5183',
                   ],
                   // 'fill-outline-color': '#35373E',
                   'fill-opacity': 0.3,
@@ -402,7 +408,7 @@ export const getGroupedValues = (
           },
           legendConfig: [{
             id: 'gradient-example-1',
-            name: 'Gradient example 1',
+            name: `${name} (${unit})`,
             icon: null,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'gradient',
@@ -496,9 +502,8 @@ export const getGroupedValuesRelatedIndicators = (
         });
       }, {
         province,
-      }));
+      })).filter((p) => p.province !== 'China');
   }
-
   if (visualization === 'choropleth') {
     const dataWithGeometries = records?.map(({ id, ...d }) => {
       const geometry = filteredRegions?.find((r) => d.region.id === r.id);
