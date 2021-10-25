@@ -355,6 +355,7 @@ export const getGroupedValues = (
         layers: [{
           id: 'regions',
           type: 'geojson',
+          filter: ['has', 'point_count'],
           source: {
             type: 'geojson',
             data: {
@@ -365,6 +366,9 @@ export const getGroupedValues = (
                 properties: cat,
               })),
             },
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 45,
           },
           render: {
             layers: [
@@ -384,26 +388,82 @@ export const getGroupedValues = (
                     '#eee695',
                   ],
                   'circle-stroke-width': 1,
-                  'circle-radius': [
-                    'interpolate',
-                    ['linear'],
-                    ['get', mapCategorySelected],
-                    minValue === maxValue ? 0 : minValue,
-                    10, // 10 y 20 tamaño min y máxim del radio
-                    maxValue, // 0 y 1000 maximo y minimo de los valores
-                    20,
-                  ],
+                  // 'circle-radius': [
+                  //   'step',
+                  //   ['get', 'point_count'],
+                  //   minValue === maxValue ? 0 : minValue,
+                  //   10, // 10 y 20 tamaño min y máxim del radio
+                  //   maxValue, // 0 y 1000 maximo y minimo de los valores
+                  //   20,
+                  // ],
+                  // 'circle-color': [
+                  //   'step',
+                  //   ['get', 'point_count'],
+                  //   '#B6B8B4',
+                  //   minValue === maxValue ? 0 : minValue,
+                  //   '#e2714b',
+                  //   maxValue,
+                  //   '#eee695',
+                  // ],
                   'circle-color': [
-                    'interpolate',
-                    ['linear'],
-                    ['get', mapCategorySelected],
-                    minValue === maxValue ? 0 : minValue,
-                    '#e2714b',
+                    'step',
+                    ['get', 'point_count'],
+                    '#cc2a58',
+                    minValue,
+                    '#eec68b',
                     maxValue,
-                    '#eee695',
-                  ],
+                    'blue'
+                    ],
+                    'circle-radius': [
+                    'step',
+                    ['get', 'point_count'],
+                    20,
+                    minValue,
+                    30,
+                    maxValue,
+                    40
+                    ]
+                  // 'circle-color': [
+                  //   'interpolate',
+                  //   ['linear'],
+                  //   ['get', mapCategorySelected],
+                  //   minValue === maxValue ? 0 : minValue,
+                  //   '#e2714b',
+                  //   maxValue,
+                  //   '#eee695',
+                  // ],
                 },
               },
+              {
+                id: 'media-cluster-count',
+                metadata: {
+                  position: 'top',
+                },
+                type: 'symbol',
+                layout: {
+                  'text-allow-overlap': true,
+                  'text-ignore-placement': true,
+                  'text-field': '{point_count_abbreviated}',
+                  'text-size': 12,
+                },
+              },
+              // {
+              //   id: 'media',
+              //   metadata: {
+              //     position: 'top',
+              //   },
+              //   type: 'symbol',
+              //   paint: {
+              //     'icon-color': '#F00',
+              //   },
+              //   layout: {
+              //     'icon-ignore-placement': true,
+              //     'icon-allow-overlap': true,
+              //     'icon-image': '',
+              //     'icon-color': 'red',
+              //     'icon-size': 10,
+              //   },
+              // },
             ],
           },
           legendConfig: [{

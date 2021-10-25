@@ -648,6 +648,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                       </div>
                     </div>
                     )}
+
                     {visualizationType === 'choropleth' && (
                     <div className="w-full h-96 pb-11">
                       <MapContainer

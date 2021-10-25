@@ -540,6 +540,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       />
                     </div>
                   )}
+
                   {visualizationType === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer
