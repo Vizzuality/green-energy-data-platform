@@ -38,15 +38,7 @@ import LoadingSpinner from 'components/loading-spinner';
 import {
   filterRecords,
   getGroupedValues,
-  getYearsFromRecords,
-  getDefaultYearFromRecords,
-  getUnitsFromRecords,
-  getDefaultUnitFromRecords,
-  getRegionsFromRecords,
-  getDefaultRegionFromRecords,
-  getCategoriesFromRecords,
   getSubcategoriesFromRecords,
-  getScenariosFromRecords,
 } from 'utils';
 
 import { RootState } from 'store/store';
@@ -58,6 +50,7 @@ import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
+import useDefaultRecordFilters from 'hooks/records';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
@@ -190,41 +183,29 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     () => filterRecords(records, filters, visualizationType, categoriesIndicator),
     [records, filters, visualizationType, categoriesIndicator],
   );
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
+  const {
+    categories,
+    defaultCategory,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    units,
+    defaultUnit,
+    scenarios,
+    defaultScenario,
+  } = useDefaultRecordFilters(
+    records,
+    filteredRecords,
+    visualizationType,
+    filters,
+  );
 
   const colors = useColors(categories.length);
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
-
-  const defaultYear = useMemo(
-    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
-    [records, visualizationType, unit]);
-
-  const regionsWithVisualization = useMemo(
-    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
-
-  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
-    [records, visualizationType, region, unit]);
-
-  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
-    [records, visualizationType, region, year]);
-
-  const defaultUnit = useMemo(
-    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
-  );
-
-  const scenarios = useMemo(
-    () => getScenariosFromRecords(records), [records],
-  );
-
-  const defaultScenario = useMemo(() => scenarios[0], [scenarios]);
-
-  const defaultCategory = 'category_1';
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
@@ -251,7 +232,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ...defaultRegion && { region: defaultRegion },
       ...defaultUnit && { unit: defaultUnit },
       ...defaultCategory && { category: { label: defaultCategory } },
-      ...defaultScenario && { scenario: defaultScenario },
+      scenario: defaultScenario,
     }));
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory, defaultScenario]);
 
@@ -348,7 +329,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         tabIndex={-1}
                         role="listbox"
                         aria-labelledby="exp_elem"
-                        className={cx('shadow-sm', { hidden: id !== compareMenuVisibility.id })}
+                        className={cx('shadow-sm first:rounded-t-xl last:rounded-b-xl', { hidden: id !== compareMenuVisibility.id })}
                         aria-activedescendant="exp_elem_Pu"
                       >
                         {subgroupsCompare.map(({
@@ -356,12 +337,17 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                           id: subgroupId,
                           slug: subgroupCompareSlug,
                           default_indicator: compareIndicator,
-                        }) => (
+                        }, index) => (
                           <li
                             key={subgroupName}
                             id={`exp-elem_${subgroupId}`}
                             role="option"
-                            className="px-5 hover:bg-white hover:text-gray1"
+                            className={cx(
+                              'px-5 hover:bg-white hover:text-gray1',
+                              {
+                                'hover:rounded-b-xl': index === subgroupsCompare.length - 1,
+                              },
+                            )}
                             aria-selected="true"
                           >
                             <Link href={{

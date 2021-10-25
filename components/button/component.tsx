@@ -22,8 +22,8 @@ const THEME = {
 
   // border
   warning: 'border border-warning text-warning',
-  'border-light': 'border border-color-white text-color-white',
-  'border-dark': 'border border-color-gray1 text-color-gray1',
+  'border-light': 'border border-color-white text-white',
+  'border-dark': 'border border-color-gray1 text-gray1',
   active: 'bg-gradient-color1',
   info: 'bg-color2 border-color2 text-white',
 };

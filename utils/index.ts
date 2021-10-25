@@ -56,8 +56,8 @@ export const filterRecords = (
     year,
     region,
     unit,
+    scenario,
   } = filters;
-
   const recordsByFilters = records.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
@@ -78,7 +78,9 @@ export const filterRecords = (
     }
 
     if (visualizationType === 'choropleth') {
-      if (year === d.year && d.unit.name === unit) return true;
+      if (year === d.year
+        && (d.unit.name === unit || !unit) // some idicators has no unit
+        && d.scenario?.name === scenario) return true;
     }
 
     if (visualizationType === 'bar') {
@@ -261,6 +263,8 @@ export const getGroupedValues = (
       });
     });
 
+    const legendTitle = unit ? `${name} (${unit})` : name;
+
     if (groupSlug !== 'coal-power-plants') {
       data = {
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
@@ -280,7 +284,7 @@ export const getGroupedValues = (
           },
           legendConfig: [{
             id: 'gradient-example-1',
-            name: `${name} (${unit})`,
+            name: legendTitle,
             icon: null,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'choropleth',
@@ -404,7 +408,7 @@ export const getGroupedValues = (
           },
           legendConfig: [{
             id: 'gradient-example-1',
-            name: `${name} (${unit})`,
+            name: legendTitle,
             icon: null,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'gradient',

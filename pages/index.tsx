@@ -37,7 +37,7 @@ const HomePage: FC = () => {
           <Link href="/indicators" passHref>
             <a
               href="/indicators"
-              className="ml-3 flex items-center justify-center text-center rounded focus:outline-none py-5 px-11 text-sm bg-gray1 text-white"
+              className="bg-gray1 text-white ml-3 border border-gray1 focus-within:flex items-center justify-center text-center rounded hover:bg-opacity-90 active:bg-white active:text-gray1  focus:outline-none py-5 px-11 text-sm"
             >
               {i18next.t('browse')}
             </a>
