@@ -248,10 +248,13 @@ export const getGroupedValues = (
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
-    const colors = chroma.scale(['#e7b092', '#dd96ab']).colors(8);
+    const colors = chroma.scale(['red', 'blue', 'green']).colors(8);
     // const escala = scaleLinear([minValue, maxValue], [0, 5]);
     const colores = scaleLinear([minValue, maxValue], colors);
 
+    console.log('minValue', minValue);
+    console.log('maxValue', maxValue);
+    console.log('colores ticks', colores.ticks(8));
 
     const ITEMS = colors.map((d, index) => {
       let value = 0;
@@ -267,10 +270,36 @@ export const getGroupedValues = (
         value,
       });
     });
-console.log(colores(minValue), colores(maxValue))
+
+    const circleStrikeColor = [
+      'step',
+      ['get', 'sum'],
+      'yellow',
+      minValue,
+      colores(minValue),
+      20000,
+      'rgb(248, 0, 7)',
+      40000,
+      'rgb(241, 0, 14)',
+      60000,
+      'rgb(234, 0, 21)',
+      80000,
+      'rgb(228, 0, 27)',
+      100000,
+      'rgb(221, 0, 34)',
+      120000,
+      'rgb(214, 0, 41)',
+      140000,
+      'rgb(207, 0, 48)',
+      160000,
+      'rgb(200, 0, 55)',
+      180000,
+      'rgb(193, 0, 62)',
+      200000,
+      'rgb(186, 0, 69)',
+    ];
 
     const media = (maxValue - minValue) / 2;
-
     const legendTitle = unit ? `${name} (${unit})` : name;
 
     if (groupSlug !== 'coal-power-plants') {
@@ -376,7 +405,8 @@ console.log(colores(minValue), colores(maxValue))
             },
             cluster: true,
             clusterMaxZoom: 14,
-            clusterRadius: 45,
+            clusterRadius: 20,
+            clusterProperties: { sum: ['+', ['get', 'Total']] },
           },
           render: {
             layers: [
@@ -399,17 +429,7 @@ console.log(colores(minValue), colores(maxValue))
                     // '#dd96ab',
                   ],
                   'circle-stroke-width': 1,
-                  'circle-color': [
-                    'step',
-                    ['get', 'point_count'],
-                    '#dd96ab',
-                    minValue,
-                    colores(minValue),
-                    // '#c73a63',
-                    // '#d06182',
-                    maxValue,
-                    colores(maxValue),
-                  ],
+                  'circle-color': circleStrikeColor,
                   'circle-radius': [
                     'step',
                     ['get', 'point_count'],
