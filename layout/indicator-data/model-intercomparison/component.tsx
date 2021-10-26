@@ -9,8 +9,6 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import cx from 'classnames';
-
 import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -20,6 +18,7 @@ import {
   useIndicator,
   useIndicatorRecords,
 } from 'hooks/indicators';
+import useDefaultRecordFilters from 'hooks/records';
 
 // components
 import Icon from 'components/icon';
@@ -34,14 +33,6 @@ import LoadingSpinner from 'components/loading-spinner';
 import {
   filterRecords,
   getGroupedValues,
-  getYearsFromRecords,
-  getDefaultYearFromRecords,
-  getUnitsFromRecords,
-  getDefaultUnitFromRecords,
-  getRegionsFromRecords,
-  getDefaultRegionFromRecords,
-  getCategoriesFromRecords,
-  getSubcategoriesFromRecords,
 } from 'utils';
 
 import { RootState } from 'store/store';
@@ -63,7 +54,7 @@ type ChartProps = {
   colors: string[],
 };
 
-const ModelInterComparisonChart: FC<IndicatorDataProps> = ({
+const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
 }: IndicatorDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
@@ -71,13 +62,14 @@ const ModelInterComparisonChart: FC<IndicatorDataProps> = ({
     year: false,
     region: false,
     unit: false,
+    scenario: false,
     category: { label: 'category_1', value: null },
   });
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const {
-    year, region, unit, category,
+    year, region, unit, category, scenario,
   } = useSelector((state: RootState) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
@@ -113,7 +105,8 @@ const ModelInterComparisonChart: FC<IndicatorDataProps> = ({
     region,
     unit,
     category,
-  }), [year, region, unit, category]);
+    scenario,
+  }), [year, region, unit, category, scenario]);
 
   const {
     data: indicatorData,
@@ -158,35 +151,26 @@ const ModelInterComparisonChart: FC<IndicatorDataProps> = ({
     () => filterRecords(records, filters, visualizationType, categoriesIndicator),
     [records, filters, visualizationType, categoriesIndicator],
   );
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
 
+  const {
+    categories,
+    defaultCategory,
+    subcategories,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    units,
+    defaultUnit,
+    scenarios,
+    defaultScenario,
+  } = useDefaultRecordFilters(
+    records,
+    filteredRecords,
+    visualizationType,
+    filters,
+  );
   const colors = useColors(categories.length);
-  const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
-  );
-
-  const defaultYear = useMemo(
-    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
-    [records, visualizationType, unit]);
-
-  const regionsWithVisualization = useMemo(
-    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
-
-  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
-    [records, visualizationType, region, unit]);
-
-  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
-    [records, visualizationType, region, year]);
-
-  const defaultUnit = useMemo(
-    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
-  );
-
-  const defaultCategory = 'category_1';
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
@@ -212,9 +196,10 @@ const ModelInterComparisonChart: FC<IndicatorDataProps> = ({
       ...defaultYear && { year: defaultYear },
       ...defaultRegion && { region: defaultRegion },
       ...defaultUnit && { unit: defaultUnit },
+      ...defaultScenario && { scenario: defaultScenario },
       ...defaultCategory && { category: { label: defaultCategory } },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
+  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultScenario, defaultCategory]);
 
   const DynamicChart = useMemo(() => {
     if (visualizationType !== 'choropleth') {
@@ -224,7 +209,7 @@ const ModelInterComparisonChart: FC<IndicatorDataProps> = ({
   }, [visualizationType]);
 
   return (
-    <div className="flex justify-between">
+    <div className={`flex justify-between ${className}`}>
       <div className="flex flex-col h-full w-full">
         <section className="flex flex-col w-full">
           <div className="flex">
@@ -257,6 +242,37 @@ const ModelInterComparisonChart: FC<IndicatorDataProps> = ({
                 </button>
               </Tooltip>
               )}
+
+              {/* scenario filter */}
+              {['choropleth'].includes(visualizationType) && !!scenarios.length && (
+              <div className="flex items-center">
+                <span className="pr-2">Scenario:</span>
+                {scenarios.length > 1 && (
+                <Tooltip
+                  placement="bottom-start"
+                  visible={dropdownVisibility.scenario}
+                  interactive
+                  onClickOutside={() => closeDropdown('scenario')}
+                  content={(
+                    <DropdownContent
+                      list={scenarios}
+                      id="scenario"
+                      onClick={handleChange}
+                    />
+                      )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('scenario'); }}
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  >
+                    <span>{scenario || i18next.t('dates')}</span>
+                  </button>
+                </Tooltip>
+                )}
+              </div>
+              )}
+
             </div>
             )}
 
@@ -383,4 +399,4 @@ const ModelInterComparisonChart: FC<IndicatorDataProps> = ({
   );
 };
 
-export default ModelInterComparisonChart;
+export default ModelIntercomparison;

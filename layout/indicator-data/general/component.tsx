@@ -9,8 +9,6 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import cx from 'classnames';
-
 import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -18,6 +16,7 @@ import { useRouter } from 'next/router';
 // hooks
 import {
   useIndicator,
+  useIndicatorMetadata,
   useIndicatorRecords,
 } from 'hooks/indicators';
 
@@ -34,12 +33,6 @@ import LoadingSpinner from 'components/loading-spinner';
 import {
   filterRecords,
   getGroupedValues,
-  getYearsFromRecords,
-  getDefaultYearFromRecords,
-  getUnitsFromRecords,
-  getDefaultUnitFromRecords,
-  getRegionsFromRecords,
-  getDefaultRegionFromRecords,
   getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
@@ -49,10 +42,11 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
-import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
@@ -63,22 +57,27 @@ type ChartProps = {
   colors: string[],
 };
 
-const IndicatorChart: FC<IndicatorDataProps> = ({
-  className,
-}: IndicatorDataProps) => {
+interface WidgetDataTypes {
+  visualizationTypes: string[];
+  layers?: MapLayersProps[]
+}
+
+const IndicatorChart: FC<IndicatorDataProps> = () => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+    scenario: false,
   });
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, region, unit, category,
-  } = useSelector((state: RootState) => state.indicator);
+    year, unit, region, category, scenario, visualization,
+  } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -108,13 +107,6 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
     });
   }, [dispatch, dropdownVisibility]);
 
-  const filters = useMemo(() => ({
-    year,
-    region,
-    unit,
-    category,
-  }), [year, region, unit, category]);
-
   const {
     data: indicatorData,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
@@ -128,7 +120,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
       name: null,
       published: false,
       start_date: null,
-      visualizationTypes: [],
+      visualization_types: [],
       group: null,
       subgroup: null,
     },
@@ -136,103 +128,153 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
+  const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
-    refetchOnWindowFocus: false,
-  });
+  const filtersIndicator = useMemo(() => {
+    if (filterByRegion) {
+      return ({
+        visualization,
+        region,
+        unit,
+      });
+    }
+    return ({
+      visualization,
+      unit,
+      year,
+    });
+  }, [visualization, region, unit, year, filterByRegion]);
 
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
+    isFetched: isFetchedRecords,
+    isSuccess: isSuccessRecords,
+  } = useIndicatorRecords(
+    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && !!unit && (!!region || !!year),
+    },
+  );
+
+  const {
+    defaultCategory,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    regionsGeometries,
+    units,
+    defaultUnit,
+    scenarios,
+    defaultScenario,
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
     refetchOnWindowFocus: false,
+    enabled: !!indicatorSlug && !!visualization,
   });
 
   const {
     name,
-    categories: categoriesIndicator,
   } = indicatorData;
 
-  const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
-    [records, filters, visualizationType, categoriesIndicator],
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(records), [records],
+  );
+
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, categories),
+    [records, filters, categories],
+  );
 
   const colors = useColors(categories.length);
-  const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
-  );
-
-  const defaultYear = useMemo(
-    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
-    [records, visualizationType, unit]);
-
-  const regionsWithVisualization = useMemo(
-    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
-
-  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
-    [records, visualizationType, region, unit]);
-
-  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
-    [records, visualizationType, region, year]);
-
-  const defaultUnit = useMemo(
-    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
-  );
-
-  const defaultCategory = 'category_1';
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualizationType],
-    [visualizationType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys)[visualization],
+    [visualization, widgetDataKeys],
   );
-  const widgetData = useMemo(
+
+  const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
-      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
-  useEffect(() => {
-    const {
-      default_visualization: defaultVisualization,
-    } = indicatorData;
+  const currentVisualization = useMemo<string>(
+    // if the current visualization is not allowed when the user changes the indicator,
+    // it will fallback into the default one. If it is, it will remain.
+    () => (indicatorData?.visualization_types?.includes(visualization)
+      ? visualization : indicatorData?.default_visualization),
+    [visualization, indicatorData],
+  );
+  const currentYear = useMemo<number>(
+    () => (year || defaultYear?.value),
+    [year, defaultYear],
+  );
 
-    setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+  const currentUnit = useMemo<string>(
+    () => (unit || defaultUnit?.value),
+    [unit, defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => (region || defaultRegion?.value),
+    [region, defaultRegion],
+  );
+
+  const currentScenario = useMemo<string>(
+    () => (scenario || defaultScenario?.value),
+    [scenario, defaultScenario],
+  );
+
+  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
+  const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
+  const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
   useEffect(() => {
     dispatch(setFilters({
-      ...defaultYear && { year: defaultYear },
-      ...defaultRegion && { region: defaultRegion },
-      ...defaultUnit && { unit: defaultUnit },
-      ...defaultCategory && { category: { label: defaultCategory } },
+      visualization: currentVisualization,
+      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+      ...defaultCategory && { category: defaultCategory },
+      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
+  }, [
+    dispatch,
+    defaultYear,
+    currentYear,
+    currentRegion,
+    defaultUnit,
+    currentUnit,
+    defaultCategory,
+    defaultScenario,
+    currentScenario,
+    currentVisualization,
+    indicatorSlug,
+  ]);
 
   const DynamicChart = useMemo(() => {
-    if (visualizationType !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    if (visualization && visualization !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
     }
     return null;
-  }, [visualizationType]);
+  }, [visualization]);
 
   return (
     <div className="flex justify-between">
       <div className="flex flex-col h-full w-full">
         <section className="flex flex-col w-full">
-          <div className="flex">
+          <div className="flex w-full justify-between">
             {/* year filter */}
-            {['bar', 'pie', 'choropleth'].includes(visualizationType) && (
+            {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
             <div className="flex items-center">
               <span className="pr-2">Showing for:</span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
+              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0].label}</span>)}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -242,7 +284,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                 content={(
                   <DropdownContent
                     list={years}
-                    id="year"
+                    keyEl="year"
                     onClick={handleChange}
                   />
                       )}
@@ -252,7 +294,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                   onClick={() => { toggleDropdown('year'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{year || i18next.t('dates')}</span>
+                  <span>{displayYear || i18next.t('dates')}</span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                 </button>
               </Tooltip>
@@ -261,13 +303,13 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
+            {(['line', 'pie'].includes(visualization) && !!regions.length) && (
             <div className="flex items-center">
               <span className="pr-2">
                 {i18next.t('region')}
                 :
               </span>
-              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]}</span>)}
+              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0].label}</span>)}
               {regions.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -277,7 +319,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                 content={(
                   <DropdownContent
                     list={regions}
-                    id="region"
+                    keyEl="region"
                     onClick={handleChange}
                   />
                       )}
@@ -287,30 +329,63 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                   onClick={() => { toggleDropdown('region'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{region || 'Select a region'}</span>
+                  <span>{displayRegion || 'Select a region'}</span>
                 </button>
               </Tooltip>
               )}
             </div>
             )}
-            {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+
+            {/* scenario filter */}
+            {['choropleth'].includes(visualization) && !!scenarios.length && (
+            <div className="flex items-center">
+              <span className="pr-2">Scenario:</span>
+              {scenarios.length > 1 && (
+              <Tooltip
+                placement="bottom-start"
+                visible={dropdownVisibility.scenario}
+                interactive
+                onClickOutside={() => closeDropdown('scenario')}
+                content={(
+                  <DropdownContent
+                    list={scenarios}
+                    keyEl="scenario"
+                    onClick={handleChange}
+                  />
+                      )}
+              >
+                <button
+                  type="button"
+                  onClick={() => { toggleDropdown('scenario'); }}
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                >
+                  <span>{scenario || i18next.t('dates')}</span>
+                </button>
+              </Tooltip>
+              )}
+            </div>
+            )}
           </div>
+
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
             <LoadingSpinner />
             )}
+            {isFetchedRecords
+                && !isFetchingRecords
+                && !filteredRecords.length
+                && !!visualization && !!unit && (!!region || !!year)
+                && (
+                  <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
+                    <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                    <p>Data not found</p>
+                  </div>
+                )}
 
-            {!isFetchingRecords && !filteredRecords.length && (
-            <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-              <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-              <p>Data not found</p>
-            </div>
-            )}
-
-            {(!!filteredRecords.length && !isFetchingRecords) && (
+            {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
               <div className="flex items-center">
-                {visualizationType !== 'choropleth'
+                {visualization !== 'choropleth'
                   && (
                     <Tooltip
                       placement="bottom-start"
@@ -320,7 +395,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={units}
-                          id="unit"
+                          keyEl="unit"
                           onClick={handleChange}
                         />
                       )}
@@ -330,12 +405,12 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                         onClick={() => { toggleDropdown('unit'); }}
                         className="text-sm flex items-center cursor-pointer text-gray1 text-opacity-50"
                       >
-                        <span>{unit}</span>
+                        <span>{displayUnit}</span>
                       </button>
                     </Tooltip>
                   )}
               </div>
-              {visualizationType !== 'choropleth'
+              {visualization !== 'choropleth'
                   && (
                     <div className="w-full h-96">
                       <DynamicChart
@@ -345,11 +420,11 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                       />
                     </div>
                   )}
-              {visualizationType === 'choropleth' && (
+
+              {visualization === 'choropleth' && (
               <div className="w-full h-96">
                 <MapContainer
-                  layers={widgetData.layers}
-                  categories={categories}
+                  layers={widgetData[0]?.layers || []}
                 />
               </div>
               )}
@@ -363,14 +438,14 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
         <section className="flex flex-col justify-between ml-8">
           {categories.length > 0 && (
           <Filters
-            visualizationType={visualizationType}
+            visualizationType={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length}
             className="overflow-y-auto mb-4"
             onClick={setFilters}
           />
           )}
-          {categories.length > 0 && visualizationType !== 'choropleth' && (
+          {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
             categories={category?.label === 'category_1' ? categories : subcategories}
             className="max-h-72 overflow-y-auto mb-4"

@@ -146,11 +146,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const {
     defaultCategory,
-    years,
     defaultYear,
-    regions,
     defaultRegion,
     units,
+    years,
+    regions,
     defaultUnit,
     defaultScenario,
   } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
@@ -205,10 +205,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     () => (scenario || defaultScenario?.value),
     [scenario, defaultScenario],
   );
-
-  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
-  const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
-  const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
   useEffect(() => {
     dispatch(setFilters({
