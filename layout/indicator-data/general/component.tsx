@@ -64,14 +64,16 @@ interface WidgetDataTypes {
   layers?: MapLayersProps[]
 }
 
-const IndicatorChart: FC<IndicatorDataProps> = () => {
+const IndicatorChart: FC<IndicatorDataProps> = ({
+  className,
+}: IndicatorDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
     region: false,
     unit: false,
-    category: { label: 'category_1', value: null },
     scenario: false,
+    category: { label: 'category_1', value: null },
   });
 
   const queryClient = useQueryClient();
@@ -268,7 +270,7 @@ const IndicatorChart: FC<IndicatorDataProps> = () => {
   }, [visualization]);
 
   return (
-    <div className="flex justify-between">
+    <div className={`flex justify-between ${className}`}>
       <div className="flex flex-col h-full w-full">
         <section className="flex flex-col w-full">
           <div className="flex w-full justify-between">
@@ -301,6 +303,37 @@ const IndicatorChart: FC<IndicatorDataProps> = () => {
                 </button>
               </Tooltip>
               )}
+
+              {/* scenario filter */}
+              {['choropleth'].includes(visualization) && !!scenarios.length && (
+              <div className="flex items-center">
+                <span className="pr-2">Scenario:</span>
+                {scenarios.length > 1 && (
+                <Tooltip
+                  placement="bottom-start"
+                  visible={dropdownVisibility.scenario}
+                  interactive
+                  onClickOutside={() => closeDropdown('scenario')}
+                  content={(
+                    <DropdownContent
+                      list={scenarios}
+                      id="scenario"
+                      onClick={handleChange}
+                    />
+                      )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('scenario'); }}
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  >
+                    <span>{scenario || i18next.t('dates')}</span>
+                  </button>
+                </Tooltip>
+                )}
+              </div>
+              )}
+
             </div>
             )}
 

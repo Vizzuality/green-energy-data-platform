@@ -203,7 +203,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     dispatch(setFilters({
       visualization: currentVisualization,
       ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-      category,
       ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
       ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },

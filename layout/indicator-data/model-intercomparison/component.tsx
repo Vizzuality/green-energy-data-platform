@@ -16,8 +16,8 @@ import { useRouter } from 'next/router';
 import {
   useIndicator,
   useIndicatorRecords,
+  useIndicatorMetadata,
 } from 'hooks/indicators';
-import useDefaultRecordFilters from 'hooks/records';
 
 // components
 import Icon from 'components/icon';
@@ -32,7 +32,9 @@ import BarChart from 'components/indicator-visualizations/bar';
 // utils
 import {
   filterRecords,
+  getCategoriesFromRecords,
   getGroupedValues,
+  getSubcategoriesFromRecords,
 } from 'utils';
 
 import { RootState } from 'store/store';
@@ -40,7 +42,6 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
-import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
@@ -56,15 +57,16 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     year: false,
     region: false,
     unit: false,
-    scenario: false,
     category: { label: 'category_1', value: null },
+    scenario: false,
   });
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, region, unit, category, scenario, visualization,
-  } = useSelector((state: RootState) => state.indicator);
+    year, unit, region, category, scenario, visualization,
+  } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -94,14 +96,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     });
   }, [dispatch, dropdownVisibility]);
 
-  const filters = useMemo(() => ({
-    year,
-    region,
-    unit,
-    category,
-    scenario,
-  }), [year, region, unit, category, scenario]);
-
   const {
     data: indicatorData,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
@@ -115,7 +109,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       name: null,
       published: false,
       start_date: null,
-      visualizationTypes: [],
+      visualization_types: [],
       group: null,
       subgroup: null,
     },
@@ -123,46 +117,70 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const { data: regionsGeojson } = useRegions({}, {
-    refetchOnWindowFocus: false,
-  });
+  const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
+
+  const filtersIndicator = useMemo(() => {
+    if (filterByRegion) {
+      return ({
+        visualization,
+        region,
+        unit,
+      });
+    }
+    return ({
+      visualization,
+      unit,
+      year,
+    });
+  }, [visualization, region, unit, year, filterByRegion]);
 
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
-    refetchOnWindowFocus: false,
-  });
-
-  const {
-    name,
-    categories: categoriesIndicator,
-  } = indicatorData;
-
-  const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualization, categoriesIndicator),
-    [records, filters, visualization, categoriesIndicator],
+    isFetched: isFetchedRecords,
+    isSuccess: isSuccessRecords,
+  } = useIndicatorRecords(
+    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && !!unit && (!!region || !!year),
+    },
   );
 
   const {
-    categories,
     defaultCategory,
-    subcategories,
     years,
     defaultYear,
     regions,
     defaultRegion,
+    regionsGeometries,
     units,
     defaultUnit,
     scenarios,
     defaultScenario,
-  } = useDefaultRecordFilters(
-    records,
-    filteredRecords,
-    visualization,
-    filters,
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
+    refetchOnWindowFocus: false,
+    enabled: !!indicatorSlug && !!visualization,
+  });
+
+  const {
+    name,
+    visualization_types: visualizationTypesIndicator,
+    description,
+  } = indicatorData;
+
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
+
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, categories),
+    [records, filters, categories],
+  );
+
   const colors = useColors(categories.length);
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(records), [records],
+  );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
@@ -170,21 +188,66 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     [visualization, widgetDataKeys],
   );
 
-  const widgetData = useMemo(
+  const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
-      name, groupSlug, categories, visualization, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, categories, visualization, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
+
+  const currentVisualization = useMemo<string>(
+    // if the current visualization is not allowed when the user changes the indicator,
+    // it will fallback into the default one. If it is, it will remain.
+    () => (indicatorData?.visualization_types?.includes(visualization)
+      ? visualization : indicatorData?.default_visualization),
+    [visualization, indicatorData],
+  );
+  const currentYear = useMemo<number>(
+    () => (year || defaultYear?.value),
+    [year, defaultYear],
+  );
+
+  const currentUnit = useMemo<string>(
+    () => (unit || defaultUnit?.value),
+    [unit, defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => (region || defaultRegion?.value),
+    [region, defaultRegion],
+  );
+
+  const currentScenario = useMemo<string>(
+    () => (scenario || defaultScenario?.value),
+    [scenario, defaultScenario],
+  );
+
+  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
+  const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
+  const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
   useEffect(() => {
     dispatch(setFilters({
-      ...defaultYear && { year: defaultYear },
-      ...defaultRegion && { region: defaultRegion },
-      ...defaultUnit && { unit: defaultUnit },
-      ...defaultScenario && { scenario: defaultScenario },
-      ...defaultCategory && { category: { label: defaultCategory } },
+      visualization: currentVisualization,
+      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+      ...defaultCategory && { category: defaultCategory },
+      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultScenario, defaultCategory]);
+  }, [
+    dispatch,
+    defaultYear,
+    currentYear,
+    currentRegion,
+    defaultUnit,
+    currentUnit,
+    defaultCategory,
+    defaultScenario,
+    currentScenario,
+    currentVisualization,
+    indicatorSlug,
+  ]);
+
   return (
     <section className={`flex flex-col  ${className}`}>
       <div className="flex justify-between">
@@ -201,7 +264,11 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
         </section>
         <section className="flex flex-col justify-between ml-4 w-full">
           <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
-
+          {categories.length > 0 && visualization !== 'choropleth' && (
+          <Legend
+            categories={category?.label === 'category_1' ? categories : subcategories}
+          />
+          )}
         </section>
       </div>
       <div>
@@ -274,6 +341,34 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             </div>
             )}
             {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+            {/* Scenario filter */}
+            <span className="pr-2">
+              {i18next.t('scenario')}
+              :
+            </span>
+            {scenarios.length > 1 && (
+            <Tooltip
+              placement="bottom-start"
+              visible={dropdownVisibility.scenario}
+              interactive
+              onClickOutside={() => closeDropdown('scenario')}
+              content={(
+                <DropdownContent
+                  list={scenarios}
+                  id="scenario"
+                  onClick={handleChange}
+                />
+                      )}
+            >
+              <button
+                type="button"
+                onClick={() => { toggleDropdown('scenario'); }}
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+              >
+                <span>{scenario || i18next.t('selectScenario')}</span>
+              </button>
+            </Tooltip>
+            )}
           </div>
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
@@ -340,11 +435,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             )}
           </div>
         </section>
-        {categories.length > 0 && visualization !== 'choropleth' && (
-          <Legend
-            categories={category?.label === 'category_1' ? categories : subcategories}
-          />
-        )}
+
       </div>
     </section>
   );
