@@ -8,9 +8,9 @@ export type SubgroupProps = {
   default_indicator?: DataIdProps,
 };
 
-export type ScenarioProps = {
+export type ScenarioProps = Readonly <{
   name: string
-};
+}>;
 
 export interface GroupProps {
   id: number,

@@ -28,15 +28,7 @@ import MapContainer from 'components/indicator-visualizations/choropleth';
 import {
   filterRecords,
   getGroupedValues,
-  getYearsFromRecords,
-  getDefaultYearFromRecords,
-  getUnitsFromRecords,
-  getDefaultUnitFromRecords,
-  getRegionsFromRecords,
-  getDefaultRegionFromRecords,
-  getCategoriesFromRecords,
   getSubcategoriesFromRecords,
-  getScenariosFromRecords,
 } from 'utils';
 
 import { setFilters } from 'store/slices/indicator';
@@ -54,9 +46,9 @@ import {
   useIndicator,
   useIndicatorRecords,
 } from 'hooks/indicators';
-
 import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
+import { useDefaultRecordFilters } from 'hooks/records';
 
 import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
@@ -238,40 +230,28 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     [records, filters, visualizationType, categoriesIndicator],
   );
 
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const {
+    categories,
+    defaultCategory,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    units,
+    defaultUnit,
+    scenarios,
+    defaultScenario,
+  } = useDefaultRecordFilters(
+    records,
+    filteredRecords,
+    visualizationType,
+    filters,
+  );
 
   const colors = useColors(categories.length);
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
   );
-  const defaultYear = useMemo(
-    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
-    [records, visualizationType, unit]);
-
-  const regionsWithVisualization = useMemo(
-    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
-
-  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
-    [records, visualizationType, region, unit]);
-
-  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
-    [records, visualizationType, region, year]);
-
-  const defaultUnit = useMemo(
-    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
-  );
-
-  const scenarios = useMemo(
-    () => getScenariosFromRecords(records), [records],
-  );
-
-  const defaultScenario = useMemo(() => scenarios[0], [scenarios]);
-
-  const defaultCategory = 'category_1';
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
@@ -323,7 +303,15 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         ...defaultScenario && { scenario: defaultScenario },
       }));
     }
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultScenario, compareIndex]);
+  }, [
+    dispatch,
+    defaultYear,
+    defaultRegion,
+    defaultUnit,
+    defaultScenario,
+    defaultCategory,
+    compareIndex,
+  ]);
 
   const DynamicChart = useMemo(() => {
     if (visualizationType !== 'choropleth') {
@@ -660,6 +648,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                       </div>
                     </div>
                     )}
+
                     {visualizationType === 'choropleth' && (
                     <div className="w-full h-96 pb-11">
                       <MapContainer

@@ -94,6 +94,8 @@ module.exports = {
     borderRadius: ['responsive', 'hover', 'first', 'last'],
     extend: {
       fontWeight: ['hover', 'focus'],
+      backgroundColor: ['active'],
+      textColor: ['active'],
     },
   },
 };

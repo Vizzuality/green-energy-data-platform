@@ -56,8 +56,8 @@ export const filterRecords = (
     year,
     region,
     unit,
+    scenario,
   } = filters;
-
   const recordsByFilters = records.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
@@ -78,7 +78,9 @@ export const filterRecords = (
     }
 
     if (visualizationType === 'choropleth') {
-      if (year === d.year && d.unit.name === unit) return true;
+      if (year === d.year
+        && (d.unit.name === unit || !unit) // some idicators has no unit
+        && d.scenario?.name === scenario) return true;
     }
 
     if (visualizationType === 'bar') {
@@ -244,7 +246,7 @@ export const getGroupedValues = (
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
-    const colors = chroma.scale(['#e2714b', '#eee695']).colors(8).reverse();
+    const colors = chroma.scale(['#e7b092', '#dd96ab']).colors(8);
 
     const ITEMS = colors.map((d, index) => {
       let value = 0;
@@ -260,6 +262,10 @@ export const getGroupedValues = (
         value,
       });
     });
+
+    const media = (maxValue - minValue) / 2;
+
+    const legendTitle = unit ? `${name} (${unit})` : name;
 
     if (groupSlug !== 'coal-power-plants') {
       data = {
@@ -280,7 +286,7 @@ export const getGroupedValues = (
           },
           legendConfig: [{
             id: 'gradient-example-1',
-            name: `${name} (${unit})`,
+            name: legendTitle,
             icon: null,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'choropleth',
@@ -349,8 +355,9 @@ export const getGroupedValues = (
         data: dataWithGeometries,
         mapValues,
         layers: [{
-          id: 'regions',
+          id: 'cluster',
           type: 'geojson',
+          filter: ['has', 'point_count'],
           source: {
             type: 'geojson',
             data: {
@@ -361,6 +368,9 @@ export const getGroupedValues = (
                 properties: cat,
               })),
             },
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 45,
           },
           render: {
             layers: [
@@ -373,38 +383,86 @@ export const getGroupedValues = (
                   'circle-stroke-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', mapCategorySelected],
-                    minValue === maxValue ? 0 : minValue,
-                    '#e2714b',
+                    ['get', 'point_count'],
+                    minValue,
+                    '#c73a63',
+                    media,
+                    '#d06182',
                     maxValue,
-                    '#eee695',
+                    '#dd96ab',
                   ],
                   'circle-stroke-width': 1,
-                  'circle-radius': [
-                    'interpolate',
-                    ['linear'],
-                    ['get', mapCategorySelected],
-                    minValue === maxValue ? 0 : minValue,
-                    10, // 10 y 20 tamaño min y máxim del radio
-                    maxValue, // 0 y 1000 maximo y minimo de los valores
-                    20,
-                  ],
                   'circle-color': [
-                    'interpolate',
-                    ['linear'],
-                    ['get', mapCategorySelected],
-                    minValue === maxValue ? 0 : minValue,
-                    '#e2714b',
+                    'step',
+                    ['get', 'point_count'],
+                    '#dd96ab',
+                    minValue,
+                    '#d46f8c',
+                    media,
+                    '#cd5478',
                     maxValue,
-                    '#eee695',
+                    '#c73a63',
+                  ],
+                  'circle-radius': [
+                    'step',
+                    ['get', 'point_count'],
+                    10,
+                    minValue,
+                    15,
+                    media,
+                    20,
+                    maxValue,
+                    25,
                   ],
                 },
               },
+              {
+                id: 'media-cluster-count',
+                metadata: {
+                  position: 'top',
+                },
+                type: 'symbol',
+                layout: {
+                  'text-allow-overlap': true,
+                  'text-ignore-placement': true,
+                  'text-field': '{point_count_abbreviated}',
+                  'text-size': 12,
+                },
+              },
+              {
+                id: 'unclustered-point',
+                type: 'circle',
+                source: 'earthquakes',
+                filter: ['!', ['has', 'point_count']],
+                paint: {
+                  'circle-color': '#e7b092',
+                  'circle-radius': 4,
+                  'circle-stroke-width': 1,
+                  'circle-stroke-color': '#fff',
+                },
+              },
+              // {
+              //   id: 'media',
+              //   metadata: {
+              //     position: 'top',
+              //   },
+              //   type: 'symbol',
+              //   paint: {
+              //     'icon-color': '#F00',
+              //   },
+              //   layout: {
+              //     'icon-ignore-placement': true,
+              //     'icon-allow-overlap': true,
+              //     'icon-image': '',
+              //     'icon-color': 'red',
+              //     'icon-size': 10,
+              //   },
+              // },
             ],
           },
           legendConfig: [{
             id: 'gradient-example-1',
-            name: `${name} (${unit})`,
+            name: legendTitle,
             icon: null,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'gradient',
