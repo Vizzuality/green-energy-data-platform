@@ -22,6 +22,7 @@ import Legend from './legend';
 import LegendItem from './legend/item';
 import LegendTypeChoropleth from './legend/choropleth';
 import LegendTypeGradient from './legend/gradient';
+import LegendTypeBasic from './legend/basic';
 
 // Map
 import { DEFAULT_VIEWPORT } from './constants';
@@ -158,6 +159,9 @@ const MapContainer: FC<MapContainerProps> = (
 
               {type === 'gradient' && (
               <LegendTypeGradient className="text-sm text-gray-300" items={items} />
+              )}
+              {type === 'basic' && (
+              <LegendTypeBasic className="text-sm text-gray-300" items={items} />
               )}
 
             </LegendItem>

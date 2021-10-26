@@ -234,7 +234,7 @@ export const getGroupedValues = (
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
-        ['Total']: d.value,
+        Total: d.value,
       });
     });
 
@@ -283,7 +283,7 @@ export const getGroupedValues = (
             name: `${name} (${unit})`,
             icon: null,
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-            type: 'choropleth',
+            type: 'basic',
             items: [
               {
                 color: '#c9e6e8',
@@ -472,7 +472,7 @@ export const getGroupedValuesRelatedIndicators = (
       }, {
         year,
       }));
-    }
+  }
 
   if (visualization === 'bar') {
     data = flatten(chain(records)
