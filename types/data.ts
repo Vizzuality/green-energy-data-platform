@@ -8,6 +8,10 @@ export type SubgroupProps = {
   default_indicator?: DataIdProps,
 };
 
+export type ScenarioProps = {
+  name: string
+};
+
 export interface GroupProps {
   id: number,
   slug: string,
@@ -49,6 +53,7 @@ export interface Record {
   geometry?: GeometryProps[]
   year: number,
   visualizationTypes: string[],
+  scenario: ScenarioProps
 }
 
 interface CategoryFilters {

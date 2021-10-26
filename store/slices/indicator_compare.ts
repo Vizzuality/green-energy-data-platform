@@ -9,10 +9,12 @@ export type IndicatorCompareFilters = {
   region: string,
   unit: string,
   category: CategoryObject,
+  scenario: string
 };
 
 const initialState = {
   year: null,
+  scenario: null,
 } as IndicatorCompareFilters;
 
 export const indicatorSlice = createSlice({

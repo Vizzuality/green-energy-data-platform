@@ -44,7 +44,7 @@ const GridItem: FC<GridItemProps> = ({
   visualization,
 }: GridItemProps) => {
   const {
-    year, region, unit, category,
+    year, region, unit, category, scenario,
   } = useSelector((state: RootState) => state.indicator);
 
   const filters = useMemo(() => ({
@@ -52,7 +52,8 @@ const GridItem: FC<GridItemProps> = ({
     region,
     unit,
     category,
-  }), [year, region, unit, category]);
+    scenario,
+  }), [year, region, unit, category, scenario]);
 
   const {
     data: records,

@@ -234,7 +234,7 @@ export const getGroupedValues = (
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
-        ['Total']: d.value,
+        Total: d.value,
       });
     });
 
@@ -472,7 +472,7 @@ export const getGroupedValuesRelatedIndicators = (
       }, {
         year,
       }));
-    }
+  }
 
   if (visualization === 'bar') {
     data = flatten(chain(records)
@@ -593,6 +593,12 @@ export const getDefaultRegionFromRecords = (
   if (!r.visualizationTypes.includes(visualizationType)) return null;
   return r.region.name;
 })));
+
+export const getScenariosFromRecords = (
+  records: Record[],
+) => compact(uniq(
+  records.map((d) => d.scenario?.name).sort().filter((s) => s !== null),
+)) as string[];
 
 export const getUnitsFromRecords = (
   records: Record[],

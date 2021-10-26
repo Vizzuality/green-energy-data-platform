@@ -46,6 +46,7 @@ import {
   getDefaultRegionFromRecords,
   getCategoriesFromRecords,
   getSubcategoriesFromRecords,
+  getScenariosFromRecords,
 } from 'utils';
 
 import { RootState } from 'store/store';
@@ -76,6 +77,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+    scenario: false,
   });
 
   const { data: groups } = useGroups({
@@ -91,7 +93,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const {
-    year, region, unit, category,
+    year, region, unit, category, scenario,
   } = useSelector((state: RootState) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
@@ -140,7 +142,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     region,
     unit,
     category,
-  }), [year, region, unit, category]);
+    scenario,
+  }), [year, region, unit, category, scenario]);
 
   const {
     data: indicatorData,
@@ -215,6 +218,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
   );
 
+  const scenarios = useMemo(
+    () => getScenariosFromRecords(records), [records],
+  );
+
+  const defaultScenario = useMemo(() => scenarios[0], [scenarios]);
+
   const defaultCategory = 'category_1';
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
@@ -242,8 +251,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ...defaultRegion && { region: defaultRegion },
       ...defaultUnit && { unit: defaultUnit },
       ...defaultCategory && { category: { label: defaultCategory } },
+      ...defaultScenario && { scenario: defaultScenario },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
+  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory, defaultScenario]);
 
   const DynamicChart = useMemo(() => {
     if (visualizationType !== 'choropleth') {
@@ -396,9 +406,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         <div className="flex justify-between">
           <div className="flex flex-col h-full w-full">
             <section className="flex flex-col w-full">
-              <div className="flex">
+              <div className="flex w-full justify-between">
                 {/* year filter */}
-                {['bar', 'pie', 'choropleth'].includes(visualizationType) && (
+                {['bar', 'pie', 'choropleth'].includes(visualizationType) && !!years.length && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
                     {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
@@ -462,8 +472,38 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     )}
                   </div>
                 )}
-                {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+
+                {/* scenario filter */}
+                {['choropleth'].includes(visualizationType) && !!scenarios.length && (
+                <div className="flex items-center">
+                  <span className="pr-2">Scenario:</span>
+                  {scenarios.length > 1 && (
+                  <Tooltip
+                    placement="bottom-start"
+                    visible={dropdownVisibility.scenario}
+                    interactive
+                    onClickOutside={() => closeDropdown('scenario')}
+                    content={(
+                      <DropdownContent
+                        list={scenarios}
+                        id="scenario"
+                        onClick={handleChange}
+                      />
+                      )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => { toggleDropdown('scenario'); }}
+                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                    >
+                      <span>{scenario || i18next.t('dates')}</span>
+                    </button>
+                  </Tooltip>
+                  )}
+                </div>
+                )}
               </div>
+
               <div className="flex h-full w-full min-h-1/2">
                 {isFetchingRecords && (
                   <LoadingSpinner />

@@ -9,6 +9,7 @@ export type IndicatorFilters = {
   region: string,
   unit: string,
   category: CategoryObject,
+  scenario: string
 };
 
 const initialState = {
