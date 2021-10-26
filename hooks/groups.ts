@@ -13,7 +13,7 @@ export const useGroups = (queryConfig = {}) => {
     (state: RootState) => (state.language),
   );
   return useQuery(['fetch-groups', current],
-    () => fetchGroups('', { locale: current }).then(({ data }) => data.filter((d) => d.id !== '9c0e0f67-d5d3-44ff-b663-cb54135fbe19')), { // currentlty hiding model intercomparison
+    () => fetchGroups('', { locale: current }).then(({ data }) => data), {
     // keepPreviousData: true
       ...queryConfig,
     });

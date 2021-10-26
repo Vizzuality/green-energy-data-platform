@@ -57,7 +57,7 @@ import { MapLayersProps } from 'components/indicator-visualizations/choropleth/c
 import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
 
-import ChartConfig from '../indicator-data/config';
+import ChartConfig from './indicator-data/general/config';
 import DropdownContent from '../dropdown-content';
 
 interface WidgetDataTypes {
@@ -501,6 +501,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       <div className={cx('container m-auto bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
         <VisualizationsNav
           active={visualization}
+          groupSlug={groupSlug}
           className="w-full px-11 py-7"
           visualizationTypes={visualizationTypes}
           mobile

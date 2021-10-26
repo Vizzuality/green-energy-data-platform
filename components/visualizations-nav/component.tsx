@@ -9,9 +9,10 @@ import { setCompareFilters } from 'store/slices/indicator_compare';
 // components
 import Icon from 'components/icon';
 
-import { VisualizationsOptions } from './constants';
+import { GeneralVisualizationsOptions, ModelIntercomparisonVisualizationsOptions } from './constants';
 
 export interface VisualizationsNavProps {
+  groupSlug: string | string[];
   visualizationTypes: string[],
   active: string;
   mobile?: boolean,
@@ -19,6 +20,7 @@ export interface VisualizationsNavProps {
   className?: string;
 }
 export const VisualizationsNav: FC<VisualizationsNavProps> = ({
+  groupSlug,
   visualizationTypes,
   className,
   mobile = false,
@@ -37,6 +39,7 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
     }, [compareIndex, dispatch],
   );
 
+  const VisualizationsOptions = groupSlug === 'model-intercomparison' ? ModelIntercomparisonVisualizationsOptions : GeneralVisualizationsOptions;
   return (
     <nav>
       <ul
