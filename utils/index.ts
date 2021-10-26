@@ -23,6 +23,8 @@ import {
 
 import resources from 'utils/translations';
 
+import { scaleLinear } from 'd3-scale';
+
 export const initializeLanguage = () => i18n.init({
   resources,
   lng: 'en',
@@ -247,6 +249,9 @@ export const getGroupedValues = (
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
     const colors = chroma.scale(['#e7b092', '#dd96ab']).colors(8);
+    // const escala = scaleLinear([minValue, maxValue], [0, 5]);
+    const colores = scaleLinear([minValue, maxValue], colors);
+
 
     const ITEMS = colors.map((d, index) => {
       let value = 0;
@@ -262,6 +267,7 @@ export const getGroupedValues = (
         value,
       });
     });
+console.log(colores(minValue), colores(maxValue))
 
     const media = (maxValue - minValue) / 2;
 
@@ -385,11 +391,12 @@ export const getGroupedValues = (
                     ['linear'],
                     ['get', 'point_count'],
                     minValue,
-                    '#c73a63',
-                    media,
-                    '#d06182',
+                    colores(minValue),
+                    // '#c73a63',
+                    // '#d06182',
                     maxValue,
-                    '#dd96ab',
+                    colores(maxValue),
+                    // '#dd96ab',
                   ],
                   'circle-stroke-width': 1,
                   'circle-color': [
@@ -397,11 +404,11 @@ export const getGroupedValues = (
                     ['get', 'point_count'],
                     '#dd96ab',
                     minValue,
-                    '#d46f8c',
-                    media,
-                    '#cd5478',
+                    colores(minValue),
+                    // '#c73a63',
+                    // '#d06182',
                     maxValue,
-                    '#c73a63',
+                    colores(maxValue),
                   ],
                   'circle-radius': [
                     'step',
