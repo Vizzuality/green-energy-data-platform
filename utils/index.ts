@@ -246,7 +246,7 @@ export const getGroupedValues = (
 
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
-    const colors = chroma.scale(['#e2714b', '#eee695']).colors(8).reverse();
+    const colors = chroma.scale(['#e7b092', '#dd96ab']).colors(8);
 
     const ITEMS = colors.map((d, index) => {
       let value = 0;
@@ -262,6 +262,8 @@ export const getGroupedValues = (
         value,
       });
     });
+
+    const media = (maxValue - minValue) / 2;
 
     const legendTitle = unit ? `${name} (${unit})` : name;
 
@@ -353,7 +355,7 @@ export const getGroupedValues = (
         data: dataWithGeometries,
         mapValues,
         layers: [{
-          id: 'regions',
+          id: 'cluster',
           type: 'geojson',
           filter: ['has', 'point_count'],
           source: {
@@ -381,57 +383,37 @@ export const getGroupedValues = (
                   'circle-stroke-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', mapCategorySelected],
-                    minValue === maxValue ? 0 : minValue,
-                    '#e2714b',
+                    ['get', 'point_count'],
+                    minValue,
+                    '#c73a63',
+                    media,
+                    '#d06182',
                     maxValue,
-                    '#eee695',
+                    '#dd96ab',
                   ],
                   'circle-stroke-width': 1,
-                  // 'circle-radius': [
-                  //   'step',
-                  //   ['get', 'point_count'],
-                  //   minValue === maxValue ? 0 : minValue,
-                  //   10, // 10 y 20 tamaño min y máxim del radio
-                  //   maxValue, // 0 y 1000 maximo y minimo de los valores
-                  //   20,
-                  // ],
-                  // 'circle-color': [
-                  //   'step',
-                  //   ['get', 'point_count'],
-                  //   '#B6B8B4',
-                  //   minValue === maxValue ? 0 : minValue,
-                  //   '#e2714b',
-                  //   maxValue,
-                  //   '#eee695',
-                  // ],
                   'circle-color': [
                     'step',
                     ['get', 'point_count'],
-                    '#cc2a58',
+                    '#dd96ab',
                     minValue,
-                    '#eec68b',
+                    '#d46f8c',
+                    media,
+                    '#cd5478',
                     maxValue,
-                    'blue'
-                    ],
-                    'circle-radius': [
+                    '#c73a63',
+                  ],
+                  'circle-radius': [
                     'step',
                     ['get', 'point_count'],
-                    20,
+                    10,
                     minValue,
-                    30,
+                    15,
+                    media,
+                    20,
                     maxValue,
-                    40
-                    ]
-                  // 'circle-color': [
-                  //   'interpolate',
-                  //   ['linear'],
-                  //   ['get', mapCategorySelected],
-                  //   minValue === maxValue ? 0 : minValue,
-                  //   '#e2714b',
-                  //   maxValue,
-                  //   '#eee695',
-                  // ],
+                    25,
+                  ],
                 },
               },
               {
@@ -445,6 +427,18 @@ export const getGroupedValues = (
                   'text-ignore-placement': true,
                   'text-field': '{point_count_abbreviated}',
                   'text-size': 12,
+                },
+              },
+              {
+                id: 'unclustered-point',
+                type: 'circle',
+                source: 'earthquakes',
+                filter: ['!', ['has', 'point_count']],
+                paint: {
+                  'circle-color': '#e7b092',
+                  'circle-radius': 4,
+                  'circle-stroke-width': 1,
+                  'circle-stroke-color': '#fff',
                 },
               },
               // {

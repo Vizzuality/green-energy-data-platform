@@ -63,7 +63,13 @@ const MapContainer: FC<MapContainerProps> = (
   }: MapContainerProps,
 ) => {
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
-  const [hoverInteractions, setHoverInteractions] = useState({} || { regions: {} });
+  const [hoverInteractions, setHoverInteractions] = useState({}
+    || {
+      regions: {},
+      cluster: {
+        point_count: null,
+      },
+    });
   const [lngLat, setLngLat] = useState(null);
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
@@ -134,6 +140,19 @@ const MapContainer: FC<MapContainerProps> = (
                 {' '}
                 {numberFormat(Object.values(hoverInteractions.regions))}
               </Popup>
+            )}
+            {lngLat && hoverInteractions.cluster && (
+            <Popup
+              latitude={lngLat[1]}
+              longitude={lngLat[0]}
+              closeButton={false}
+              className="rounded-2xl"
+            >
+              Total count
+              :
+                {' '}
+                {hoverInteractions.cluster.point_count}
+            </Popup>
             )}
           </>
         )}
