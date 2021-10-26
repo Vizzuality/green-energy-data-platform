@@ -139,7 +139,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   );
 
   const {
-    defaultCategory,
     defaultYear,
     defaultRegion,
     units,
@@ -204,24 +203,20 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     dispatch(setFilters({
       visualization: currentVisualization,
       ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-      ...defaultCategory && { category: defaultCategory },
+      category,
       ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
       ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     }));
   }, [
     dispatch,
-    defaultYear,
     currentYear,
     currentRegion,
-    defaultUnit,
     currentUnit,
-    defaultCategory,
+    defaultUnit,
     defaultScenario,
     currentScenario,
-    currentVisualization,
-    indicatorSlug,
-  ]);
+    currentVisualization]);
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',

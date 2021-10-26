@@ -43,3 +43,8 @@ export const ModelIntercomparisonVisualizationsOptions = [
     label: 'Table',
   },
 ];
+
+export default {
+  GeneralVisualizationsOptions,
+  ModelIntercomparisonVisualizationsOptions,
+};

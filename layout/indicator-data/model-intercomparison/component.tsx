@@ -123,7 +123,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualization, {
+  const { data: regionsGeojson } = useRegions({}, {
     refetchOnWindowFocus: false,
   });
 
@@ -274,7 +274,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             </div>
             )}
             {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
-
           </div>
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
