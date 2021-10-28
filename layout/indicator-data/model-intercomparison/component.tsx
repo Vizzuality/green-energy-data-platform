@@ -165,7 +165,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   const {
     name,
     visualization_types: visualizationTypesIndicator,
-    description,
   } = indicatorData;
 
   const categories = useMemo(

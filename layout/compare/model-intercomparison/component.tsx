@@ -121,7 +121,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualization, {
+  const { data: regionsGeojson } = useRegions({}, {
     refetchOnWindowFocus: false,
   });
 
@@ -138,8 +138,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   } = indicatorData;
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualization, categoriesIndicator),
-    [records, filters, visualization, categoriesIndicator],
+    () => filterRecords(records, filters, categoriesIndicator),
+    [records, filters, categoriesIndicator],
   );
 
   const {
