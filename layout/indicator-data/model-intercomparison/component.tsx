@@ -291,14 +291,14 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                     id="year"
                     onClick={handleChange}
                   />
-                      )}
+                )}
               >
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('year'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{year || i18next.t('dates')}</span>
+                  <span>{displayYear || i18next.t('dates')}</span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                 </button>
               </Tooltip>
@@ -326,14 +326,14 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                     id="region"
                     onClick={handleChange}
                   />
-                      )}
+                )}
               >
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('region'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{region || 'Select a region'}</span>
+                  <span>{displayRegion || 'Select a region'}</span>
                 </button>
               </Tooltip>
               )}
@@ -357,7 +357,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                   id="scenario"
                   onClick={handleChange}
                 />
-                      )}
+              )}
             >
               <button
                 type="button"
