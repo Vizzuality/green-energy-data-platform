@@ -9,7 +9,6 @@ import {
   useQueryClient,
 } from 'react-query';
 
-import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -26,8 +25,9 @@ import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
-import MapContainer from 'components/indicator-visualizations/choropleth';
 import LoadingSpinner from 'components/loading-spinner';
+import LineChart from 'components/indicator-visualizations/line';
+import BarChart from 'components/indicator-visualizations/bar';
 
 // utils
 import {
@@ -47,12 +47,6 @@ import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
-
-type ChartProps = {
-  widgetData: any,
-  widgetConfig: any,
-  colors: string[],
-};
 
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
@@ -201,14 +195,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       ...defaultCategory && { category: { label: defaultCategory } },
     }));
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultScenario, defaultCategory]);
-
-  const DynamicChart = useMemo(() => {
-    if (visualizationType !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
-    }
-    return null;
-  }, [visualizationType]);
-
   return (
     <section className={`flex flex-col  ${className}`}>
       <div className="flex justify-between">
@@ -343,24 +329,29 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                     </Tooltip>
                   )}
               </div>
-              {visualizationType !== 'choropleth'
+              {visualizationType !== 'line'
                   && (
                     <div className="w-full h-96">
-                      <DynamicChart
+                      <LineChart
                         widgetData={widgetData}
                         widgetConfig={widgetConfig}
                         colors={colors}
                       />
                     </div>
                   )}
-              {visualizationType === 'choropleth' && (
-              <div className="w-full h-96">
-                <MapContainer
-                  layers={widgetData.layers}
-                  categories={categories}
-                />
-              </div>
-              )}
+              {visualizationType === 'bar'
+                  && (
+                    <div className="w-full h-96 flex">
+                      {scenarios.map((s) => (
+                        <BarChart
+                          key={s}
+                          widgetData={widgetData}
+                          widgetConfig={widgetConfig}
+                          colors={colors}
+                        />
+                      ))}
+                    </div>
+                  )}
 
             </div>
             )}
