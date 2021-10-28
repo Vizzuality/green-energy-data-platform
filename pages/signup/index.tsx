@@ -11,7 +11,7 @@ import {
 } from 'next-auth/client';
 import cx from 'classnames';
 
-import { signUp } from 'services/user';
+import API from 'lib/api';
 
 // components
 import LayoutPage from 'layout';
@@ -40,7 +40,7 @@ const SignupPage: FC = () => {
       [type]: e.currentTarget.value,
     });
   };
-  const handleSubmit = useCallback((evt) => {
+  const handleSubmit = useCallback(async (evt) => {
     evt.preventDefault();
 
     if (passwordInputRef?.current?.value.length < 6) {
@@ -52,15 +52,23 @@ const SignupPage: FC = () => {
       setErrorMessage("Passwords Don't Match");
       setTimeout(() => setErrorMessage(''), 3000);
     } else {
-      signUp(credentials).then(({ data, status }) => {
-        if (!!data && status === 201) {
+      try {
+        const signUpResponse = await API
+          .request({
+            method: 'POST',
+            url: '/users/signup',
+            headers: {
+              'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
+            },
+            data: credentials,
+          });
+        if (signUpResponse.status === 201) {
           router.push('signin');
         }
-      })
-        .catch(({ response: { data: { error } } }) => {
-          setErrorMessage(error);
-          setTimeout(() => setErrorMessage(''), 3000);
-        });
+      } catch ({ response: { data: { error } } }) {
+        setErrorMessage(error);
+        setTimeout(() => setErrorMessage(''), 3000);
+      }
     }
   }, [credentials]);
 
