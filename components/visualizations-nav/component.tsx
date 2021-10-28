@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import cx from 'classnames';
 import i18next from 'i18next';
 
@@ -39,7 +39,13 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
     }, [compareIndex, dispatch],
   );
 
-  const VisualizationsOptions = groupSlug === 'model-intercomparison' ? ModelIntercomparisonVisualizationsOptions : GeneralVisualizationsOptions;
+  const VisualizationsOptions = useMemo(() => {
+    if (groupSlug === 'model-intercomparison') {
+      return ModelIntercomparisonVisualizationsOptions;
+    }
+    return GeneralVisualizationsOptions;
+  }, [groupSlug]);
+
   return (
     <nav>
       <ul

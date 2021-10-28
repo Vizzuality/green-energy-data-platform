@@ -80,7 +80,7 @@ const Filters: FC<FiltersProps> = ({
   };
 
   return (
-    <div className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1',
+    <div className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full',
       { [className]: className })}
     >
       <div className="flex justify-start py-3.5 px-6 ">

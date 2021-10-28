@@ -177,6 +177,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     () => ChartConfig(widgetDataKeys)[visualizationType],
     [visualizationType, widgetDataKeys],
   );
+
   const widgetData = useMemo(
     () => getGroupedValues(
       name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
@@ -209,8 +210,30 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   }, [visualizationType]);
 
   return (
-    <div className={`flex justify-between ${className}`}>
-      <div className="flex flex-col h-full w-full">
+    <section className={`flex flex-col  ${className}`}>
+      <div className="flex justify-between">
+        <section className="w-full">
+          {categories.length > 0 && (
+          <Filters
+            visualizationType={visualizationType}
+            categories={categories}
+            hasSubcategories={!!subcategories.length}
+            className="overflow-y-auto mb-4"
+            onClick={setFilters}
+          />
+          )}
+        </section>
+        <section className="flex flex-col justify-between ml-8 w-full">
+          <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
+          {categories.length > 0 && visualizationType !== 'choropleth' && (
+          <Legend
+            categories={category?.label === 'category_1' ? categories : subcategories}
+          />
+          )}
+        </section>
+      </div>
+      <div>
+
         <section className="flex flex-col w-full">
           <div className="flex">
             {/* year filter */}
@@ -242,42 +265,11 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 </button>
               </Tooltip>
               )}
-
-              {/* scenario filter */}
-              {['choropleth'].includes(visualizationType) && !!scenarios.length && (
-              <div className="flex items-center">
-                <span className="pr-2">Scenario:</span>
-                {scenarios.length > 1 && (
-                <Tooltip
-                  placement="bottom-start"
-                  visible={dropdownVisibility.scenario}
-                  interactive
-                  onClickOutside={() => closeDropdown('scenario')}
-                  content={(
-                    <DropdownContent
-                      list={scenarios}
-                      id="scenario"
-                      onClick={handleChange}
-                    />
-                      )}
-                >
-                  <button
-                    type="button"
-                    onClick={() => { toggleDropdown('scenario'); }}
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                  >
-                    <span>{scenario || i18next.t('dates')}</span>
-                  </button>
-                </Tooltip>
-                )}
-              </div>
-              )}
-
             </div>
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
+            {(['line'].includes(visualizationType) && !!regions.length) && (
             <div className="flex items-center">
               <span className="pr-2">
                 {i18next.t('region')}
@@ -374,28 +366,9 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             )}
           </div>
         </section>
+
       </div>
-      <div className="flex">
-        <section className="flex flex-col justify-between ml-8">
-          {categories.length > 0 && (
-          <Filters
-            visualizationType={visualizationType}
-            categories={categories}
-            hasSubcategories={!!subcategories.length}
-            className="overflow-y-auto mb-4"
-            onClick={setFilters}
-          />
-          )}
-          {categories.length > 0 && visualizationType !== 'choropleth' && (
-          <Legend
-            categories={category?.label === 'category_1' ? categories : subcategories}
-            className="max-h-72 overflow-y-auto mb-4"
-          />
-          )}
-          <DataSource indicatorSlug={indicatorSlug} />
-        </section>
-      </div>
-    </div>
+    </section>
   );
 };
 
