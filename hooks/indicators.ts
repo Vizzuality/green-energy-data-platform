@@ -85,6 +85,7 @@ export function useIndicatorRecords(
   groupId,
   subgroupId,
   indicatorId,
+  params = {},
   queryOptions = {},
 ) {
   const {
@@ -94,11 +95,14 @@ export function useIndicatorRecords(
   );
 
   const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
-    () => fetchIndicatorRecords(groupId, subgroupId, indicatorId, { locale: current }), {
+    () => fetchIndicatorRecords(groupId, subgroupId, indicatorId, { locale: current, ...params }),
+    {
       placeholderData: [],
       ...queryOptions,
     });
+
   const { data } = query;
+
   return useMemo(() => ({
     ...query,
     data: data.map((d) => ({

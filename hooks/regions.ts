@@ -20,6 +20,9 @@ export const useRegions = (id, visualizationType, queryConfig = {}) => {
     });
 };
 
+export const useRegionIdFromName = (regions, name) => regions.find((region) => name === region);
+
 export default {
   useRegions,
+  useRegionIdFromName,
 };

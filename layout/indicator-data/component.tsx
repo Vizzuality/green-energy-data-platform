@@ -48,9 +48,9 @@ import i18next from 'i18next';
 
 import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
+import { useDefaultRecordFilters } from 'hooks/records';
 
 import DropdownContent from 'layout/dropdown-content';
-import useDefaultRecordFilters from 'hooks/records';
 import ChartConfig from './config';
 
 import IndicatorDataProps from './types';
@@ -168,9 +168,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
-    refetchOnWindowFocus: false,
-  });
+  } = useIndicatorRecords(
+    groupSlug, subgroupSlug, indicatorSlug,
+    { ...filters }, { refetchOnWindowFocus: false },
+  );
 
   const {
     name,
@@ -232,7 +233,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ...defaultRegion && { region: defaultRegion },
       ...defaultUnit && { unit: defaultUnit },
       ...defaultCategory && { category: { label: defaultCategory } },
-      scenario: defaultScenario,
+      // scenario: defaultScenario,
     }));
   }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory, defaultScenario]);
 

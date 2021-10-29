@@ -1,10 +1,9 @@
 import {
   compact,
-  uniq,
+  sortedUniq,
   chain,
   flatten,
   groupBy,
-  sortedUniq,
 } from 'lodash';
 
 import chroma from 'chroma-js';
@@ -40,11 +39,11 @@ export const Filter = (arr: (string | number)[], param: number) => {
 
 export const getCategoriesFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1)))).sort();
+) => compact(sortedUniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1))));
 
 export const getSubcategoriesFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2)))).sort();
+) => compact(sortedUniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2))));
 
 export const filterRecords = (
   records: Record[],
@@ -61,7 +60,6 @@ export const filterRecords = (
   const recordsByFilters = records.filter((d) => {
     if (visualizationType === 'line') {
       // API return region name to null for China
-
       if (
         (d.region.name === region || (d.region.name === null)
         )
@@ -86,7 +84,7 @@ export const filterRecords = (
     if (visualizationType === 'bar') {
       if (year === d.year
         && d.unit.name === unit
-        && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
+        && d.region.name !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
         && d.region.name !== 'China') return true;
     }
 
@@ -232,7 +230,7 @@ export const getGroupedValues = (
 
   if (visualization === 'choropleth') {
     const dataWithGeometries = filteredData.map(({ id, ...d }) => {
-      const geometry = filteredRegions?.find((r) => d.region.id === r.id);
+      const geometry = filteredRegions?.find((r) => d.region.name === r.region.name);
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
@@ -562,7 +560,7 @@ export const getGroupedValuesRelatedIndicators = (
   }
   if (visualization === 'choropleth') {
     const dataWithGeometries = records?.map(({ id, ...d }) => {
-      const geometry = filteredRegions?.find((r) => d.region.id === r.id);
+      const geometry = filteredRegions?.find((r) => d.region.name === r.name);
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,
@@ -622,10 +620,10 @@ export const getYearsFromRecords = (
   visualizationType: string,
   region: string,
   unit: string,
-) => compact(uniq(records
+) => compact(sortedUniq(records
   .filter((r) => r.visualizationTypes.includes(visualizationType)
     && r.region.name === region && r.unit.name === unit)
-  .map((d) => d.year))).sort();
+  .map((d) => d.year)));
 
 export const getDefaultYearFromRecords = (
   records: Record[],
@@ -639,23 +637,23 @@ export const getRegionsFromRecords = (
   records: Record[],
   visualizationType: string,
   unit: string,
-) => compact(uniq(records
+) => compact(sortedUniq(records
   .filter((r) => r.visualizationTypes.includes(visualizationType)
     && r.unit.name === unit)
-  .map((d) => d.region.name))).sort();
+  .map((d) => d.region.name)));
 
 export const getDefaultRegionFromRecords = (
   records: Record[],
   visualizationType: string,
-) => compact(uniq(records.map((r) => {
+) => sortedUniq(records.map((r) => {
   if (!r.visualizationTypes.includes(visualizationType)) return null;
   return r.region.name;
-})));
+}));
 
 export const getScenariosFromRecords = (
   records: Record[],
-) => compact(uniq(
-  records.map((d) => d.scenario?.name).sort().filter((s) => s !== null),
+) => compact(sortedUniq(
+  records.map((d) => d.scenario?.name).filter((s) => s !== null),
 )) as string[];
 
 export const getUnitsFromRecords = (
@@ -663,10 +661,10 @@ export const getUnitsFromRecords = (
   visualizationType: string,
   region: string,
   year: number,
-) => compact(uniq(records
+) => compact(sortedUniq(records
   .filter((r) => r.visualizationTypes.includes(visualizationType)
   && r.region.name === region && r.year === year)
-  .map((d) => d.unit.name))).sort();
+  .map((d) => d.unit.name)));
 
 export const getDefaultUnitFromRecords = (
   records: Record[],

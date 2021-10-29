@@ -1,4 +1,4 @@
-export type SubgroupProps = {
+export type SubgroupProps = Readonly<{
   description: string,
   id: number;
   indicators: IndicatorProps[],
@@ -6,7 +6,7 @@ export type SubgroupProps = {
   name: string;
   published: boolean,
   default_indicator?: DataIdProps,
-};
+}>;
 
 export type ScenarioProps = Readonly <{
   name: string
