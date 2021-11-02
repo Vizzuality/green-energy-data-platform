@@ -1,6 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import cx from 'classnames';
 import i18next from 'i18next';
+
+import { useDispatch } from 'react-redux';
+import { setFilters } from 'store/slices/indicator';
 
 // components
 import Icon from 'components/icon';
@@ -12,19 +15,19 @@ export interface VisualizationsNavProps {
   active: string;
   mobile?: boolean,
   className?: string;
-  onClick: (id: string) => void;
 }
-
 export const VisualizationsNav: FC<VisualizationsNavProps> = ({
   visualizationTypes,
   className,
   mobile = false,
   active,
-  onClick,
 }: VisualizationsNavProps) => {
-  const handleVisualization = (id) => {
-    onClick(id);
-  };
+  const dispatch = useDispatch();
+
+  const handleVisualization = useCallback(
+    (id) => dispatch(setFilters({ visualization: id })),
+    [dispatch],
+  );
 
   return (
     <nav>

@@ -4,13 +4,14 @@ type CategoryObject = {
   label: string, value?: string
 };
 
-export type IndicatorFilters = {
+export type IndicatorFilters = Readonly<{
   year: number,
   region: string,
   unit: string,
   category: CategoryObject,
-  scenario: string
-};
+  scenario: string,
+  visualization: string
+}>;
 
 const initialState = {
   year: null,

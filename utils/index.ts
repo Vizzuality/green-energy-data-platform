@@ -1,5 +1,6 @@
 import {
   compact,
+  sortBy,
   sortedUniq,
   chain,
   flatten,
@@ -39,16 +40,15 @@ export const Filter = (arr: (string | number)[], param: number) => {
 
 export const getCategoriesFromRecords = (
   records: Record[],
-) => compact(sortedUniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1))));
+) => compact(sortedUniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort()));
 
 export const getSubcategoriesFromRecords = (
   records: Record[],
-) => compact(sortedUniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2))));
+) => compact(sortedUniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2)).sort()));
 
 export const filterRecords = (
   records: Record[],
   filters: IndicatorFilters,
-  visualizationType: string,
   categories: unknown[],
 ) => {
   const {
@@ -56,9 +56,10 @@ export const filterRecords = (
     region,
     unit,
     scenario,
+    visualization,
   } = filters;
   const recordsByFilters = records.filter((d) => {
-    if (visualizationType === 'line') {
+    if (visualization === 'line') {
       // API return region name to null for China
       if (
         (d.region.name === region || (d.region.name === null)
@@ -68,20 +69,20 @@ export const filterRecords = (
         || categories.length === 1)) return true;
     }
 
-    if (visualizationType === 'pie') {
+    if (visualization === 'pie') {
       if ((d.region.name === region || (d.region.name === null))
         && d.unit.name === unit && year === d.year
         && (((categories.length > 1) && d.category_1 !== 'Total')
         || categories.length === 1)) return true;
     }
 
-    if (visualizationType === 'choropleth') {
+    if (visualization === 'choropleth') {
       if (year === d.year
         && (d.unit.name === unit || !unit) // some idicators has no unit
         && d.scenario?.name === scenario) return true;
     }
 
-    if (visualizationType === 'bar') {
+    if (visualization === 'bar') {
       if (year === d.year
         && d.unit.name === unit
         && d.region.name !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
@@ -97,9 +98,8 @@ export const filterRecords = (
 export const filterRelatedIndicators = (
   records: Record[],
   filters: IndicatorFilters,
-  visualizationType: string,
 ) => {
-  const { region, category } = filters;
+  const { region, category, visualization } = filters;
   const label = category?.label;
   const categories = getCategoriesFromRecords(records).filter((c) => c !== 'Total');
 
@@ -110,21 +110,21 @@ export const filterRelatedIndicators = (
   });
 
   const recordsByFilters = results.filter((d) => {
-    if (visualizationType === 'line') {
+    if (visualization === 'line') {
       // API return region name to null for China
       if ((categories.length > 1 && d.category_1 !== 'Total') || categories.length === 1) return true;
     }
 
-    if (visualizationType === 'pie') {
+    if (visualization === 'pie') {
       if ((categories.length > 1 && d.category_1 !== 'Total')
       || categories.length === 1) return true;
     }
 
-    if (visualizationType === 'bar') {
+    if (visualization === 'bar') {
       if (d.region.name !== 'China') return true;
     }
 
-    if (visualizationType === 'choropleth') {
+    if (visualization === 'choropleth') {
       if (d.region.name === region || d.region.name === null) return true;
     }
 
@@ -139,13 +139,11 @@ export const filterRelatedIndicators = (
 export const getGroupedValues = (
   name: string,
   groupSlug: string | string[],
-  categories: string[],
-  visualization: string,
   filters: IndicatorFilters,
   records: Record[],
   regions: Record[],
 ) => {
-  const { category, unit } = filters;
+  const { category, unit, visualization } = filters;
 
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
@@ -470,20 +468,18 @@ export const getGroupedValues = (
       };
     }
   }
-
   return data;
 };
 
 export const getGroupedValuesRelatedIndicators = (
   categories: string[],
-  visualization: string,
   filters: IndicatorFilters,
   records: Record[],
   regions,
 ) => {
   let data;
 
-  const { category } = filters;
+  const { category, visualization } = filters;
   const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
@@ -623,37 +619,36 @@ export const getYearsFromRecords = (
 ) => compact(sortedUniq(records
   .filter((r) => r.visualizationTypes.includes(visualizationType)
     && r.region.name === region && r.unit.name === unit)
-  .map((d) => d.year)));
+  .map((d) => d.year).sort()));
 
 export const getDefaultYearFromRecords = (
   records: Record[],
   visualizationType: string,
-) => compact(sortedUniq(records.map((r) => {
+) => compact(records.map((r) => {
   if (!r.visualizationTypes.includes(visualizationType)) return null;
   return r.year;
-})))[0];
+}))[0];
 
 export const getRegionsFromRecords = (
   records: Record[],
   visualizationType: string,
   unit: string,
-) => compact(sortedUniq(records
-  .filter((r) => r.visualizationTypes.includes(visualizationType)
-    && r.unit.name === unit)
+) => compact(sortedUniq(sortBy(records
+  .filter((r) => r.visualizationTypes.includes(visualizationType) && r.unit.name === unit), 'region.name')
   .map((d) => d.region.name)));
 
 export const getDefaultRegionFromRecords = (
   records: Record[],
   visualizationType: string,
-) => sortedUniq(records.map((r) => {
+) => records.map((r) => {
   if (!r.visualizationTypes.includes(visualizationType)) return null;
   return r.region.name;
-}));
+});
 
 export const getScenariosFromRecords = (
   records: Record[],
 ) => compact(sortedUniq(
-  records.map((d) => d.scenario?.name).filter((s) => s !== null),
+  records.map((d) => d.scenario?.name).filter((s) => s !== null).sort(),
 )) as string[];
 
 export const getUnitsFromRecords = (
@@ -661,18 +656,18 @@ export const getUnitsFromRecords = (
   visualizationType: string,
   region: string,
   year: number,
-) => compact(sortedUniq(records
+) => compact(sortedUniq(sortBy(records
   .filter((r) => r.visualizationTypes.includes(visualizationType)
-  && r.region.name === region && r.year === year)
+  && r.region.name === region && r.year === year), 'unit.name')
   .map((d) => d.unit.name)));
 
 export const getDefaultUnitFromRecords = (
   records: Record[],
   visualizationType: string,
-) => compact(sortedUniq(records.map((r) => {
+) => compact(records.map((r) => {
   if (!r.visualizationTypes.includes(visualizationType)) return null;
   return r.unit.name;
-})))[0];
+}))[0];
 
 export const getTodaysDate = () => {
   const today = new Date();

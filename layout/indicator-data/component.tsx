@@ -86,7 +86,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const {
-    year, region, unit, category, scenario,
+    year, region, unit, category, scenario, visualization,
   } = useSelector((state: RootState) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
@@ -136,7 +136,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     unit,
     category,
     scenario,
-  }), [year, region, unit, category, scenario]);
+    visualization,
+  }), [year, region, unit, category, scenario, visualization]);
 
   const {
     data: indicatorData,
@@ -159,9 +160,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
-
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
+  const { data: regionsGeojson } = useRegions(indicatorSlug, visualization, {
     refetchOnWindowFocus: false,
   });
 
@@ -181,8 +180,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   } = indicatorData;
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
-    [records, filters, visualizationType, categoriesIndicator],
+    () => filterRecords(records, filters, categoriesIndicator),
+    [records, filters, categoriesIndicator],
   );
 
   const {
@@ -199,7 +198,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   } = useDefaultRecordFilters(
     records,
     filteredRecords,
-    visualizationType,
     filters,
   );
 
@@ -210,22 +208,21 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualizationType],
-    [visualizationType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys)[visualization],
+    [visualization, widgetDataKeys],
   );
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, filters, filteredRecords, regionsGeojson,
+    ), [name, groupSlug, filters, filteredRecords, regionsGeojson],
   );
 
+  const {
+    default_visualization: defaultVisualization,
+  } = indicatorData;
   useEffect(() => {
-    const {
-      default_visualization: defaultVisualization,
-    } = indicatorData;
-
-    setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+    setFilters({ visualization: defaultVisualization });
+  }, [defaultVisualization]);
 
   useEffect(() => {
     dispatch(setFilters({
@@ -234,25 +231,33 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ...defaultUnit && { unit: defaultUnit },
       ...defaultCategory && { category: { label: defaultCategory } },
       // scenario: defaultScenario,
+      ...defaultVisualization && { visualization: defaultVisualization },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory, defaultScenario]);
+  }, [
+    dispatch,
+    defaultYear,
+    defaultRegion,
+    defaultUnit,
+    defaultCategory,
+    defaultScenario,
+    defaultVisualization,
+  ]);
 
   const DynamicChart = useMemo(() => {
-    if (visualizationType !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    if (visualization !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
     }
     return null;
-  }, [visualizationType]);
+  }, [visualization]);
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
     >
       <VisualizationsNav
-        active={visualizationType}
+        active={visualization}
         className="w-full lg:px-32 md:px-24 sm:px-16 px-8"
         visualizationTypes={visualizationTypesIndicator}
-        onClick={setVisualizationType}
       />
       <div className="flex flex-col lg:px-32 md:px-24 px-16 py-11 w-full">
         <div className="flex items-center w-full justify-between">
@@ -395,7 +400,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             <section className="flex flex-col w-full">
               <div className="flex w-full justify-between">
                 {/* year filter */}
-                {['bar', 'pie', 'choropleth'].includes(visualizationType) && !!years.length && (
+                {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
                     {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
@@ -427,7 +432,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 )}
 
                 {/* region filter */}
-                {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
+                {(['line', 'pie'].includes(visualization) && !!regions.length) && (
                   <div className="flex items-center">
                     <span className="pr-2">
                       {i18next.t('region')}
@@ -461,7 +466,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 )}
 
                 {/* scenario filter */}
-                {['choropleth'].includes(visualizationType) && !!scenarios.length && (
+                {['choropleth'].includes(visualization) && !!scenarios.length && (
                 <div className="flex items-center">
                   <span className="pr-2">Scenario:</span>
                   {scenarios.length > 1 && (
@@ -506,7 +511,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {(!!filteredRecords.length && !isFetchingRecords) && (
                 <div className="flex flex-col h-full w-full min-h-1/2 py-8">
                   <div className="flex items-center">
-                    {visualizationType !== 'choropleth'
+                    {visualization !== 'choropleth'
                   && (
                     <Tooltip
                       placement="bottom-start"
@@ -531,7 +536,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     </Tooltip>
                   )}
                   </div>
-                  {visualizationType !== 'choropleth'
+                  {visualization !== 'choropleth'
                   && (
                     <div className="w-full h-96">
                       <DynamicChart
@@ -542,7 +547,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     </div>
                   )}
 
-                  {visualizationType === 'choropleth' && (
+                  {visualization === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer
                       layers={widgetData.layers}
@@ -560,14 +565,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             <section className="flex flex-col justify-between ml-8">
               {categories.length > 0 && (
               <Filters
-                visualizationType={visualizationType}
+                visualizationType={visualization}
                 categories={categories}
                 hasSubcategories={!!subcategories.length}
                 className="overflow-y-auto mb-4"
                 onClick={setFilters}
               />
               )}
-              {categories.length > 0 && visualizationType !== 'choropleth' && (
+              {categories.length > 0 && visualization !== 'choropleth' && (
                 <Legend
                   categories={category?.label === 'category_1' ? categories : subcategories}
                   className="max-h-72 overflow-y-auto mb-4"

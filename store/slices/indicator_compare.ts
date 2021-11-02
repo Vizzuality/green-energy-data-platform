@@ -9,7 +9,8 @@ export type IndicatorCompareFilters = {
   region: string,
   unit: string,
   category: CategoryObject,
-  scenario: string
+  scenario: string,
+  visualization: string,
 };
 
 const initialState = {

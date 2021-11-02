@@ -14,34 +14,33 @@ import {
 export function useDefaultRecordFilters(
   records,
   filteredRecords,
-  visualizationType,
   filters,
 ) {
   const {
-    year, region, unit,
+    year, region, unit, visualization
   } = filters;
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
   const defaultCategory = 'category_1';
 
-  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
-    [records, visualizationType, region, unit]);
+  const years = useMemo(() => getYearsFromRecords(records, visualization, region, unit),
+    [records, visualization, region, unit]);
   const defaultYear = useMemo(
-    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
+    () => getDefaultYearFromRecords(records, visualization), [records, visualization],
   );
 
   const regionsWithVisualization = useMemo(
-    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
+    () => getDefaultRegionFromRecords(records, visualization), [records, visualization],
   );
 
-  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
-    [records, visualizationType, unit]);
+  const regions = useMemo(() => getRegionsFromRecords(records, visualization, unit),
+    [records, visualization, unit]);
   const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
 
-  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
-    [records, visualizationType, region, year]);
+  const units = useMemo(() => getUnitsFromRecords(records, visualization, region, year),
+    [records, visualization, region, year]);
   const defaultUnit = useMemo(
-    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
+    () => getDefaultUnitFromRecords(records, visualization), [records, visualization],
   );
 
   const scenarios = useMemo(

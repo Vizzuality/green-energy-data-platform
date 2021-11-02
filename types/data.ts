@@ -8,7 +8,7 @@ export type SubgroupProps = Readonly<{
   default_indicator?: DataIdProps,
 }>;
 
-export type ScenarioProps = Readonly <{
+export type ScenarioProps = Readonly<{
   name: string
 }>;
 

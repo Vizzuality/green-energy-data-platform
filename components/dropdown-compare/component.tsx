@@ -51,7 +51,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const {
-    year, region, unit, category, scenario,
+    year, region, unit, category, scenario, visualization,
   } = useSelector((state: RootState) => state.indicator);
 
   const router = useRouter();
@@ -66,7 +66,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     unit,
     category,
     scenario,
-  }), [year, region, unit, category, scenario]);
+    visualization,
+  }), [year, region, unit, category, scenario, visualization]);
 
   const {
     data: indicatorData,
@@ -89,22 +90,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
-
   const {
     data: records,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
-    refetchOnWindowFocus: false,
-    ...filters,
-  });
+  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug,
+    { ...filters },
+    { refetchOnWindowFocus: false });
 
   const {
     categories: categoriesIndicator,
   } = indicatorData;
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
-    [records, filters, visualizationType, categoriesIndicator],
+    () => filterRecords(records, filters, categoriesIndicator),
+    [records, filters, categoriesIndicator],
   );
 
   const {
@@ -116,17 +114,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   } = useDefaultRecordFilters(
     records,
     filteredRecords,
-    visualizationType,
     filters,
   );
 
-  useEffect(() => {
-    const {
-      default_visualization: defaultVisualization,
-    } = indicatorData;
+  const {
+    default_visualization: defaultVisualization,
+  } = indicatorData;
 
-    setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+  useEffect(() => {
+    setFilters({ visualization: defaultVisualization });
+  }, [indicatorData, defaultVisualization]);
 
   useEffect(() => {
     dispatch(setFilters({
@@ -135,8 +132,17 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ...defaultUnit && { unit: defaultUnit },
       ...defaultCategory && { category: { label: defaultCategory } },
       scenario: defaultScenario,
+      ...defaultVisualization && { visualization: defaultVisualization },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory, defaultScenario]);
+  }, [
+    dispatch,
+    defaultYear,
+    defaultRegion,
+    defaultUnit,
+    defaultCategory,
+    defaultScenario,
+    defaultVisualization,
+  ]);
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',

@@ -34,17 +34,15 @@ interface GridItemProps {
   group: string | string[],
   subgroup: string,
   indicator: string,
-  visualization: string,
 }
 
 const GridItem: FC<GridItemProps> = ({
   group,
   subgroup,
   indicator,
-  visualization,
 }: GridItemProps) => {
   const {
-    year, region, unit, category, scenario,
+    year, region, unit, category, scenario, visualization,
   } = useSelector((state: RootState) => state.indicator);
 
   const filters = useMemo(() => ({
@@ -53,7 +51,8 @@ const GridItem: FC<GridItemProps> = ({
     unit,
     category,
     scenario,
-  }), [year, region, unit, category, scenario]);
+    visualization,
+  }), [year, region, unit, category, scenario, visualization]);
 
   const {
     data: records,
@@ -63,8 +62,8 @@ const GridItem: FC<GridItemProps> = ({
   });
 
   const filteredRecords = useMemo(
-    () => filterRelatedIndicators(records, filters, visualization),
-    [records, filters, visualization],
+    () => filterRelatedIndicators(records, filters),
+    [records, filters],
   );
   const { data: regionsGeojson } = useRegions(indicator, visualization, {
     refetchOnWindowFocus: false,
@@ -80,9 +79,9 @@ const GridItem: FC<GridItemProps> = ({
   );
   const widgetData = useMemo(
     () => getGroupedValuesRelatedIndicators(
-      categories, visualization, filters, filteredRecords, regionsGeojson,
+      categories, filters, filteredRecords, regionsGeojson,
     ),
-    [categories, visualization, filters, filteredRecords, regionsGeojson],
+    [categories, filters, filteredRecords, regionsGeojson],
   );
 
   return (

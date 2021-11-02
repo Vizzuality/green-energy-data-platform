@@ -89,6 +89,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     unit,
     category,
     scenario,
+    visualization,
   } = useSelector(
     (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
   );
@@ -183,7 +184,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     unit,
     category,
     scenario,
-  }), [year, region, unit, category, scenario]);
+    visualization,
+  }), [year, region, unit, category, scenario, visualization]);
 
   const {
     data: indicatorData,
@@ -205,8 +207,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
-
   const {
     data: records,
     isFetching: isFetchingRecords,
@@ -214,7 +214,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
+  const { data: regionsGeojson } = useRegions(indicatorSlug, visualization, {
     refetchOnWindowFocus: false,
   });
 
@@ -226,8 +226,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   }: IndicatorProps = indicatorData;
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
-    [records, filters, visualizationType, categoriesIndicator],
+    () => filterRecords(records, filters, categoriesIndicator),
+    [records, filters, categoriesIndicator],
   );
 
   const {
@@ -244,7 +244,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   } = useDefaultRecordFilters(
     records,
     filteredRecords,
-    visualizationType,
     filters,
   );
 
@@ -255,24 +254,24 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualizationType],
-    [visualizationType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys)[visualization],
+    [visualization, widgetDataKeys],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
+      name, groupSlug, filters, filteredRecords, regionsGeojson,
     ),
-    [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+    [name, groupSlug, filters, filteredRecords, regionsGeojson],
   );
 
-  useEffect(() => {
-    const {
-      default_visualization: defaultVisualization,
-    } = indicatorData;
+  const {
+    default_visualization: defaultVisualization,
+  } = indicatorData;
 
-    setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+  useEffect(() => {
+    setFilters({ ...filters, visualization: defaultVisualization });
+  }, [indicatorData, defaultVisualization, filters]);
 
   const { data: group } = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
@@ -292,7 +291,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         ...defaultUnit && { unit: defaultUnit },
         ...defaultCategory && { category: { label: defaultCategory } },
         ...defaultScenario && { scenario: defaultScenario },
-
+        ...defaultVisualization && { visualization: defaultVisualization },
       }));
     } else {
       dispatch(setCompareFilters({
@@ -301,6 +300,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         ...defaultUnit && { unit: defaultUnit },
         ...defaultCategory && { category: { label: defaultCategory } },
         ...defaultScenario && { scenario: defaultScenario },
+        ...defaultVisualization && { visualization: defaultVisualization },
       }));
     }
   }, [
@@ -310,15 +310,16 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     defaultUnit,
     defaultScenario,
     defaultCategory,
+    defaultVisualization,
     compareIndex,
   ]);
 
   const DynamicChart = useMemo(() => {
-    if (visualizationType !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    if (visualization !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
     }
     return null;
-  }, [visualizationType]);
+  }, [visualization]);
 
   return (
     <div className="py-24 text-gray1" key={compareIndex}>
@@ -442,10 +443,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       </Hero>
       <div className={cx('container m-auto bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
         <VisualizationsNav
-          active={visualizationType}
+          active={visualization}
           className="w-full px-11 py-7"
           visualizationTypes={visualizationTypes}
-          onClick={setVisualizationType}
           mobile
         />
         <div className="flex flex-col p-11 w-full">
@@ -499,7 +499,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           </p>
           {categories?.length > 1 && (
             <Filters
-              visualizationType={visualizationType}
+              visualizationType={visualization}
               categories={categories}
               hasSubcategories={!!subcategories.length}
               className="mb-4"
@@ -511,7 +511,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             <section className="flex flex-col w-full">
               <div className="flex">
                 {/* year filter */}
-                {['bar', 'pie'].includes(visualizationType) && !!years.length && (
+                {['bar', 'pie'].includes(visualization) && !!years.length && (
                 <div className="flex items-center">
                   <span className="pr-2">Showing for:</span>
                   <Tooltip
@@ -524,6 +524,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         list={years}
                         id="year"
                         onClick={handleChange}
+                        compareIndex={compareIndex}
                       />
                         )}
                   >
@@ -540,7 +541,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 )}
 
                 {/* region filter */}
-                {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
+                {(['line', 'pie'].includes(visualization) && !!regions.length) && (
                 <div className="flex items-center">
                   <span className="pr-2">
                     {i18next.t('region')}
@@ -572,7 +573,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 )}
 
                 {/* scenario filter */}
-                {['choropleth'].includes(visualizationType) && !!scenarios.length && (
+                {['choropleth'].includes(visualization) && !!scenarios.length && (
                   <div className="flex items-center">
                     <span className="pr-2">Scenario:</span>
                     {scenarios.length > 1 && (
@@ -614,7 +615,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 {(!!filteredRecords.length && !isFetchingRecords) && (
                 <div className="flex flex-col h-full w-full min-h-1/2 py-8">
                   <div className="flex items-center">
-                    {visualizationType !== 'choropleth' && (
+                    {visualization !== 'choropleth' && (
                     <div className="flex flex-col h-full w-full min-h-1/2 py-8">
                       <div className="flex items-center">
                         <Tooltip
@@ -649,7 +650,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     </div>
                     )}
 
-                    {visualizationType === 'choropleth' && (
+                    {visualization === 'choropleth' && (
                     <div className="w-full h-96 pb-11">
                       <MapContainer
                         layers={widgetData.layers}
@@ -660,7 +661,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   </div>
                 </div>
                 )}
-                {categories.length > 0 && visualizationType !== 'choropleth' && (
+                {categories.length > 0 && visualization !== 'choropleth' && (
                 <Legend
                   categories={category.label === 'category_1' ? categories : subcategories}
                   className="overflow-y-auto mb-4"
