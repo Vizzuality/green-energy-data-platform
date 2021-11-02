@@ -315,7 +315,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   ]);
 
   const DynamicChart = useMemo(() => {
-    if (visualization !== 'choropleth') {
+    if (visualization && visualization !== 'choropleth') {
       return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
     }
     return null;

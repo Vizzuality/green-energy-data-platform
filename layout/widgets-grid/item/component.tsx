@@ -57,7 +57,7 @@ const GridItem: FC<GridItemProps> = ({
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(group, subgroup, indicator, {
+  } = useIndicatorRecords(group, subgroup, indicator, {}, {
     refetchOnWindowFocus: false,
   });
 

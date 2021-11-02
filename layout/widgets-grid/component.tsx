@@ -39,7 +39,6 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
           id,
           name,
           slug: indicatorSlug,
-          default_visualization: visualization,
         } = default_indicator;
         return (
           <InView key={id} triggerOnce>
@@ -55,7 +54,6 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
                       group={groupSlug}
                       subgroup={subgroupSlug}
                       indicator={indicatorSlug}
-                      visualization={visualization}
                     />
                   </div>
                 ))}
