@@ -46,7 +46,7 @@ import { useColors } from 'hooks/utils';
 import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
-import IndicatorDataProps from './types';
+import IndicatorDataProps from '../types';
 
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
@@ -63,7 +63,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const {
-    year, region, unit, category, scenario,
+    year, region, unit, category, scenario, visualization,
   } = useSelector((state: RootState) => state.indicator);
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
@@ -123,9 +123,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
-
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
+  const { data: regionsGeojson } = useRegions(indicatorSlug, visualization, {
     refetchOnWindowFocus: false,
   });
 
@@ -142,8 +140,8 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   } = indicatorData;
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
-    [records, filters, visualizationType, categoriesIndicator],
+    () => filterRecords(records, filters, visualization, categoriesIndicator),
+    [records, filters, visualization, categoriesIndicator],
   );
 
   const {
@@ -161,30 +159,22 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   } = useDefaultRecordFilters(
     records,
     filteredRecords,
-    visualizationType,
+    visualization,
     filters,
   );
   const colors = useColors(categories.length);
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualizationType],
-    [visualizationType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys)[visualization],
+    [visualization, widgetDataKeys],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, categories, visualization, filters, filteredRecords, regionsGeojson,
+    ), [name, groupSlug, categories, visualization, filters, filteredRecords, regionsGeojson],
   );
-
-  useEffect(() => {
-    const {
-      default_visualization: defaultVisualization,
-    } = indicatorData;
-
-    setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
 
   useEffect(() => {
     dispatch(setFilters({
@@ -201,7 +191,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
         <section className="w-full">
           {categories.length > 0 && (
           <Filters
-            visualizationType={visualizationType}
+            visualizationType={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length}
             className="overflow-y-auto mb-4"
@@ -209,9 +199,9 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
           />
           )}
         </section>
-        <section className="flex flex-col justify-between ml-8 w-full">
+        <section className="flex flex-col justify-between ml-4 w-full">
           <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
-          {categories.length > 0 && visualizationType !== 'choropleth' && (
+          {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
             categories={category?.label === 'category_1' ? categories : subcategories}
           />
@@ -221,9 +211,9 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       <div>
 
         <section className="flex flex-col w-full">
-          <div className="flex">
+          <div className="flex py-4">
             {/* year filter */}
-            {['bar', 'pie', 'choropleth'].includes(visualizationType) && (
+            {['bar', 'pie', 'choropleth'].includes(visualization) && (
             <div className="flex items-center">
               <span className="pr-2">Showing for:</span>
               {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
@@ -255,7 +245,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             )}
 
             {/* region filter */}
-            {(['line'].includes(visualizationType) && !!regions.length) && (
+            {(['line'].includes(visualization) && !!regions.length) && (
             <div className="flex items-center">
               <span className="pr-2">
                 {i18next.t('region')}
@@ -288,6 +278,34 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             </div>
             )}
             {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+            {/* Scenario filter */}
+            <span className="pr-2">
+              {i18next.t('scenario')}
+              :
+            </span>
+            {scenarios.length > 1 && (
+              <Tooltip
+                placement="bottom-start"
+                visible={dropdownVisibility.scenario}
+                interactive
+                onClickOutside={() => closeDropdown('scenario')}
+                content={(
+                  <DropdownContent
+                    list={scenarios}
+                    id="scenario"
+                    onClick={handleChange}
+                  />
+                      )}
+              >
+                <button
+                  type="button"
+                  onClick={() => { toggleDropdown('scenario'); }}
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                >
+                  <span>{scenario || i18next.t('selectScenario')}</span>
+                </button>
+              </Tooltip>
+            )}
           </div>
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
@@ -304,32 +322,29 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             {(!!filteredRecords.length && !isFetchingRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
               <div className="flex items-center">
-                {visualizationType !== 'choropleth'
-                  && (
-                    <Tooltip
-                      placement="bottom-start"
-                      visible={dropdownVisibility.unit}
-                      interactive
-                      onClickOutside={() => closeDropdown('unit')}
-                      content={(
-                        <DropdownContent
-                          list={units}
-                          id="unit"
-                          onClick={handleChange}
-                        />
+                <Tooltip
+                  placement="bottom-start"
+                  visible={dropdownVisibility.unit}
+                  interactive
+                  onClickOutside={() => closeDropdown('unit')}
+                  content={(
+                    <DropdownContent
+                      list={units}
+                      id="unit"
+                      onClick={handleChange}
+                    />
                       )}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => { toggleDropdown('unit'); }}
-                        className="text-sm flex items-center cursor-pointer text-gray1 text-opacity-50"
-                      >
-                        <span>{unit}</span>
-                      </button>
-                    </Tooltip>
-                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('unit'); }}
+                    className="flex items-center cursor-pointer text-sm text-gray1 text-opacity-50"
+                  >
+                    <span>{unit}</span>
+                  </button>
+                </Tooltip>
               </div>
-              {visualizationType !== 'line'
+              {visualization === 'line'
                   && (
                     <div className="w-full h-96">
                       <LineChart
@@ -339,7 +354,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                       />
                     </div>
                   )}
-              {visualizationType === 'bar'
+              {visualization === 'bar'
                   && (
                     <div className="w-full h-96 flex">
                       {scenarios.map((s) => (

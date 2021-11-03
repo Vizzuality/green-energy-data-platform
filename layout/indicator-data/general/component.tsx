@@ -9,6 +9,8 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import cx from 'classnames';
+
 import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -49,7 +51,7 @@ import { MapLayersProps } from 'components/indicator-visualizations/choropleth/c
 
 import ChartConfig from './config';
 
-import IndicatorDataProps from './types';
+import IndicatorDataProps from '../types';
 
 type ChartProps = {
   widgetData: any,
@@ -403,7 +405,11 @@ const IndicatorChart: FC<IndicatorDataProps> = () => {
                       <button
                         type="button"
                         onClick={() => { toggleDropdown('unit'); }}
-                        className="text-sm flex items-center cursor-pointer text-gray1 text-opacity-50"
+                        className={cx('flex items-center cursor-pointer',
+                          {
+                            'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
+                            'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
+                          })}
                       >
                         <span>{displayUnit}</span>
                       </button>
