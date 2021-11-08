@@ -10,7 +10,6 @@ import {
 } from 'react-query';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
 
 // hooks
 import {
@@ -49,9 +48,12 @@ import ChartConfig from './config';
 import IndicatorCompareDataProps from '../types';
 
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
+  groupSlug,
+  subgroupSlug,
+  indicatorSlug,
   className,
   visualization,
-}: IndicatorDataProps) => {
+}: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -66,11 +68,6 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const {
     year, region, unit, category, scenario,
   } = useSelector((state: RootState) => state.indicator);
-  const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
-
-  const subgroupSlug = subgroupQuery?.[0];
-  const indicatorSlug = subgroupQuery?.[1];
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({

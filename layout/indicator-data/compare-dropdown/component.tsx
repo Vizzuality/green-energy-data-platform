@@ -68,7 +68,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
           {groups?.map(({
             name, id, slug,
           }) => (
-            <li key={id} className="px-7 text-white first:rounded-t-xl last:rounded-b-xl">
+            <li key={id} className="px-7 first:rounded-t-xl last:rounded-b-xl">
               <button
                 className="w-full h-full py-2 flex items-center flex-1 border-b border-white border-opacity-10 last:border-0"
                 type="button"
@@ -107,11 +107,11 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
           />
         </div>
 
-        <ul>
+        <ul className="items-center px-9 max-w-sm">
           {subgroups?.map(({
             name, id, slug,
           }) => (
-            <li key={id} className="px-7 text-white first:rounded-t-xl last:rounded-b-xl">
+            <li key={id} className="first:rounded-t-xl last:rounded-b-xl">
               <button
                 className="w-full h-full py-2 flex items-center flex-1"
                 type="button"
@@ -129,7 +129,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
       )}
 
       {step === 3 && (
-      <div className="px-7 py-2 ">
+      <div className="px-7 py-2">
         <div className="flex font-bold items-center">
           <Icon
             ariaLabel="arrow"
@@ -139,11 +139,11 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
           />
           <span>{subgroupName}</span>
         </div>
-        <ul>
+        <ul className="items-center px-9 max-w-sm">
           {indicators?.map(({
             name, id, slug,
           }) => (
-            <li key={id} className="items-center px-7 text-white first:rounded-t-xl last:rounded-b-xl max-w-sm">
+            <li key={id} className="first:rounded-t-xl last:rounded-b-xl">
               <Link href={{
                 pathname: '/compare',
                 query: {

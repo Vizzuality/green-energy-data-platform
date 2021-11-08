@@ -13,7 +13,6 @@ import cx from 'classnames';
 
 import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
 
 // hooks
 import {
@@ -58,7 +57,7 @@ type ChartProps = {
 
 const IndicatorChart: FC<IndicatorCompareDataProps> = ({
   className,
-}: IndicatorDataProps) => {
+}: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -73,11 +72,6 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
   const {
     year, region, unit, category, scenario,
   } = useSelector((state: RootState) => state.indicator);
-  const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
-
-  const subgroupSlug = subgroupQuery?.[0];
-  const indicatorSlug = subgroupQuery?.[1];
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
