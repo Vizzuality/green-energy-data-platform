@@ -175,8 +175,8 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
   );
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, categories, filters, filteredRecords, regionsGeojson,
+    ), [name, groupSlug, categories, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
