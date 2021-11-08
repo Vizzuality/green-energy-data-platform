@@ -33,14 +33,14 @@ import { getCategoriesFromRecords } from 'utils';
 
 import ID_CHINA from 'utils/constants';
 
-export function useIndicators(group_id, subgroup_id) {
+export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
     current,
   } = useSelector(
     (state: RootState) => (state.language),
   );
   const query = useQuery(['fetch-indicators', current],
-    () => fetchIndicators(group_id, subgroup_id, { locale: current }));
+    () => fetchIndicators(group_id, subgroup_id, { locale: current }), { ...queryConfig });
 
   const {
     data, status, error, isSuccess, isLoading,

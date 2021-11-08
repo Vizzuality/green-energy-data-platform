@@ -16,3 +16,8 @@ export type ChartProps = {
   widgetConfig: any
   colors: string[]
 };
+
+export default interface IndicatorDataProps {
+  className?: string;
+  visualization: string;
+}

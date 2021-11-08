@@ -96,6 +96,7 @@ module.exports = {
       fontWeight: ['hover', 'focus'],
       backgroundColor: ['active'],
       textColor: ['active'],
+      padding: ['first', 'last'],
     },
   },
 };

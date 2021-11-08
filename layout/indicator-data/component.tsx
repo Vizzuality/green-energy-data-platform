@@ -11,14 +11,12 @@ import {
 
 import cx from 'classnames';
 
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import { RootState } from 'store/store';
 
 // hooks
-import { useGroups } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
 import {
   useIndicator,
@@ -35,6 +33,7 @@ import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import General from './general';
 import ModelIntercomparison from './model-intercomparison';
+import CompareDropdownContent from './compare-dropdown/component';
 
 import IndicatorDataProps from './types';
 
@@ -48,11 +47,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     unit: false,
     category: { label: 'category_1', value: null },
     scenario: false,
-  });
-
-  const { data: groups } = useGroups({
-    refetchOnWindowFocus: false,
-    placeholderData: [],
   });
 
   const [compareMenuVisibility, setSubMenuVisibility] = useState({
@@ -284,82 +278,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               maxHeight={400}
               onTrigger={() => setSubMenuVisibility({ menuVisibility: !compareMenuVisibility.menuVisibility, id: '' })}
               content={(
-                <ul className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10">
-                  {groups?.map(({
-                    name: groupName, id, subgroups: subgroupsCompare, slug,
-                  }) => (
-                    <li key={id} className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl divide-opacity-10">
-                      <button
-                        type="button"
-                        aria-haspopup="listbox"
-                        aria-labelledby="exp_elem exp_button"
-                        id="exp_button"
-                        className={cx('flex items-center w-full last:border-b-0 px-5 py-2',
-                          { hidden: id !== compareMenuVisibility.id && compareMenuVisibility.id !== '' })}
-                        onClick={() => setSubMenuVisibility({ menuVisibility: !compareMenuVisibility.menuVisibility, id: compareMenuVisibility.id ? '' : id })}
-
-                      >
-                        <span>{groupName}</span>
-                        {' '}
-                        <Icon
-                          ariaLabel="arrow"
-                          name="arrow"
-                          className={cx('ml-2',
-                            { 'transform rotate-180': id === compareMenuVisibility.id })}
-                        />
-                      </button>
-
-                      <ul
-                        id="exp_elem_list"
-                        tabIndex={-1}
-                        role="listbox"
-                        aria-labelledby="exp_elem"
-                        className={cx('shadow-sm first:rounded-t-xl last:rounded-b-xl', { hidden: id !== compareMenuVisibility.id })}
-                        aria-activedescendant="exp_elem_Pu"
-                      >
-                        {subgroupsCompare.map(({
-                          name: subgroupName,
-                          id: subgroupId,
-                          slug: subgroupCompareSlug,
-                          default_indicator: compareIndicator,
-                        }, index) => (
-                          <li
-                            key={subgroupName}
-                            id={`exp-elem_${subgroupId}`}
-                            role="option"
-                            className={cx(
-                              'px-5 hover:bg-white hover:text-gray1',
-                              {
-                                'hover:rounded-b-xl': index === subgroupsCompare.length - 1,
-                              },
-                            )}
-                            aria-selected="true"
-                          >
-                            <Link href={{
-                              pathname: '/compare',
-                              query: {
-                                g1: groupSlug,
-                                sg1: subgroupSlug,
-                                ind1: indicatorSlug,
-                                g2: slug,
-                                sg2: subgroupCompareSlug,
-                                ind2: compareIndicator.slug,
-                              },
-                            }}
-                            >
-                              <a
-                                className="flex items-center w-full py-2 last:border-b-0 "
-                                href="/compare"
-                              >
-                                {subgroupName}
-                              </a>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ))}
-                </ul>
+                <CompareDropdownContent
+                  compareGroupSlug={groupSlug}
+                  compareSubgroupSlug={subgroupSlug}
+                  compareIndicatorSlug={indicatorSlug}
+                />
               )}
             >
               <button

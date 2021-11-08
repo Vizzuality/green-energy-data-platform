@@ -31,6 +31,7 @@ export const useGroup = (id: string, queryConfig = {}) => {
       .then((data) => data),
     {
     // keepPreviousData: true,
+      enabled: !!id,
       ...queryConfig,
     });
 };
