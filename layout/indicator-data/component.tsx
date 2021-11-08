@@ -208,22 +208,23 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     ), [name, groupSlug, filters, filteredRecords, regionsGeojson],
   );
 
-  const {
-    default_visualization: defaultVisualization,
-  } = indicatorData;
-
-  const currentVisualization = useMemo(() => visualization || defaultVisualization, [visualization, defaultVisualization]);
-  console.log({currentVisualization})
+  const currentVisualization = useMemo(
+    // if the current visualization is not allowed when the user changes the indicator,
+    // it will fallback into the default one. If it is, it will remain.
+    () => (indicatorData?.visualizationTypes.includes(visualization)
+      ? visualization : indicatorData?.default_visualization),
+    [visualization, indicatorData],
+  );
 
   useEffect(() => {
     dispatch(setFilters({
-      ...defaultUnit && { unit: defaultUnit.id },
       visualization: currentVisualization,
-      ...defaultCategory && { category: { label: defaultCategory.label } },
-      ...(['line', 'pie'].includes(visualization) && defaultRegion) && { region: defaultRegion.id },
-      ...(['pie', 'choropleth', 'bar'].includes(visualization) && defaultYear) && { year: defaultYear },
-      ...(['choropleth'].includes(visualization) && defaultScenario) && { scenario: defaultScenario },
-      // scenario: defaultScenario,
+      ...defaultUnit && { unit: defaultUnit.id },
+      ...defaultScenario && { scenario: defaultScenario },
+      ...defaultCategory && { category: defaultCategory },
+      ...(['line', 'pie'].includes(currentVisualization) && defaultRegion) && { region: defaultRegion.id },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && defaultYear) && { year: defaultYear },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: defaultScenario },
     }));
   }, [
     dispatch,
@@ -233,8 +234,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     defaultCategory,
     defaultScenario,
     currentVisualization,
-    // defaultVisualization,
-    // visualization
   ]);
 
   const DynamicChart = useMemo(() => {
@@ -407,7 +406,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={years}
-                          id="year"
+                          keyEl="year"
                           onClick={handleChange}
                         />
                       )}
@@ -442,7 +441,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={regions}
-                          id="region"
+                          keyEl="region"
                           onClick={handleChange}
                         />
                       )}
@@ -472,7 +471,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                     content={(
                       <DropdownContent
                         list={scenarios}
-                        id="scenario"
+                        keyEl="scenario"
                         onClick={handleChange}
                       />
                       )}
@@ -515,7 +514,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={units}
-                          id="unit"
+                          keyEl="unit"
                           onClick={handleChange}
                         />
                       )}
@@ -544,6 +543,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   {visualization === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer
+                      // @ts-ignore
                       layers={widgetData.layers}
                       categories={categories}
                     />

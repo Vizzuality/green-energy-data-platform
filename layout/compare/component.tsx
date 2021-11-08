@@ -31,7 +31,10 @@ import {
   getSubcategoriesFromRecords,
 } from 'utils';
 
-import { setFilters } from 'store/slices/indicator';
+import {
+  setFilters,
+  IndicatorFilters,
+} from 'store/slices/indicator';
 import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
@@ -210,7 +213,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, filters }, {
+  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, filters, {
     refetchOnWindowFocus: false,
   });
 
@@ -284,24 +287,18 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const { name: groupName } = group;
 
   useEffect(() => {
+    const newFilters = {
+      ...defaultYear && { year: defaultYear },
+      ...defaultRegion && { region: defaultRegion.id },
+      ...defaultUnit && { unit: defaultUnit.id },
+      ...defaultCategory && { category: defaultCategory },
+      ...defaultScenario && { scenario: defaultScenario },
+      ...defaultVisualization && { visualization: defaultVisualization },
+    } as IndicatorFilters;
     if (compareIndex === 1) {
-      dispatch(setFilters({
-        ...defaultYear && { year: defaultYear },
-        ...defaultRegion && { region: defaultRegion },
-        ...defaultUnit && { unit: defaultUnit },
-        ...defaultCategory && { category: { label: defaultCategory } },
-        ...defaultScenario && { scenario: defaultScenario },
-        ...defaultVisualization && { visualization: defaultVisualization },
-      }));
+      dispatch(setFilters(newFilters));
     } else {
-      dispatch(setCompareFilters({
-        ...defaultYear && { year: defaultYear },
-        ...defaultRegion && { region: defaultRegion },
-        ...defaultUnit && { unit: defaultUnit },
-        ...defaultCategory && { category: { label: defaultCategory } },
-        ...defaultScenario && { scenario: defaultScenario },
-        ...defaultVisualization && { visualization: defaultVisualization },
-      }));
+      dispatch(setCompareFilters(newFilters));
     }
   }, [
     dispatch,
@@ -522,7 +519,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     content={(
                       <DropdownContent
                         list={years}
-                        id="year"
+                        keyEl="year"
                         onClick={handleChange}
                       />
                         )}
@@ -554,7 +551,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     content={(
                       <DropdownContent
                         list={regions}
-                        id="region"
+                        keyEl="region"
                         onClick={handleChange}
                       />
                         )}
@@ -584,7 +581,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                       content={(
                         <DropdownContent
                           list={scenarios}
-                          id="scenario"
+                          keyEl="scenario"
                           onClick={handleChange}
                         />
                       )}
@@ -625,7 +622,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           content={(
                             <DropdownContent
                               list={units}
-                              id="unit"
+                              keyEl="unit"
                               onClick={handleChange}
                             />
                         )}
@@ -652,6 +649,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     {visualization === 'choropleth' && (
                     <div className="w-full h-96 pb-11">
                       <MapContainer
+                        // @ts-ignore
                         layers={widgetData.layers}
                         categories={categories}
                       />
@@ -662,7 +660,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 )}
                 {categories.length > 0 && visualization !== 'choropleth' && (
                 <Legend
-                  categories={category.label === 'category_1' ? categories : subcategories}
+                  categories={category?.label === 'category_1' ? categories : subcategories}
                   className="overflow-y-auto mb-4"
                 />
                 )}

@@ -33,7 +33,7 @@ export const fetchIndicatorRecords = (
   indicator_id: string,
   params = {},
   headers = {},
-) => console.log({params}) || API.get(`/groups/${group_id}/subgroups/${subgroup_id}/indicators/${indicator_id}/records`, {
+) => API.get(`/groups/${group_id}/subgroups/${subgroup_id}/indicators/${indicator_id}/records`, {
   headers: {
     ...headers,
   },
