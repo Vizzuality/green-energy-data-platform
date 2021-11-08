@@ -353,7 +353,6 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 )}
               </div>
               )}
-
             </div>
             )}
 
