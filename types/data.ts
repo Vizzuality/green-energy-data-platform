@@ -46,6 +46,7 @@ export interface Record {
   category_1?: string,
   category_2?: string,
   id: string,
+  name: string,
   slug: string,
   value: number,
   unit: Unit,

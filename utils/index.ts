@@ -58,6 +58,7 @@ export const filterRecords = (
     scenario,
     visualization,
   } = filters;
+
   const recordsByFilters = records.filter((d) => {
     if (visualization === 'line') {
       // API return region name to null for China
@@ -228,7 +229,7 @@ export const getGroupedValues = (
 
   if (visualization === 'choropleth') {
     const dataWithGeometries = filteredData.map(({ id, ...d }) => {
-      const geometry = filteredRegions?.find((r) => d.region.name === r.region.name);
+      const geometry = filteredRegions?.find((r) => d.region.name === r.name);
       return ({
         visualizationTypes: d.visualizationTypes,
         geometry,

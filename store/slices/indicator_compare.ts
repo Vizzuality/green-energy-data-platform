@@ -16,6 +16,7 @@ export type IndicatorCompareFilters = {
 const initialState = {
   year: null,
   scenario: null,
+  visualization: null,
 } as IndicatorCompareFilters;
 
 export const indicatorSlice = createSlice({

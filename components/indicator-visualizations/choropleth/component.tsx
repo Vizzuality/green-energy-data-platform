@@ -89,7 +89,7 @@ const MapContainer: FC<MapContainerProps> = (
 
   // Sorted
   const sortedItems = useMemo(() => {
-    const itms = layers[0].legendConfig.sort(
+    const itms = layers[0]?.legendConfig?.sort(
       (a, b) => sortArray.indexOf(a.id) - sortArray.indexOf(b.id),
     );
     return itms;

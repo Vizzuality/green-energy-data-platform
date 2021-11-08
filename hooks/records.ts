@@ -17,7 +17,7 @@ export function useDefaultRecordFilters(
   filters,
 ) {
   const {
-    year, region, unit, visualization
+    year, region, unit, visualization,
   } = filters;
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
@@ -62,11 +62,4 @@ export function useDefaultRecordFilters(
   };
 }
 
-// export function useFiltersIds(filters, years, regions, units) {
-//   const { year, unit, region } = filters;
-
-// //   const yearId =
-
-// // }
-// }
 export default { useDefaultRecordFilters };

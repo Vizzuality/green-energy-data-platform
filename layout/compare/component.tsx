@@ -524,7 +524,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                         list={years}
                         id="year"
                         onClick={handleChange}
-                        compareIndex={compareIndex}
                       />
                         )}
                   >

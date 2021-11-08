@@ -4,29 +4,37 @@ import i18next from 'i18next';
 
 import { useDispatch } from 'react-redux';
 import { setFilters } from 'store/slices/indicator';
+import { setCompareFilters } from 'store/slices/indicator_compare';
 
 // components
 import Icon from 'components/icon';
 
-import VisualizationsOptions from './constants';
+import { VisualizationsOptions } from './constants';
 
 export interface VisualizationsNavProps {
   visualizationTypes: string[],
   active: string;
   mobile?: boolean,
+  compareIndex?: number,
   className?: string;
 }
 export const VisualizationsNav: FC<VisualizationsNavProps> = ({
   visualizationTypes,
   className,
   mobile = false,
+  compareIndex,
   active,
 }: VisualizationsNavProps) => {
   const dispatch = useDispatch();
 
   const handleVisualization = useCallback(
-    (id) => dispatch(setFilters({ visualization: id })),
-    [dispatch],
+    (id) => {
+      if (compareIndex === 1) {
+        dispatch(setFilters({ visualization: id }));
+      } else {
+        dispatch(setCompareFilters({ visualization: id }));
+      }
+    }, [compareIndex, dispatch],
   );
 
   return (
