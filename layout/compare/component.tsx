@@ -210,7 +210,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
+  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, filters }, {
     refetchOnWindowFocus: false,
   });
 

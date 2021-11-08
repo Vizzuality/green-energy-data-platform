@@ -94,8 +94,14 @@ export function useIndicatorRecords(
     (state: RootState) => (state.language),
   );
 
-  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
-    () => fetchIndicatorRecords(groupId, subgroupId, indicatorId, { locale: current, ...params }),
+  const {
+    category,
+    visualization,
+    ...restParams
+  } = params;
+
+  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, restParams, current],
+    () => fetchIndicatorRecords(groupId, subgroupId, indicatorId, { locale: current, ...restParams }),
     {
       placeholderData: [],
       ...queryOptions,

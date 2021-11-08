@@ -29,7 +29,7 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
 
   const handleVisualization = useCallback(
     (id) => {
-      if (compareIndex === 1) {
+      if (!compareIndex || compareIndex === 0) {
         dispatch(setFilters({ visualization: id }));
       } else {
         dispatch(setCompareFilters({ visualization: id }));

@@ -62,12 +62,7 @@ export const filterRecords = (
   const recordsByFilters = records.filter((d) => {
     if (visualization === 'line') {
       // API return region name to null for China
-      if (
-        (d.region.name === region || (d.region.name === null)
-        )
-        && d.unit.name === unit
-        && (((categories.length > 1) && d.category_1 !== 'Total')
-        || categories.length === 1)) return true;
+      if ((categories.length > 1 && d.category_1 !== 'Total') || categories.length === 1) return true;
     }
 
     if (visualization === 'pie') {
@@ -86,7 +81,7 @@ export const filterRecords = (
     if (visualization === 'bar') {
       if (year === d.year
         && d.unit.name === unit
-        && d.region.name !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
+        && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
         && d.region.name !== 'China') return true;
     }
 
@@ -152,7 +147,7 @@ export const getGroupedValues = (
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
-  let data;
+  let data = [];
   if (visualization === 'pie') {
     data = chain(filteredData)
       .groupBy(label)
@@ -177,13 +172,14 @@ export const getGroupedValues = (
         .map((res, key) => (
           {
             [key !== 'null' ? key : 'Total']: res.reduce(
-              (previous, current) => (current.value || 0) + previous, 0,
+              (previous, current) => console.log(label) || (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
             visualizationTypes: value[0].visualizationTypes,
           }))
         .value()))
       .value());
+
     const dataByYear = groupBy(data, 'year');
 
     return Object.keys(dataByYear).map((year) => dataByYear[year]
@@ -634,16 +630,19 @@ export const getRegionsFromRecords = (
   records: Record[],
   visualizationType: string,
   unit: string,
-) => compact(sortedUniq(sortBy(records
+) => sortedUniq(sortBy(records
   .filter((r) => r.visualizationTypes.includes(visualizationType) && r.unit.name === unit), 'region.name')
-  .map((d) => d.region.name)));
+  .map((d) => ({
+    label: d.region.name,
+    value: d.region.id,
+  })));
 
 export const getDefaultRegionFromRecords = (
   records: Record[],
   visualizationType: string,
 ) => records.map((r) => {
   if (!r.visualizationTypes.includes(visualizationType)) return null;
-  return r.region.name;
+  return r.region;
 });
 
 export const getScenariosFromRecords = (
@@ -657,17 +656,20 @@ export const getUnitsFromRecords = (
   visualizationType: string,
   region: string,
   year: number,
-) => compact(sortedUniq(sortBy(records
+) => sortedUniq(sortBy(records
   .filter((r) => r.visualizationTypes.includes(visualizationType)
   && r.region.name === region && r.year === year), 'unit.name')
-  .map((d) => d.unit.name)));
+  .map((d) => ({
+    label: d.unit.name,
+    value: d.unit.id,
+  })));
 
 export const getDefaultUnitFromRecords = (
   records: Record[],
   visualizationType: string,
 ) => compact(records.map((r) => {
   if (!r.visualizationTypes.includes(visualizationType)) return null;
-  return r.unit.name;
+  return r.unit;
 }))[0];
 
 export const getTodaysDate = () => {

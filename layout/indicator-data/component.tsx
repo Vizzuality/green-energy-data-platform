@@ -85,9 +85,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.indicator);
   const {
     year, region, unit, category, scenario, visualization,
-  } = useSelector((state: RootState) => state.indicator);
+  } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -130,15 +131,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const filters = useMemo(() => ({
-    year,
-    region,
-    unit,
-    category,
-    scenario,
-    visualization,
-  }), [year, region, unit, category, scenario, visualization]);
-
   const {
     data: indicatorData,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
@@ -168,8 +160,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     data: records,
     isFetching: isFetchingRecords,
   } = useIndicatorRecords(
-    groupSlug, subgroupSlug, indicatorSlug,
-    { ...filters }, { refetchOnWindowFocus: false },
+    groupSlug, subgroupSlug, indicatorSlug, filters, { refetchOnWindowFocus: false },
   );
 
   const {
@@ -220,18 +211,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const {
     default_visualization: defaultVisualization,
   } = indicatorData;
-  useEffect(() => {
-    setFilters({ visualization: defaultVisualization });
-  }, [defaultVisualization]);
+
+  const currentVisualization = useMemo(() => visualization || defaultVisualization, [visualization, defaultVisualization]);
+  console.log({currentVisualization})
 
   useEffect(() => {
     dispatch(setFilters({
-      ...defaultYear && { year: defaultYear },
-      ...defaultRegion && { region: defaultRegion },
-      ...defaultUnit && { unit: defaultUnit },
-      ...defaultCategory && { category: { label: defaultCategory } },
+      ...defaultUnit && { unit: defaultUnit.id },
+      visualization: currentVisualization,
+      ...defaultCategory && { category: { label: defaultCategory.label } },
+      ...(['line', 'pie'].includes(visualization) && defaultRegion) && { region: defaultRegion.id },
+      ...(['pie', 'choropleth', 'bar'].includes(visualization) && defaultYear) && { year: defaultYear },
+      ...(['choropleth'].includes(visualization) && defaultScenario) && { scenario: defaultScenario },
       // scenario: defaultScenario,
-      ...defaultVisualization && { visualization: defaultVisualization },
     }));
   }, [
     dispatch,
@@ -240,7 +232,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     defaultUnit,
     defaultCategory,
     defaultScenario,
-    defaultVisualization,
+    currentVisualization,
+    // defaultVisualization,
+    // visualization
   ]);
 
   const DynamicChart = useMemo(() => {

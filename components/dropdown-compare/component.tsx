@@ -93,7 +93,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const {
     data: records,
   } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug,
-    { ...filters },
+    filters,
     { refetchOnWindowFocus: false });
 
   const {
@@ -105,46 +105,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [records, filters, categoriesIndicator],
   );
 
-  const {
-    defaultCategory,
-    defaultYear,
-    defaultRegion,
-    defaultUnit,
-    defaultScenario,
-  } = useDefaultRecordFilters(
-    records,
-    filteredRecords,
-    filters,
-  );
-
-  const {
-    default_visualization: defaultVisualization,
-  } = indicatorData;
-
-  useEffect(() => {
-    setFilters({ visualization: defaultVisualization });
-  }, [indicatorData, defaultVisualization]);
-
-  useEffect(() => {
-    dispatch(setFilters({
-      ...defaultYear && { year: defaultYear },
-      ...defaultRegion && { region: defaultRegion },
-      ...defaultUnit && { unit: defaultUnit },
-      ...defaultCategory && { category: { label: defaultCategory } },
-      scenario: defaultScenario,
-      ...defaultVisualization && { visualization: defaultVisualization },
-    }));
-  }, [
-    dispatch,
-    defaultYear,
-    defaultRegion,
-    defaultUnit,
-    defaultCategory,
-    defaultScenario,
-    defaultVisualization,
-  ]);
-
-  return (
+   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
     >
