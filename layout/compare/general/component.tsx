@@ -47,7 +47,6 @@ import { useColors } from 'hooks/utils';
 import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
-import { IndicatorProps } from 'types/data';
 import IndicatorCompareDataProps from '../types';
 
 type ChartProps = {
@@ -128,7 +127,7 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
+  const { data: regionsGeojson } = useRegions({}, {
     refetchOnWindowFocus: false,
   });
 
@@ -145,8 +144,8 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
   } = indicatorData;
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
-    [records, filters, visualizationType, categoriesIndicator],
+    () => filterRecords(records, filters, categoriesIndicator),
+    [records, filters, categoriesIndicator],
   );
 
   const {
