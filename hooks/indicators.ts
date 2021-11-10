@@ -8,6 +8,9 @@ import {
   IndicatorProps,
   Record,
 } from 'types/data';
+import {
+  IndicatorFilters,
+} from 'store/slices/indicator';
 
 // services
 import {
@@ -98,10 +101,12 @@ export function useIndicatorRecords(
     category,
     visualization,
     ...restParams
-  } = params;
+  } = params as IndicatorFilters;
 
   const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, restParams, current],
-    () => fetchIndicatorRecords(groupId, subgroupId, indicatorId, { locale: current, ...restParams }),
+    () => fetchIndicatorRecords(
+      groupId, subgroupId, indicatorId, { locale: current, ...restParams },
+    ),
     {
       placeholderData: [],
       ...queryOptions,

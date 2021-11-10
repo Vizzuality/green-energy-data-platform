@@ -1,7 +1,13 @@
 import React, { FC } from 'react';
 
+type DropdownItem = Readonly<{
+  label: string
+  value: string
+}>;
 interface DrodownProps {
-  list: number[] | string[],
+  // list should only validate the DropdownItem type. I've kept the other to not break TS,
+  // but they should be removed as soon as the data is parsed correctly.
+  list: number[] | string[] | DropdownItem[],
   keyEl: string,
   onClick: (key, value) => void,
   compareIndex?: number

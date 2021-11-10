@@ -172,7 +172,7 @@ export const getGroupedValues = (
         .map((res, key) => (
           {
             [key !== 'null' ? key : 'Total']: res.reduce(
-              (previous, current) => console.log(label) || (current.value || 0) + previous, 0,
+              (previous, current) => (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
             visualizationTypes: value[0].visualizationTypes,
