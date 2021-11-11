@@ -33,7 +33,6 @@ import {
 
 import {
   setFilters,
-  IndicatorFilters,
 } from 'store/slices/indicator';
 import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
@@ -246,7 +245,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     defaultScenario,
   } = useDefaultRecordFilters(
     records,
-    filteredRecords,
     filters,
   );
 
@@ -263,9 +261,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeojson,
+      name, groupSlug, filters, filteredRecords, regionsGeojson, units,
     ),
-    [name, groupSlug, filters, filteredRecords, regionsGeojson],
+    [name, groupSlug, filters, filteredRecords, regionsGeojson, units],
   );
 
   const {
@@ -286,15 +284,23 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const { name: groupName } = group;
 
+  const currentVisualization = useMemo(
+    // if the current visualization is not allowed when the user changes the indicator,
+    // it will fallback into the default one. If it is, it will remain.
+    () => (indicatorData?.visualizationTypes.includes(visualization)
+      ? visualization : indicatorData?.default_visualization),
+    [visualization, indicatorData],
+  );
+
   useEffect(() => {
     const newFilters = {
-      ...defaultYear && { year: defaultYear },
-      ...defaultRegion && { region: defaultRegion.id },
-      ...defaultUnit && { unit: defaultUnit.id },
+      visualization: currentVisualization,
+      ...defaultUnit ? { unit: defaultUnit.id } : { unit: '' },
       ...defaultCategory && { category: defaultCategory },
-      ...defaultScenario && { scenario: defaultScenario },
-      ...defaultVisualization && { visualization: defaultVisualization },
-    } as IndicatorFilters;
+      ...(['line', 'pie'].includes(currentVisualization) && defaultRegion) ? { region: defaultRegion.id } : { region: '' },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && defaultYear) ? { year: defaultYear } : { year: null },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: defaultScenario },
+    };
     if (compareIndex === 1) {
       dispatch(setFilters(newFilters));
     } else {
@@ -309,6 +315,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     defaultCategory,
     defaultVisualization,
     compareIndex,
+    currentVisualization,
   ]);
 
   const DynamicChart = useMemo(() => {

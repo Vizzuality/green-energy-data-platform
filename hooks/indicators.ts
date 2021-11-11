@@ -99,7 +99,6 @@ export function useIndicatorRecords(
 
   const {
     category,
-    visualization,
     ...restParams
   } = params as IndicatorFilters;
 

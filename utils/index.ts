@@ -1,5 +1,6 @@
 import {
   compact,
+  uniqBy,
   sortBy,
   sortedUniq,
   chain,
@@ -66,21 +67,21 @@ export const filterRecords = (
     }
 
     if (visualization === 'pie') {
-      if ((d.region.name === region || (d.region.name === null))
-        && d.unit.name === unit && year === d.year
+      if ((d.region.id === region || (d.region.name === null))
+        && d.unit.id === unit && year === d.year
         && (((categories.length > 1) && d.category_1 !== 'Total')
         || categories.length === 1)) return true;
     }
 
     if (visualization === 'choropleth') {
       if (year === d.year
-        && (d.unit.name === unit || !unit) // some idicators has no unit
+        && (d.unit.id === unit || !unit) // some idicators has no unit
         && d.scenario?.name === scenario) return true;
     }
 
     if (visualization === 'bar') {
       if (year === d.year
-        && d.unit.name === unit
+        && d.unit.id === unit
         && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
         && d.region.name !== 'China') return true;
     }
@@ -138,6 +139,7 @@ export const getGroupedValues = (
   filters: IndicatorFilters,
   records: Record[],
   regions: Record[],
+  units: { label: string, value: string }[],
 ) => {
   const { category, unit, visualization } = filters;
 
@@ -258,10 +260,12 @@ export const getGroupedValues = (
 
     const media = (maxValue - minValue) / 2;
 
-    const legendTitle = unit ? `${name} (${unit})` : name;
+    const unitLabel = units.find((u) => u.value === unit)?.label;
+    const legendTitle = unit ? `${name} (${unitLabel})` : name;
 
     if (groupSlug !== 'coal-power-plants') {
       data = {
+        // @ts-ignore
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
         layers: [{
           id: 'regions',
@@ -281,7 +285,7 @@ export const getGroupedValues = (
             id: 'gradient-example-1',
             name: legendTitle,
             icon: null,
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            // description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'choropleth',
             items: [
               {
@@ -344,6 +348,7 @@ export const getGroupedValues = (
 
     if (groupSlug === 'coal-power-plants') {
       data = {
+      // @ts-ignore
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
         data: dataWithGeometries,
         mapValues,
@@ -457,7 +462,7 @@ export const getGroupedValues = (
             id: 'gradient-example-1',
             name: legendTitle,
             icon: null,
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+            // description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'gradient',
             items: ITEMS,
           }],
@@ -613,10 +618,12 @@ export const getYearsFromRecords = (
   visualizationType: string,
   region: string,
   unit: string,
-) => compact(sortedUniq(records
-  .filter((r) => r.visualizationTypes.includes(visualizationType)
-    && r.region.name === region && r.unit.name === unit)
-  .map((d) => d.year).sort()));
+) => uniqBy(sortedUniq(records
+  .filter(((r) => r.visualizationTypes.includes(visualizationType) && r.region.id === region && r.unit.id === unit), 'unit.name')
+  .map((d) => ({
+    label: d.year,
+    value: d.year,
+  })).sort()), 'value');
 
 export const getDefaultYearFromRecords = (
   records: Record[],
@@ -630,12 +637,12 @@ export const getRegionsFromRecords = (
   records: Record[],
   visualizationType: string,
   unit: string,
-) => sortedUniq(sortBy(records
-  .filter((r) => r.visualizationTypes.includes(visualizationType) && r.unit.name === unit), 'region.name')
+) => uniqBy(sortBy(records
+  .filter((r) => r.visualizationTypes.includes(visualizationType) && r.unit.id === unit), 'region.name')
   .map((d) => ({
     label: d.region.name,
     value: d.region.id,
-  })));
+  })), 'value');
 
 export const getDefaultRegionFromRecords = (
   records: Record[],
@@ -648,21 +655,21 @@ export const getDefaultRegionFromRecords = (
 export const getScenariosFromRecords = (
   records: Record[],
 ) => compact(sortedUniq(
-  records.map((d) => d.scenario?.name).filter((s) => s !== null).sort(),
-)) as string[];
+  records.map((d) => ({
+    label: d.scenario?.name,
+    value: d.scenario?.name,
+  })).filter((s) => s.value !== undefined).sort(),
+));
 
 export const getUnitsFromRecords = (
   records: Record[],
   visualizationType: string,
-  region: string,
-  year: number,
-) => sortedUniq(sortBy(records
-  .filter((r) => r.visualizationTypes.includes(visualizationType)
-  && r.region.name === region && r.year === year), 'unit.name')
+) => compact(uniqBy(sortedUniq(sortBy(records
+  .filter((r) => r.visualizationTypes.includes(visualizationType)), 'unit.name')
   .map((d) => ({
     label: d.unit.name,
     value: d.unit.id,
-  })));
+  }))), 'value'));
 
 export const getDefaultUnitFromRecords = (
   records: Record[],

@@ -188,13 +188,12 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     defaultScenario,
   } = useDefaultRecordFilters(
     records,
-    filteredRecords,
     filters,
   );
 
   const colors = useColors(categories.length);
   const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
+    () => getSubcategoriesFromRecords(records), [records],
   );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
@@ -204,8 +203,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   );
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, filters, filteredRecords, regionsGeojson, units,
+    ), [name, groupSlug, filters, filteredRecords, regionsGeojson, units],
   );
 
   const currentVisualization = useMemo(
@@ -219,11 +218,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
-      ...defaultUnit && { unit: defaultUnit.id },
-      ...defaultScenario && { scenario: defaultScenario },
+      ...defaultUnit ? { unit: defaultUnit.id } : { unit: '' },
       ...defaultCategory && { category: defaultCategory },
-      ...(['line', 'pie'].includes(currentVisualization) && defaultRegion) && { region: defaultRegion.id },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && defaultYear) && { year: defaultYear },
+      ...(['line', 'pie'].includes(currentVisualization) && defaultRegion) ? { region: defaultRegion.id } : { region: '' },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && defaultYear) ? { year: defaultYear } : { year: null },
       ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: defaultScenario },
     }));
   }, [
@@ -242,6 +240,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     }
     return null;
   }, [visualization]);
+
+  const displayYear = years.find((y) => y.value === year)?.label;
+  const displayUnit = units.find((y) => y.value === unit)?.label;
+  const displayRegion = regions.find((y) => y.value === region)?.label;
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
@@ -396,7 +398,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
-                    {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
+                    {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0].label}</span>)}
                     {years.length > 1 && (
                     <Tooltip
                       placement="bottom-start"
@@ -416,7 +418,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         onClick={() => { toggleDropdown('year'); }}
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
-                        <span>{year || i18next.t('dates')}</span>
+                        <span>{displayYear || i18next.t('dates')}</span>
                         <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                       </button>
                     </Tooltip>
@@ -431,7 +433,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       {i18next.t('region')}
                       :
                     </span>
-                    {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]}</span>)}
+                    {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0].label}</span>)}
                     {regions.length > 1 && (
                     <Tooltip
                       placement="bottom-start"
@@ -451,7 +453,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         onClick={() => { toggleDropdown('region'); }}
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
-                        <span>{region || 'Select a region'}</span>
+                        <span>{displayRegion || 'Select a region'}</span>
                       </button>
                     </Tooltip>
                     )}
@@ -524,7 +526,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         onClick={() => { toggleDropdown('unit'); }}
                         className="text-sm flex items-center cursor-pointer text-gray1 text-opacity-50"
                       >
-                        <span>{unit}</span>
+                        <span>{displayUnit}</span>
                       </button>
                     </Tooltip>
                   )}
