@@ -201,11 +201,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
         </section>
         <section className="flex flex-col justify-between ml-4 w-full">
           <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
-          {categories.length > 0 && visualization !== 'choropleth' && (
-          <Legend
-            categories={category?.label === 'category_1' ? categories : subcategories}
-          />
-          )}
+
         </section>
       </div>
       <div>
@@ -278,34 +274,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             </div>
             )}
             {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
-            {/* Scenario filter */}
-            <span className="pr-2">
-              {i18next.t('scenario')}
-              :
-            </span>
-            {scenarios.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.scenario}
-                interactive
-                onClickOutside={() => closeDropdown('scenario')}
-                content={(
-                  <DropdownContent
-                    list={scenarios}
-                    id="scenario"
-                    onClick={handleChange}
-                  />
-                      )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('scenario'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
-                  <span>{scenario || i18next.t('selectScenario')}</span>
-                </button>
-              </Tooltip>
-            )}
+
           </div>
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
@@ -372,7 +341,11 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             )}
           </div>
         </section>
-
+        {categories.length > 0 && visualization !== 'choropleth' && (
+          <Legend
+            categories={category?.label === 'category_1' ? categories : subcategories}
+          />
+        )}
       </div>
     </section>
   );
