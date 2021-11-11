@@ -65,8 +65,10 @@ const SignupPage: FC = () => {
         if (signUpResponse.status === 201) {
           router.push('signin');
         }
-      } catch ({ response: { data: { error } } }) {
-        setErrorMessage(error);
+      } catch (responseError) {
+        const errorMge = responseError?.response?.data?.error;
+
+        setErrorMessage(errorMge);
         setTimeout(() => setErrorMessage(''), 3000);
       }
     }
@@ -181,7 +183,7 @@ const SignupPage: FC = () => {
                       onChange={(e) => handleChange('password_confirmation', e)}
                       required
                     />
-                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-7',
                       { 'bg-gradient-color1': credentials.password_confirmation.length })}
                     />
                   </div>
@@ -208,7 +210,7 @@ const SignupPage: FC = () => {
                     required
                   />
                 </label>
-                <label htmlFor="privacy-policy" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
+                <label htmlFor="privacy-policy" className="flex flex-row-reverse justify-end items-center text-sm text-gray1 mb-8">
                   <span>
                     {i18next.t('agreement')}
                     <Link href={{ pathname: '/privacy-policy' }} passHref>
