@@ -26,18 +26,6 @@ export const logIn = (
     },
   }).then(({ data }) => data);
 
-export const signUp = (
-  params = {},
-) => API.post('/users/signup',
-  {
-    ...params,
-  },
-  {
-    headers: {
-      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
-    },
-  });
-
 // Upades user details
 export const updateUser = (
   params = {},
