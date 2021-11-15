@@ -52,14 +52,19 @@ import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
 import { useDefaultRecordFilters } from 'hooks/records';
 
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
 
 import ChartConfig from '../indicator-data/config';
 import DropdownContent from '../dropdown-content';
 
+interface WidgetData {
+  layers?: MapLayersProps
+}
+
 type ChartProps = {
-  widgetData: Record<string, string>[],
+  widgetData: WidgetData[],
   widgetConfig: any,
   colors: string[]
 };
@@ -216,7 +221,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualization, {
+  const { data: regionsGeojson } = useRegions({}, {
     refetchOnWindowFocus: false,
   });
 
@@ -237,7 +242,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     defaultCategory,
     years,
     defaultYear,
-    regions,
+    regionsFromRecords: regions,
     defaultRegion,
     units,
     defaultUnit,
@@ -264,7 +269,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       name, groupSlug, filters, filteredRecords, regionsGeojson, units,
     ),
     [name, groupSlug, filters, filteredRecords, regionsGeojson, units],
-  );
+  ) || [];
 
   const {
     default_visualization: defaultVisualization,
@@ -297,7 +302,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       visualization: currentVisualization,
       ...defaultUnit ? { unit: defaultUnit.id } : { unit: '' },
       ...defaultCategory && { category: defaultCategory },
-      ...(['line', 'pie'].includes(currentVisualization) && defaultRegion) ? { region: defaultRegion.id } : { region: '' },
+      ...(['line', 'pie'].includes(currentVisualization) && defaultRegion) ? { region: defaultRegion.value } : { region: '' },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && defaultYear) ? { year: defaultYear } : { year: null },
       ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: defaultScenario },
     };

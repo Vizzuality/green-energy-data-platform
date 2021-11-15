@@ -1,6 +1,7 @@
 import {
   compact,
   uniqBy,
+  uniq,
   sortBy,
   sortedUniq,
   chain,
@@ -16,7 +17,7 @@ import { saveAs } from 'file-saver';
 
 import {
   Record,
-  RegionTypes,
+  Region,
 } from 'types/data';
 
 import {
@@ -25,7 +26,7 @@ import {
 
 import resources from 'utils/translations';
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
-import ID_CHINA from 'constants';
+import ID_CHINA from 'utils/constants';
 
 export const initializeLanguage = () => i18n.init({
   resources,
@@ -64,7 +65,6 @@ export const filterRecords = (
   } = filters;
 
   const recordsByFilters = records.filter((d) => {
-    console.log(ID_CHINA)
     if (visualization === 'line') {
       // API return region name to null for China
       if ((categories.length > 1 && d.category_1 !== 'Total') || categories.length === 1) return true;
@@ -143,7 +143,7 @@ export const getGroupedValues = (
   groupSlug: string | string[],
   filters: IndicatorFilters,
   records: Record[],
-  regions: Record[],
+  regions: Region[],
   units: { label: string, value: string }[],
 ): unknown => {
   const { category, unit, visualization } = filters;
@@ -295,7 +295,6 @@ export const getGroupedValues = (
             id: 'gradient-example-1',
             name: legendTitle,
             icon: null,
-            // description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'choropleth',
             items: [
               {
@@ -515,7 +514,7 @@ export const getGroupedValuesRelatedIndicators = (
   const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
 
-  const filteredRegions: RegionTypes[] = regions?.filter((r) => r.geometry !== null);
+  const filteredRegions: Region[] = regions?.filter((r) => r.geometry !== null);
   if (visualization === 'pie') {
     data = chain(records)
       .groupBy('category_1')
@@ -569,7 +568,7 @@ export const getGroupedValuesRelatedIndicators = (
             [key !== 'null' ? key : 'Total']: res.reduce(
               (previous, current) => (current.value || 0) + previous, 0,
             ),
-            province: res[0].region.name,
+            province: res[0]?.region.name,
           }))
         .value()))
       .value());
@@ -589,7 +588,7 @@ export const getGroupedValuesRelatedIndicators = (
   }
   if (visualization === 'choropleth') {
     const dataWithGeometries = records?.map(({ id, ...d }) => {
-      const geometry = filteredRegions?.find((r) => d.region.name === r.name);
+      const geometry = filteredRegions?.find((r) => d.region.id === r.id);
       return ({
         visualizationTypes: d.visualization_types,
         geometry,
@@ -666,22 +665,17 @@ export const getDefaultYearFromRecords = (
 
 export const getRegionsFromRecords = (
   records: Record[],
-  visualizationType: string,
-  unit: string,
-) => uniqBy(sortBy(records
-  .filter((r) => r.visualization_types.includes(visualizationType) && r.unit.id === unit), 'region.name')
-  .map((d) => ({
-    label: d.region.name,
-    value: d.region_id,
-  })), 'value');
-
-export const getDefaultRegionFromRecords = (
-  records: Record[],
-  visualizationType: string,
-) => records.map((r) => {
-  if (!r.visualization_types.includes(visualizationType)) return null;
-  return r.region;
-});
+  regions: Region[],
+) => {
+  const regionIdsFromRecords = uniq(records
+    .map(({ region_id }) => region_id));
+  return sortBy(regions
+    .filter(({ id }) => regionIdsFromRecords.includes(id))
+    .map(({ id: value, name: label }) => ({
+      label,
+      value,
+    })), 'name');
+};
 
 export const getScenariosFromRecords = (
   records: Record[],

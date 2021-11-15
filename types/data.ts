@@ -23,7 +23,7 @@ export interface GroupProps {
   subgroups: SubgroupProps[],
 }
 
-interface GeometryProps {
+interface Geometry {
   geometry: {
     coordinates: number[],
     type: string,
@@ -36,6 +36,11 @@ interface Unit {
   name: string,
 }
 
+interface RegionRecord {
+  id: string,
+  name: string,
+}
+
 export interface Record {
   category_1?: string,
   category_2?: string,
@@ -44,8 +49,9 @@ export interface Record {
   slug: string,
   value: number,
   unit: Unit,
-  region_id: string,
-  geometry?: GeometryProps[]
+  region: RegionRecord,
+  region_id: string;
+  geometry?: Geometry[]
   year: number,
   visualization_types: string[],
   scenario: ScenarioProps
@@ -87,9 +93,9 @@ export interface ComparePageProps {
   sg2: string,
   ind2: string
 }
-
-export interface RegionTypes {
+export interface Region {
   id: string,
-  geometry: any,
-  name: string
+  geometry: Geometry,
+  name: string,
+  region_type: string
 }

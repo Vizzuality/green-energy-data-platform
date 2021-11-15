@@ -53,6 +53,7 @@ const GridItem: FC<GridItemProps> = ({
     scenario,
     visualization,
   }), [year, region, unit, category, scenario, visualization]);
+  console.log('llega?');
 
   const {
     data: records,
@@ -65,9 +66,8 @@ const GridItem: FC<GridItemProps> = ({
     () => filterRelatedIndicators(records, filters),
     [records, filters],
   );
-  const { data: regionsGeojson } = useRegions(indicator, visualization, {
+  const { data: regionsGeojson } = useRegions({}, {
     refetchOnWindowFocus: false,
-
   });
 
   const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);

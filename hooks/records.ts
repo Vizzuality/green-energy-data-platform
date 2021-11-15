@@ -1,15 +1,18 @@
 import { useMemo } from 'react';
 
+import { useRegions } from 'hooks/regions';
+
 import {
   getYearsFromRecords,
   getDefaultYearFromRecords,
   getUnitsFromRecords,
   getDefaultUnitFromRecords,
   getRegionsFromRecords,
-  getDefaultRegionFromRecords,
   getCategoriesFromRecords,
   getScenariosFromRecords,
 } from 'utils';
+
+import ID_CHINA from 'utils/constants';
 
 export function useDefaultRecordFilters(
   records,
@@ -20,6 +23,11 @@ export function useDefaultRecordFilters(
     category,
   } = filters;
 
+  const { data: regions } = useRegions({}, {
+    refetchOnWindowFocus: false,
+    placeholderData: [],
+  });
+
   const categories = useMemo(() => getCategoriesFromRecords(records), [records]);
 
   const years = useMemo(() => getYearsFromRecords(records, visualization, region, unit),
@@ -29,14 +37,12 @@ export function useDefaultRecordFilters(
     [records, visualization],
   );
 
-  const regionsWithVisualization = useMemo(
-    () => getDefaultRegionFromRecords(records, visualization),
-    [records, visualization],
-  );
+  const regionsFromRecords = useMemo(() => getRegionsFromRecords(records, regions),
+    [records, regions]);
 
-  const regions = useMemo(() => getRegionsFromRecords(records, visualization, unit),
-    [records, visualization, unit]);
-  const defaultRegion = regionsWithVisualization.find((_region) => _region?.id === 'bca25526-8927-4d27-ac0e-e92bed88198a') || regionsWithVisualization?.[0];
+  const defaultRegion = useMemo(() => regionsFromRecords.find(
+    (_region) => _region.value === ID_CHINA,
+  ) || regionsFromRecords?.[0], [regionsFromRecords]);
 
   const units = useMemo(() => getUnitsFromRecords(records, visualization),
     [records, visualization]);
@@ -57,6 +63,7 @@ export function useDefaultRecordFilters(
     years,
     defaultYear,
     regions,
+    regionsFromRecords,
     defaultRegion,
     units,
     defaultUnit,

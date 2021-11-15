@@ -19,6 +19,10 @@ import {
   fetchIndicatorRecords,
 } from 'services/indicators';
 
+import {
+  useRegions,
+} from 'hooks/regions';
+
 export function useIndicators(group_id, subgroup_id) {
   const {
     current,
@@ -97,6 +101,10 @@ export function useIndicatorRecords(
     (state: RootState) => (state.language),
   );
 
+  const { data: regions } = useRegions({}, {
+    placeholderData: [],
+  });
+
   const {
     category,
     ...restParams
@@ -119,6 +127,10 @@ export function useIndicatorRecords(
       ...d,
       category_1: d.category_1 === null ? 'Total' : d.category_1,
       category_2: d.category_2 === null ? 'Total' : d.category_2,
+      region: {
+        id: d.region_id,
+        name: (regions.find(({ id }) => d.region_id === id) || {}).name || '-',
+      },
     })),
-  }), [data, query]);
+  }), [data, regions, query]);
 }
