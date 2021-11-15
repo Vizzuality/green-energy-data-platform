@@ -82,7 +82,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       name: null,
       published: false,
       start_date: null,
-      visualizationTypes: [],
+      visualization_types: [],
       group: null,
       subgroup: null,
     },

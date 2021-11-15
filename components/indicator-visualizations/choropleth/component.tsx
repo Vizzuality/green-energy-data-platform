@@ -40,7 +40,7 @@ type LegendConfigProps = {
   items: ItemProps[]
 };
 
-interface MapLayersProps {
+export interface MapLayersProps {
   id: string,
   type: string,
   name: string,

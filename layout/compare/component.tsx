@@ -223,7 +223,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   const {
     name,
     categories: categoriesIndicator,
-    visualizationTypes,
+    visualization_types: visualizationTypes,
     description,
   }: IndicatorProps = indicatorData;
 
@@ -656,7 +656,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     {visualization === 'choropleth' && (
                     <div className="w-full h-96 pb-11">
                       <MapContainer
-                        // @ts-ignore
                         layers={widgetData.layers}
                         categories={categories}
                       />

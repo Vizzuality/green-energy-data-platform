@@ -50,6 +50,7 @@ import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
 import { useDefaultRecordFilters } from 'hooks/records';
 
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
@@ -144,7 +145,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       name: null,
       published: false,
       start_date: null,
-      visualizationTypes: [],
+      visualization_types: [],
       group: null,
       subgroup: null,
     },
@@ -160,13 +161,16 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     data: records,
     isFetching: isFetchingRecords,
   } = useIndicatorRecords(
-    groupSlug, subgroupSlug, indicatorSlug, filters, { refetchOnWindowFocus: false },
+    groupSlug, subgroupSlug, indicatorSlug, filters, {
+      refetchOnWindowFocus: false,
+      enabled: !!visualization,
+    },
   );
 
   const {
     name,
     categories: categoriesIndicator,
-    visualizationTypes: visualizationTypesIndicator,
+    visualization_types: visualizationTypesIndicator,
     description,
   } = indicatorData;
 
@@ -201,16 +205,22 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     () => ChartConfig(widgetDataKeys)[visualization],
     [visualization, widgetDataKeys],
   );
-  const widgetData = useMemo(
+
+  interface WidgetDataTypes {
+    visualizationTypes: string[];
+    layers?: MapLayersProps[]
+  }
+
+  const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
       name, groupSlug, filters, filteredRecords, regionsGeojson, units,
-    ), [name, groupSlug, filters, filteredRecords, regionsGeojson, units],
+    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeojson, units],
   );
 
-  const currentVisualization = useMemo(
+  const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.
-    () => (indicatorData?.visualizationTypes.includes(visualization)
+    () => (indicatorData?.visualization_types.includes(visualization)
       ? visualization : indicatorData?.default_visualization),
     [visualization, indicatorData],
   );
@@ -545,7 +555,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   {visualization === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer
-                      // @ts-ignore
                       layers={widgetData.layers}
                       categories={categories}
                     />

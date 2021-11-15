@@ -31,12 +31,6 @@ interface GeometryProps {
   type: string,
 }
 
-interface Region {
-  id: string,
-  name: string,
-  region_type: string,
-}
-
 interface Unit {
   id: string,
   name: string,
@@ -50,10 +44,10 @@ export interface Record {
   slug: string,
   value: number,
   unit: Unit,
-  region: Region,
+  region_id: string,
   geometry?: GeometryProps[]
   year: number,
-  visualizationTypes: string[],
+  visualization_types: string[],
   scenario: ScenarioProps
 }
 
@@ -78,7 +72,7 @@ export interface IndicatorProps {
   name: string;
   published: boolean,
   start_date: number,
-  visualizationTypes: string[],
+  visualization_types: string[],
   records: Record[],
   group: DataIdProps,
   subgroup: DataIdProps,
@@ -92,4 +86,10 @@ export interface ComparePageProps {
   g2: string,
   sg2: string,
   ind2: string
+}
+
+export interface RegionTypes {
+  id: string,
+  geometry: any,
+  name: string
 }
