@@ -49,7 +49,7 @@ export interface MapLayersProps {
 
 interface MapContainerProps {
   layers: MapLayersProps[],
-  hasIteraction?: boolean,
+  hasInteraction?: boolean,
   style?: Object,
   categories: string[]
 }
@@ -58,7 +58,7 @@ const numberFormat = format('.2s');
 const MapContainer: FC<MapContainerProps> = (
   {
     layers,
-    hasIteraction = true,
+    hasInteraction = true,
     style = {},
   }: MapContainerProps,
 ) => {
@@ -157,13 +157,13 @@ const MapContainer: FC<MapContainerProps> = (
           </>
         )}
       </Map>
-      {hasIteraction && (
+      {hasInteraction && (
         <ZoomControl
           viewport={viewport}
           onZoomChange={handleZoomChange}
         />
       )}
-      {hasIteraction
+      {hasInteraction
       && (
       <Legend onChangeOrder={onChangeOrder}>
         {sortedItems.map((i) => {

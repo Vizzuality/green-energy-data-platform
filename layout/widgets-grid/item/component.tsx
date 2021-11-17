@@ -71,7 +71,8 @@ const GridItem: FC<GridItemProps> = ({
 
   const categories = useMemo(
     () => getCategoriesFromRecords(filteredRecords, visualization),
-  [filteredRecords, visualization]);
+    [filteredRecords, visualization],
+  );
 
   const colors = useColors(categories.length);
 
@@ -126,7 +127,7 @@ const GridItem: FC<GridItemProps> = ({
           )}
           {visualization === 'choropleth' && (
           <MapContainer
-            hasIteraction={false}
+            hasInteraction={false}
             style={{ marginTop: 30 }}
             layers={widgetData.layers}
             categories={categories}
