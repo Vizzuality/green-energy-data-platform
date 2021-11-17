@@ -284,8 +284,7 @@ export const getGroupedValues = (
     const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
 
     if (groupSlug !== 'coal-power-plants') {
-      data = {
-        // @ts-ignore
+      data = [{
         visualizationTypes: visualizations,
         layers: [{
           id: 'regions',
@@ -362,11 +361,11 @@ export const getGroupedValues = (
             ],
           },
         }],
-      };
+      }];
     }
 
     if (groupSlug === 'coal-power-plants') {
-      data = {
+      data = [{
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
         data: dataWithGeometries,
         mapValues,
@@ -484,7 +483,7 @@ export const getGroupedValues = (
             items: ITEMS,
           }],
         }],
-      };
+      }];
     }
 
     return data;

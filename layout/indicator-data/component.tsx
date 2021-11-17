@@ -591,7 +591,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   {visualization === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer
-                      layers={widgetData.layers}
+                      layers={widgetData[0].layers}
                       categories={categories}
                     />
                   </div>

@@ -129,7 +129,7 @@ const GridItem: FC<GridItemProps> = ({
           <MapContainer
             hasInteraction={false}
             style={{ marginTop: 30 }}
-            layers={widgetData.layers}
+            layers={widgetData[0].layers}
             categories={categories}
           />
           )}
