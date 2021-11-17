@@ -4,8 +4,11 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
+import { orderBy } from 'lodash';
+
 import {
   IndicatorProps,
+  IndicatorMetadata,
   Record,
 } from 'types/data';
 import {
@@ -17,11 +20,15 @@ import {
   fetchIndicators,
   fetchIndicator,
   fetchIndicatorRecords,
+  fetchIndicatorMetadata,
 } from 'services/indicators';
 
 import {
   useRegions,
 } from 'hooks/regions';
+import { getCategoriesFromRecords } from 'utils';
+
+import ID_CHINA from 'utils/constants';
 
 export function useIndicators(group_id, subgroup_id) {
   const {
@@ -79,6 +86,112 @@ export function useIndicator(
       },
       ...queryOptions,
     });
+}
+
+export function useIndicatorMetadata(
+  id: string,
+  visualization: string,
+  records: Record[],
+  indicatorSlug: string,
+  params = {},
+  queryOptions = {},
+) {
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+
+  const query = useQuery<IndicatorMetadata, Error>(['indicator-metadata', id, visualization, current],
+    () => fetchIndicatorMetadata(id, { locale: current, ...params }), {
+      placeholderData: {},
+      ...queryOptions,
+    });
+
+  const { data } = query;
+
+  const years = useMemo<{ label: number, value: number }[] | []>(
+    () => orderBy(data[visualization]?.year.map((y) => ({
+      label: y,
+      value: y,
+    })), ['value'], ['desc']) || [], [data, visualization],
+  );
+
+  const defaultYear = useMemo<{ label: number, value: number }>(() => years?.[0], [years]);
+
+  const regions = useMemo<{ label: string, value: string }[] | []>(
+    () => data[visualization]?.regions.map((reg) => ({
+      label: reg.name,
+      value: reg.id,
+    })) || [], [data, visualization],
+  );
+
+  const defaultRegion = useMemo<{ label: string, value: string }>(
+    () => regions.find(({ value }) => value === ID_CHINA || regions[0]),
+    [regions],
+  );
+
+  const units = useMemo<{ label: string, value: string }[]>(
+    () => data[visualization]?.units.map((u) => ({
+      label: u.name,
+      value: u.id,
+    })) || [], [data, visualization],
+  );
+
+  const defaultUnit = useMemo<{ label: string, value: string }>(
+    () => units?.[0], [units],
+  );
+
+  const { data: regionsGeometries } = useRegions({}, {
+    refetchOnWindowFocus: false,
+    placeholderData: [],
+  });
+
+  const scenarios = useMemo<{ label: string, value: string }[]>(
+    () => data[visualization]?.scenarios.map((scenario) => ({
+      label: scenario,
+      value: scenario,
+    })) || [], [data, visualization],
+  );
+
+  const defaultScenario = useMemo<{ label: string, value: string }>(
+    () => scenarios?.[0],
+    [scenarios],
+  );
+
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+  );
+
+  const defaultCategory = useMemo(() => ({ label: 'category_1' }), []);
+
+  return useMemo(() => ({
+    id,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    regionsGeometries,
+    units,
+    defaultUnit,
+    scenarios,
+    defaultScenario,
+    categories,
+    defaultCategory,
+  }), [
+    id,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    regionsGeometries,
+    units,
+    defaultUnit,
+    scenarios,
+    defaultScenario,
+    categories,
+    defaultCategory,
+  ]);
 }
 
 export function useDefaultIndicator(group) {

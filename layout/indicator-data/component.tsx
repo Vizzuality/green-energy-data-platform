@@ -22,6 +22,7 @@ import { useSubgroup } from 'hooks/subgroups';
 import {
   useIndicator,
   useIndicatorRecords,
+  useIndicatorMetadata,
 } from 'hooks/indicators';
 
 // components
@@ -37,6 +38,7 @@ import LoadingSpinner from 'components/loading-spinner';
 // utils
 import {
   filterRecords,
+  getCategoriesFromRecords,
   getGroupedValues,
   getSubcategoriesFromRecords,
 } from 'utils';
@@ -46,8 +48,8 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
+// hooks
 import { useColors } from 'hooks/utils';
-import { useDefaultRecordFilters } from 'hooks/records';
 
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import DropdownContent from 'layout/dropdown-content';
@@ -87,7 +89,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, region, unit, category, scenario, visualization,
+    year, unit, region, category, scenario, visualization,
   } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
@@ -152,42 +154,58 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
+  const filtersIndicator = useMemo(() => {
+    if (visualization !== 'choropleth') {
+      return ({
+        region,
+        unit,
+      });
+    }
+    return ({
+      unit,
+      year,
+    });
+  }, [visualization, region, unit, year]);
+
   const {
     data: records,
     isFetching: isFetchingRecords,
   } = useIndicatorRecords(
-    groupSlug, subgroupSlug, indicatorSlug, filters, {
+    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
       enabled: !!visualization,
     },
   );
 
   const {
-    name,
-    categories: categoriesIndicator,
-    visualization_types: visualizationTypesIndicator,
-    description,
-  } = indicatorData;
-
-  const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categoriesIndicator),
-    [records, filters, categoriesIndicator],
-  );
-
-  const {
-    categories,
     defaultCategory,
     years,
     defaultYear,
-    regionsFromRecords: regions,
+    regions,
     defaultRegion,
+    regionsGeometries,
     units,
     defaultUnit,
     scenarios,
     defaultScenario,
-  } = useDefaultRecordFilters(
-    records,
-    filters,
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
+    refetchOnWindowFocus: false,
+    enabled: !!indicatorSlug && !!visualization,
+  });
+
+  const {
+    name,
+    visualization_types: visualizationTypesIndicator,
+    description,
+  } = indicatorData;
+
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+  );
+
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, categories),
+    [records, filters, categories],
   );
 
   const colors = useColors(categories.length);
@@ -208,8 +226,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regions, units,
-    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regions, units],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
@@ -219,26 +237,51 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       ? visualization : indicatorData?.default_visualization),
     [visualization, indicatorData],
   );
+  const currentYear = useMemo<number>(
+    () => (year || defaultYear?.value),
+    [year, defaultYear],
+  );
 
-  const currentRegion = useMemo(() => defaultRegion?.value || '', [defaultRegion]);
+  const currentUnit = useMemo<string>(
+    () => (unit || defaultUnit?.value),
+    [unit, defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => (region || defaultRegion?.value),
+    [region, defaultRegion],
+  );
+
+  const currentScenario = useMemo<string>(
+    () => (scenario || defaultScenario?.value),
+    [scenario, defaultScenario],
+  );
+
+  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
+  const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
+  const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
-      ...defaultUnit ? { unit: defaultUnit.id } : { unit: '' },
+      ...(defaultUnit && { unit: currentUnit }) || { unit: '' },
       ...defaultCategory && { category: defaultCategory },
       ...(['line', 'pie'].includes(currentVisualization)) && { region: currentRegion },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && defaultYear) ? { year: defaultYear } : { year: null },
-      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: defaultScenario },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     }));
   }, [
     dispatch,
     defaultYear,
+    currentYear,
     currentRegion,
     defaultUnit,
+    currentUnit,
     defaultCategory,
     defaultScenario,
+    currentScenario,
     currentVisualization,
+    indicatorSlug,
   ]);
 
   const DynamicChart = useMemo(() => {
@@ -247,10 +290,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     }
     return null;
   }, [visualization]);
-
-  const displayYear = years.find((y) => y.value === year)?.label;
-  const displayUnit = units.find((y) => y.value === unit)?.label;
-  const displayRegion = regions.find((y) => y.value === region)?.label;
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',

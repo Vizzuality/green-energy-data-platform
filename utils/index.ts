@@ -1,8 +1,5 @@
 import {
   compact,
-  uniqBy,
-  uniq,
-  sortBy,
   sortedUniq,
   chain,
   flatten,
@@ -45,11 +42,25 @@ export const Filter = (arr: (string | number)[], param: number) => {
 
 export const getCategoriesFromRecords = (
   records: Record[],
-) => compact(sortedUniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort()));
+  visualization: string,
+) => {
+  const categories = compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort()));
+
+  if (visualization === 'choropleth') {
+    return categories;
+  }
+
+  return categories.filter((category) => {
+    if (categories.length > 1) {
+      return category !== 'Total' && category !== null;
+    }
+    return category || 'Total';
+  });
+};
 
 export const getSubcategoriesFromRecords = (
   records: Record[],
-) => compact(sortedUniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2)).sort()));
+) => compact(sortedUniq(records?.map((d) => (d.category_2 === null ? 'Total' : d.category_2)).sort()));
 
 export const filterRecords = (
   records: Record[],
@@ -102,7 +113,7 @@ export const filterRelatedIndicators = (
 ) => {
   const { region, category, visualization } = filters;
   const label = category?.label;
-  const categories = getCategoriesFromRecords(records).filter((c) => c !== 'Total');
+  const categories = getCategoriesFromRecords(records, visualization);
 
   const results = records.filter((r) => {
     if (categories.length > 1) return r.category_1 !== 'Total';
@@ -147,7 +158,6 @@ export const getGroupedValues = (
   units: { label: string, value: string }[],
 ): unknown => {
   const { category, unit, visualization } = filters;
-
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
   const mapCategorySelected = 'Total';
@@ -471,7 +481,6 @@ export const getGroupedValues = (
             id: 'gradient-example-1',
             name: legendTitle,
             icon: null,
-            // description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'gradient',
             items: ITEMS,
           }],
@@ -498,7 +507,6 @@ export const getGroupedValues = (
     default:
       data = [];
   }
-
   return data;
 };
 
@@ -642,67 +650,6 @@ export const getGroupedValuesRelatedIndicators = (
   }
   return data;
 };
-
-export const getYearsFromRecords = (
-  records: Record[],
-  visualizationType: string,
-  region: string,
-  unit: string,
-) => uniqBy(sortedUniq(records
-  .filter(((r) => r.visualization_types.includes(visualizationType) && r.region_id === region && r.unit.id === unit), 'unit.name')
-  .map((d) => ({
-    label: d.year,
-    value: d.year,
-  })).sort()), 'value');
-
-export const getDefaultYearFromRecords = (
-  records: Record[],
-  visualizationType: string,
-) => compact(records.map((r) => {
-  if (!r.visualization_types.includes(visualizationType)) return null;
-  return r.year;
-}))[0];
-
-export const getRegionsFromRecords = (
-  records: Record[],
-  regions: Region[],
-) => {
-  const regionIdsFromRecords = uniq(records
-    .map(({ region_id }) => region_id));
-  return sortBy(regions
-    .filter(({ id }) => regionIdsFromRecords.includes(id))
-    .map(({ id: value, name: label }) => ({
-      label,
-      value,
-    })), 'name');
-};
-
-export const getScenariosFromRecords = (
-  records: Record[],
-) => compact(sortedUniq(
-  records.map((d) => ({
-    label: d.scenario?.name,
-    value: d.scenario?.name,
-  })).filter((s) => s.value !== undefined).sort(),
-));
-
-export const getUnitsFromRecords = (
-  records: Record[],
-  visualizationType: string,
-) => compact(uniqBy(sortedUniq(sortBy(records
-  .filter((r) => r.visualization_types.includes(visualizationType)), 'unit.name')
-  .map((d) => ({
-    label: d.unit.name,
-    value: d.unit.id,
-  }))), 'value'));
-
-export const getDefaultUnitFromRecords = (
-  records: Record[],
-  visualizationType: string,
-) => compact(records.map((r) => {
-  if (!r.visualization_types.includes(visualizationType)) return null;
-  return r.unit;
-}))[0];
 
 export const getTodaysDate = () => {
   const today = new Date();

@@ -84,6 +84,25 @@ export interface IndicatorProps {
   subgroup: DataIdProps,
 }
 
+type Filter = Readonly<{
+  id: string,
+  name: string,
+}>;
+
+type VisualizationFilters = Readonly<{
+  years: number[],
+  regions: Filter,
+  units: Filter,
+  scenarios: string[]
+}>;
+
+export interface IndicatorMetadata {
+  line?: VisualizationFilters,
+  choropleth?: VisualizationFilters,
+  bar?: VisualizationFilters,
+  pie?: VisualizationFilters,
+}
+
 // pages
 export interface ComparePageProps {
   g1: string,

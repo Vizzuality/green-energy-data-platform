@@ -53,7 +53,6 @@ const GridItem: FC<GridItemProps> = ({
     scenario,
     visualization,
   }), [year, region, unit, category, scenario, visualization]);
-  console.log('llega?');
 
   const {
     data: records,
@@ -70,7 +69,8 @@ const GridItem: FC<GridItemProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords, visualization), [filteredRecords, visualization]);
+
   const colors = useColors(categories.length);
 
   const widgetConfig = useMemo(

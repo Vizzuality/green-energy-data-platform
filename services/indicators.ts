@@ -1,4 +1,5 @@
 import { API } from 'lib/api';
+import { identity } from 'lodash';
 
 export const fetchIndicators = (
   group_id: string,
@@ -60,8 +61,21 @@ export const fetchDataToDownload = (
 })
   .then(({ data }) => data);
 
+export const fetchIndicatorMetadata = (
+  id: string,
+  headers = {},
+  params = {},
+) => API.get(`/indicators/${id}/meta`, {
+  headers: {
+    ...headers,
+  },
+  params,
+})
+  .then(({ data: { meta } }) => meta);
+
 export default {
   fetchIndicators,
   fetchIndicator,
   fetchDataToDownload,
+  fetchIndicatorMetadata,
 };
