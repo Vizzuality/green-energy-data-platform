@@ -63,6 +63,11 @@ type ChartProps = {
   colors: string[],
 };
 
+interface WidgetDataTypes {
+  visualizationTypes: string[];
+  layers?: MapLayersProps[]
+}
+
 const IndicatorData: FC<IndicatorDataProps> = ({
   className,
 }: IndicatorDataProps) => {
@@ -218,11 +223,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     () => ChartConfig(widgetDataKeys)[visualization],
     [visualization, widgetDataKeys],
   );
-
-  interface WidgetDataTypes {
-    visualizationTypes: string[];
-    layers?: MapLayersProps[]
-  }
 
   const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(

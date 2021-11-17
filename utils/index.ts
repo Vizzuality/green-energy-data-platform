@@ -367,7 +367,6 @@ export const getGroupedValues = (
 
     if (groupSlug === 'coal-power-plants') {
       data = {
-        // @ts-ignore
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
         data: dataWithGeometries,
         mapValues,

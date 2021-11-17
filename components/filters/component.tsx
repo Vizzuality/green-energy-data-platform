@@ -4,12 +4,10 @@ import React, {
 import cx from 'classnames';
 import i18next from 'i18next';
 
-import { useDispatch, useSelector } from 'react-redux';
-// import { RootState } from 'store/store';
+import { useDispatch } from 'react-redux';
 
 // components
 import Icon from 'components/icon';
-import { RootState } from 'store/store';
 
 interface FiltersProps {
   visualizationType: string,

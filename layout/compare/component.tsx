@@ -28,6 +28,7 @@ import MapContainer from 'components/indicator-visualizations/choropleth';
 import {
   filterRecords,
   getGroupedValues,
+  getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
 
@@ -47,10 +48,10 @@ import { useSubgroup } from 'hooks/subgroups';
 import {
   useIndicator,
   useIndicatorRecords,
+  useIndicatorMetadata,
 } from 'hooks/indicators';
 import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
-import { useDefaultRecordFilters } from 'hooks/records';
 
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import { IndicatorProps } from 'types/data';
@@ -59,12 +60,13 @@ import { CompareLayoutProps } from './types';
 import ChartConfig from '../indicator-data/config';
 import DropdownContent from '../dropdown-content';
 
-interface WidgetData {
-  layers?: MapLayersProps
+interface WidgetDataTypes {
+  visualizationTypes: string[];
+  layers?: MapLayersProps[]
 }
 
 type ChartProps = {
-  widgetData: WidgetData[],
+  widgetData: any,
   widgetConfig: any,
   colors: string[]
 };
@@ -221,6 +223,21 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const {
+    defaultCategory,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    units,
+    defaultUnit,
+    scenarios,
+    defaultScenario,
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
+    refetchOnWindowFocus: false,
+    enabled: !!indicatorSlug && !!visualization,
+  });
+
   const { data: regionsGeojson } = useRegions({}, {
     refetchOnWindowFocus: false,
   });
@@ -232,25 +249,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     description,
   }: IndicatorProps = indicatorData;
 
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+  );
+
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, categoriesIndicator),
     [records, filters, categoriesIndicator],
-  );
-
-  const {
-    categories,
-    defaultCategory,
-    years,
-    defaultYear,
-    regionsFromRecords: regions,
-    defaultRegion,
-    units,
-    defaultUnit,
-    scenarios,
-    defaultScenario,
-  } = useDefaultRecordFilters(
-    records,
-    filters,
   );
 
   const colors = useColors(categories.length);
@@ -264,10 +269,10 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     [visualization, widgetDataKeys],
   );
 
-  const widgetData = useMemo(
+  const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
       name, groupSlug, filters, filteredRecords, regionsGeojson, units,
-    ),
+    ) as WidgetDataTypes,
     [name, groupSlug, filters, filteredRecords, regionsGeojson, units],
   ) || [];
 
@@ -297,14 +302,34 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     [visualization, indicatorData],
   );
 
+  const currentYear = useMemo<number>(
+    () => (year || defaultYear?.value),
+    [year, defaultYear],
+  );
+
+  const currentUnit = useMemo<string>(
+    () => (unit || defaultUnit?.value),
+    [unit, defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => (region || defaultRegion?.value),
+    [region, defaultRegion],
+  );
+
+  const currentScenario = useMemo<string>(
+    () => (scenario || defaultScenario?.value),
+    [scenario, defaultScenario],
+  );
+
   useEffect(() => {
     const newFilters = {
       visualization: currentVisualization,
-      ...defaultUnit ? { unit: defaultUnit.id } : { unit: '' },
+      ...(defaultUnit && { unit: currentUnit }) || { unit: '' },
       ...defaultCategory && { category: defaultCategory },
-      ...(['line', 'pie'].includes(currentVisualization) && defaultRegion) ? { region: defaultRegion.value } : { region: '' },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && defaultYear) ? { year: defaultYear } : { year: null },
-      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: defaultScenario },
+      ...(['line', 'pie'].includes(currentVisualization)) && { region: currentRegion },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     };
     if (compareIndex === 1) {
       dispatch(setFilters(newFilters));
@@ -314,13 +339,16 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   }, [
     dispatch,
     defaultYear,
-    defaultRegion,
+    currentYear,
+    currentRegion,
     defaultUnit,
-    defaultScenario,
+    currentUnit,
     defaultCategory,
-    defaultVisualization,
-    compareIndex,
+    defaultScenario,
+    currentScenario,
     currentVisualization,
+    indicatorSlug,
+    compareIndex,
   ]);
 
   const DynamicChart = useMemo(() => {

@@ -92,7 +92,6 @@ export function useIndicatorMetadata(
   id: string,
   visualization: string,
   records: Record[],
-  indicatorSlug: string,
   params = {},
   queryOptions = {},
 ) {

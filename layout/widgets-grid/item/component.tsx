@@ -69,7 +69,9 @@ const GridItem: FC<GridItemProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords, visualization), [filteredRecords, visualization]);
+  const categories = useMemo(
+    () => getCategoriesFromRecords(filteredRecords, visualization),
+  [filteredRecords, visualization]);
 
   const colors = useColors(categories.length);
 
