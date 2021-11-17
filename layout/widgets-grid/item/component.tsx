@@ -82,9 +82,9 @@ const GridItem: FC<GridItemProps> = ({
   );
   const widgetData = useMemo(
     () => getGroupedValuesRelatedIndicators(
-      categories, filters, filteredRecords, regionsGeojson,
+      group, categories, filters, filteredRecords, regionsGeojson,
     ),
-    [categories, filters, filteredRecords, regionsGeojson],
+    [group, categories, filters, filteredRecords, regionsGeojson],
   );
 
   return (
@@ -125,11 +125,12 @@ const GridItem: FC<GridItemProps> = ({
             colors={colors}
           />
           )}
+
           {visualization === 'choropleth' && (
           <MapContainer
             hasInteraction={false}
             style={{ marginTop: 30 }}
-            layers={widgetData[0].layers}
+            layers={widgetData[0]?.layers || []}
             categories={categories}
           />
           )}

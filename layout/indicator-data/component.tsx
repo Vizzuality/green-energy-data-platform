@@ -264,9 +264,9 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
-      ...(defaultUnit && { unit: currentUnit }) || { unit: '' },
+      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
       ...defaultCategory && { category: defaultCategory },
-      ...(['line', 'pie'].includes(currentVisualization)) && { region: currentRegion },
+      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
       ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     }));
@@ -591,7 +591,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   {visualization === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer
-                      layers={widgetData[0].layers}
+                      layers={widgetData[0]?.layers || []}
                       categories={categories}
                     />
                   </div>

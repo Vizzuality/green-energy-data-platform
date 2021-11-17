@@ -509,6 +509,7 @@ export const getGroupedValues = (
 };
 
 export const getGroupedValuesRelatedIndicators = (
+  groupSlug: string | string[],
   categories: string[],
   filters: IndicatorFilters,
   records: Record[],
@@ -531,6 +532,7 @@ export const getGroupedValuesRelatedIndicators = (
             (previous, current) => (current.value || 0) + previous, 0,
           ),
           year: value[0].year,
+          visualizationTypes: value[0].visualization_types,
         }))
       .value();
   }
@@ -546,6 +548,7 @@ export const getGroupedValuesRelatedIndicators = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
+            visualizationTypes: value[0].visualization_types,
           }))
         .value()))
       .value());
@@ -575,6 +578,7 @@ export const getGroupedValuesRelatedIndicators = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             province: res[0]?.region.name,
+            visualizationTypes: value[0].visualization_types,
           }))
         .value()))
       .value());
@@ -592,6 +596,7 @@ export const getGroupedValuesRelatedIndicators = (
         province,
       })).filter((p) => p.province !== 'China');
   }
+
   if (visualization === 'choropleth') {
     const dataWithGeometries = records?.map(({ id, ...d }) => {
       const geometry = filteredRegions?.find((r) => d.region.id === r.id);
@@ -603,48 +608,168 @@ export const getGroupedValuesRelatedIndicators = (
     });
 
     const mapValues = dataWithGeometries
-      .filter((d) => d[mapCategorySelected]).map((r) => r[mapCategorySelected]) as number[];
+      .filter((d) => d[mapCategorySelected])
+      .map((r) => r[mapCategorySelected]) as number[];
+
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
+    const media = (maxValue - minValue) / 2;
 
-    data = {
-      visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
-      layers: [{
-        id: 'regions',
-        type: 'geojson',
-        source: {
+    if (groupSlug === 'coal-power-plants') {
+      data = [{
+        visualizationTypes: dataWithGeometries[0]?.visualization_types,
+        data: dataWithGeometries,
+        mapValues,
+        layers: [{
+          id: 'cluster',
           type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
-              type: 'Feature',
-              geometry: geometry?.geometry,
-              properties: cat,
-            })),
-          },
-        },
-        render: {
-          layers: [
-            {
-              type: 'fill',
-              paint: {
-                'fill-color': [
-                  'interpolate',
-                  ['linear'],
-                  ['get', categorySelected],
-                  minValue === maxValue ? 0 : minValue,
-                  '#C9E6E8',
-                  maxValue,
-                  '#1B5183',
-                ],
-                // 'fill-outline-color': '#35373E',
-                'fill-opacity': 0.3,
-              },
+          filter: ['has', 'point_count'],
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+                type: 'Feature',
+                geometry: geometry?.geometry,
+                properties: cat,
+              })),
             },
-          ],
-        },
-      }],
-    };
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 45,
+          },
+          render: {
+            layers: [
+              {
+                type: 'circle',
+                paint: {
+                // 'fill-color': '#00ffff',
+                  'circle-opacity': 0.5,
+                  // 'circle-stroke-opacity': 0.7,
+                  'circle-stroke-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'point_count'],
+                    minValue,
+                    '#c73a63',
+                    media,
+                    '#d06182',
+                    maxValue,
+                    '#dd96ab',
+                  ],
+                  'circle-stroke-width': 1,
+                  'circle-color': [
+                    'step',
+                    ['get', 'point_count'],
+                    '#dd96ab',
+                    minValue,
+                    '#d46f8c',
+                    media,
+                    '#cd5478',
+                    maxValue,
+                    '#c73a63',
+                  ],
+                  'circle-radius': [
+                    'step',
+                    ['get', 'point_count'],
+                    10,
+                    minValue,
+                    15,
+                    media,
+                    20,
+                    maxValue,
+                    25,
+                  ],
+                },
+              },
+              {
+                id: 'media-cluster-count',
+                metadata: {
+                  position: 'top',
+                },
+                type: 'symbol',
+                layout: {
+                  'text-allow-overlap': true,
+                  'text-ignore-placement': true,
+                  'text-field': '{point_count_abbreviated}',
+                  'text-size': 12,
+                },
+              },
+              {
+                id: 'unclustered-point',
+                type: 'circle',
+                source: 'earthquakes',
+                filter: ['!', ['has', 'point_count']],
+                paint: {
+                  'circle-color': '#e7b092',
+                  'circle-radius': 4,
+                  'circle-stroke-width': 1,
+                  'circle-stroke-color': '#fff',
+                },
+              },
+            // {
+            //   id: 'media',
+            //   metadata: {
+            //     position: 'top',
+            //   },
+            //   type: 'symbol',
+            //   paint: {
+            //     'icon-color': '#F00',
+            //   },
+            //   layout: {
+            //     'icon-ignore-placement': true,
+            //     'icon-allow-overlap': true,
+            //     'icon-image': '',
+            //     'icon-color': 'red',
+            //     'icon-size': 10,
+            //   },
+            // },
+            ],
+          },
+        }],
+      }];
+    }
+
+    if (groupSlug !== 'coal-power-plants') {
+      data = [{
+        visualizationTypes: dataWithGeometries[0]?.visualization_types,
+        layers: [{
+          id: 'regions',
+          type: 'geojson',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+                type: 'Feature',
+                geometry: geometry?.geometry,
+                properties: cat,
+              })),
+            },
+          },
+          render: {
+            layers: [
+              {
+                type: 'fill',
+                paint: {
+                  'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', categorySelected],
+                    minValue === maxValue ? 0 : minValue,
+                    '#C9E6E8',
+                    maxValue,
+                    '#1B5183',
+                  ],
+                  // 'fill-outline-color': '#35373E',
+                  'fill-opacity': 0.3,
+                },
+              },
+            ],
+          },
+        }],
+      }];
+    }
   }
   return data;
 };
