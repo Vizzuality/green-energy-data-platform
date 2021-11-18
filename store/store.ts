@@ -4,6 +4,7 @@ import group from './slices/group';
 import subgroup from './slices/subgroup';
 import indicator from './slices/indicator';
 import indicator_compare from './slices/indicator_compare';
+import indicator_related from './slices/indicator_related';
 import search from './slices/search';
 import language from './slices/language';
 
@@ -12,6 +13,7 @@ const staticReducers = {
   subgroup,
   indicator,
   indicator_compare,
+  indicator_related,
   search,
   language,
 };

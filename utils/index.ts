@@ -245,7 +245,7 @@ export const getGroupedValues = (
     data?: unknown,
     mapValues: number[]
   }[] => {
-    const dataWithGeometries = filteredData.map(({ id, ...d }) => {
+    const dataWithGeometries = filteredData?.map(({ id, ...d }) => {
       const geometry = filteredRegions?.find((r):boolean => d.region.name === r.name);
       return ({
         geometry,
@@ -254,8 +254,9 @@ export const getGroupedValues = (
       });
     });
 
-    const mapValues = dataWithGeometries
-      .filter((d) => d[mapCategorySelected])
+    const mapValues = dataWithGeometries?.filter(
+      (d) => d[mapCategorySelected],
+    )
       .map((r) => r[mapCategorySelected]) as number[];
 
     const minValue = Math.min(...mapValues);
@@ -606,9 +607,7 @@ export const getGroupedValuesRelatedIndicators = (
         [d.category_1]: d.value,
       });
     });
-
-    const mapValues = dataWithGeometries
-      .filter((d) => d[mapCategorySelected])
+    const mapValues = dataWithGeometries?.filter((d) => d[mapCategorySelected])
       .map((r) => r[mapCategorySelected]) as number[];
 
     const minValue = Math.min(...mapValues);

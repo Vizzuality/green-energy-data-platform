@@ -690,7 +690,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     <div className="w-full h-96 pb-11">
                       <MapContainer
                         layers={widgetData.layers}
-                        categories={categories}
                       />
                     </div>
                     )}

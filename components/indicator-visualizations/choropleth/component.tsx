@@ -51,7 +51,6 @@ interface MapContainerProps {
   layers: MapLayersProps[],
   hasInteraction?: boolean,
   style?: Object,
-  categories: string[]
 }
 
 const numberFormat = format('.2s');

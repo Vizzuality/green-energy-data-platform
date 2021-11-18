@@ -107,8 +107,7 @@ export function useIndicatorMetadata(
       ...queryOptions,
     });
 
-  const { data } = query;
-
+  const { data, isFetching } = query;
   const years = useMemo<{ label: number, value: number }[] | []>(
     () => orderBy(data[visualization]?.year.map((y) => ({
       label: y,
@@ -159,12 +158,13 @@ export function useIndicatorMetadata(
   );
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+    () => getCategoriesFromRecords(records, visualization) || [], [records, visualization],
   );
 
   const defaultCategory = useMemo(() => ({ label: 'category_1' }), []);
 
   return useMemo(() => ({
+    isFetching,
     id,
     years,
     defaultYear,
@@ -178,6 +178,7 @@ export function useIndicatorMetadata(
     categories,
     defaultCategory,
   }), [
+    isFetching,
     id,
     years,
     defaultYear,
@@ -215,6 +216,7 @@ export function useIndicatorRecords(
 
   const { data: regions } = useRegions({}, {
     placeholderData: [],
+    refetchOnWindowsFocus: false,
   });
 
   const {
@@ -235,7 +237,7 @@ export function useIndicatorRecords(
 
   return useMemo(() => ({
     ...query,
-    data: data.map((d) => ({
+    data: data?.map((d) => ({
       ...d,
       category_1: d.category_1 === null ? 'Total' : d.category_1,
       category_2: d.category_2 === null ? 'Total' : d.category_2,
