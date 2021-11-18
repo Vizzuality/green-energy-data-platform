@@ -36,7 +36,7 @@ interface Unit {
   name: string,
 }
 
-interface RegionRecord {
+interface GeometryProps {
   id: string,
   name: string,
 }
@@ -49,9 +49,9 @@ export interface Record {
   slug: string,
   value: number,
   unit: Unit,
-  region: RegionRecord,
-  region_id: string;
-  geometry?: Geometry[]
+  region: Region,
+  region_id: string,
+  geometry?: GeometryProps[]
   year: number,
   visualization_types: string[],
   scenario: ScenarioProps

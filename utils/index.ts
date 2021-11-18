@@ -119,7 +119,9 @@ export const filterRelatedIndicators = (
   records: Record[],
   filters: IndicatorFilters,
 ) => {
-  const { region, category, visualization } = filters;
+  const {
+    year, unit, category, visualization, scenario,
+  } = filters;
   const label = category?.label;
   const categories = getCategoriesFromRecords(records, visualization);
 
@@ -141,11 +143,16 @@ export const filterRelatedIndicators = (
     }
 
     if (visualization === 'bar') {
-      if (d.region_id !== ID_CHINA) return true;
+      if (year === d.year
+        && d.unit.id === unit
+        && d.region_id !== ID_CHINA
+      ) return true;
     }
 
     if (visualization === 'choropleth') {
-      if (d.region_id === region) return true;
+      if (year === d.year
+        && (d.unit.id === unit || !unit) // some idicators has no unit
+        && d.scenario?.name === scenario) return true;
     }
 
     if (label !== 'category_2') {
@@ -220,7 +227,7 @@ export const getGroupedValues = (
 
   const getBarData = () => {
     data = flatten(chain(filteredData)
-      .groupBy('region.name')
+      .groupBy('region_id')
       .map((value) => flatten(chain(value)
         .groupBy(label)
         .map((res, key) => (
@@ -579,7 +586,7 @@ export const getGroupedValuesRelatedIndicators = (
   }
   if (visualization === 'bar') {
     data = flatten(chain(records)
-      .groupBy('region.name')
+      .groupBy('region_id')
       .map((value) => flatten(chain(value)
         .groupBy('category_1')
         .map((res, key) => (
@@ -609,7 +616,7 @@ export const getGroupedValuesRelatedIndicators = (
 
   if (visualization === 'choropleth') {
     const dataWithGeometries = records?.map(({ id, ...d }) => {
-      const geometry = filteredRegions?.find((r) => d.region.id === r.id);
+      const geometry = filteredRegions?.find((r) => d.region_id === r.id);
       return ({
         visualizationTypes: d.visualization_types,
         geometry,

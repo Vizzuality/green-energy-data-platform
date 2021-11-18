@@ -47,6 +47,7 @@ import { useColors } from 'hooks/utils';
 import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
+import { IndicatorProps } from 'types/data';
 import IndicatorCompareDataProps from '../types';
 
 type ChartProps = {
@@ -117,7 +118,7 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
       name: null,
       published: false,
       start_date: null,
-      visualizationTypes: [],
+      visualization_types: [],
       group: null,
       subgroup: null,
     },
