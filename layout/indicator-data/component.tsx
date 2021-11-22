@@ -159,7 +159,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const filtersIndicator = useMemo(() => {
+const filtersIndicator = useMemo(() => {
     if (visualization !== 'choropleth') {
       return ({
         region,
@@ -176,7 +176,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     data: records,
     isFetching: isFetchingRecords,
   } = useIndicatorRecords(
-    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
+    groupSlug, subgroupSlug, indicatorSlug, visualization, filtersIndicator, {
       refetchOnWindowFocus: false,
       enabled: !!visualization,
     },
@@ -233,7 +233,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.
-    () => (indicatorData?.visualization_types.includes(visualization)
+    () => (indicatorData?.visualization_types?.includes(visualization)
       ? visualization : indicatorData?.default_visualization),
     [visualization, indicatorData],
   );

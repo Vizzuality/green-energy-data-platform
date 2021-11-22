@@ -107,7 +107,10 @@ export function useIndicatorMetadata(
       ...queryOptions,
     });
 
-  const { data, isFetching } = query;
+  const {
+    data, isFetching, isFetched, isSuccess,
+  } = query;
+
   const years = useMemo<{ label: number, value: number }[] | []>(
     () => orderBy(data[visualization]?.year.map((y) => ({
       label: y,
@@ -165,6 +168,8 @@ export function useIndicatorMetadata(
 
   return useMemo(() => ({
     isFetching,
+    isFetched,
+    isSuccess,
     id,
     years,
     defaultYear,
@@ -205,6 +210,7 @@ export function useIndicatorRecords(
   groupId,
   subgroupId,
   indicatorId,
+  visualization,
   params = {},
   queryOptions = {},
 ) {
@@ -224,9 +230,21 @@ export function useIndicatorRecords(
     ...restParams
   } = params as IndicatorFilters;
 
-  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, restParams, current],
+  const {
+    year,
+    ...restParamsYear
+  } = restParams as IndicatorFilters;
+
+  const {
+    region,
+    ...restParamsRegion
+  } = restParams as IndicatorFilters;
+
+  const filters = (visualization === 'choropleth' || visualization === 'pie') ? restParamsYear : restParamsRegion;
+
+  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
     () => fetchIndicatorRecords(
-      groupId, subgroupId, indicatorId, { locale: current, ...restParams },
+      groupId, subgroupId, indicatorId, { locale: current, ...filters },
     ),
     {
       placeholderData: [],

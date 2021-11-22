@@ -254,6 +254,16 @@ export const getGroupedValues = (
       });
     });
 
+    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
+    const getMostFrequent = (array) => {
+      const hashmap = array?.reduce((acc, val) => {
+        acc[val] = (acc[val] || 0) + 1;
+        return acc;
+      }, {});
+      return Object.keys(hashmap).reduce((a, b) => (hashmap[a] > hashmap[b] ? a : b));
+    };
+
+    const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries?.filter(
       (d) => d[mapCategorySelected],
     )
@@ -284,7 +294,7 @@ export const getGroupedValues = (
     const legendTitle = unit ? `${name} (${unitLabel})` : name;
     const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
 
-    if (groupSlug !== 'coal-power-plants') {
+    if (layerType !== 'Point') {
       data = [{
         visualizationTypes: visualizations,
         layers: [{
@@ -365,7 +375,7 @@ export const getGroupedValues = (
       }];
     }
 
-    if (groupSlug === 'coal-power-plants') {
+    if (groupSlug === 'Point') {
       data = [{
         visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
         data: dataWithGeometries,
@@ -510,7 +520,6 @@ export const getGroupedValues = (
 };
 
 export const getGroupedValuesRelatedIndicators = (
-  groupSlug: string | string[],
   categories: string[],
   filters: IndicatorFilters,
   records: Record[],
@@ -523,6 +532,7 @@ export const getGroupedValuesRelatedIndicators = (
   const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
 
   const filteredRegions: Region[] = regions?.filter((r) => r.geometry !== null);
+
   if (visualization === 'pie') {
     data = chain(records)
       .groupBy('category_1')
@@ -607,6 +617,18 @@ export const getGroupedValuesRelatedIndicators = (
         [d.category_1]: d.value,
       });
     });
+
+    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
+    const getMostFrequent = (array) => {
+      const hashmap = array?.reduce((acc, val) => {
+        acc[val] = (acc[val] || 0) + 1;
+        return acc;
+      }, {});
+      return Object.keys(hashmap).reduce((a, b) => (hashmap[a] > hashmap[b] ? a : b));
+    };
+
+    const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
+
     const mapValues = dataWithGeometries?.filter((d) => d[mapCategorySelected])
       .map((r) => r[mapCategorySelected]) as number[];
 
@@ -614,7 +636,7 @@ export const getGroupedValuesRelatedIndicators = (
     const maxValue = Math.max(...mapValues);
     const media = (maxValue - minValue) / 2;
 
-    if (groupSlug === 'coal-power-plants') {
+    if (layerType === 'Point') {
       data = [{
         visualizationTypes: dataWithGeometries[0]?.visualization_types,
         data: dataWithGeometries,
@@ -729,7 +751,7 @@ export const getGroupedValuesRelatedIndicators = (
       }];
     }
 
-    if (groupSlug !== 'coal-power-plants') {
+    if (layerType !== 'Point') {
       data = [{
         visualizationTypes: dataWithGeometries[0]?.visualization_types,
         layers: [{

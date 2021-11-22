@@ -12,6 +12,7 @@ import ReactMapGL, {
   TRANSITION_EVENTS,
   ViewportProps,
   InteractiveMapProps,
+  FullscreenControl,
 } from 'react-map-gl';
 import { fitBounds } from '@math.gl/web-mercator';
 
@@ -227,6 +228,10 @@ const Map = ({
           && !!mapRef.current
           && typeof children === 'function'
           && children(mapRef.current)}
+        {/* <div className="w-2 h-8 right-2 absolute">
+          <FullscreenControl />
+        </div> */}
+
       </ReactMapGL>
     </div>
   );

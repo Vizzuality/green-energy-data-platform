@@ -38,6 +38,25 @@
     color: white;
   }
 
+  .mapboxgl-ctrl-group button {
+    border-radius: 10px;
+    border: none;
+    background-color: #3A3F59 !important;
+    width: 25px !important;
+    height: 25px !important;
+    background-color: blue ;
+    position: absolute;
+    top: 12px;
+    right: 12px
+;
+  }
+
+  .mapboxgl-ctrl-icon {
+    width: 5px !important;
+    height: 5px !important;
+    background-image: url('/images/enlarge.svg') !important;
+  }
+
   /* News Gothic MT */
   @font-face {
     font-family: 'News Gothic MT';

@@ -28,6 +28,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
   });
 
   const { subgroups } = group;
+
   return (
     <section className="grid grid-cols-3 grid-flow gap-x-3 gap-y-6.5 py-11">
       {subgroups.map(({
@@ -40,6 +41,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
           slug: indicatorSlug,
           default_visualization: defaultVisualization,
         } = default_indicator;
+
         return (
           <InView key={id} triggerOnce>
             {({ ref, inView }) => (
@@ -54,6 +56,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
                       group={groupSlug}
                       subgroup={subgroupSlug}
                       indicator={indicatorSlug}
+                      indicatorId={id}
                       defaultVisualization={defaultVisualization}
                     />
                   </div>

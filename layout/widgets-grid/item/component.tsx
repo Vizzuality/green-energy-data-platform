@@ -34,6 +34,7 @@ interface GridItemProps {
   group: string | string[],
   subgroup: string,
   indicator: string,
+  indicatorId: string,
   defaultVisualization: string
 }
 
@@ -41,6 +42,7 @@ const GridItem: FC<GridItemProps> = ({
   group,
   subgroup,
   indicator,
+  indicatorId,
   defaultVisualization,
 }: GridItemProps) => {
   const {
@@ -63,9 +65,12 @@ const GridItem: FC<GridItemProps> = ({
     defaultRegion,
     defaultUnit,
     defaultScenario,
-  } = useIndicatorMetadata(indicator, visualization, [], {}, {
+    isFetching: isFetchingMeta,
+    isFetched,
+    isSuccess,
+  } = useIndicatorMetadata(indicatorId, defaultVisualization, [], {}, {
     refetchOnWindowFocus: false,
-    enabled: !!indicator && !!visualization,
+    enabled: !!indicatorId && !!defaultVisualization,
   });
 
   const currentYear = useMemo<number>(
@@ -87,20 +92,17 @@ const GridItem: FC<GridItemProps> = ({
     () => (scenario || defaultScenario?.value),
     [scenario, defaultScenario],
   );
-
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(group, subgroup, indicator, {
-    visualization: defaultVisualization,
+  } = useIndicatorRecords(group, subgroup, indicator, defaultVisualization, {
+    defaultVisualization,
     ...(defaultUnit && { unit: currentUnit }) || { unit: null },
     ...defaultCategory && { category: defaultCategory },
-    ...((['line', 'pie'].includes(visualization)) && { region: currentRegion }) || { region: null },
-    ...(['pie', 'choropleth', 'bar'].includes(visualization) && { year: currentYear }) || { year: null },
-    ...(['choropleth'].includes(visualization) && defaultScenario) && { scenario: currentScenario },
-
+    ...['line', 'pie'].includes(defaultVisualization) ? { region: currentRegion } : { region: null },
+    ...['pie', 'choropleth', 'bar'].includes(defaultVisualization) ? { year: currentYear } : { year: null },
   }, {
-    enabled: !!visualization,
+    enabled: !!isFetched && !!isSuccess && !!defaultUnit,
     refetchOnWindowFocus: false,
   });
 
@@ -108,9 +110,8 @@ const GridItem: FC<GridItemProps> = ({
     dispatch(setRelatedFilters({
       visualization: defaultVisualization,
       ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-      ...((['line', 'pie'].includes(visualization)) && { region: currentRegion }) || { region: null },
-      ...(['pie', 'choropleth', 'bar'].includes(visualization) && { year: currentYear }) || { year: null },
-      scenario: null,
+      ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion }) || { region: null },
+      ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) && { year: currentYear }) || { year: null },
     }));
   }, [
     dispatch,
@@ -123,7 +124,6 @@ const GridItem: FC<GridItemProps> = ({
     defaultCategory,
     defaultScenario,
     currentScenario,
-    visualization,
   ]);
 
   const { data: regionsGeojson } = useRegions({}, {
@@ -131,21 +131,21 @@ const GridItem: FC<GridItemProps> = ({
   });
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization),
-    [records, visualization],
+    () => getCategoriesFromRecords(records, defaultVisualization),
+    [records, defaultVisualization],
   );
 
   const colors = useColors(categories.length);
 
   const widgetConfig = useMemo(
-    () => CONFIG(categories)[visualization],
-    [visualization, categories],
+    () => CONFIG(categories)[defaultVisualization],
+    [defaultVisualization, categories],
   );
   const widgetData = useMemo(
     () => getGroupedValuesRelatedIndicators(
-      group, categories, filters, records, regionsGeojson,
+      categories, filters, records, regionsGeojson,
     ),
-    [group, categories, filters, records, regionsGeojson],
+    [categories, filters, records, regionsGeojson],
   );
 
   return (
@@ -165,21 +165,21 @@ const GridItem: FC<GridItemProps> = ({
       {!isFetchingRecords && !!records.length && (
       <Link href={`/${group}/${subgroup}/${indicator}`} passHref>
         <a href={`/${group}/${subgroup}/${indicator}`}>
-          {visualization === 'pie' && (
+          {defaultVisualization === 'pie' && (
           <PieChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
           />
           )}
-          {visualization === 'line' && (
+          {defaultVisualization === 'line' && (
           <LineChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
           />
           )}
-          {visualization === 'bar' && (
+          {defaultVisualization === 'bar' && (
           <BarChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
@@ -187,7 +187,7 @@ const GridItem: FC<GridItemProps> = ({
           />
           )}
 
-          {visualization === 'choropleth' && (
+          {defaultVisualization === 'choropleth' && (
           <MapContainer
             hasInteraction={false}
             style={{ marginTop: 30 }}
