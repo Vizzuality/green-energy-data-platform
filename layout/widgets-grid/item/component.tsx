@@ -96,7 +96,7 @@ const GridItem: FC<GridItemProps> = ({
     data: records,
     isFetching: isFetchingRecords,
   } = useIndicatorRecords(group, subgroup, indicator, defaultVisualization, {
-    defaultVisualization,
+    visualization: defaultVisualization,
     ...(defaultUnit && { unit: currentUnit }) || { unit: null },
     ...defaultCategory && { category: defaultCategory },
     ...['line', 'pie'].includes(defaultVisualization) ? { region: currentRegion } : { region: null },
