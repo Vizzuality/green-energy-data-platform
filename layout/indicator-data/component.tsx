@@ -547,7 +547,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 {isFetchingRecords && (
                   <LoadingSpinner />
                 )}
-                {isFetchedRecords && !filteredRecords.length && (
+                {isFetchedRecords
+                && !isFetchingRecords
+                && !filteredRecords.length
+                && !!visualization && !!unit && (!!region || !!year)
+                && (
                   <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
                     <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
                     <p>Data not found</p>
