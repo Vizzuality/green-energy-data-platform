@@ -30,6 +30,14 @@ export const initializeLanguage = () => i18n.init({
   lng: 'en',
 });
 
+export const getMostFrequent = (array) => {
+  const hashmap = array?.reduce((acc, val) => {
+    acc[val] = (acc[val] || 0) + 1;
+    return acc;
+  }, {});
+  return Object.keys(hashmap).reduce((a, b) => (hashmap[a] > hashmap[b] ? a : b));
+};
+
 export const Filter = (arr: (string | number)[], param: number) => {
   const index = arr.indexOf(param);
   if (index !== -1) {
@@ -255,13 +263,6 @@ export const getGroupedValues = (
     });
 
     const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
-    const getMostFrequent = (array) => {
-      const hashmap = array?.reduce((acc, val) => {
-        acc[val] = (acc[val] || 0) + 1;
-        return acc;
-      }, {});
-      return Object.keys(hashmap).reduce((a, b) => (hashmap[a] > hashmap[b] ? a : b));
-    };
 
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries?.filter(
@@ -294,7 +295,7 @@ export const getGroupedValues = (
     const legendTitle = unit ? `${name} (${unitLabel})` : name;
     const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
 
-    if (layerType !== 'Point') {
+    if (layerType === 'Multipolygon' || layerType === 'Polygon') {
       data = [{
         visualizationTypes: visualizations,
         layers: [{
@@ -375,9 +376,9 @@ export const getGroupedValues = (
       }];
     }
 
-    if (groupSlug === 'Point') {
+    if (layerType === 'Point') {
       data = [{
-        visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
+        visualizationTypes: visualizations,
         data: dataWithGeometries,
         mapValues,
         layers: [{
@@ -496,7 +497,6 @@ export const getGroupedValues = (
         }],
       }];
     }
-
     return data;
   };
 
@@ -577,7 +577,6 @@ export const getGroupedValuesRelatedIndicators = (
         year,
       }));
   }
-
   if (visualization === 'bar') {
     data = flatten(chain(records)
       .groupBy('region.name')
@@ -619,14 +618,6 @@ export const getGroupedValuesRelatedIndicators = (
     });
 
     const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
-    const getMostFrequent = (array) => {
-      const hashmap = array?.reduce((acc, val) => {
-        acc[val] = (acc[val] || 0) + 1;
-        return acc;
-      }, {});
-      return Object.keys(hashmap).reduce((a, b) => (hashmap[a] > hashmap[b] ? a : b));
-    };
-
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
 
     const mapValues = dataWithGeometries?.filter((d) => d[mapCategorySelected])
@@ -635,10 +626,11 @@ export const getGroupedValuesRelatedIndicators = (
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
     const media = (maxValue - minValue) / 2;
+    const visualizations = dataWithGeometries[0]?.visualizationTypes;
 
     if (layerType === 'Point') {
       data = [{
-        visualizationTypes: dataWithGeometries[0]?.visualization_types,
+        visualizationTypes: visualizations,
         data: dataWithGeometries,
         mapValues,
         layers: [{
@@ -751,9 +743,9 @@ export const getGroupedValuesRelatedIndicators = (
       }];
     }
 
-    if (layerType !== 'Point') {
+    if (layerType === 'Multipolygon' || layerType === 'Polygon') {
       data = [{
-        visualizationTypes: dataWithGeometries[0]?.visualization_types,
+        visualizationTypes: visualizations,
         layers: [{
           id: 'regions',
           type: 'geojson',

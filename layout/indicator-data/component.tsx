@@ -159,26 +159,32 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-const filtersIndicator = useMemo(() => {
-    if (visualization !== 'choropleth') {
+  const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
+
+  const filtersIndicator = useMemo(() => {
+    if (filterByRegion) {
       return ({
+        visualization,
         region,
         unit,
       });
     }
     return ({
+      visualization,
       unit,
       year,
     });
-  }, [visualization, region, unit, year]);
+  }, [visualization, region, unit, year, filterByRegion]);
 
   const {
     data: records,
     isFetching: isFetchingRecords,
+    isFetched: isFetchedRecords,
+    isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
-    groupSlug, subgroupSlug, indicatorSlug, visualization, filtersIndicator, {
+    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization,
+      enabled: !!visualization && !!unit && (!!region || !!year),
     },
   );
 
@@ -541,15 +547,14 @@ const filtersIndicator = useMemo(() => {
                 {isFetchingRecords && (
                   <LoadingSpinner />
                 )}
-
-                {!isFetchingRecords && !filteredRecords.length && (
+                {isFetchedRecords && !filteredRecords.length && (
                   <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
                     <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
                     <p>Data not found</p>
                   </div>
                 )}
 
-                {(!!filteredRecords.length && !isFetchingRecords) && (
+                {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
                 <div className="flex flex-col h-full w-full min-h-1/2 py-8">
                   <div className="flex items-center">
                     {visualization !== 'choropleth'

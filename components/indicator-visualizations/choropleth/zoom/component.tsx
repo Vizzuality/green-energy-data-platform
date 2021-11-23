@@ -34,7 +34,7 @@ export const ZoomControl = ({
   );
 
   return (
-    <div className={`absolute p-1 top-9 right-2 z-10 inline-flex flex-col text-white bg-gray1 rounded-xl ${className}`}>
+    <div className={`absolute w-6 top-10 right-2 z-10 inline-flex flex-col text-white bg-gray1 rounded-sm ${className}`}>
       <button
         aria-label="max zoom"
         type="button"

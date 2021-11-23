@@ -184,6 +184,8 @@ export function useIndicatorMetadata(
     defaultCategory,
   }), [
     isFetching,
+    isFetched,
+    isSuccess,
     id,
     years,
     defaultYear,
@@ -210,8 +212,7 @@ export function useIndicatorRecords(
   groupId,
   subgroupId,
   indicatorId,
-  visualization,
-  params = {},
+  params,
   queryOptions = {},
 ) {
   const {
@@ -220,6 +221,7 @@ export function useIndicatorRecords(
     (state: RootState) => (state.language),
   );
 
+  const { visualization } = params;
   const { data: regions } = useRegions({}, {
     placeholderData: [],
     refetchOnWindowsFocus: false,
@@ -230,17 +232,21 @@ export function useIndicatorRecords(
     ...restParams
   } = params as IndicatorFilters;
 
+  // adapt filters to different visulizations
+  // all should filter by unit and visulization
+  // choropleth and bar should filter also by year
+  // pie, line and table should filter also by region
   const {
     year,
-    ...restParamsYear
+    ...restParamsRegion
   } = restParams as IndicatorFilters;
 
   const {
     region,
-    ...restParamsRegion
+    ...restParamsYear
   } = restParams as IndicatorFilters;
 
-  const filters = (visualization === 'choropleth' || visualization === 'pie') ? restParamsYear : restParamsRegion;
+  const filters = (visualization === 'choropleth' || visualization === 'bars') ? restParamsYear : restParamsRegion;
 
   const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
     () => fetchIndicatorRecords(

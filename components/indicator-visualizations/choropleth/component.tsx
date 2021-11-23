@@ -91,7 +91,7 @@ const MapContainer: FC<MapContainerProps> = (
     const itms = layers[0]?.legendConfig?.sort(
       (a, b) => sortArray.indexOf(a.id) - sortArray.indexOf(b.id),
     );
-    return itms;
+    return itms || [];
   }, [sortArray, layers]);
 
   // Callbacks
@@ -102,6 +102,7 @@ const MapContainer: FC<MapContainerProps> = (
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
       <Map
+        hasInteraction={hasInteraction}
         width="100%"
         height="100%"
         viewport={viewport}
@@ -165,8 +166,9 @@ const MapContainer: FC<MapContainerProps> = (
       {hasInteraction
       && (
       <Legend onChangeOrder={onChangeOrder}>
-        {sortedItems.map((i) => {
+        {sortedItems?.map((i) => {
           const { type, items } = i;
+
           return (
             <LegendItem key={i.id} {...i}>
 

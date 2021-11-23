@@ -3,7 +3,6 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
-import Link from 'next/link';
 
 // components
 import BarChart from 'components/indicator-visualizations/bar';
@@ -46,18 +45,10 @@ const GridItem: FC<GridItemProps> = ({
   defaultVisualization,
 }: GridItemProps) => {
   const {
-    year, region, unit, category, scenario, visualization,
+    scenario, visualization,
   } = useSelector((state: RootState) => state.indicator_related);
 
   const dispatch = useDispatch();
-  const filters = useMemo(() => ({
-    year,
-    region,
-    unit,
-    category,
-    scenario,
-    visualization,
-  }), [year, region, unit, category, scenario, visualization]);
 
   const {
     defaultCategory,
@@ -95,7 +86,8 @@ const GridItem: FC<GridItemProps> = ({
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(group, subgroup, indicator, defaultVisualization, {
+    isFetched: isFetchedRecords,
+  } = useIndicatorRecords(group, subgroup, indicator, {
     visualization: defaultVisualization,
     ...(defaultUnit && { unit: currentUnit }) || { unit: null },
     ...defaultCategory && { category: defaultCategory },
@@ -131,8 +123,8 @@ const GridItem: FC<GridItemProps> = ({
   });
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, defaultVisualization),
-    [records, defaultVisualization],
+    () => getCategoriesFromRecords(records, visualization),
+    [records, visualization],
   );
 
   const colors = useColors(categories.length);
@@ -141,61 +133,64 @@ const GridItem: FC<GridItemProps> = ({
     () => CONFIG(categories)[defaultVisualization],
     [defaultVisualization, categories],
   );
+
+  const newFilters = useMemo(() => ({
+    visualization: defaultVisualization,
+    category: { label: 'category_1' },
+    scenario: null,
+    ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+    ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion }) || { region: null },
+    ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) && { year: currentYear }) || { year: null },
+  }), [currentRegion, currentUnit, currentYear, defaultVisualization, defaultUnit]);
+
   const widgetData = useMemo(
     () => getGroupedValuesRelatedIndicators(
-      categories, filters, records, regionsGeojson,
-    ),
-    [categories, filters, records, regionsGeojson],
+      categories, newFilters, records, regionsGeojson,
+    ) || [],
+    [categories, newFilters, records, regionsGeojson],
   );
 
   return (
     <section className="w-hull h-48">
-      {isFetchingRecords && (
+      {(isFetchingMeta || isFetchingRecords) && (
         <div className="w-full h-full flex items-center justify-center">
           <LoadingSpinner />
         </div>
       )}
 
-      {!isFetchingRecords && !records.length && (
+      {!!isFetchedRecords && !records.length && (
       <div className="w-full h-full flex flex-col items-center justify-center">
         <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
         <p>Data not found</p>
       </div>
       )}
+
       {!isFetchingRecords && !!records.length && (
-      <Link href={`/${group}/${subgroup}/${indicator}`} passHref>
-        <a href={`/${group}/${subgroup}/${indicator}`}>
-          {defaultVisualization === 'pie' && (
+        (defaultVisualization === 'pie' && (
           <PieChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
           />
-          )}
-          {defaultVisualization === 'line' && (
+        )) || (defaultVisualization === 'line' && (
           <LineChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
           />
-          )}
-          {defaultVisualization === 'bar' && (
+        )) || (defaultVisualization === 'bar' && (
           <BarChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
           />
-          )}
-
-          {defaultVisualization === 'choropleth' && (
+        )) || (defaultVisualization === 'choropleth' && (
           <MapContainer
             hasInteraction={false}
             style={{ marginTop: 30 }}
             layers={widgetData[0]?.layers || []}
           />
-          )}
-        </a>
-      </Link>
+        ))
       )}
     </section>
   );
