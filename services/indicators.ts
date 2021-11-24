@@ -1,5 +1,4 @@
 import { API } from 'lib/api';
-import { identity } from 'lodash';
 
 export const fetchIndicators = (
   group_id: string,
@@ -27,7 +26,6 @@ export const fetchIndicator = (
   params,
 })
   .then(({ data }) => data);
-
 export const fetchIndicatorRecords = (
   group_id: string,
   subgroup_id: string,

@@ -108,7 +108,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       indicator: false,
     });
 
-    router.push(url, url, { shallow: true });
+    router.push(url);
   }, [router, dropdownVisibility]);
 
   const toggleDropdown = useCallback((key) => {
@@ -544,7 +544,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               </div>
 
               <div className="flex w-full h-full min-h-1/2">
-                {isFetchingRecords && (
+                {(isFetchingRecords && !filteredRecords.length) && (
                   <LoadingSpinner />
                 )}
                 {isFetchedRecords
@@ -558,7 +558,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   </div>
                 )}
 
-                {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
+                {(!!filteredRecords.length && isSuccessRecords) && (
                 <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                   <div className="flex items-center">
                     <Tooltip
