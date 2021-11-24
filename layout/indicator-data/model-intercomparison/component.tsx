@@ -45,6 +45,7 @@ import i18next from 'i18next';
 
 import { useColors } from 'hooks/utils';
 
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import DropdownContent from 'layout/dropdown-content';
 
 import ChartConfig from 'components/indicator-visualizations/config';
@@ -52,6 +53,17 @@ import ChartConfig from 'components/indicator-visualizations/config';
 // types
 import { ChartLine, ChartBar } from 'types/model-intercomparison';
 import IndicatorDataProps from '../types';
+
+type ChartProps = {
+  widgetData: any,
+  widgetConfig: any,
+  colors: string[],
+};
+
+interface WidgetDataTypes {
+  visualizationTypes: string[];
+  layers?: MapLayersProps[]
+}
 
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
@@ -124,6 +136,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
   const filtersIndicator = useMemo(() => {
+    // TO DO - API should be able to filter records by scenario
     if (filterByRegion) {
       return ({
         scenario,

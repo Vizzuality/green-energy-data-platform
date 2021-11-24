@@ -19,7 +19,7 @@ export const useGroups = (queryConfig = {}) => {
     });
 };
 
-export const useGroup = (id, queryConfig = {}) => {
+export const useGroup = (id: string | string[], queryConfig = {}) => {
   const {
     current,
   } = useSelector(
