@@ -16,7 +16,7 @@ export const useRegions = (params = {}, queryConfig = {}) => {
     (state: RootState) => (state.language),
   );
   const queryParams = { ...params, locale: current };
-  return useQuery<Region[], Error>(['fetch-regions', queryParams], () => fetchRegions(queryParams), { ...queryConfig });
+  return useQuery<Region[], Error>(['fetch-regions', current], () => fetchRegions(queryParams), { ...queryConfig });
 };
 
 export const useRegion = (id, params = {}, queryConfig = {}) => {

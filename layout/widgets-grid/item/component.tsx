@@ -3,6 +3,9 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
+import {
+  useQueryClient,
+} from 'react-query';
 
 // components
 import BarChart from 'components/indicator-visualizations/bar';
@@ -47,6 +50,12 @@ const GridItem: FC<GridItemProps> = ({
   const {
     scenario, visualization,
   } = useSelector((state: RootState) => state.indicator_related);
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+  const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
 
@@ -120,6 +129,7 @@ const GridItem: FC<GridItemProps> = ({
 
   const { data: regionsGeojson } = useRegions({}, {
     refetchOnWindowFocus: false,
+    placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
   const categories = useMemo(
@@ -151,16 +161,16 @@ const GridItem: FC<GridItemProps> = ({
   );
 
   return (
-    <section className="w-hull h-48">
+    <section className="h-48 w-hull">
       {(isFetchingMeta || isFetchingRecords) && (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="flex items-center justify-center w-full h-full">
           <LoadingSpinner />
         </div>
       )}
 
       {!!isFetchedRecords && !records.length && (
-      <div className="w-full h-full flex flex-col items-center justify-center">
-        <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
         <p>Data not found</p>
       </div>
       )}

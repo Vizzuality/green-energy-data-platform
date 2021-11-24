@@ -89,6 +89,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     scenario: false,
     category: { label: 'category_1', value: null },
   });
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -240,6 +245,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const { data: regionsGeojson } = useRegions({}, {
     refetchOnWindowFocus: false,
+    placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
   const {
@@ -364,11 +370,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         theme="light"
         header={false}
         rounded
-        className="min-h-xs relative bg-gradient-color2 pb-2 px-11 rounded-t-2xl text-white"
+        className="relative pb-2 text-white min-h-xs bg-gradient-color2 px-11 rounded-t-2xl"
       >
         <button
           type="button"
-          className="absolute left-0 top-0 bg-gray1 rounded-tl-2xl rounded-br-2xl flex divide-x divide-white items-center"
+          className="absolute top-0 left-0 flex items-center divide-x divide-white bg-gray1 rounded-tl-2xl rounded-br-2xl"
           onClick={() => onClose(groupSlug, subgroupSlug, indicatorSlug)}
         >
           <Icon
@@ -388,7 +394,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             onClickOutside={() => { closeDropdown('group'); }}
             content={(
               <ul
-                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
+                className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
               >
                 {defaultGroupSlugs?.map(({
                   name: defaultName,
@@ -403,7 +409,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   >
                     <button
                       type="button"
-                      className="px-5 cursor-pointer w-full py-2 flex pointer-events-all"
+                      className="flex w-full px-5 py-2 cursor-pointer pointer-events-all"
                       onClick={() => handleGroupChange(
                         defaultGroupSlug, defaultSubgroupSlug, defaultIndicatorSlug,
                       )}
@@ -420,7 +426,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               className="flex items-center pt-3"
               onClick={() => { toggleDropdown('group'); }}
             >
-              <h2 className="text-white font-bold pt-10">{groupName}</h2>
+              <h2 className="pt-10 font-bold text-white">{groupName}</h2>
             </button>
           </Tooltip>
 
@@ -432,7 +438,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             onClickOutside={() => { closeDropdown('subgroup'); }}
             content={(
               <ul
-                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
+                className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
               >
                 {group.subgroups.map(({
                   slug: sgSlug, id, name: sgName, default_indicator,
@@ -441,11 +447,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   return (
                     <li
                       key={id}
-                      className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
+                      className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-opacity-10"
                     >
                       <button
                         type="button"
-                        className="px-5 cursor-pointer w-full py-2 flex"
+                        className="flex w-full px-5 py-2 cursor-pointer"
                         onClick={() => handleSubgroupChange(sgSlug, indSlug)}
                       >
                         {sgName}
@@ -485,8 +491,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           visualizationTypes={visualizationTypes}
           mobile
         />
-        <div className="flex flex-col p-11 w-full">
-          <div className="flex items-baseline w-full justify-between">
+        <div className="flex flex-col w-full p-11">
+          <div className="flex items-baseline justify-between w-full">
             <h2 className="flex max-w-xs font-bold">
               {name}
             </h2>
@@ -497,13 +503,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 interactive
                 onClickOutside={() => closeDropdown('indicator')}
                 content={(
-                  <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                  <ul className="z-10 w-full min-w-full overflow-y-auto divide-y divide-white rounded-xl divide-opacity-10 max-h-96">
                     {subgroup?.indicators?.map(
                       ({ name: group_name, id, slug }) => (
-                        <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">
+                        <li key={id} className="px-5 text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-opacity-10 bg-gray3">
                           <button
                             type="button"
-                            className="flex items-center py-2 w-full last:border-b-0"
+                            className="flex items-center w-full py-2 last:border-b-0"
                             onClick={() => handleIndicatorChange(slug)}
                           >
                             {group_name}
@@ -638,21 +644,21 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   </div>
                 )}
               </div>
-              <div className="flex h-full flex-col w-full min-h-1/2">
+              <div className="flex flex-col w-full h-full min-h-1/2">
                 {isFetchingRecords && (
                 <LoadingSpinner />
                 )}
                 {!isFetchingRecords && !filteredRecords.length && (
-                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                   <p>Data not found</p>
                 </div>
                 )}
                 {(!!filteredRecords.length && !isFetchingRecords) && (
-                <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                   <div className="flex items-center">
                     {visualization !== 'choropleth' && (
-                    <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                    <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                       <div className="flex items-center">
                         <Tooltip
                           placement="bottom-start"
@@ -670,13 +676,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           <button
                             type="button"
                             onClick={() => { toggleDropdown('unit'); }}
-                            className="flex items-center cursor-pointer opacity-50 hover:font-bold hover:cursor-pointer tracking-tight text-sm"
+                            className="flex items-center text-sm tracking-tight opacity-50 cursor-pointer hover:font-bold hover:cursor-pointer"
                           >
                             <span>{unit}</span>
                           </button>
                         </Tooltip>
                       </div>
-                      <div className="w-full flex justify-center pb-11">
+                      <div className="flex justify-center w-full pb-11">
                         <DynamicChart
                           widgetData={widgetData}
                           widgetConfig={widgetConfig}
@@ -699,7 +705,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 {categories.length > 0 && visualization !== 'choropleth' && (
                 <Legend
                   categories={category?.label === 'category_1' ? categories : subcategories}
-                  className="overflow-y-auto mb-4"
+                  className="mb-4 overflow-y-auto"
                 />
                 )}
                 <DataSource

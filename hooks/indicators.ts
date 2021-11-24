@@ -1,4 +1,7 @@
-import { useQuery } from 'react-query';
+import {
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import { useMemo } from 'react';
 
 import { useSelector } from 'react-redux';
@@ -100,6 +103,7 @@ export function useIndicatorMetadata(
   } = useSelector(
     (state: RootState) => (state.language),
   );
+  const queryClient = useQueryClient();
 
   const query = useQuery<IndicatorMetadata, Error>(['indicator-metadata', id, visualization, current],
     () => fetchIndicatorMetadata(id, { locale: current, ...params }), {
@@ -145,7 +149,7 @@ export function useIndicatorMetadata(
 
   const { data: regionsGeometries } = useRegions({}, {
     refetchOnWindowFocus: false,
-    placeholderData: [],
+    placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
   const scenarios = useMemo<{ label: string, value: string }[]>(
@@ -220,11 +224,12 @@ export function useIndicatorRecords(
   } = useSelector(
     (state: RootState) => (state.language),
   );
+  const queryClient = useQueryClient();
 
   const { visualization } = params;
   const { data: regions } = useRegions({}, {
-    placeholderData: [],
     refetchOnWindowsFocus: false,
+    placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
   const {
@@ -248,12 +253,12 @@ export function useIndicatorRecords(
 
   const filters = (visualization === 'choropleth' || visualization === 'bars') ? restParamsYear : restParamsRegion;
 
-  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current],
+  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current, filters],
     () => fetchIndicatorRecords(
       groupId, subgroupId, indicatorId, { locale: current, ...filters },
     ),
     {
-      placeholderData: [],
+      placeholderData: queryClient.getQueryData([['indicator-records', groupId, subgroupId, indicatorId, current, filters]]) || [],
       ...queryOptions,
     });
 
