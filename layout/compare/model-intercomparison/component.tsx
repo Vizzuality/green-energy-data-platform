@@ -15,8 +15,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   useIndicator,
   useIndicatorRecords,
+  useIndicatorMetadata,
 } from 'hooks/indicators';
-import useDefaultRecordFilters from 'hooks/records';
 
 // components
 import Icon from 'components/icon';
@@ -32,6 +32,8 @@ import BarChart from 'components/indicator-visualizations/bar';
 import {
   filterRecords,
   getGroupedValues,
+  getCategoriesFromRecords,
+  getSubcategoriesFromRecords,
 } from 'utils';
 
 import { RootState } from 'store/store';
@@ -128,38 +130,43 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
+    isFetched: isFetchedRecords,
+    isSuccess: isSuccessRecords,
+  } = useIndicatorRecords(
+    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && !!unit && (!!region || !!year),
+    },
+  );
+
+  const {
+    defaultCategory,
+    defaultYear,
+    defaultRegion,
+    defaultUnit,
+    defaultScenario,
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
     refetchOnWindowFocus: false,
+    enabled: !!indicatorSlug && !!visualization,
   });
 
   const {
     name,
-    categories: categoriesIndicator,
   } = indicatorData;
 
-  const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categoriesIndicator),
-    [records, filters, categoriesIndicator],
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
 
-  const {
-    categories,
-    defaultCategory,
-    subcategories,
-    years,
-    defaultYear,
-    regions,
-    defaultRegion,
-    units,
-    defaultUnit,
-    scenarios,
-    defaultScenario,
-  } = useDefaultRecordFilters(
-    records,
-    filteredRecords,
-    visualization,
-    filters,
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(records), [records],
   );
+
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, categories, groupSlug),
+    [records, filters, categories, groupSlug],
+  );
+
   const colors = useColors(categories.length);
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
@@ -170,8 +177,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, categories, visualization, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, categories, visualization, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, categories, filters, filteredRecords, regionsGeojson,
+    ), [name, groupSlug, categories, filters, filteredRecords, regionsGeojson],
   );
 
   useEffect(() => {
@@ -224,7 +231,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                 content={(
                   <DropdownContent
                     list={years}
-                    id="year"
+                    keyEl="year"
                     onClick={handleChange}
                   />
                       )}
@@ -259,7 +266,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                 content={(
                   <DropdownContent
                     list={regions}
-                    id="region"
+                    keyEl="region"
                     onClick={handleChange}
                   />
                       )}
@@ -290,7 +297,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                 content={(
                   <DropdownContent
                     list={scenarios}
-                    id="scenario"
+                    keyEl="scenario"
                     onClick={handleChange}
                   />
                       )}

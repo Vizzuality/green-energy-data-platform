@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
-import { orderBy } from 'lodash';
+import { orderBy, uniq } from 'lodash';
 
 import {
   IndicatorProps,
@@ -153,7 +153,7 @@ export function useIndicatorMetadata(
   });
 
   const scenarios = useMemo<{ label: string, value: string }[]>(
-    () => data[visualization]?.scenarios.map((scenario) => ({
+    () => uniq(data[visualization]?.scenarios).map((scenario) => ({
       label: scenario,
       value: scenario,
     })) || [], [data, visualization],
@@ -227,6 +227,10 @@ export function useIndicatorRecords(
   const queryClient = useQueryClient();
 
   const { visualization } = params;
+<<<<<<< HEAD
+=======
+
+>>>>>>> bars model intercomp
   const { data: regions } = useRegions({}, {
     refetchOnWindowsFocus: false,
     placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
@@ -253,9 +257,13 @@ export function useIndicatorRecords(
 
   const filters = (visualization === 'choropleth' || visualization === 'bars') ? restParamsYear : restParamsRegion;
 
+<<<<<<< HEAD
   const filterValueKeys = Object.values(filters).filter((filter) => Boolean(filter));
 
   const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current, ...filterValueKeys],
+=======
+  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, restParams, current],
+>>>>>>> bars model intercomp
     () => fetchIndicatorRecords(
       groupId, subgroupId, indicatorId, { locale: current, ...filters },
     ),

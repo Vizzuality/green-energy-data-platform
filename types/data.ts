@@ -8,7 +8,7 @@ export type SubgroupProps = Readonly<{
   default_indicator?: DataIdProps,
 }>;
 
-export type ScenarioProps = Readonly<{
+export type Scenario = Readonly<{
   name: string
 }>;
 
@@ -23,6 +23,11 @@ export interface GroupProps {
   subgroups: SubgroupProps[],
 }
 
+interface Unit {
+  id: string,
+  name: string,
+}
+
 interface Geometry {
   geometry: {
     coordinates: number[],
@@ -31,12 +36,7 @@ interface Geometry {
   type: string,
 }
 
-interface Unit {
-  id: string,
-  name: string,
-}
-
-interface GeometryProps {
+interface RegionRecord {
   id: string,
   name: string,
 }
@@ -49,12 +49,12 @@ export interface Record {
   slug: string,
   value: number,
   unit: Unit,
-  region: Region,
-  region_id: string,
-  geometry?: GeometryProps[]
+  region: RegionRecord,
+  region_id: string;
+  geometry?: Geometry[]
   year: number,
   visualization_types: string[],
-  scenario: ScenarioProps
+  scenario: Scenario
 }
 
 interface CategoryFilters {

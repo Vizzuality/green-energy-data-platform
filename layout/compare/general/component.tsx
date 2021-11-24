@@ -18,8 +18,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   useIndicator,
   useIndicatorRecords,
+  useIndicatorMetadata,
 } from 'hooks/indicators';
-import useDefaultRecordFilters from 'hooks/records';
 
 // components
 import Icon from 'components/icon';
@@ -34,6 +34,8 @@ import LoadingSpinner from 'components/loading-spinner';
 import {
   filterRecords,
   getGroupedValues,
+  getCategoriesFromRecords,
+  getSubcategoriesFromRecords,
 } from 'utils';
 
 import { RootState } from 'store/store';
@@ -41,12 +43,12 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
-import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
-import ChartConfig from './config';
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 
+import ChartConfig from './config';
 import IndicatorCompareDataProps from '../types';
 
 type ChartProps = {
@@ -55,7 +57,10 @@ type ChartProps = {
   colors: string[],
 };
 
-const IndicatorChart: FC<IndicatorCompareDataProps> = ({
+const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
+  groupSlug,
+  subgroupSlug,
+  indicatorSlug,
   className,
 }: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
@@ -69,9 +74,10 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, region, unit, category, scenario,
-  } = useSelector((state: RootState) => state.indicator);
+    year, region, unit, category, scenario, visualization,
+  } = filters;
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
@@ -96,14 +102,6 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
     });
   }, [dispatch, dropdownVisibility]);
 
-  const filters = useMemo(() => ({
-    year,
-    region,
-    unit,
-    category,
-    scenario,
-  }), [year, region, unit, category, scenario]);
-
   const {
     data: indicatorData,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
@@ -125,92 +123,141 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
+  const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
-  const { data: regionsGeojson } = useRegions({}, {
-    refetchOnWindowFocus: false,
-  });
+  const filtersIndicator = useMemo(() => {
+    if (filterByRegion) {
+      return ({
+        visualization,
+        region,
+        unit,
+      });
+    }
+    return ({
+      visualization,
+      unit,
+      year,
+    });
+  }, [visualization, region, unit, year, filterByRegion]);
 
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
-    refetchOnWindowFocus: false,
-  });
-
-  const {
-    name,
-    categories: categoriesIndicator,
-  } = indicatorData;
-
-  const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categoriesIndicator),
-    [records, filters, categoriesIndicator],
+    isFetched: isFetchedRecords,
+    isSuccess: isSuccessRecords,
+  } = useIndicatorRecords(
+    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && !!unit && (!!region || !!year),
+    },
   );
 
   const {
-    categories,
     defaultCategory,
-    subcategories,
     years,
     defaultYear,
     regions,
     defaultRegion,
+    regionsGeometries,
     units,
     defaultUnit,
     scenarios,
     defaultScenario,
-  } = useDefaultRecordFilters(
-    records,
-    filteredRecords,
-    visualizationType,
-    filters,
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
+    refetchOnWindowFocus: false,
+    enabled: !!indicatorSlug && !!visualization,
+  });
+
+  const {
+    name,
+  } = indicatorData;
+
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
+
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(records), [records],
+  );
+
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, categories, groupSlug),
+    [records, filters, categories, groupSlug],
+  );
+
   const colors = useColors(categories.length);
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualizationType],
-    [visualizationType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys)[visualization],
+    [visualization, widgetDataKeys],
   );
-  const widgetData = useMemo(
+  const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
-      name, groupSlug, categories, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, categories, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
-  useEffect(() => {
-    const {
-      default_visualization: defaultVisualization,
-    } = indicatorData;
+  const currentVisualization = useMemo<string>(
+    // if the current visualization is not allowed when the user changes the indicator,
+    // it will fallback into the default one. If it is, it will remain.
+    () => (indicatorData?.visualization_types?.includes(visualization)
+      ? visualization : indicatorData?.default_visualization),
+    [visualization, indicatorData],
+  );
+  const currentYear = useMemo<number>(
+    () => (year || defaultYear?.value),
+    [year, defaultYear],
+  );
 
-    setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+  const currentUnit = useMemo<string>(
+    () => (unit || defaultUnit?.value),
+    [unit, defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => (region || defaultRegion?.value),
+    [region, defaultRegion],
+  );
+
+  const currentScenario = useMemo<string>(
+    () => (scenario || defaultScenario?.value),
+    [scenario, defaultScenario],
+  );
+
+  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
+  const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
+  const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
   useEffect(() => {
     dispatch(setFilters({
-      ...defaultYear && { year: defaultYear },
-      ...defaultRegion && { region: defaultRegion },
-      ...defaultUnit && { unit: defaultUnit },
-      ...defaultScenario && { scenario: defaultScenario },
-      ...defaultCategory && { category: { label: defaultCategory } },
+      visualization: currentVisualization,
+      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+      ...defaultCategory && { category: defaultCategory },
+      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     }));
   }, [
     dispatch,
     defaultYear,
-    defaultRegion,
+    currentYear,
+    currentRegion,
     defaultUnit,
-    defaultScenario,
+    currentUnit,
     defaultCategory,
-    visualizationType,
+    defaultScenario,
+    currentScenario,
+    currentVisualization,
+    indicatorSlug,
   ]);
 
   const DynamicChart = useMemo(() => {
-    if (visualizationType !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    if (visualization && visualization !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
     }
     return null;
-  }, [visualizationType]);
+  }, [visualization]);
 
   return (
     <div className={`flex justify-between ${className}`}>
@@ -218,10 +265,10 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
         <section className="flex flex-col w-full">
           <div className="flex">
             {/* year filter */}
-            {['bar', 'pie', 'choropleth'].includes(visualizationType) && (
+            {['bar', 'pie', 'choropleth'].includes(visualization) && (
             <div className="flex items-center">
               <span className="pr-2">Showing for:</span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
+              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]?.label}</span>)}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -231,7 +278,7 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
                 content={(
                   <DropdownContent
                     list={years}
-                    id="year"
+                    keyEl="year"
                     onClick={handleChange}
                   />
                       )}
@@ -241,14 +288,14 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
                   onClick={() => { toggleDropdown('year'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{year || i18next.t('dates')}</span>
+                  <span>{displayYear || i18next.t('dates')}</span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                 </button>
               </Tooltip>
               )}
 
               {/* scenario filter */}
-              {['choropleth'].includes(visualizationType) && !!scenarios.length && (
+              {['choropleth'].includes(visualization) && !!scenarios.length && (
               <div className="flex items-center">
                 <span className="pr-2">Scenario:</span>
                 {scenarios.length > 1 && (
@@ -260,7 +307,7 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
                   content={(
                     <DropdownContent
                       list={scenarios}
-                      id="scenario"
+                      keyEl="scenario"
                       onClick={handleChange}
                     />
                       )}
@@ -281,7 +328,7 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
+            {(['line', 'pie'].includes(visualization) && !!regions.length) && (
             <div className="flex items-center">
               <span className="pr-2">
                 {i18next.t('region')}
@@ -297,17 +344,17 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
                 content={(
                   <DropdownContent
                     list={regions}
-                    id="region"
+                    keyEl="region"
                     onClick={handleChange}
                   />
-                      )}
+                )}
               >
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('region'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{region || 'Select a region'}</span>
+                  <span>{displayRegion || 'Select a region'}</span>
                 </button>
               </Tooltip>
               )}
@@ -320,17 +367,21 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
             <LoadingSpinner />
             )}
 
-            {!isFetchingRecords && !filteredRecords.length && (
-            <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-              <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-              <p>Data not found</p>
-            </div>
-            )}
+            {isFetchedRecords
+                && !isFetchingRecords
+                && !filteredRecords.length
+                && !!visualization && !!unit && (!!region || !!year)
+                && (
+                  <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
+                    <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                    <p>Data not found</p>
+                  </div>
+                )}
 
-            {(!!filteredRecords.length && !isFetchingRecords) && (
+            {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
               <div className="flex items-center">
-                {visualizationType !== 'choropleth'
+                {visualization !== 'choropleth'
                   && (
                     <Tooltip
                       placement="bottom-start"
@@ -340,7 +391,7 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
                       content={(
                         <DropdownContent
                           list={units}
-                          id="unit"
+                          keyEl="unit"
                           onClick={handleChange}
                         />
                       )}
@@ -350,16 +401,16 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
                         onClick={() => { toggleDropdown('unit'); }}
                         className={cx('flex items-center cursor-pointer',
                           {
-                            'text-sm  text-gray1 text-opacity-50': visualizationType !== 'choropleth',
-                            'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualizationType === 'choropleth',
+                            'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
+                            'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
                           })}
                       >
-                        <span>{unit}</span>
+                        <span>{displayUnit}</span>
                       </button>
                     </Tooltip>
                   )}
               </div>
-              {visualizationType !== 'choropleth'
+              {visualization !== 'choropleth'
                   && (
                     <div className="w-full h-96">
                       <DynamicChart
@@ -369,11 +420,10 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
                       />
                     </div>
                   )}
-              {visualizationType === 'choropleth' && (
+              {visualization === 'choropleth' && (
               <div className="w-full h-96">
                 <MapContainer
-                  layers={widgetData.layers}
-                  categories={categories}
+                  layers={widgetData[0]?.layers || []}
                 />
               </div>
               )}
@@ -387,14 +437,14 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
         <section className="flex flex-col justify-between ml-8">
           {categories.length > 0 && (
           <Filters
-            visualizationType={visualizationType}
+            visualization={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length}
             className="overflow-y-auto mb-4"
             onClick={setFilters}
           />
           )}
-          {categories.length > 0 && visualizationType !== 'choropleth' && (
+          {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
             categories={category?.label === 'category_1' ? categories : subcategories}
             className="max-h-72 overflow-y-auto mb-4"
@@ -407,4 +457,4 @@ const IndicatorChart: FC<IndicatorCompareDataProps> = ({
   );
 };
 
-export default IndicatorChart;
+export default CompareIndicatorChart;

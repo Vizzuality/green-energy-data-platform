@@ -17,6 +17,14 @@ export type ChartProps = {
   colors: string[]
 };
 
+export interface IndicatorDataProps {
+  groupSlug: string | string[];
+  subgroupSlug: string | string[];
+  indicatorSlug: string;
+  className?: string;
+  visualization: string;
+}
+
 export default interface IndicatorCompareDataProps {
   groupSlug: string | string[];
   subgroupSlug: string | string[];

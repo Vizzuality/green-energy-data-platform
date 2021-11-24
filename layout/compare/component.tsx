@@ -62,14 +62,14 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   compareIndex,
 }: CompareLayoutProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
-    group: false,
-    subgroup: false,
     indicator: false,
     year: false,
     region: false,
     unit: false,
-    scenario: false,
     category: { label: 'category_1', value: null },
+    scenario: false,
+    group: false,
+    subgroup: false,
   });
 
   const queryClient = useQueryClient();

@@ -74,6 +74,7 @@ export const filterRecords = (
   records: Record[],
   filters: IndicatorFilters,
   categories: unknown[],
+  groupSlug: string | string[],
 ) => {
   const {
     year,
@@ -101,16 +102,22 @@ export const filterRecords = (
         && (d.unit.id === unit || !unit) // some idicators has no unit
         && d.scenario?.name === scenario) return true;
     }
-
     if (visualization === 'bar') {
+      if (groupSlug === 'model-intercomparison') {
+        if (year === d.year
+          && d.scenario.name === scenario
+          && d.unit.id === unit
+        ) return true;
+      }
       if (year === d.year
         && d.unit.id === unit
-        && d.region_id !== ID_CHINA
+        && (d.region_id !== ID_CHINA)
       ) return true;
     }
 
     return false;
   });
+
   return recordsByFilters;
 };
 
@@ -226,32 +233,61 @@ export const getGroupedValues = (
     .value();
 
   const getBarData = () => {
-    data = flatten(chain(filteredData)
-      .groupBy('region_id')
-      .map((value) => flatten(chain(value)
-        .groupBy(label)
-        .map((res, key) => (
-          {
-            [key !== 'null' ? key : 'Total']: res.reduce(
-              (previous, current) => (current.value || 0) + previous, 0,
-            ),
-            province: res[0].region.name,
-            visualizationTypes: value[0].visualization_types,
-          }))
-        .value()))
-      .value());
-    const dataByProvince = groupBy(data, 'province');
-    return Object.keys(dataByProvince).map((province) => dataByProvince[province]
-      .reduce((acc, next) => {
-        const { province: currentProvince, ...rest } = next;
+    // data = flatten(chain(filteredData)
+    //   .groupBy('region_id')
+    //   .map((value) => flatten(chain(value)
+    //     .groupBy(label)
+    //     .map((res, key) => (
+    //       {
+    //         [key !== 'null' ? key : 'Total']: res.reduce(
+    //           (previous, current) => (current.value || 0) + previous, 0,
+    //         ),
+    //         province: res[0].region.name,
+    //         visualizationTypes: value[0].visualization_types,
+    //       }))
+    //     .value()))
+    //   .value());
+    // const dataByProvince = groupBy(data, 'province');
+    // return Object.keys(dataByProvince).map((province) => dataByProvince[province]
+    //   .reduce((acc, next) => {
+    //     const { province: currentProvince, ...rest } = next;
 
-        return ({
-          ...acc,
-          ...rest,
-        });
-      }, {
-        province,
-      }));
+    //     return ({
+    //       ...acc,
+    //       ...rest,
+    //     });
+    //   }, {
+    //     province,
+    //   }));
+
+      if (groupSlug === 'model-intercomparison') {
+        data = flatten(chain(filteredData)
+        .groupBy('year')
+        .map((value) => flatten(chain(value)
+          .groupBy(label)
+          .map((res, key) => (
+            {
+              [key !== 'null' ? key : 'Total']: res.reduce(
+                (previous, current) => (current.value || 0) + previous, 0,
+              ),
+              province: res[0].region.name,
+              visualizationTypes: value[0].visualization_types,
+            }))
+          .value()))
+        .value());
+      const dataByProvince = groupBy(data, 'province');
+      return Object.keys(dataByProvince).map((province) => dataByProvince[province]
+        .reduce((acc, next) => {
+          const { province: currentProvince, ...rest } = next;
+
+          return ({
+            ...acc,
+            ...rest,
+          });
+        }, {
+          province,
+        }));
+      }
   };
 
   const getChoroplethData = (): {

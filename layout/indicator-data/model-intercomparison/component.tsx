@@ -44,10 +44,22 @@ import i18next from 'i18next';
 
 import { useColors } from 'hooks/utils';
 
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
 import IndicatorDataProps from '../types';
+
+type ChartProps = {
+  widgetData: any,
+  widgetConfig: any,
+  colors: string[],
+};
+
+interface WidgetDataTypes {
+  visualizationTypes: string[];
+  layers?: MapLayersProps[]
+}
 
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
@@ -120,19 +132,29 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
   const filtersIndicator = useMemo(() => {
+    // TO DO - API should be able to filter records by scenario
     if (filterByRegion) {
       return ({
+        // scenario,
         visualization,
         region,
         unit,
       });
     }
     return ({
+      // scenario,
       visualization,
       unit,
       year,
     });
-  }, [visualization, region, unit, year, filterByRegion]);
+  }, [
+    visualization,
+    // scenario,
+    region,
+    unit,
+    year,
+    filterByRegion,
+  ]);
 
   const {
     data: records,
@@ -142,7 +164,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && (!!region || !!year),
+      enabled: !!visualization && !!unit && scenario && (!!region || !!year),
     },
   );
 
@@ -164,7 +186,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
 
   const {
     name,
-    visualization_types: visualizationTypesIndicator,
   } = indicatorData;
 
   const categories = useMemo(
@@ -172,8 +193,8 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   );
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categories),
-    [records, filters, categories],
+    () => filterRecords(records, filters, categories, groupSlug),
+    [records, filters, categories, groupSlug],
   );
 
   const colors = useColors(categories.length);
@@ -231,7 +252,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       ...defaultCategory && { category: defaultCategory },
       ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
+      ...(['choropleth', 'bar'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     }));
   }, [
     dispatch,
@@ -278,7 +299,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             {['bar', 'pie', 'choropleth'].includes(visualization) && (
             <div className="flex items-center">
               <span className="pr-2">Showing for:</span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
+              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]?.label}</span>)}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -288,7 +309,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 content={(
                   <DropdownContent
                     list={years}
-                    id="year"
+                    keyEl="year"
                     onClick={handleChange}
                   />
                 )}
@@ -313,7 +334,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 {i18next.t('region')}
                 :
               </span>
-              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]}</span>)}
+              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]?.label}</span>)}
               {regions.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -323,7 +344,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 content={(
                   <DropdownContent
                     list={regions}
-                    id="region"
+                    keyEl="region"
                     onClick={handleChange}
                   />
                 )}
@@ -354,7 +375,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
               content={(
                 <DropdownContent
                   list={scenarios}
-                  id="scenario"
+                  keyEl="scenario"
                   onClick={handleChange}
                 />
               )}
@@ -374,14 +395,18 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             <LoadingSpinner />
             )}
 
-            {!isFetchingRecords && !filteredRecords.length && (
+            {isFetchedRecords
+            && !isFetchingRecords
+            && !filteredRecords.length
+            && !!visualization && !!unit && (!!region || !!year)
+            && (
             <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
               <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
               <p>Data not found</p>
             </div>
             )}
 
-            {(!!filteredRecords.length && !isFetchingRecords) && (
+            {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
               <div className="flex items-center">
                 <Tooltip
@@ -392,17 +417,17 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                   content={(
                     <DropdownContent
                       list={units}
-                      id="unit"
+                      keyEl="unit"
                       onClick={handleChange}
                     />
-                      )}
+                  )}
                 >
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('unit'); }}
                     className="flex items-center cursor-pointer text-sm text-gray1 text-opacity-50"
                   >
-                    <span>{unit}</span>
+                    <span>{displayUnit}</span>
                   </button>
                 </Tooltip>
               </div>
@@ -419,7 +444,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
               {visualization === 'bar'
                   && (
                     <div className="w-full h-96 flex">
-                      {scenarios.map((s) => (
+                      {categories.map((s) => (
                         <BarChart
                           key={s}
                           widgetData={widgetData}

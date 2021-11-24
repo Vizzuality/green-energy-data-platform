@@ -1,8 +1,6 @@
 import React, {
   FC,
-  useEffect,
   useState,
-  useMemo,
   useCallback,
 } from 'react';
 import {
@@ -11,20 +9,15 @@ import {
 
 import cx from 'classnames';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import { RootState } from 'store/store';
 
 // hooks
 import { useSubgroup } from 'hooks/subgroups';
-import {
-  useIndicator,
-  useIndicatorRecords,
-  useIndicatorMetadata,
-} from 'hooks/indicators';
+import { useIndicator } from 'hooks/indicators';
 
-import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
 // components
@@ -55,10 +48,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
   });
 
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
-  const {
-    year, region, unit, scenario, visualization,
-  } = useSelector((state: RootState) => state.indicator);
+  const { visualization } = useSelector((state: RootState) => state.indicator);
 
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
@@ -114,108 +104,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
-
-  const filtersIndicator = useMemo(() => {
-    if (filterByRegion) {
-      return ({
-        visualization,
-        region,
-        unit,
-      });
-    }
-    return ({
-      visualization,
-      unit,
-      year,
-    });
-  }, [visualization, region, unit, year, filterByRegion]);
-
-  const { data: records } = useIndicatorRecords(
-    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-      refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && (!!region || !!year),
-    },
-  );
-
-  const {
-    defaultYear,
-    defaultRegion,
-    units,
-    years,
-    regions,
-    defaultUnit,
-    defaultScenario,
-  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
-    refetchOnWindowFocus: false,
-    enabled: !!indicatorSlug && !!visualization,
-  });
-
   const {
     name,
     visualization_types: visualizationTypesIndicator,
     description,
   } = indicatorData;
-
-  const currentVisualization = useMemo<string>(
-    // if the current visualization is not allowed when the user changes the indicator,
-    // it will fallback into the default one. If it is, it will remain.
-    () => (indicatorData?.visualization_types?.includes(visualization)
-      ? visualization : indicatorData?.default_visualization),
-    [visualization, indicatorData],
-  );
-  const currentYear = useMemo<number>(
-    () => {
-      if (years.find(({ value }) => value === year)) {
-        return year;
-      }
-      return defaultYear?.value;
-    },
-    [year, years, defaultYear],
-  );
-
-  const currentUnit = useMemo<string>(
-    () => {
-      if (units.find(({ value }) => value === unit)) {
-        return unit;
-      }
-      return defaultUnit?.value;
-    },
-    [unit, units, defaultUnit],
-  );
-
-  const currentRegion = useMemo<string>(
-    () => {
-      if (regions.find(({ value }) => value === region)) {
-        return region;
-      }
-      return defaultRegion?.value;
-    },
-    [region, regions, defaultRegion],
-  );
-
-  const currentScenario = useMemo<string>(
-    () => (scenario || defaultScenario?.value),
-    [scenario, defaultScenario],
-  );
-
-  useEffect(() => {
-    dispatch(setFilters({
-      visualization: currentVisualization,
-      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
-    }));
-  }, [
-    dispatch,
-    currentYear,
-    currentRegion,
-    currentUnit,
-    defaultUnit,
-    defaultScenario,
-    currentScenario,
-    currentVisualization]);
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',

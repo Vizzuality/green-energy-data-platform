@@ -48,7 +48,7 @@ const GroupPage: FC = () => {
     router.push(url);
   }, [router]);
 
-  const { data: group } = useGroup(groupSlug as '', {
+  const { data: group } = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
     placeholderData: {
       subgroups: [],

@@ -72,8 +72,8 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
     year: false,
     region: false,
     unit: false,
-    scenario: false,
     category: { label: 'category_1', value: null },
+    scenario: false,
   });
 
   const queryClient = useQueryClient();
@@ -185,16 +185,15 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
     () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
 
-  const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(records), [records],
-  );
-
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categories),
-    [records, filters, categories],
+    () => filterRecords(records, filters, categories, groupSlug),
+    [records, filters, categories, groupSlug],
   );
 
   const colors = useColors(categories.length);
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(records), [records],
+  );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
@@ -317,7 +316,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                   content={(
                     <DropdownContent
                       list={scenarios}
-                      id="scenario"
+                      keyEl="scenario"
                       onClick={handleChange}
                     />
                       )}
