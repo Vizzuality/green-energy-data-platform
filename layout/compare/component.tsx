@@ -28,10 +28,13 @@ import MapContainer from 'components/indicator-visualizations/choropleth';
 import {
   filterRecords,
   getGroupedValues,
+  getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
 
-import { setFilters } from 'store/slices/indicator';
+import {
+  setFilters,
+} from 'store/slices/indicator';
 import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
@@ -45,19 +48,25 @@ import { useSubgroup } from 'hooks/subgroups';
 import {
   useIndicator,
   useIndicatorRecords,
+  useIndicatorMetadata,
 } from 'hooks/indicators';
 import { useRegions } from 'hooks/regions';
 import { useColors } from 'hooks/utils';
-import { useDefaultRecordFilters } from 'hooks/records';
 
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import { IndicatorProps } from 'types/data';
 import { CompareLayoutProps } from './types';
 
 import ChartConfig from '../indicator-data/config';
 import DropdownContent from '../dropdown-content';
 
+interface WidgetDataTypes {
+  visualizationTypes: string[];
+  layers?: MapLayersProps[]
+}
+
 type ChartProps = {
-  widgetData: Record<string, string>[],
+  widgetData: any,
   widgetConfig: any,
   colors: string[]
 };
@@ -80,6 +89,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     scenario: false,
     category: { label: 'category_1', value: null },
   });
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -89,6 +103,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     unit,
     category,
     scenario,
+    visualization,
   } = useSelector(
     (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
   );
@@ -183,7 +198,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     unit,
     category,
     scenario,
-  }), [year, region, unit, category, scenario]);
+    visualization,
+  }), [year, region, unit, category, scenario, visualization]);
 
   const {
     data: indicatorData,
@@ -198,40 +214,21 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       name: null,
       published: false,
       start_date: null,
-      visualizationTypes: [],
+      visualization_types: [],
       group: null,
       subgroup: null,
     },
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
-
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
-    refetchOnWindowFocus: false,
-  });
-
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
+  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, filters, {
     refetchOnWindowFocus: false,
   });
 
   const {
-    name,
-    categories: categoriesIndicator,
-    visualizationTypes,
-    description,
-  }: IndicatorProps = indicatorData;
-
-  const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
-    [records, filters, visualizationType, categoriesIndicator],
-  );
-
-  const {
-    categories,
     defaultCategory,
     years,
     defaultYear,
@@ -241,11 +238,30 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     defaultUnit,
     scenarios,
     defaultScenario,
-  } = useDefaultRecordFilters(
-    records,
-    filteredRecords,
-    visualizationType,
-    filters,
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
+    refetchOnWindowFocus: false,
+    enabled: !!indicatorSlug && !!visualization,
+  });
+
+  const { data: regionsGeojson } = useRegions({}, {
+    refetchOnWindowFocus: false,
+    placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
+  });
+
+  const {
+    name,
+    categories: categoriesIndicator,
+    visualization_types: visualizationTypes,
+    description,
+  }: IndicatorProps = indicatorData;
+
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+  );
+
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, categoriesIndicator),
+    [records, filters, categoriesIndicator],
   );
 
   const colors = useColors(categories.length);
@@ -255,24 +271,24 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualizationType],
-    [visualizationType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys)[visualization],
+    [visualization, widgetDataKeys],
   );
 
-  const widgetData = useMemo(
+  const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
-      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
-    ),
-    [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, filters, filteredRecords, regionsGeojson, units,
+    ) as WidgetDataTypes,
+    [name, groupSlug, filters, filteredRecords, regionsGeojson, units],
   );
+
+  const {
+    default_visualization: defaultVisualization,
+  } = indicatorData;
 
   useEffect(() => {
-    const {
-      default_visualization: defaultVisualization,
-    } = indicatorData;
-
-    setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+    setFilters({ ...filters, visualization: defaultVisualization });
+  }, [indicatorData, defaultVisualization, filters]);
 
   const { data: group } = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
@@ -284,41 +300,69 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const { name: groupName } = group;
 
-  useEffect(() => {
-    if (compareIndex === 1) {
-      dispatch(setFilters({
-        ...defaultYear && { year: defaultYear },
-        ...defaultRegion && { region: defaultRegion },
-        ...defaultUnit && { unit: defaultUnit },
-        ...defaultCategory && { category: { label: defaultCategory } },
-        ...defaultScenario && { scenario: defaultScenario },
+  const currentVisualization = useMemo(
+    // if the current visualization is not allowed when the user changes the indicator,
+    // it will fallback into the default one. If it is, it will remain.
+    () => (indicatorData?.visualization_types.includes(visualization)
+      ? visualization : indicatorData?.default_visualization),
+    [visualization, indicatorData],
+  );
 
-      }));
+  const currentYear = useMemo<number>(
+    () => (year || defaultYear?.value),
+    [year, defaultYear],
+  );
+
+  const currentUnit = useMemo<string>(
+    () => (unit || defaultUnit?.value),
+    [unit, defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => (region || defaultRegion?.value),
+    [region, defaultRegion],
+  );
+
+  const currentScenario = useMemo<string>(
+    () => (scenario || defaultScenario?.value),
+    [scenario, defaultScenario],
+  );
+
+  useEffect(() => {
+    const newFilters = {
+      visualization: currentVisualization,
+      ...(defaultUnit && { unit: currentUnit }) || { unit: '' },
+      ...defaultCategory && { category: defaultCategory },
+      ...(['line', 'pie'].includes(currentVisualization)) && { region: currentRegion },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
+    };
+    if (compareIndex === 1) {
+      dispatch(setFilters(newFilters));
     } else {
-      dispatch(setCompareFilters({
-        ...defaultYear && { year: defaultYear },
-        ...defaultRegion && { region: defaultRegion },
-        ...defaultUnit && { unit: defaultUnit },
-        ...defaultCategory && { category: { label: defaultCategory } },
-        ...defaultScenario && { scenario: defaultScenario },
-      }));
+      dispatch(setCompareFilters(newFilters));
     }
   }, [
     dispatch,
     defaultYear,
-    defaultRegion,
+    currentYear,
+    currentRegion,
     defaultUnit,
-    defaultScenario,
+    currentUnit,
     defaultCategory,
+    defaultScenario,
+    currentScenario,
+    currentVisualization,
+    indicatorSlug,
     compareIndex,
   ]);
 
   const DynamicChart = useMemo(() => {
-    if (visualizationType !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    if (visualization && visualization !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
     }
     return null;
-  }, [visualizationType]);
+  }, [visualization]);
 
   return (
     <div className="py-24 text-gray1" key={compareIndex}>
@@ -326,11 +370,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         theme="light"
         header={false}
         rounded
-        className="min-h-xs relative bg-gradient-color2 pb-2 px-11 rounded-t-2xl text-white"
+        className="relative pb-2 text-white min-h-xs bg-gradient-color2 px-11 rounded-t-2xl"
       >
         <button
           type="button"
-          className="absolute left-0 top-0 bg-gray1 rounded-tl-2xl rounded-br-2xl flex divide-x divide-white items-center"
+          className="absolute top-0 left-0 flex items-center divide-x divide-white bg-gray1 rounded-tl-2xl rounded-br-2xl"
           onClick={() => onClose(groupSlug, subgroupSlug, indicatorSlug)}
         >
           <Icon
@@ -350,7 +394,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             onClickOutside={() => { closeDropdown('group'); }}
             content={(
               <ul
-                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
+                className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
               >
                 {defaultGroupSlugs?.map(({
                   name: defaultName,
@@ -365,7 +409,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   >
                     <button
                       type="button"
-                      className="px-5 cursor-pointer w-full py-2 flex pointer-events-all"
+                      className="flex w-full px-5 py-2 cursor-pointer pointer-events-all"
                       onClick={() => handleGroupChange(
                         defaultGroupSlug, defaultSubgroupSlug, defaultIndicatorSlug,
                       )}
@@ -382,7 +426,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               className="flex items-center pt-3"
               onClick={() => { toggleDropdown('group'); }}
             >
-              <h2 className="text-white font-bold pt-10">{groupName}</h2>
+              <h2 className="pt-10 font-bold text-white">{groupName}</h2>
             </button>
           </Tooltip>
 
@@ -394,7 +438,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             onClickOutside={() => { closeDropdown('subgroup'); }}
             content={(
               <ul
-                className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
+                className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
               >
                 {group.subgroups.map(({
                   slug: sgSlug, id, name: sgName, default_indicator,
@@ -403,11 +447,11 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   return (
                     <li
                       key={id}
-                      className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
+                      className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-opacity-10"
                     >
                       <button
                         type="button"
-                        className="px-5 cursor-pointer w-full py-2 flex"
+                        className="flex w-full px-5 py-2 cursor-pointer"
                         onClick={() => handleSubgroupChange(sgSlug, indSlug)}
                       >
                         {sgName}
@@ -442,14 +486,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       </Hero>
       <div className={cx('container m-auto bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
         <VisualizationsNav
-          active={visualizationType}
+          active={visualization}
           className="w-full px-11 py-7"
           visualizationTypes={visualizationTypes}
-          onClick={setVisualizationType}
           mobile
         />
-        <div className="flex flex-col p-11 w-full">
-          <div className="flex items-baseline w-full justify-between">
+        <div className="flex flex-col w-full p-11">
+          <div className="flex items-baseline justify-between w-full">
             <h2 className="flex max-w-xs font-bold">
               {name}
             </h2>
@@ -460,13 +503,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 interactive
                 onClickOutside={() => closeDropdown('indicator')}
                 content={(
-                  <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full">
+                  <ul className="z-10 w-full min-w-full overflow-y-auto divide-y divide-white rounded-xl divide-opacity-10 max-h-96">
                     {subgroup?.indicators?.map(
                       ({ name: group_name, id, slug }) => (
-                        <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">
+                        <li key={id} className="px-5 text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-opacity-10 bg-gray3">
                           <button
                             type="button"
-                            className="flex items-center py-2 w-full last:border-b-0"
+                            className="flex items-center w-full py-2 last:border-b-0"
                             onClick={() => handleIndicatorChange(slug)}
                           >
                             {group_name}
@@ -499,7 +542,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           </p>
           {categories?.length > 1 && (
             <Filters
-              visualizationType={visualizationType}
+              visualizationType={visualization}
               categories={categories}
               hasSubcategories={!!subcategories.length}
               className="mb-4"
@@ -511,7 +554,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             <section className="flex flex-col w-full">
               <div className="flex">
                 {/* year filter */}
-                {['bar', 'pie'].includes(visualizationType) && !!years.length && (
+                {['bar', 'pie'].includes(visualization) && !!years.length && (
                 <div className="flex items-center">
                   <span className="pr-2">Showing for:</span>
                   <Tooltip
@@ -522,7 +565,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     content={(
                       <DropdownContent
                         list={years}
-                        id="year"
+                        keyEl="year"
                         onClick={handleChange}
                       />
                         )}
@@ -540,7 +583,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 )}
 
                 {/* region filter */}
-                {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
+                {(['line', 'pie'].includes(visualization) && !!regions.length) && (
                 <div className="flex items-center">
                   <span className="pr-2">
                     {i18next.t('region')}
@@ -554,7 +597,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     content={(
                       <DropdownContent
                         list={regions}
-                        id="region"
+                        keyEl="region"
                         onClick={handleChange}
                       />
                         )}
@@ -572,7 +615,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                 )}
 
                 {/* scenario filter */}
-                {['choropleth'].includes(visualizationType) && !!scenarios.length && (
+                {['choropleth'].includes(visualization) && !!scenarios.length && (
                   <div className="flex items-center">
                     <span className="pr-2">Scenario:</span>
                     {scenarios.length > 1 && (
@@ -584,7 +627,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                       content={(
                         <DropdownContent
                           list={scenarios}
-                          id="scenario"
+                          keyEl="scenario"
                           onClick={handleChange}
                         />
                       )}
@@ -601,21 +644,21 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   </div>
                 )}
               </div>
-              <div className="flex h-full flex-col w-full min-h-1/2">
+              <div className="flex flex-col w-full h-full min-h-1/2">
                 {isFetchingRecords && (
                 <LoadingSpinner />
                 )}
                 {!isFetchingRecords && !filteredRecords.length && (
-                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                   <p>Data not found</p>
                 </div>
                 )}
                 {(!!filteredRecords.length && !isFetchingRecords) && (
-                <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                   <div className="flex items-center">
-                    {visualizationType !== 'choropleth' && (
-                    <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                    {visualization !== 'choropleth' && (
+                    <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                       <div className="flex items-center">
                         <Tooltip
                           placement="bottom-start"
@@ -625,7 +668,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           content={(
                             <DropdownContent
                               list={units}
-                              id="unit"
+                              keyEl="unit"
                               onClick={handleChange}
                             />
                         )}
@@ -633,13 +676,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                           <button
                             type="button"
                             onClick={() => { toggleDropdown('unit'); }}
-                            className="flex items-center cursor-pointer opacity-50 hover:font-bold hover:cursor-pointer tracking-tight text-sm"
+                            className="flex items-center text-sm tracking-tight opacity-50 cursor-pointer hover:font-bold hover:cursor-pointer"
                           >
                             <span>{unit}</span>
                           </button>
                         </Tooltip>
                       </div>
-                      <div className="w-full flex justify-center pb-11">
+                      <div className="flex justify-center w-full pb-11">
                         <DynamicChart
                           widgetData={widgetData}
                           widgetConfig={widgetConfig}
@@ -649,21 +692,20 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     </div>
                     )}
 
-                    {visualizationType === 'choropleth' && (
+                    {visualization === 'choropleth' && (
                     <div className="w-full h-96 pb-11">
                       <MapContainer
                         layers={widgetData.layers}
-                        categories={categories}
                       />
                     </div>
                     )}
                   </div>
                 </div>
                 )}
-                {categories.length > 0 && visualizationType !== 'choropleth' && (
+                {categories.length > 0 && visualization !== 'choropleth' && (
                 <Legend
-                  categories={category.label === 'category_1' ? categories : subcategories}
-                  className="overflow-y-auto mb-4"
+                  categories={category?.label === 'category_1' ? categories : subcategories}
+                  className="mb-4 overflow-y-auto"
                 />
                 )}
                 <DataSource

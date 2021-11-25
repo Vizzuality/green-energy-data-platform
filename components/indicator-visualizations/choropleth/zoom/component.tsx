@@ -34,11 +34,11 @@ export const ZoomControl = ({
   );
 
   return (
-    <div className={`absolute top-4 right-7 z-10 inline-flex flex-col ${className}`}>
+    <div className={`absolute w-6 top-10 right-2 z-10 inline-flex flex-col text-white bg-gray1 rounded-sm ${className}`}>
       <button
         aria-label="max zoom"
         type="button"
-        className="font-bold p-0.5 rounded-t-4xl text-white bg-gray1 focus:outline-none"
+        className="font-bold p-0.5 focus:outline-none"
         disabled={zoom === maxZoom}
         onClick={increaseZoom}
       >
@@ -47,7 +47,7 @@ export const ZoomControl = ({
       <button
         aria-label="min zoom"
         type="button"
-        className="font-bold p-0.5 rounded-b-4xl text-white bg-gray1 focus:outline-none"
+        className="font-bold p-0.5 focus:outline-none"
         disabled={zoom === minZoom}
         onClick={decreaseZoom}
       >

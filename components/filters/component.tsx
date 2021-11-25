@@ -5,7 +5,6 @@ import cx from 'classnames';
 import i18next from 'i18next';
 
 import { useDispatch } from 'react-redux';
-// import { RootState } from 'store/store';
 
 // components
 import Icon from 'components/icon';

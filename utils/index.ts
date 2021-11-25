@@ -1,10 +1,9 @@
 import {
   compact,
-  uniq,
+  sortedUniq,
   chain,
   flatten,
   groupBy,
-  sortedUniq,
 } from 'lodash';
 
 import chroma from 'chroma-js';
@@ -15,6 +14,7 @@ import { saveAs } from 'file-saver';
 
 import {
   Record,
+  Region,
 } from 'types/data';
 
 import {
@@ -22,11 +22,21 @@ import {
 } from 'store/slices/indicator';
 
 import resources from 'utils/translations';
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+import ID_CHINA from 'utils/constants';
 
 export const initializeLanguage = () => i18n.init({
   resources,
   lng: 'en',
 });
+
+export const getMostFrequent = (array) => {
+  const hashmap = array?.reduce((acc, val) => {
+    acc[val] = (acc[val] || 0) + 1;
+    return acc;
+  }, {});
+  return Object.keys(hashmap).reduce((a, b) => (hashmap[a] > hashmap[b] ? a : b));
+};
 
 export const Filter = (arr: (string | number)[], param: number) => {
   const index = arr.indexOf(param);
@@ -40,16 +50,29 @@ export const Filter = (arr: (string | number)[], param: number) => {
 
 export const getCategoriesFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => (d.category_1 === null ? 'Total' : d.category_1)))).sort();
+  visualization: string,
+) => {
+  const categories = compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort()));
+
+  if (visualization === 'choropleth') {
+    return categories;
+  }
+
+  return categories.filter((category) => {
+    if (categories.length > 1) {
+      return category !== 'Total' && category !== null;
+    }
+    return category || 'Total';
+  });
+};
 
 export const getSubcategoriesFromRecords = (
   records: Record[],
-) => compact(uniq(records.map((d) => (d.category_2 === null ? 'Total' : d.category_2)))).sort();
+) => compact(sortedUniq(records?.map((d) => (d.category_2 === null ? 'Total' : d.category_2)).sort()));
 
 export const filterRecords = (
   records: Record[],
   filters: IndicatorFilters,
-  visualizationType: string,
   categories: unknown[],
 ) => {
   const {
@@ -57,37 +80,33 @@ export const filterRecords = (
     region,
     unit,
     scenario,
+    visualization,
   } = filters;
+
   const recordsByFilters = records.filter((d) => {
-    if (visualizationType === 'line') {
+    if (visualization === 'line') {
       // API return region name to null for China
+      if ((categories.length > 1 && d.category_1 !== 'Total') || categories.length === 1) return true;
+    }
 
-      if (
-        (d.region.name === region || (d.region.name === null)
-        )
-        && d.unit.name === unit
+    if (visualization === 'pie') {
+      if ((d.region_id === region || (d.region_id === null))
+        && d.unit.id === unit && year === d.year
         && (((categories.length > 1) && d.category_1 !== 'Total')
         || categories.length === 1)) return true;
     }
 
-    if (visualizationType === 'pie') {
-      if ((d.region.name === region || (d.region.name === null))
-        && d.unit.name === unit && year === d.year
-        && (((categories.length > 1) && d.category_1 !== 'Total')
-        || categories.length === 1)) return true;
-    }
-
-    if (visualizationType === 'choropleth') {
+    if (visualization === 'choropleth') {
       if (year === d.year
-        && (d.unit.name === unit || !unit) // some idicators has no unit
+        && (d.unit.id === unit || !unit) // some idicators has no unit
         && d.scenario?.name === scenario) return true;
     }
 
-    if (visualizationType === 'bar') {
+    if (visualization === 'bar') {
       if (year === d.year
-        && d.unit.name === unit
-        && d.region.id !== 'bca25526-8927-4d27-ac0e-e92bed88198a'
-        && d.region.name !== 'China') return true;
+        && d.unit.id === unit
+        && d.region_id !== ID_CHINA
+      ) return true;
     }
 
     return false;
@@ -99,11 +118,10 @@ export const filterRecords = (
 export const filterRelatedIndicators = (
   records: Record[],
   filters: IndicatorFilters,
-  visualizationType: string,
 ) => {
-  const { region, category } = filters;
+  const { region, category, visualization } = filters;
   const label = category?.label;
-  const categories = getCategoriesFromRecords(records).filter((c) => c !== 'Total');
+  const categories = getCategoriesFromRecords(records, visualization);
 
   const results = records.filter((r) => {
     if (categories.length > 1) return r.category_1 !== 'Total';
@@ -112,22 +130,22 @@ export const filterRelatedIndicators = (
   });
 
   const recordsByFilters = results.filter((d) => {
-    if (visualizationType === 'line') {
+    if (visualization === 'line') {
       // API return region name to null for China
       if ((categories.length > 1 && d.category_1 !== 'Total') || categories.length === 1) return true;
     }
 
-    if (visualizationType === 'pie') {
+    if (visualization === 'pie') {
       if ((categories.length > 1 && d.category_1 !== 'Total')
       || categories.length === 1) return true;
     }
 
-    if (visualizationType === 'bar') {
-      if (d.region.name !== 'China') return true;
+    if (visualization === 'bar') {
+      if (d.region_id !== ID_CHINA) return true;
     }
 
-    if (visualizationType === 'choropleth') {
-      if (d.region.name === region || d.region.name === null) return true;
+    if (visualization === 'choropleth') {
+      if (d.region_id === region) return true;
     }
 
     if (label !== 'category_2') {
@@ -138,41 +156,24 @@ export const filterRelatedIndicators = (
 
   return recordsByFilters;
 };
+
 export const getGroupedValues = (
   name: string,
   groupSlug: string | string[],
-  categories: string[],
-  visualization: string,
   filters: IndicatorFilters,
   records: Record[],
-  regions: Record[],
-) => {
-  const { category, unit } = filters;
-
+  regions: Region[],
+  units: { label: string, value: string }[],
+): unknown => {
+  const { category, unit, visualization } = filters;
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
   const mapCategorySelected = 'Total';
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
-  let data;
-  if (visualization === 'pie') {
-    data = chain(filteredData)
-      .groupBy(label)
-      .map((value, key) => (
-        {
-          name: key,
-          value: value.reduce(
-            (previous, current) => (current.value || 0) + previous, 0,
-          ),
-          region: value[0].region.name,
-          year: value[0].year,
-          visualizationTypes: value[0].visualizationTypes,
-        }))
-      .value();
-  }
-
-  if (visualization === 'line') {
+  let data = [];
+  const getLineData = (): {}[] => {
     data = flatten(chain(filteredData)
       .groupBy('year')
       .map((value) => flatten(chain(value)
@@ -183,10 +184,11 @@ export const getGroupedValues = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
-            visualizationTypes: value[0].visualizationTypes,
+            visualizationTypes: value[0].visualization_types,
           }))
         .value()))
       .value());
+
     const dataByYear = groupBy(data, 'year');
 
     return Object.keys(dataByYear).map((year) => dataByYear[year]
@@ -200,8 +202,23 @@ export const getGroupedValues = (
       }, {
         year,
       }));
-  }
-  if (visualization === 'bar') {
+  };
+
+  const getPieData = () => chain(filteredData)
+    .groupBy(label)
+    .map((value, key) => (
+      {
+        name: key,
+        value: value.reduce(
+          (previous, current) => (current.value || 0) + previous, 0,
+        ),
+        region: value[0].region.name,
+        year: value[0].year,
+        visualizationTypes: value[0].visualization_types,
+      }))
+    .value();
+
+  const getBarData = () => {
     data = flatten(chain(filteredData)
       .groupBy('region.name')
       .map((value) => flatten(chain(value)
@@ -212,7 +229,7 @@ export const getGroupedValues = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             province: res[0].region.name,
-            visualizationTypes: value[0].visualizationTypes,
+            visualizationTypes: value[0].visualization_types,
           }))
         .value()))
       .value());
@@ -228,20 +245,29 @@ export const getGroupedValues = (
       }, {
         province,
       }));
-  }
+  };
 
-  if (visualization === 'choropleth') {
-    const dataWithGeometries = filteredData.map(({ id, ...d }) => {
-      const geometry = filteredRegions?.find((r) => d.region.id === r.id);
+  const getChoroplethData = (): {
+    layers: MapLayersProps,
+    visualizationTypes: string[],
+    data?: unknown,
+    mapValues: number[]
+  }[] => {
+    const dataWithGeometries = filteredData?.map(({ id, ...d }) => {
+      const geometry = filteredRegions?.find((r):boolean => d.region.name === r.name);
       return ({
-        visualizationTypes: d.visualizationTypes,
         geometry,
+        visualizationTypes: d.visualization_types,
         Total: d.value,
       });
     });
 
-    const mapValues = dataWithGeometries
-      .filter((d) => d[mapCategorySelected])
+    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
+
+    const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
+    const mapValues = dataWithGeometries?.filter(
+      (d) => d[mapCategorySelected],
+    )
       .map((r) => r[mapCategorySelected]) as number[];
 
     const minValue = Math.min(...mapValues);
@@ -265,11 +291,13 @@ export const getGroupedValues = (
 
     const media = (maxValue - minValue) / 2;
 
-    const legendTitle = unit ? `${name} (${unit})` : name;
+    const unitLabel = units.find((u) => u.value === unit)?.label;
+    const legendTitle = unit ? `${name} (${unitLabel})` : name;
+    const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
 
-    if (groupSlug !== 'coal-power-plants') {
-      data = {
-        visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
+    if (layerType === 'Multipolygon' || layerType === 'Polygon') {
+      data = [{
+        visualizationTypes: visualizations,
         layers: [{
           id: 'regions',
           type: 'geojson',
@@ -288,7 +316,6 @@ export const getGroupedValues = (
             id: 'gradient-example-1',
             name: legendTitle,
             icon: null,
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'choropleth',
             items: [
               {
@@ -346,12 +373,12 @@ export const getGroupedValues = (
             ],
           },
         }],
-      };
+      }];
     }
 
-    if (groupSlug === 'coal-power-plants') {
-      data = {
-        visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
+    if (layerType === 'Point') {
+      data = [{
+        visualizationTypes: visualizations,
         data: dataWithGeometries,
         mapValues,
         layers: [{
@@ -377,7 +404,7 @@ export const getGroupedValues = (
               {
                 type: 'circle',
                 paint: {
-                  // 'fill-color': '#00ffff',
+                // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
                   // 'circle-stroke-opacity': 0.7,
                   'circle-stroke-color': [
@@ -441,54 +468,71 @@ export const getGroupedValues = (
                   'circle-stroke-color': '#fff',
                 },
               },
-              // {
-              //   id: 'media',
-              //   metadata: {
-              //     position: 'top',
-              //   },
-              //   type: 'symbol',
-              //   paint: {
-              //     'icon-color': '#F00',
-              //   },
-              //   layout: {
-              //     'icon-ignore-placement': true,
-              //     'icon-allow-overlap': true,
-              //     'icon-image': '',
-              //     'icon-color': 'red',
-              //     'icon-size': 10,
-              //   },
-              // },
+            // {
+            //   id: 'media',
+            //   metadata: {
+            //     position: 'top',
+            //   },
+            //   type: 'symbol',
+            //   paint: {
+            //     'icon-color': '#F00',
+            //   },
+            //   layout: {
+            //     'icon-ignore-placement': true,
+            //     'icon-allow-overlap': true,
+            //     'icon-image': '',
+            //     'icon-color': 'red',
+            //     'icon-size': 10,
+            //   },
+            // },
             ],
           },
           legendConfig: [{
             id: 'gradient-example-1',
             name: legendTitle,
             icon: null,
-            description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
             type: 'gradient',
             items: ITEMS,
           }],
         }],
-      };
+      }];
     }
-  }
+    return data;
+  };
 
+  switch (visualization) {
+    case 'line':
+      data = getLineData();
+      break;
+    case 'pie':
+      data = getPieData();
+      break;
+    case 'bar':
+      data = getBarData();
+      break;
+    case 'choropleth':
+      data = getChoroplethData();
+      break;
+    default:
+      data = [];
+  }
   return data;
 };
 
 export const getGroupedValuesRelatedIndicators = (
   categories: string[],
-  visualization: string,
   filters: IndicatorFilters,
   records: Record[],
   regions,
 ) => {
   let data;
 
-  const { category } = filters;
+  const { category, visualization } = filters;
   const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
-  const filteredRegions = regions?.filter((r) => r.geometry !== null);
+
+  const filteredRegions: Region[] = regions?.filter((r) => r.geometry !== null);
+
   if (visualization === 'pie') {
     data = chain(records)
       .groupBy('category_1')
@@ -499,6 +543,7 @@ export const getGroupedValuesRelatedIndicators = (
             (previous, current) => (current.value || 0) + previous, 0,
           ),
           year: value[0].year,
+          visualizationTypes: value[0].visualization_types,
         }))
       .value();
   }
@@ -514,6 +559,7 @@ export const getGroupedValuesRelatedIndicators = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
+            visualizationTypes: value[0].visualization_types,
           }))
         .value()))
       .value());
@@ -531,7 +577,6 @@ export const getGroupedValuesRelatedIndicators = (
         year,
       }));
   }
-
   if (visualization === 'bar') {
     data = flatten(chain(records)
       .groupBy('region.name')
@@ -542,7 +587,8 @@ export const getGroupedValuesRelatedIndicators = (
             [key !== 'null' ? key : 'Total']: res.reduce(
               (previous, current) => (current.value || 0) + previous, 0,
             ),
-            province: res[0].region.name,
+            province: res[0]?.region.name,
+            visualizationTypes: value[0].visualization_types,
           }))
         .value()))
       .value());
@@ -560,121 +606,186 @@ export const getGroupedValuesRelatedIndicators = (
         province,
       })).filter((p) => p.province !== 'China');
   }
+
   if (visualization === 'choropleth') {
     const dataWithGeometries = records?.map(({ id, ...d }) => {
       const geometry = filteredRegions?.find((r) => d.region.id === r.id);
       return ({
-        visualizationTypes: d.visualizationTypes,
+        visualizationTypes: d.visualization_types,
         geometry,
         [d.category_1]: d.value,
       });
     });
 
-    const mapValues = dataWithGeometries
-      .filter((d) => d[mapCategorySelected]).map((r) => r[mapCategorySelected]);
+    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
+    const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
+
+    const mapValues = dataWithGeometries?.filter((d) => d[mapCategorySelected])
+      .map((r) => r[mapCategorySelected]) as number[];
+
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
+    const media = (maxValue - minValue) / 2;
+    const visualizations = dataWithGeometries[0]?.visualizationTypes;
 
-    data = {
-      visualizationTypes: dataWithGeometries[0]?.visualizationTypes,
-      layers: [{
-        id: 'regions',
-        type: 'geojson',
-        source: {
+    if (layerType === 'Point') {
+      data = [{
+        visualizationTypes: visualizations,
+        data: dataWithGeometries,
+        mapValues,
+        layers: [{
+          id: 'cluster',
           type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
-              type: 'Feature',
-              geometry: geometry?.geometry,
-              properties: cat,
-            })),
-          },
-        },
-        render: {
-          layers: [
-            {
-              type: 'fill',
-              paint: {
-                'fill-color': [
-                  'interpolate',
-                  ['linear'],
-                  ['get', categorySelected],
-                  minValue === maxValue ? 0 : minValue,
-                  '#C9E6E8',
-                  maxValue,
-                  '#1B5183',
-                ],
-                // 'fill-outline-color': '#35373E',
-                'fill-opacity': 0.3,
-              },
+          filter: ['has', 'point_count'],
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+                type: 'Feature',
+                geometry: geometry?.geometry,
+                properties: cat,
+              })),
             },
-          ],
-        },
-      }],
-    };
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 45,
+          },
+          render: {
+            layers: [
+              {
+                type: 'circle',
+                paint: {
+                // 'fill-color': '#00ffff',
+                  'circle-opacity': 0.5,
+                  // 'circle-stroke-opacity': 0.7,
+                  'circle-stroke-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'point_count'],
+                    minValue,
+                    '#c73a63',
+                    media,
+                    '#d06182',
+                    maxValue,
+                    '#dd96ab',
+                  ],
+                  'circle-stroke-width': 1,
+                  'circle-color': [
+                    'step',
+                    ['get', 'point_count'],
+                    '#dd96ab',
+                    minValue,
+                    '#d46f8c',
+                    media,
+                    '#cd5478',
+                    maxValue,
+                    '#c73a63',
+                  ],
+                  'circle-radius': [
+                    'step',
+                    ['get', 'point_count'],
+                    10,
+                    minValue,
+                    15,
+                    media,
+                    20,
+                    maxValue,
+                    25,
+                  ],
+                },
+              },
+              {
+                id: 'media-cluster-count',
+                metadata: {
+                  position: 'top',
+                },
+                type: 'symbol',
+                layout: {
+                  'text-allow-overlap': true,
+                  'text-ignore-placement': true,
+                  'text-field': '{point_count_abbreviated}',
+                  'text-size': 12,
+                },
+              },
+              {
+                id: 'unclustered-point',
+                type: 'circle',
+                source: 'earthquakes',
+                filter: ['!', ['has', 'point_count']],
+                paint: {
+                  'circle-color': '#e7b092',
+                  'circle-radius': 4,
+                  'circle-stroke-width': 1,
+                  'circle-stroke-color': '#fff',
+                },
+              },
+            // {
+            //   id: 'media',
+            //   metadata: {
+            //     position: 'top',
+            //   },
+            //   type: 'symbol',
+            //   paint: {
+            //     'icon-color': '#F00',
+            //   },
+            //   layout: {
+            //     'icon-ignore-placement': true,
+            //     'icon-allow-overlap': true,
+            //     'icon-image': '',
+            //     'icon-color': 'red',
+            //     'icon-size': 10,
+            //   },
+            // },
+            ],
+          },
+        }],
+      }];
+    }
+
+    if (layerType === 'Multipolygon' || layerType === 'Polygon') {
+      data = [{
+        visualizationTypes: visualizations,
+        layers: [{
+          id: 'regions',
+          type: 'geojson',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+                type: 'Feature',
+                geometry: geometry?.geometry,
+                properties: cat,
+              })),
+            },
+          },
+          render: {
+            layers: [
+              {
+                type: 'fill',
+                paint: {
+                  'fill-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', categorySelected],
+                    minValue === maxValue ? 0 : minValue,
+                    '#C9E6E8',
+                    maxValue,
+                    '#1B5183',
+                  ],
+                  // 'fill-outline-color': '#35373E',
+                  'fill-opacity': 0.3,
+                },
+              },
+            ],
+          },
+        }],
+      }];
+    }
   }
   return data;
 };
-
-export const getYearsFromRecords = (
-  records: Record[],
-  visualizationType: string,
-  region: string,
-  unit: string,
-) => compact(uniq(records
-  .filter((r) => r.visualizationTypes.includes(visualizationType)
-    && r.region.name === region && r.unit.name === unit)
-  .map((d) => d.year))).sort();
-
-export const getDefaultYearFromRecords = (
-  records: Record[],
-  visualizationType: string,
-) => compact(sortedUniq(records.map((r) => {
-  if (!r.visualizationTypes.includes(visualizationType)) return null;
-  return r.year;
-})))[0];
-
-export const getRegionsFromRecords = (
-  records: Record[],
-  visualizationType: string,
-  unit: string,
-) => compact(uniq(records
-  .filter((r) => r.visualizationTypes.includes(visualizationType)
-    && r.unit.name === unit)
-  .map((d) => d.region.name))).sort();
-
-export const getDefaultRegionFromRecords = (
-  records: Record[],
-  visualizationType: string,
-) => compact(uniq(records.map((r) => {
-  if (!r.visualizationTypes.includes(visualizationType)) return null;
-  return r.region.name;
-})));
-
-export const getScenariosFromRecords = (
-  records: Record[],
-) => compact(uniq(
-  records.map((d) => d.scenario?.name).sort().filter((s) => s !== null),
-)) as string[];
-
-export const getUnitsFromRecords = (
-  records: Record[],
-  visualizationType: string,
-  region: string,
-  year: number,
-) => compact(uniq(records
-  .filter((r) => r.visualizationTypes.includes(visualizationType)
-  && r.region.name === region && r.year === year)
-  .map((d) => d.unit.name))).sort();
-
-export const getDefaultUnitFromRecords = (
-  records: Record[],
-  visualizationType: string,
-) => compact(sortedUniq(records.map((r) => {
-  if (!r.visualizationTypes.includes(visualizationType)) return null;
-  return r.unit.name;
-})))[0];
 
 export const getTodaysDate = () => {
   const today = new Date();

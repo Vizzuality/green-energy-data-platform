@@ -39,25 +39,30 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
           id,
           name,
           slug: indicatorSlug,
-          default_visualization: visualization,
+          default_visualization: defaultVisualization,
         } = default_indicator;
+
         return (
           <InView key={id} triggerOnce>
             {({ ref, inView }) => (
-              <div ref={ref}>
+              <div
+                ref={ref}
+                className={cx('cursor-pointer w-full h-72 bg-white rounded-2.5xl shadow text-gray-900 px-7 py-4',
+                  { [className]: className })}
+              >
                 {(inView && (
-                  <div
-                    className={cx('cursor-pointer w-full h-72 bg-white rounded-2.5xl shadow text-gray-900 px-7 py-4',
-                      { [className]: className })}
-                  >
-                    <div>{name}</div>
-                    <GridItem
-                      group={groupSlug}
-                      subgroup={subgroupSlug}
-                      indicator={indicatorSlug}
-                      visualization={visualization}
-                    />
-                  </div>
+                  <Link href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`} passHref>
+                    <a href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>
+                      <span>{name}</span>
+                      <GridItem
+                        group={groupSlug}
+                        subgroup={subgroupSlug}
+                        indicator={indicatorSlug}
+                        indicatorId={id}
+                        defaultVisualization={defaultVisualization}
+                      />
+                    </a>
+                  </Link>
                 ))}
               </div>
             )}

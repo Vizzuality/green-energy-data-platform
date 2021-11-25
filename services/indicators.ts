@@ -26,7 +26,6 @@ export const fetchIndicator = (
   params,
 })
   .then(({ data }) => data);
-
 export const fetchIndicatorRecords = (
   group_id: string,
   subgroup_id: string,
@@ -60,8 +59,21 @@ export const fetchDataToDownload = (
 })
   .then(({ data }) => data);
 
+export const fetchIndicatorMetadata = (
+  id: string,
+  headers = {},
+  params = {},
+) => API.get(`/indicators/${id}/meta`, {
+  headers: {
+    ...headers,
+  },
+  params,
+})
+  .then(({ data: { meta } }) => meta);
+
 export default {
   fetchIndicators,
   fetchIndicator,
   fetchDataToDownload,
+  fetchIndicatorMetadata,
 };

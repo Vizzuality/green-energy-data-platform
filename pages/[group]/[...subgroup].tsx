@@ -79,7 +79,7 @@ const GroupPage: FC = () => {
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${data?.name} analysis`} />
-      <Hero className="lg:px-32 md:px-24 sm:px-16 px-8">
+      <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
         <Nav className="pt-10" />
         <Tooltip
           placement="bottom-start"
@@ -89,7 +89,7 @@ const GroupPage: FC = () => {
           onClickOutside={() => { setDropdownVisibility(false); }}
           content={(
             <ul
-              className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm"
+              className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
             >
               {group.subgroups.map(({
                 slug: sgSlug, id, name, default_indicator,
@@ -98,11 +98,11 @@ const GroupPage: FC = () => {
                 return (
                   <li
                     key={id}
-                    className="text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-y divide-white divide-opacity-10"
+                    className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-opacity-10"
                   >
                     <button
                       type="button"
-                      className="px-5 cursor-pointer w-full py-2 flex"
+                      className="flex w-full px-5 py-2 cursor-pointer"
                       onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${indSlug}`)}
                     >
                       {name}
@@ -115,10 +115,10 @@ const GroupPage: FC = () => {
         >
           <button
             type="button"
-            className="flex items-center"
+            className="flex items-center pt-3"
             onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
           >
-            <h1 className="text-5.5xl pt-3 text-left">
+            <h1 className="text-5.5xl text-left">
               {data?.subgroup?.name}
             </h1>
             <Icon
@@ -131,8 +131,8 @@ const GroupPage: FC = () => {
           </button>
         </Tooltip>
       </Hero>
-      <div className="container m-auto pb-20">
-        <section className="max-w-6xl m-auto -mt-40 ">
+      <div className="container pb-20 m-auto">
+        <section className="max-w-6xl m-auto -mt-40">
           <IndicatorData />
           <WidgetsGrid />
         </section>

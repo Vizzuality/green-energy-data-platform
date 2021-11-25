@@ -2,24 +2,37 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
-// services
-import { fetchRegions } from 'services/regions';
+import {
+  Region,
+} from 'types/data';
 
-export const useRegions = (id, visualizationType, queryConfig = {}) => {
+// services
+import { fetchRegion, fetchRegions } from 'services/regions';
+
+export const useRegions = (params = {}, queryConfig = {}) => {
   const {
     current,
   } = useSelector(
     (state: RootState) => (state.language),
   );
-  return useQuery(['fetch-regions', id, current],
-    () => fetchRegions(id, { locale: current })
-      .then(({ data }) => data.filter((d) => d.geometry !== null)), {
-    // keepPreviousData: true
-      enabled: visualizationType === 'choropleth',
-      ...queryConfig,
-    });
+  const queryParams = { ...params, locale: current };
+  return useQuery<Region[], Error>(['fetch-regions', current], () => fetchRegions(queryParams), { ...queryConfig });
 };
+
+export const useRegion = (id, params = {}, queryConfig = {}) => {
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+  const queryParams = { ...params, locale: current };
+
+  return useQuery(['fetch-region', id, queryParams], () => fetchRegion(id, queryParams), { ...queryConfig });
+};
+
+export const useRegionIdFromName = (regions, name) => regions.find((region) => name === region);
 
 export default {
   useRegions,
+  useRegionIdFromName,
 };

@@ -1,8 +1,11 @@
 import React, {
   FC,
   useMemo,
+  useEffect,
 } from 'react';
-import Link from 'next/link';
+import {
+  useQueryClient,
+} from 'react-query';
 
 // components
 import BarChart from 'components/indicator-visualizations/bar';
@@ -12,21 +15,20 @@ import MapContainer from 'components/indicator-visualizations/choropleth/compone
 import LoadingSpinner from 'components/loading-spinner/component';
 
 // hooks
-import { useIndicatorRecords } from 'hooks/indicators';
+import { useDispatch, useSelector } from 'react-redux';
+import { useColors } from 'hooks/utils';
 import { useRegions } from 'hooks/regions';
-import { useSelector } from 'react-redux';
+import { useIndicatorRecords, useIndicatorMetadata } from 'hooks/indicators';
 
 // utils
 import {
-  filterRelatedIndicators,
   getGroupedValuesRelatedIndicators,
   getCategoriesFromRecords,
-
 } from 'utils';
 
-import { RootState } from 'store/store';
+import { setRelatedFilters } from 'store/slices/indicator_related';
 
-import { useColors } from 'hooks/utils';
+import { RootState } from 'store/store';
 
 import CONFIG from '../config';
 
@@ -34,105 +36,171 @@ interface GridItemProps {
   group: string | string[],
   subgroup: string,
   indicator: string,
-  visualization: string,
+  indicatorId: string,
+  defaultVisualization: string
 }
 
 const GridItem: FC<GridItemProps> = ({
   group,
   subgroup,
   indicator,
-  visualization,
+  indicatorId,
+  defaultVisualization,
 }: GridItemProps) => {
   const {
-    year, region, unit, category, scenario,
-  } = useSelector((state: RootState) => state.indicator);
+    scenario, visualization,
+  } = useSelector((state: RootState) => state.indicator_related);
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+  const queryClient = useQueryClient();
 
-  const filters = useMemo(() => ({
-    year,
-    region,
-    unit,
-    category,
-    scenario,
-  }), [year, region, unit, category, scenario]);
+  const dispatch = useDispatch();
 
+  const {
+    defaultCategory,
+    defaultYear,
+    defaultRegion,
+    defaultUnit,
+    defaultScenario,
+    isFetching: isFetchingMeta,
+    isFetched,
+    isSuccess,
+  } = useIndicatorMetadata(indicatorId, defaultVisualization, [], {}, {
+    refetchOnWindowFocus: false,
+    enabled: !!indicatorId && !!defaultVisualization,
+  });
+
+  const currentYear = useMemo<number>(
+    () => (defaultYear?.value),
+    [defaultYear],
+  );
+
+  const currentUnit = useMemo<string>(
+    () => (defaultUnit?.value),
+    [defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => (defaultRegion?.value),
+    [defaultRegion],
+  );
+
+  const currentScenario = useMemo<string>(
+    () => (scenario || defaultScenario?.value),
+    [scenario, defaultScenario],
+  );
   const {
     data: records,
     isFetching: isFetchingRecords,
+    isFetched: isFetchedRecords,
   } = useIndicatorRecords(group, subgroup, indicator, {
+    visualization: defaultVisualization,
+    ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+    ...defaultCategory && { category: defaultCategory },
+    ...['line', 'pie'].includes(defaultVisualization) ? { region: currentRegion } : { region: null },
+    ...['pie', 'choropleth', 'bar'].includes(defaultVisualization) ? { year: currentYear } : { year: null },
+  }, {
+    enabled: !!isFetched && !!isSuccess && !!defaultUnit,
     refetchOnWindowFocus: false,
   });
 
-  const filteredRecords = useMemo(
-    () => filterRelatedIndicators(records, filters, visualization),
-    [records, filters, visualization],
+  useEffect(() => {
+    dispatch(setRelatedFilters({
+      visualization: defaultVisualization,
+      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+      ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion }) || { region: null },
+      ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) && { year: currentYear }) || { year: null },
+    }));
+  }, [
+    dispatch,
+    defaultVisualization,
+    defaultYear,
+    currentYear,
+    currentRegion,
+    defaultUnit,
+    currentUnit,
+    defaultCategory,
+    defaultScenario,
+    currentScenario,
+  ]);
+
+  const { data: regionsGeojson } = useRegions({}, {
+    refetchOnWindowFocus: false,
+    placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
+  });
+
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization),
+    [records, visualization],
   );
-  const { data: regionsGeojson } = useRegions(indicator, visualization, {
-    refetchOnWindowFocus: false,
 
-  });
-
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
   const colors = useColors(categories.length);
 
   const widgetConfig = useMemo(
-    () => CONFIG(categories)[visualization],
-    [visualization, categories],
+    () => CONFIG(categories)[defaultVisualization],
+    [defaultVisualization, categories],
   );
+
+  const newFilters = useMemo(() => ({
+    visualization: defaultVisualization,
+    category: { label: 'category_1' },
+    scenario: null,
+    ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+    ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion }) || { region: null },
+    ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) && { year: currentYear }) || { year: null },
+  }), [currentRegion, currentUnit, currentYear, defaultVisualization, defaultUnit]);
+
   const widgetData = useMemo(
     () => getGroupedValuesRelatedIndicators(
-      categories, visualization, filters, filteredRecords, regionsGeojson,
-    ),
-    [categories, visualization, filters, filteredRecords, regionsGeojson],
+      categories, newFilters, records, regionsGeojson,
+    ) || [],
+    [categories, newFilters, records, regionsGeojson],
   );
 
   return (
-    <section className="w-hull h-48">
-      {isFetchingRecords && (
-        <div className="w-full h-full flex items-center justify-center">
+    <section className="h-48 w-hull">
+      {(isFetchingMeta || isFetchingRecords) && (
+        <div className="flex items-center justify-center w-full h-full">
           <LoadingSpinner />
         </div>
       )}
 
-      {!isFetchingRecords && !filteredRecords.length && (
-      <div className="w-full h-full flex flex-col items-center justify-center">
-        <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+      {!!isFetchedRecords && !records.length && (
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
         <p>Data not found</p>
       </div>
       )}
-      {!isFetchingRecords && !!filteredRecords.length && (
-      <Link href={`/${group}/${subgroup}/${indicator}`} passHref>
-        <a href={`/${group}/${subgroup}/${indicator}`}>
-          {visualization === 'pie' && (
+
+      {!isFetchingRecords && !!records.length && (
+        (defaultVisualization === 'pie' && (
           <PieChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
           />
-          )}
-          {visualization === 'line' && (
+        )) || (defaultVisualization === 'line' && (
           <LineChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
           />
-          )}
-          {visualization === 'bar' && (
+        )) || (defaultVisualization === 'bar' && (
           <BarChart
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
           />
-          )}
-          {visualization === 'choropleth' && (
+        )) || (defaultVisualization === 'choropleth' && (
           <MapContainer
-            hasIteraction={false}
+            hasInteraction={false}
             style={{ marginTop: 30 }}
-            layers={widgetData.layers}
-            categories={categories}
+            layers={widgetData[0]?.layers || []}
           />
-          )}
-        </a>
-      </Link>
+        ))
       )}
     </section>
   );

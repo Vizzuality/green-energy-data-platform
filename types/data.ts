@@ -1,4 +1,4 @@
-export type SubgroupProps = {
+export type SubgroupProps = Readonly<{
   description: string,
   id: number;
   indicators: IndicatorProps[],
@@ -6,9 +6,9 @@ export type SubgroupProps = {
   name: string;
   published: boolean,
   default_indicator?: DataIdProps,
-};
+}>;
 
-export type ScenarioProps = Readonly <{
+export type ScenarioProps = Readonly<{
   name: string
 }>;
 
@@ -23,7 +23,7 @@ export interface GroupProps {
   subgroups: SubgroupProps[],
 }
 
-interface GeometryProps {
+interface Geometry {
   geometry: {
     coordinates: number[],
     type: string,
@@ -31,13 +31,12 @@ interface GeometryProps {
   type: string,
 }
 
-interface Region {
+interface Unit {
   id: string,
   name: string,
-  region_type: string,
 }
 
-interface Unit {
+interface RegionRecord {
   id: string,
   name: string,
 }
@@ -46,13 +45,15 @@ export interface Record {
   category_1?: string,
   category_2?: string,
   id: string,
+  name: string,
   slug: string,
   value: number,
   unit: Unit,
-  region: Region,
-  geometry?: GeometryProps[]
+  region: RegionRecord,
+  region_id: string;
+  geometry?: Geometry[]
   year: number,
-  visualizationTypes: string[],
+  visualization_types: string[],
   scenario: ScenarioProps
 }
 
@@ -77,10 +78,29 @@ export interface IndicatorProps {
   name: string;
   published: boolean,
   start_date: number,
-  visualizationTypes: string[],
+  visualization_types: string[],
   records: Record[],
   group: DataIdProps,
   subgroup: DataIdProps,
+}
+
+type Filter = Readonly<{
+  id: string,
+  name: string,
+}>;
+
+type VisualizationFilters = Readonly<{
+  years: number[],
+  regions: Filter,
+  units: Filter,
+  scenarios: string[]
+}>;
+
+export interface IndicatorMetadata {
+  line?: VisualizationFilters,
+  choropleth?: VisualizationFilters,
+  bar?: VisualizationFilters,
+  pie?: VisualizationFilters,
 }
 
 // pages
@@ -91,4 +111,10 @@ export interface ComparePageProps {
   g2: string,
   sg2: string,
   ind2: string
+}
+export interface Region {
+  id: string,
+  geometry: Geometry,
+  name: string,
+  region_type: string
 }
