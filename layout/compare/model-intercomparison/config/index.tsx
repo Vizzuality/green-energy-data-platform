@@ -158,13 +158,8 @@ const ChartConfig = (categories) => {
         tick: DefaultTick,
       },
       xAxis: {
-        type: 'category',
-        dataKey: 'province',
-        interval: 0,
-        tick: Tick,
-        label: {
-          content: LabelContent,
-        },
+        dataKey: 'year',
+        tick: DefaultTick,
       },
       tooltip: {
         isAnimationActive: false,

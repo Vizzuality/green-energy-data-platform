@@ -135,21 +135,20 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     // TO DO - API should be able to filter records by scenario
     if (filterByRegion) {
       return ({
-        // scenario,
+     //   scenario,
         visualization,
         region,
         unit,
       });
     }
     return ({
-      // scenario,
       visualization,
       unit,
       year,
     });
   }, [
     visualization,
-    // scenario,
+  //  scenario,
     region,
     unit,
     year,
@@ -210,10 +209,11 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
 
   const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      name, groupSlug, filters, records, regionsGeometries, units,
+    ) as WidgetDataTypes, [name, groupSlug, filters, records, regionsGeometries, units],
   );
 
+    console.log({categories, widgetData})
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.
@@ -252,10 +252,11 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       ...defaultCategory && { category: defaultCategory },
       ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...(['choropleth', 'bar'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
+      ...((['choropleth'].includes(currentVisualization) || groupSlug === 'model-intercomparison') && defaultScenario) && { scenario: currentScenario },
     }));
   }, [
     dispatch,
+    groupSlug,
     defaultYear,
     currentYear,
     currentRegion,

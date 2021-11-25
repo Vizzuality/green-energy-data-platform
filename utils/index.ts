@@ -260,33 +260,36 @@ export const getGroupedValues = (
     //     province,
     //   }));
 
-      if (groupSlug === 'model-intercomparison') {
-        data = flatten(chain(filteredData)
-        .groupBy('year')
-        .map((value) => flatten(chain(value)
-          .groupBy(label)
-          .map((res, key) => (
-            {
-              [key !== 'null' ? key : 'Total']: res.reduce(
-                (previous, current) => (current.value || 0) + previous, 0,
-              ),
-              province: res[0].region.name,
-              visualizationTypes: value[0].visualization_types,
-            }))
-          .value()))
-        .value());
-      const dataByProvince = groupBy(data, 'province');
-      return Object.keys(dataByProvince).map((province) => dataByProvince[province]
-        .reduce((acc, next) => {
-          const { province: currentProvince, ...rest } = next;
 
-          return ({
-            ...acc,
-            ...rest,
-          });
-        }, {
-          province,
-        }));
+    if (groupSlug === 'model-intercomparison') {
+      data = flatten(chain(records)
+      .groupBy('year')
+      .map((value) => flatten(chain(value)
+        .groupBy('category_1')
+        .map((res, key) => console.log({res, key}) || (
+          {
+            [key !== 'null' ? key : 'Total']: res.reduce(
+              (previous, current) => (current.value || 0) + previous, 0,
+            ),
+            year: res[0].year,
+            visualizationTypes: value[0].visualization_types,
+          }))
+        .value()))
+      .value());
+console.log({data, records, filteredData})
+    const dataByYear = groupBy(data, 'year');
+
+    return Object.keys(dataByYear).map((year) => dataByYear[year]
+      .reduce((acc, next) => {
+        const { year: currentYear, ...rest } = next;
+
+        return ({
+          ...acc,
+          ...rest,
+        });
+      }, {
+        year,
+      }));
       }
   };
 
