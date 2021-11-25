@@ -244,18 +244,33 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [visualization, indicatorData],
   );
   const currentYear = useMemo<number>(
-    () => (year || defaultYear?.value),
-    [year, defaultYear],
+    () => {
+      if (years.find(({ value }) => value === year)) {
+        return year;
+      }
+      return defaultYear?.value;
+    },
+    [year, years, defaultYear],
   );
 
   const currentUnit = useMemo<string>(
-    () => (unit || defaultUnit?.value),
-    [unit, defaultUnit],
+    () => {
+      if (units.find(({ value }) => value === unit)) {
+        return unit;
+      }
+      return defaultUnit?.value;
+    },
+    [unit, units, defaultUnit],
   );
 
   const currentRegion = useMemo<string>(
-    () => (region || defaultRegion?.value),
-    [region, defaultRegion],
+    () => {
+      if (regions.find(({ value }) => value === region)) {
+        return region;
+      }
+      return defaultRegion?.value;
+    },
+    [region, regions, defaultRegion],
   );
 
   const currentScenario = useMemo<string>(
@@ -541,6 +556,33 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                   )}
                 </div>
                 )}
+                {(!!filteredRecords.length && isSuccessRecords && !!units.length && visualization === 'choropleth') && (
+                <div className="flex items-center">
+                  <span className="pr-2">Unit:</span>
+                  <Tooltip
+                    placement="bottom-start"
+                    visible={dropdownVisibility.unit}
+                    interactive
+                    onClickOutside={() => closeDropdown('unit')}
+                    content={(
+                      <DropdownContent
+                        list={units}
+                        keyEl="unit"
+                        onClick={handleChange}
+                      />
+                      )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => { toggleDropdown('unit'); }}
+                      className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4"
+                    >
+
+                      <span>{displayUnit}</span>
+                    </button>
+                  </Tooltip>
+                </div>
+                )}
               </div>
 
               <div className="flex w-full h-full min-h-1/2">
@@ -560,6 +602,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
                 {(!!filteredRecords.length && isSuccessRecords) && (
                 <div className="flex flex-col w-full h-full py-8 min-h-1/2">
+                  {visualization !== 'choropleth' && (
                   <div className="flex items-center">
                     <Tooltip
                       placement="bottom-start"
@@ -577,12 +620,18 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       <button
                         type="button"
                         onClick={() => { toggleDropdown('unit'); }}
-                        className="flex items-center text-sm text-opacity-50 cursor-pointer text-gray1"
+                        className={cx(
+                          {
+                            'flex items-center text-sm text-opacity-50 cursor-pointer text-gray1': visualization !== 'choropleth',
+                            'flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
+                          },
+                        )}
                       >
                         <span>{displayUnit}</span>
                       </button>
                     </Tooltip>
                   </div>
+                  )}
                   {visualization !== 'choropleth'
                   && (
                     <div className="w-full h-96">

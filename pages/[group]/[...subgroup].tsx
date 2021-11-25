@@ -115,10 +115,10 @@ const GroupPage: FC = () => {
         >
           <button
             type="button"
-            className="flex items-center"
+            className="flex items-center pt-3"
             onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
           >
-            <h1 className="text-5.5xl pt-3 text-left">
+            <h1 className="text-5.5xl text-left">
               {data?.subgroup?.name}
             </h1>
             <Icon

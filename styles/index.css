@@ -49,16 +49,14 @@
     right: 8px;
   }
 
-  .mapboxgl-ctrl-icon {
-    &.mapboxgl-ctrl-fullscreen {
-      width: 5px !important;
-      height: 5px !important;
-      background-image: url('/images/enlarge.svg') !important;
-      padding: 5px !important;
-      background-repeat: no-repeat !important;
-      background-position: center !important;
-      background-size: cover !important;
-    }
+  .mapboxgl-ctrl-icon .mapboxgl-ctrl-fullscreen {
+    width: 5px !important;
+    height: 5px !important;
+    background-image: url('/images/enlarge.svg') !important;
+    padding: 5px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: cover !important;
   }
 
   /* News Gothic MT */
