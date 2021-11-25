@@ -64,6 +64,10 @@ type ChartProps = {
 };
 
 interface WidgetDataTypes {
+  name?: string,
+  value?: number,
+  region?: string,
+  year: number,
   visualizationTypes: string[];
   layers?: MapLayersProps[]
 }
@@ -230,7 +234,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     [visualization, widgetDataKeys],
   );
 
-  const widgetData = useMemo<WidgetDataTypes>(
+  const widgetData = useMemo<WidgetDataTypes | WidgetDataTypes[]>(
     () => getGroupedValues(
       name, groupSlug, filters, filteredRecords, regionsGeometries, units,
     ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
@@ -305,6 +309,20 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     indicatorSlug,
   ]);
 
+  const LegendPayload = useMemo<{ label: string, color: string }[]>(
+    () => {
+      let legendData;
+      if (visualization === 'pie') {
+        legendData = widgetData;
+      } else legendData = category?.label === 'category_1' ? categories : subcategories;
+
+      return legendData.map((item, index) => ({
+        label: item.name || item,
+        color: colors[index],
+      }));
+    }, [colors, widgetData, categories, category, subcategories, visualization],
+  );
+
   const DynamicChart = useMemo(() => {
     if (visualization && visualization !== 'choropleth') {
       return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
@@ -350,7 +368,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 </ul>
               )}
             >
-
               <button
                 type="button"
                 onClick={() => { toggleDropdown('indicator'); }}
@@ -359,8 +376,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 <span>{i18next.t('change')}</span>
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" />
               </button>
-
             </Tooltip>
+
             <Tooltip
               trigger="click"
               placement="bottom-start"
@@ -669,8 +686,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               )}
               {categories.length > 0 && visualization !== 'choropleth' && (
                 <Legend
-                  categories={category?.label === 'category_1' ? categories : subcategories}
                   className="mb-4 overflow-y-auto max-h-72"
+                  payload={LegendPayload}
                 />
               )}
               <DataSource indicatorSlug={indicatorSlug} />
