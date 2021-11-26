@@ -5,9 +5,8 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {
-  useQueryClient,
-} from 'react-query';
+
+import { useQueryClient } from 'react-query';
 
 import cx from 'classnames';
 
@@ -214,19 +213,35 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
       ? visualization : indicatorData?.default_visualization),
     [visualization, indicatorData],
   );
+
   const currentYear = useMemo<number>(
-    () => (year || defaultYear?.value),
-    [year, defaultYear],
+    () => {
+      if (years.find(({ value }) => value === year)) {
+        return year;
+      }
+      return defaultYear?.value;
+    },
+    [year, years, defaultYear],
   );
 
   const currentUnit = useMemo<string>(
-    () => (unit || defaultUnit?.value),
-    [unit, defaultUnit],
+    () => {
+      if (units.find(({ value }) => value === unit)) {
+        return unit;
+      }
+      return defaultUnit?.value;
+    },
+    [unit, units, defaultUnit],
   );
 
   const currentRegion = useMemo<string>(
-    () => (region || defaultRegion?.value),
-    [region, defaultRegion],
+    () => {
+      if (regions.find(({ value }) => value === region)) {
+        return region;
+      }
+      return defaultRegion?.value;
+    },
+    [region, regions, defaultRegion],
   );
 
   const currentScenario = useMemo<string>(
@@ -241,7 +256,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
-      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+      ...(currentUnit && { unit: currentUnit }) || { unit: null },
       ...defaultCategory && { category: defaultCategory },
       ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
@@ -260,6 +275,20 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
     currentVisualization,
     indicatorSlug,
   ]);
+
+  const LegendPayload = useMemo<{ label: string, color: string }[]>(
+    () => {
+      let legendData;
+      if (visualization === 'pie') {
+        legendData = widgetData;
+      } else legendData = category?.label === 'category_1' ? categories : subcategories;
+
+      return legendData.map((item, index) => ({
+        label: item.name || item,
+        color: colors[index],
+      }));
+    }, [colors, widgetData, categories, category, subcategories, visualization],
+  );
 
   const DynamicChart = useMemo(() => {
     if (visualization && visualization !== 'choropleth') {
@@ -485,7 +514,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
           )}
           {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
-            categories={category?.label === 'category_1' ? categories : subcategories}
+            payload={LegendPayload}
             className="max-h-72 overflow-y-auto mb-4"
           />
           )}

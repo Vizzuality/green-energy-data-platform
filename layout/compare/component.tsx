@@ -11,13 +11,7 @@ import cx from 'classnames';
 
 import { RootState } from 'store/store';
 
-<<<<<<< HEAD
-import {
-  setFilters,
-} from 'store/slices/indicator';
-=======
 import { setFilters } from 'store/slices/indicator';
->>>>>>> compare props + router removed
 import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
@@ -41,13 +35,6 @@ import Icon from 'components/icon';
 import VisualizationsNav from 'components/visualizations-nav';
 
 import { IndicatorProps } from 'types/data';
-<<<<<<< HEAD
-
-import General from './general';
-import ModelIntercomparison from './model-intercomparison';
-
-=======
->>>>>>> compare props + router removed
 import { CompareLayoutProps } from './types';
 
 import General from './general';
@@ -461,11 +448,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
           </p>
 
-<<<<<<< HEAD
-          {groupSlug !== 'model-intercomparison' && <General />}
-          {groupSlug === 'model-intercomparison' && <ModelIntercomparison />}
-
-=======
           {groupSlug !== 'model-intercomparison' && (
             <General
               groupSlug={groupSlug}
@@ -482,7 +464,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               visualization={visualization}
             />
           )}
->>>>>>> compare props + router removed
         </div>
       </div>
     </div>

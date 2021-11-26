@@ -102,16 +102,14 @@ export const filterRecords = (
         && (d.unit.id === unit || !unit) // some idicators has no unit
         && d.scenario?.name === scenario) return true;
     }
+
     if (visualization === 'bar') {
-      if (groupSlug === 'model-intercomparison') {
-        if (year === d.year
+      if ((groupSlug === 'model-intercomparison'
           && d.scenario.name === scenario
-          && d.unit.id === unit
-        ) return true;
-      }
-      if (year === d.year
-        && d.unit.id === unit
-        && (d.region_id !== ID_CHINA)
+          && d.unit.id === unit)
+          || (groupSlug !== 'model-intercomparison'
+          && year === d.year
+          && d.unit.id === unit)
       ) return true;
     }
 
@@ -233,64 +231,54 @@ export const getGroupedValues = (
     .value();
 
   const getBarData = () => {
-    // data = flatten(chain(filteredData)
-    //   .groupBy('region_id')
-    //   .map((value) => flatten(chain(value)
-    //     .groupBy(label)
-    //     .map((res, key) => (
-    //       {
-    //         [key !== 'null' ? key : 'Total']: res.reduce(
-    //           (previous, current) => (current.value || 0) + previous, 0,
-    //         ),
-    //         province: res[0].region.name,
-    //         visualizationTypes: value[0].visualization_types,
-    //       }))
-    //     .value()))
-    //   .value());
-    // const dataByProvince = groupBy(data, 'province');
-    // return Object.keys(dataByProvince).map((province) => dataByProvince[province]
-    //   .reduce((acc, next) => {
-    //     const { province: currentProvince, ...rest } = next;
+    if (groupSlug !== 'model-intercomparison') {
+      data = flatten(chain(filteredData)
+        .groupBy('region_id')
+        .map((value) => flatten(chain(value)
+          .groupBy(label)
+          .map((res, key) => (
+            {
+              [key !== 'null' ? key : 'Total']: res.reduce(
+                (previous, current) => (current.value || 0) + previous, 0,
+              ),
+              province: res[0].region.name,
+              visualizationTypes: value[0].visualization_types,
+            }))
+          .value()))
+        .value());
+      const dataByProvince = groupBy(data, 'province');
+      return Object.keys(dataByProvince).map((province) => dataByProvince[province]
+        .reduce((acc, next) => {
+          const { province: currentProvince, ...rest } = next;
 
-    //     return ({
-    //       ...acc,
-    //       ...rest,
-    //     });
-    //   }, {
-    //     province,
-    //   }));
-
+          return ({
+            ...acc,
+            ...rest,
+          });
+        }, {
+          province,
+        }));
+    }
 
     if (groupSlug === 'model-intercomparison') {
-      data = flatten(chain(records)
-      .groupBy('year')
-      .map((value) => flatten(chain(value)
+      data = chain(records)
         .groupBy('category_1')
-        .map((res, key) => console.log({res, key}) || (
-          {
-            [key !== 'null' ? key : 'Total']: res.reduce(
-              (previous, current) => (current.value || 0) + previous, 0,
-            ),
-            year: res[0].year,
-            visualizationTypes: value[0].visualization_types,
-          }))
-        .value()))
-      .value());
-console.log({data, records, filteredData})
-    const dataByYear = groupBy(data, 'year');
-
-    return Object.keys(dataByYear).map((year) => dataByYear[year]
-      .reduce((acc, next) => {
-        const { year: currentYear, ...rest } = next;
-
-        return ({
-          ...acc,
-          ...rest,
-        });
-      }, {
-        year,
-      }));
-      }
+        .map((value) => flatten(chain(value)
+          .groupBy('year')
+          .map((res) => (
+            {
+              model: res[0].category_1,
+              [res[0].category_2]: res.reduce(
+                (previous, current) => (current.value || 0) + previous, 0,
+              ),
+              year: res[0].year,
+              visualizationTypes: value[0].visualization_types,
+            }))
+          .value()))
+        .value();
+      return data;
+    }
+    return data;
   };
 
   const getChoroplethData = (): {

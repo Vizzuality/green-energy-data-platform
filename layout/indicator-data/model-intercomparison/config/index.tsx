@@ -72,6 +72,7 @@ const ChartConfig = (categories) => {
   };
 
   const getBars = () => {
+    console.log(categories)
     if (categories.length) {
       return categories.map((c) => ({
         dataKey: c,
@@ -191,6 +192,33 @@ const ChartConfig = (categories) => {
       xAxis: {
         dataKey: 'province',
         tick: DefaultTick,
+      },
+    },
+    model_intercomparison_bar: {
+      margin: {
+        top: 20, right: 0, left: 0, bottom: 100,
+      },
+      width: '200px',
+      height: 100,
+      cartesianGrid: {
+        vertical: false,
+      },
+      isAnimationActive: false,
+      bars: getBars(),
+      yAxis: {
+        tick: DefaultTick,
+      },
+      xAxis: {
+        dataKey: 'year',
+        interval: 0,
+        tick: Tick,
+        label: {
+          content: LabelContent,
+        },
+      },
+      tooltip: {
+        isAnimationActive: false,
+        content: TooltipContent,
       },
     },
     table: {

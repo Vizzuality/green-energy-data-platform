@@ -46,16 +46,21 @@ import i18next from 'i18next';
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
+
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 
 import ChartConfig from './config';
+
 import IndicatorCompareDataProps from '../types';
 
-type ChartProps = {
-  widgetData: any,
-  widgetConfig: any,
-  colors: string[],
-};
+interface WidgetDataTypes {
+  name?: string,
+  value?: number,
+  region?: string,
+  year: number,
+  visualizationTypes: string[];
+  layers?: MapLayersProps[]
+}
 
 const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   groupSlug,
@@ -68,15 +73,15 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     year: false,
     region: false,
     unit: false,
-    scenario: false,
     category: { label: 'category_1', value: null },
+    scenario: false,
   });
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, region, unit, category, scenario, visualization,
+    year, unit, region, category, scenario, visualization,
   } = filters;
 
   const toggleDropdown = useCallback((key) => {
@@ -168,31 +173,29 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     enabled: !!indicatorSlug && !!visualization,
   });
 
-  const {
-    name,
-  } = indicatorData;
+  const { name } = indicatorData;
 
   const categories = useMemo(
     () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
 
-  const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(records), [records],
-  );
-
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categories, groupSlug),
-    [records, filters, categories, groupSlug],
+    () => filterRecords(records, filters, categories),
+    [records, filters, categories],
   );
 
   const colors = useColors(categories.length);
+  const subcategories = useMemo(
+    () => getSubcategoriesFromRecords(records), [records],
+  );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[visualization],
     [visualization, widgetDataKeys],
   );
-  const widgetData = useMemo<WidgetDataTypes>(
+
+  const widgetData = useMemo<WidgetDataTypes | WidgetDataTypes[]>(
     () => getGroupedValues(
       name, groupSlug, filters, filteredRecords, regionsGeometries, units,
     ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
@@ -206,18 +209,33 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     [visualization, indicatorData],
   );
   const currentYear = useMemo<number>(
-    () => (year || defaultYear?.value),
-    [year, defaultYear],
+    () => {
+      if (years.find(({ value }) => value === year)) {
+        return year;
+      }
+      return defaultYear?.value;
+    },
+    [year, years, defaultYear],
   );
 
   const currentUnit = useMemo<string>(
-    () => (unit || defaultUnit?.value),
-    [unit, defaultUnit],
+    () => {
+      if (units.find(({ value }) => value === unit)) {
+        return unit;
+      }
+      return defaultUnit?.value;
+    },
+    [unit, units, defaultUnit],
   );
 
   const currentRegion = useMemo<string>(
-    () => (region || defaultRegion?.value),
-    [region, defaultRegion],
+    () => {
+      if (regions.find(({ value }) => value === region)) {
+        return region;
+      }
+      return defaultRegion?.value;
+    },
+    [region, regions, defaultRegion],
   );
 
   const currentScenario = useMemo<string>(
@@ -251,6 +269,20 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     currentVisualization,
     indicatorSlug,
   ]);
+
+  const LegendPayload = useMemo<{ label: string, color: string }[]>(
+    () => {
+      let legendData;
+      if (visualization === 'pie') {
+        legendData = widgetData;
+      } else legendData = category?.label === 'category_1' ? categories : subcategories;
+
+      return legendData.map((item, index) => ({
+        label: item.name || item,
+        color: colors[index],
+      }));
+    }, [colors, widgetData, categories, category, subcategories, visualization],
+  );
 
   const DynamicChart = useMemo(() => {
     if (visualization && visualization !== 'choropleth') {
@@ -444,9 +476,9 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             onClick={setFilters}
           />
           )}
-          {categories.length > 0 && visualization !== 'choropleth' && (
+          {LegendPayload.length > 0 && visualization !== 'choropleth' && (
           <Legend
-            categories={category?.label === 'category_1' ? categories : subcategories}
+            payload={LegendPayload}
             className="max-h-72 overflow-y-auto mb-4"
           />
           )}

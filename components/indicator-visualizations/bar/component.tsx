@@ -27,13 +27,21 @@ interface ConfigProps {
 }
 
 interface ChartProps {
+  width?: number,
+  height?: number,
   widgetData: Object[],
   widgetConfig: ConfigProps,
   color?: string,
   colors: string[],
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps) => {
+const Chart: FC<ChartProps> = ({
+  widgetData,
+  widgetConfig,
+  colors,
+  width,
+  height,
+}: ChartProps) => {
   const {
     cartesianGrid,
     cartesianAxis,
@@ -45,8 +53,8 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps)
   } = widgetConfig;
 
   return (
-    <ResponsiveContainer width="100%" height={500} {...rest}>
-      <BarChart width={400} height={500} data={widgetData} {...rest}>
+    <ResponsiveContainer width="100%" height={height} {...rest}>
+      <BarChart width={width} height={height} data={widgetData} {...rest}>
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}

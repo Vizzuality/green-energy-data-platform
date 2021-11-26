@@ -5,9 +5,8 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {
-  useQueryClient,
-} from 'react-query';
+
+import { useQueryClient } from 'react-query';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -49,12 +48,6 @@ import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
 import IndicatorDataProps from '../types';
-
-type ChartProps = {
-  widgetData: any,
-  widgetConfig: any,
-  colors: string[],
-};
 
 interface WidgetDataTypes {
   visualizationTypes: string[];
@@ -135,7 +128,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     // TO DO - API should be able to filter records by scenario
     if (filterByRegion) {
       return ({
-     //   scenario,
+        //   scenario,
         visualization,
         region,
         unit,
@@ -148,7 +141,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     });
   }, [
     visualization,
-  //  scenario,
+    //  scenario,
     region,
     unit,
     year,
@@ -201,19 +194,20 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     () => getSubcategoriesFromRecords(records), [records],
   );
 
-  const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
+  const widgetDataKeys = subcategories;
+  const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
+  console.log(configType)
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualization],
+    () => ChartConfig(widgetDataKeys)[configType],
     [visualization, widgetDataKeys],
   );
-
   const widgetData = useMemo<WidgetDataTypes>(
     () => getGroupedValues(
-      name, groupSlug, filters, records, regionsGeometries, units,
-    ) as WidgetDataTypes, [name, groupSlug, filters, records, regionsGeometries, units],
-  );
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+      ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      );
 
-    console.log({categories, widgetData})
+      console.log({ChartConfig, widgetConfig, widgetData})
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.
@@ -221,19 +215,35 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       ? visualization : indicatorData?.default_visualization),
     [visualization, indicatorData],
   );
+
   const currentYear = useMemo<number>(
-    () => (year || defaultYear?.value),
-    [year, defaultYear],
+    () => {
+      if (years.find(({ value }) => value === year)) {
+        return year;
+      }
+      return defaultYear?.value;
+    },
+    [year, years, defaultYear],
   );
 
   const currentUnit = useMemo<string>(
-    () => (unit || defaultUnit?.value),
-    [unit, defaultUnit],
+    () => {
+      if (units.find(({ value }) => value === unit)) {
+        return unit;
+      }
+      return defaultUnit?.value;
+    },
+    [unit, units, defaultUnit],
   );
 
   const currentRegion = useMemo<string>(
-    () => (region || defaultRegion?.value),
-    [region, defaultRegion],
+    () => {
+      if (regions.find(({ value }) => value === region)) {
+        return region;
+      }
+      return defaultRegion?.value;
+    },
+    [region, regions, defaultRegion],
   );
 
   const currentScenario = useMemo<string>(
@@ -269,6 +279,20 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     indicatorSlug,
   ]);
 
+  const LegendPayload = useMemo<{ label: string, color: string }[]>(
+    () => {
+      let legendData;
+      if (visualization === 'pie') {
+        legendData = widgetData;
+      } else legendData = category?.label === 'category_1' ? categories : subcategories;
+
+      return legendData.map((item, index) => ({
+        label: item.name || item,
+        color: colors[index],
+      }));
+    }, [colors, widgetData, categories, category, subcategories, visualization],
+  );
+
   return (
     <section className={`flex flex-col  ${className}`}>
       <div className="flex justify-between">
@@ -287,7 +311,8 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
           <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
           {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
-            categories={category?.label === 'category_1' ? categories : subcategories}
+            payload={LegendPayload}
+            className="max-h-72 overflow-y-auto mb-4"
           />
           )}
         </section>
@@ -444,11 +469,13 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                   )}
               {visualization === 'bar'
                   && (
-                    <div className="w-full h-96 flex">
-                      {categories.map((s) => (
+                    <div className="w-full h-full flex flex-wrap">
+                      {widgetData.map((data) => (
                         <BarChart
-                          key={s}
-                          widgetData={widgetData}
+                          key={data.label}
+                          height={250}
+                          width={250}
+                          widgetData={data}
                           widgetConfig={widgetConfig}
                           colors={colors}
                         />
