@@ -175,8 +175,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   );
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categories, groupSlug),
-    [records, filters, categories, groupSlug],
+    () => filterRecords(records, filters, categories),
+    [records, filters, categories],
   );
 
   const colors = useColors(categories.length);

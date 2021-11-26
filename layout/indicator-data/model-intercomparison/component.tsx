@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
+
 import cx from 'classnames';
 
 import { useQueryClient } from 'react-query';
@@ -54,16 +55,6 @@ import ChartConfig from 'components/indicator-visualizations/config';
 import { ChartLine, ChartBar } from 'types/model-intercomparison';
 import IndicatorDataProps from '../types';
 
-type ChartProps = {
-  widgetData: any,
-  widgetConfig: any,
-  colors: string[],
-};
-
-interface WidgetDataTypes {
-  visualizationTypes: string[];
-  layers?: MapLayersProps[]
-}
 
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,

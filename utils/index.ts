@@ -108,6 +108,7 @@ export const filterRecords = (
 
       ) return true;
     }
+
     if (visualization === 'bar') {
       if ((groupSlug === 'model-intercomparison'
           && d.scenario.id === scenario
