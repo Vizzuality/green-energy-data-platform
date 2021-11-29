@@ -1,7 +1,16 @@
 import React, { FC, useState } from 'react';
 import { Layer } from 'recharts';
 
-import { uniq } from 'lodash';
+import COLORS from './constants';
+
+type Source = Readonly<{
+  name: string,
+  category: string
+}>;
+
+type Payload = Readonly<{
+  source: Source
+}>;
 
 interface DemoProps {
   sourceX?: number,
@@ -12,6 +21,7 @@ interface DemoProps {
   targetControlX?: number,
   linkWidth?: number,
   index?: number,
+  payload: Payload
 }
 const Demo: FC<DemoProps> = ({
   sourceX,
@@ -21,20 +31,23 @@ const Demo: FC<DemoProps> = ({
   sourceControlX,
   targetControlX,
   linkWidth,
-  nodes,
   payload,
   index,
 }: DemoProps) => {
-  const [color, setColor] = useState('#45CBF4');
-  const categories = uniq(
-    nodes.map((node) => (node.category)));
+  const [opacity, setOpacity] = useState(0.3);
 
-  const COLORS = ['#1B5183', '#1E6D86', '#2A8FAF', '#C9E6E8', '#929292', '#766964', '#F8981C', '#760015'];
+  const currentColor = COLORS.find((c) => payload.source.name.toLowerCase()
+    .includes(c.label.toLowerCase())) || { label: 'General', value: '#CCCCCC' };
 
-  const colorIndex = categories.indexOf(payload.source.category);
-  console.log(colorIndex, payload)
+  const gradientID = `linkGradient${index}`;
   return (
     <Layer key={`CustomLink${index}`}>
+      <defs>
+        <linearGradient id={gradientID}>
+          <stop offset="100%" stopColor={currentColor.value} stopOpacity={opacity} />
+          {/* <stop offset="20%" stopColor={currentColor.value} stopOpacity={0.5} /> */}
+        </linearGradient>
+      </defs>
       <path
         d={`
             M${sourceX},${sourceY + linkWidth / 2}
@@ -47,12 +60,13 @@ const Demo: FC<DemoProps> = ({
               ${sourceX},${sourceY - linkWidth / 2}
             Z
           `}
-        fill={COLORS[colorIndex]}
+        fill={`url(#${gradientID})`}
         opacity={0.5}
         strokeWidth="10"
-        onMouseEnter={() => setColor('#009DCD')}
-        onMouseLeave={() => setColor('#45CBF4')}
+        onMouseEnter={() => setOpacity(1)}
+        onMouseLeave={() => setOpacity(0.3)}
       />
+
     </Layer>
   );
 };
