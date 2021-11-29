@@ -72,7 +72,6 @@ const ChartConfig = (categories) => {
   };
 
   const getBars = () => {
-    console.log(categories)
     if (categories.length) {
       return categories.map((c) => ({
         dataKey: c,

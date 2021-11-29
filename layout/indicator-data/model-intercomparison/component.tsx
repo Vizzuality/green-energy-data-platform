@@ -43,16 +43,16 @@ import i18next from 'i18next';
 
 import { useColors } from 'hooks/utils';
 
-import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+// import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
 import IndicatorDataProps from '../types';
 
-interface WidgetDataTypes {
-  visualizationTypes: string[];
-  layers?: MapLayersProps[]
-}
+// interface WidgetDataTypes {
+//   visualizationTypes: string[];
+//   layers?: MapLayersProps[]
+// }
 
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
@@ -196,18 +196,16 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
 
   const widgetDataKeys = subcategories;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
-  console.log(configType)
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[configType],
-    [visualization, widgetDataKeys],
+    [configType, widgetDataKeys],
   );
-  const widgetData = useMemo<WidgetDataTypes>(
+  const widgetData = useMemo<Object[]>(
     () => getGroupedValues(
       name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-      ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
-      );
+    ) as Object[], [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+  );
 
-      console.log({ChartConfig, widgetConfig, widgetData})
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.
