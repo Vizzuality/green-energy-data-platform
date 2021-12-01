@@ -19,7 +19,6 @@ import {
 } from 'hooks/indicators';
 
 // components
-import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
@@ -151,7 +150,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && scenario && (!!region || !!year),
+      enabled: !!visualization && !!unit && scenario && !!region,
     },
   );
 
@@ -245,7 +244,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     [scenario, defaultScenario],
   );
 
-  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
@@ -293,7 +291,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
         <section className="w-full">
           {categories.length > 0 && (
           <Filters
-            visualizationType={visualization}
+            visualization={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length}
             className="overflow-y-auto mb-4"
@@ -314,39 +312,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       <div>
 
         <section className="flex flex-col w-full">
-          <div className="flex py-4">
-            {/* year filter */}
-            {['bar', 'pie', 'choropleth'].includes(visualization) && (
-            <div className="flex items-center">
-              <span className="pr-2">Showing for:</span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]?.label}</span>)}
-              {years.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.year}
-                interactive
-                onClickOutside={() => closeDropdown('year')}
-                content={(
-                  <DropdownContent
-                    list={years}
-                    keyEl="year"
-                    onClick={handleChange}
-                  />
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('year'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
-                  <span>{displayYear || i18next.t('dates')}</span>
-                  <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                </button>
-              </Tooltip>
-              )}
-            </div>
-            )}
-
+          <div className="flex py-4 items-center">
             {/* region filter */}
             {(['line'].includes(visualization) && !!regions.length) && (
             <div className="flex items-center">

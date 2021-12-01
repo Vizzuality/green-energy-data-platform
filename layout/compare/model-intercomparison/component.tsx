@@ -19,7 +19,6 @@ import {
 } from 'hooks/indicators';
 
 // components
-import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
@@ -38,7 +37,7 @@ import {
 
 import { RootState } from 'store/store';
 
-import { setFilters } from 'store/slices/indicator';
+import { IndicatorFilters, setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
 import { useColors } from 'hooks/utils';
@@ -105,7 +104,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     });
   }, [dispatch, dropdownVisibility]);
 
-  const filters = useMemo(() => ({
+  const filters = useMemo<IndicatorFilters>(() => ({
     year,
     region,
     unit,
@@ -159,7 +158,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && (!!region || !!year),
+      enabled: !!visualization && !!unit && !!region,
     },
   );
 
@@ -186,8 +185,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   );
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categories),
-    [records, filters, categories],
+    () => filterRecords(records, filters, categories, groupSlug),
+    [records, filters, categories, groupSlug],
   );
 
   const colors = useColors(categories.length);
@@ -249,7 +248,6 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     [scenario, defaultScenario],
   );
 
-  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
@@ -296,7 +294,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
         <section className="w-full">
           {categories.length > 0 && (
           <Filters
-            visualizationType={visualization}
+            visualization={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length}
             className="overflow-y-auto mb-4"
@@ -314,39 +312,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       <div>
 
         <section className="flex flex-col w-full">
-          <div className="flex py-4">
-            {/* year filter */}
-            {['bar', 'pie', 'choropleth'].includes(visualization) && (
-            <div className="flex items-center">
-              <span className="pr-2">Showing for:</span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
-              {years.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.year}
-                interactive
-                onClickOutside={() => closeDropdown('year')}
-                content={(
-                  <DropdownContent
-                    list={years}
-                    keyEl="year"
-                    onClick={handleChange}
-                  />
-                      )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('year'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
-                  <span>{year || i18next.t('dates')}</span>
-                  <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                </button>
-              </Tooltip>
-              )}
-            </div>
-            )}
-
+          <div className="flex py-4 items-center">
             {/* region filter */}
             {(['line'].includes(visualization) && !!regions.length) && (
             <div className="flex items-center">
@@ -374,7 +340,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   onClick={() => { toggleDropdown('region'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{region || 'Select a region'}</span>
+                  <span>{displayRegion || 'Select a region'}</span>
                 </button>
               </Tooltip>
               )}
@@ -415,14 +381,18 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
             <LoadingSpinner />
             )}
 
-            {!isFetchingRecords && !filteredRecords.length && (
-            <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-              <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-              <p>Data not found</p>
-            </div>
-            )}
+            {isFetchedRecords
+                && !isFetchingRecords
+                && !filteredRecords.length
+                && !!visualization && !!unit && (!!region || !!year)
+                && (
+                  <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                    <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
+                    <p>Data not found</p>
+                  </div>
+                )}
 
-            {(!!filteredRecords.length && !isFetchingRecords) && (
+            {(!!filteredRecords.length && isSuccessRecords && !!units.length) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
               <div className="flex items-center">
                 <Tooltip
@@ -443,7 +413,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                     onClick={() => { toggleDropdown('unit'); }}
                     className="flex items-center cursor-pointer text-sm text-gray1 text-opacity-50"
                   >
-                    <span>{unit}</span>
+                    <span>{displayUnit}</span>
                   </button>
                 </Tooltip>
               </div>

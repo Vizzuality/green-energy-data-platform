@@ -17,6 +17,7 @@ import {
 
 type Object = {
   [key: string]: string | number | (() => void),
+  year: number,
 };
 
 interface ConfigProps {

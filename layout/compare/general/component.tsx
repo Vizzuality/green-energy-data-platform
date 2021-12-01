@@ -47,19 +47,14 @@ import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
 
-import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
-
 import ChartConfig from './config';
 
 import IndicatorCompareDataProps from '../types';
 
-interface WidgetDataTypes {
-  name?: string,
-  value?: number,
-  region?: string,
-  year: number,
-  visualizationTypes: string[];
-  layers?: MapLayersProps[]
+interface ChartProps {
+  widgetData: unknown[],
+  widgetConfig: unknown,
+  colors: string[]
 }
 
 const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
@@ -180,8 +175,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   );
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categories),
-    [records, filters, categories],
+    () => filterRecords(records, filters, categories, groupSlug),
+    [records, filters, categories, groupSlug],
   );
 
   const colors = useColors(categories.length);
@@ -195,10 +190,10 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     [visualization, widgetDataKeys],
   );
 
-  const widgetData = useMemo<WidgetDataTypes | WidgetDataTypes[]>(
+  const widgetData = useMemo(
     () => getGroupedValues(
       name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(

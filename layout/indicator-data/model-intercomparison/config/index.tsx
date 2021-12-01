@@ -197,8 +197,8 @@ const ChartConfig = (categories) => {
       margin: {
         top: 20, right: 0, left: 0, bottom: 100,
       },
-      width: '200px',
-      height: 100,
+      width: 200,
+      height: 250,
       cartesianGrid: {
         vertical: false,
       },

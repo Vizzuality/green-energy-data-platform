@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 import Icon from 'components/icon';
 
 interface FiltersProps {
-  visualizationType: string,
+  visualization: string,
   categories: string[]
   hasSubcategories: boolean,
   className?: string,
@@ -18,7 +18,7 @@ interface FiltersProps {
 }
 
 const Filters: FC<FiltersProps> = ({
-  visualizationType,
+  visualization,
   categories,
   hasSubcategories,
   className = '',
@@ -33,7 +33,7 @@ const Filters: FC<FiltersProps> = ({
   // );
 
   // useEffect(() => {
-  //   if (visualizationType === 'choropleth') {
+  //   if (visualization === 'choropleth') {
   //     const hasTotal = categories.includes('Total' || '全部的');
   //     if (hasTotal) {
   //       const value = current === 'cn' ? '全部的' : 'Total';
@@ -45,16 +45,16 @@ const Filters: FC<FiltersProps> = ({
   //       dispatch(onClick({ category: { label: 'category_2', value } }));
   //     }
   //   }
-  // }, [dispatch, onClick, categories, visualizationType, current]);
+  // }, [dispatch, onClick, categories, visualization, current]);
 
   useEffect(() => {
-    if (visualizationType === 'choropleth') {
+    if (visualization === 'choropleth') {
       const value = categories[0];
       setActive(value);
       dispatch(onClick({ category: { label: 'category_2', value } }));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, onClick, visualizationType]);
+  }, [dispatch, onClick, visualization]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
