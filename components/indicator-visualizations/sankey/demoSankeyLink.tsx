@@ -21,7 +21,7 @@ interface DemoProps {
   targetControlX?: number,
   linkWidth?: number,
   index?: number,
-  payload: Payload
+  payload?: Payload
 }
 const Demo: FC<DemoProps> = ({
   sourceX,
