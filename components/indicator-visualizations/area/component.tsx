@@ -36,7 +36,7 @@ interface ConfigProps {
 }
 
 interface ChartProps {
-  widgetData: any[],
+  widgetData: unknown[],
   widgetConfig: ConfigProps,
   colors: string[]
 }

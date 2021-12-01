@@ -4,27 +4,26 @@ type CategoryObject = {
   label: string, value?: string
 };
 
-export type IndicatorCompareFilters = {
+export type IndicatorRelatedFilters = Readonly<{
   year: number,
   region: string,
   unit: string,
   category: CategoryObject,
   scenario: string,
-  visualization: string,
-};
+  visualization: string
+}>;
 
 const initialState = {
   year: null,
-  scenario: null,
-  visualization: null,
-} as IndicatorCompareFilters;
+  category: { label: 'category_1' },
+} as IndicatorRelatedFilters;
 
 export const indicatorSlice = createSlice({
-  name: 'indicator-compare-filters',
+  name: 'indicator-filters',
   initialState,
   reducers: {
-    setCompareFilters: (
-      state: IndicatorCompareFilters,
+    setRelatedFilters: (
+      state: IndicatorRelatedFilters,
       action: PayloadAction<{ [key: string]: string | number | CategoryObject }>,
     ) => ({
       ...state,
@@ -34,7 +33,7 @@ export const indicatorSlice = createSlice({
 });
 
 export const {
-  setCompareFilters,
+  setRelatedFilters,
 } = indicatorSlice.actions;
 
 export default indicatorSlice.reducer;

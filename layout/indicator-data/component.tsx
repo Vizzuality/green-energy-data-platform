@@ -22,6 +22,7 @@ import { useSubgroup } from 'hooks/subgroups';
 import {
   useIndicator,
   useIndicatorRecords,
+  useIndicatorMetadata,
 } from 'hooks/indicators';
 
 // components
@@ -37,14 +38,8 @@ import LoadingSpinner from 'components/loading-spinner';
 // utils
 import {
   filterRecords,
-  getGroupedValues,
-  getYearsFromRecords,
-  getDefaultYearFromRecords,
-  getUnitsFromRecords,
-  getDefaultUnitFromRecords,
-  getRegionsFromRecords,
-  getDefaultRegionFromRecords,
   getCategoriesFromRecords,
+  getGroupedValues,
   getSubcategoriesFromRecords,
 } from 'utils';
 
@@ -53,9 +48,10 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
-import { useRegions } from 'hooks/regions';
+// hooks
 import { useColors } from 'hooks/utils';
 
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from './config';
 
@@ -67,6 +63,15 @@ type ChartProps = {
   colors: string[],
 };
 
+interface WidgetDataTypes {
+  name?: string,
+  value?: number,
+  region?: string,
+  year: number,
+  visualizationTypes: string[];
+  layers?: MapLayersProps[]
+}
+
 const IndicatorData: FC<IndicatorDataProps> = ({
   className,
 }: IndicatorDataProps) => {
@@ -76,6 +81,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+    scenario: false,
   });
 
   const { data: groups } = useGroups({
@@ -90,9 +96,10 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, region, unit, category,
-  } = useSelector((state: RootState) => state.indicator);
+    year, unit, region, category, scenario, visualization,
+  } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -135,13 +142,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const filters = useMemo(() => ({
-    year,
-    region,
-    unit,
-    category,
-  }), [year, region, unit, category]);
-
   const {
     data: indicatorData,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
@@ -155,7 +155,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       name: null,
       published: false,
       start_date: null,
-      visualizationTypes: [],
+      visualization_types: [],
       group: null,
       subgroup: null,
     },
@@ -163,107 +163,184 @@ const IndicatorData: FC<IndicatorDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const [visualizationType, setVisualizationType] = useState(indicatorData.default_visualization);
+  const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
-  const { data: regionsGeojson } = useRegions(indicatorSlug, visualizationType, {
-    refetchOnWindowFocus: false,
-  });
+  const filtersIndicator = useMemo(() => {
+    if (filterByRegion) {
+      return ({
+        visualization,
+        region,
+        unit,
+      });
+    }
+    return ({
+      visualization,
+      unit,
+      year,
+    });
+  }, [visualization, region, unit, year, filterByRegion]);
 
   const {
     data: records,
     isFetching: isFetchingRecords,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, {
+    isFetched: isFetchedRecords,
+    isSuccess: isSuccessRecords,
+  } = useIndicatorRecords(
+    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && !!unit && (!!region || !!year),
+    },
+  );
+
+  const {
+    defaultCategory,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    regionsGeometries,
+    units,
+    defaultUnit,
+    scenarios,
+    defaultScenario,
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
     refetchOnWindowFocus: false,
+    enabled: !!indicatorSlug && !!visualization,
   });
 
   const {
     name,
-    categories: categoriesIndicator,
-    visualizationTypes: visualizationTypesIndicator,
+    visualization_types: visualizationTypesIndicator,
     description,
   } = indicatorData;
 
-  const filteredRecords = useMemo(
-    () => filterRecords(records, filters, visualizationType, categoriesIndicator),
-    [records, filters, visualizationType, categoriesIndicator],
+  const categories = useMemo(
+    () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
-  const categories = useMemo(() => getCategoriesFromRecords(filteredRecords), [filteredRecords]);
+
+  const filteredRecords = useMemo(
+    () => filterRecords(records, filters, categories),
+    [records, filters, categories],
+  );
 
   const colors = useColors(categories.length);
   const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(filteredRecords), [filteredRecords],
+    () => getSubcategoriesFromRecords(records), [records],
   );
-
-  const defaultYear = useMemo(
-    () => getDefaultYearFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const regions = useMemo(() => getRegionsFromRecords(records, visualizationType, unit),
-    [records, visualizationType, unit]);
-
-  const regionsWithVisualization = useMemo(
-    () => getDefaultRegionFromRecords(records, visualizationType), [records, visualizationType],
-  );
-  const defaultRegion = regionsWithVisualization.includes('China') ? 'China' : regionsWithVisualization?.[0];
-
-  const years = useMemo(() => getYearsFromRecords(records, visualizationType, region, unit),
-    [records, visualizationType, region, unit]);
-
-  const units = useMemo(() => getUnitsFromRecords(records, visualizationType, region, year),
-    [records, visualizationType, region, year]);
-
-  const defaultUnit = useMemo(
-    () => getDefaultUnitFromRecords(records, visualizationType), [records, visualizationType],
-  );
-
-  const defaultCategory = 'category_1';
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualizationType],
-    [visualizationType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys)[visualization],
+    [visualization, widgetDataKeys],
   );
-  const widgetData = useMemo(
+
+  const widgetData = useMemo<WidgetDataTypes | WidgetDataTypes[]>(
     () => getGroupedValues(
-      name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson,
-    ), [name, groupSlug, categories, visualizationType, filters, filteredRecords, regionsGeojson],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
-  useEffect(() => {
-    const {
-      default_visualization: defaultVisualization,
-    } = indicatorData;
+  const currentVisualization = useMemo<string>(
+    // if the current visualization is not allowed when the user changes the indicator,
+    // it will fallback into the default one. If it is, it will remain.
+    () => (indicatorData?.visualization_types?.includes(visualization)
+      ? visualization : indicatorData?.default_visualization),
+    [visualization, indicatorData],
+  );
+  const currentYear = useMemo<number>(
+    () => {
+      if (years.find(({ value }) => value === year)) {
+        return year;
+      }
+      return defaultYear?.value;
+    },
+    [year, years, defaultYear],
+  );
 
-    setVisualizationType(defaultVisualization);
-  }, [indicatorData]);
+  const currentUnit = useMemo<string>(
+    () => {
+      if (units.find(({ value }) => value === unit)) {
+        return unit;
+      }
+      return defaultUnit?.value;
+    },
+    [unit, units, defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => {
+      if (regions.find(({ value }) => value === region)) {
+        return region;
+      }
+      return defaultRegion?.value;
+    },
+    [region, regions, defaultRegion],
+  );
+
+  const currentScenario = useMemo<string>(
+    () => (scenario || defaultScenario?.value),
+    [scenario, defaultScenario],
+  );
+
+  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
+  const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
+  const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
   useEffect(() => {
     dispatch(setFilters({
-      ...defaultYear && { year: defaultYear },
-      ...defaultRegion && { region: defaultRegion },
-      ...defaultUnit && { unit: defaultUnit },
-      ...defaultCategory && { category: { label: defaultCategory } },
+      visualization: currentVisualization,
+      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+      ...defaultCategory && { category: defaultCategory },
+      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
     }));
-  }, [dispatch, defaultYear, defaultRegion, defaultUnit, defaultCategory]);
+  }, [
+    dispatch,
+    defaultYear,
+    currentYear,
+    currentRegion,
+    defaultUnit,
+    currentUnit,
+    defaultCategory,
+    defaultScenario,
+    currentScenario,
+    currentVisualization,
+    indicatorSlug,
+  ]);
+
+  const LegendPayload = useMemo<{ label: string, color: string }[]>(
+    () => {
+      let legendData;
+      if (visualization === 'pie') {
+        legendData = widgetData;
+      } else legendData = category?.label === 'category_1' ? categories : subcategories;
+
+      return legendData.map((item, index) => ({
+        label: item.name || item,
+        color: colors[index],
+      }));
+    }, [colors, widgetData, categories, category, subcategories, visualization],
+  );
 
   const DynamicChart = useMemo(() => {
-    if (visualizationType !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualizationType}`));
+    if (visualization && visualization !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
     }
     return null;
-  }, [visualizationType]);
+  }, [visualization]);
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
     >
       <VisualizationsNav
-        active={visualizationType}
-        className="w-full lg:px-32 md:px-24 sm:px-16 px-8"
+        active={visualization}
+        className="w-full px-8 lg:px-32 md:px-24 sm:px-16"
         visualizationTypes={visualizationTypesIndicator}
-        onClick={setVisualizationType}
       />
-      <div className="flex flex-col lg:px-32 md:px-24 px-16 py-11 w-full">
-        <div className="flex items-center w-full justify-between">
+      <div className="flex flex-col w-full px-16 lg:px-32 md:px-24 py-11">
+        <div className="flex items-center justify-between w-full">
           <h2 className="flex text-3.5xl max-w-6xl">
             {name}
           </h2>
@@ -274,13 +351,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
               interactive
               onClickOutside={() => closeDropdown('indicator')}
               content={(
-                <ul className="w-full z-10 rounded-xl divide-y divide-white divide-opacity-10 overflow-y-auto max-h-96 min-w-full shadow-sm">
+                <ul className="z-10 w-full min-w-full overflow-y-auto divide-y divide-white shadow-sm rounded-xl divide-opacity-10 max-h-96">
                   {subgroup?.indicators?.map(
                     ({ name: groupName, id, slug }) => (
-                      <li key={id} className="px-5 text-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-y divide-white divide-opacity-10 bg-gray3">
+                      <li key={id} className="px-5 text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-opacity-10 bg-gray3">
                         <button
                           type="button"
-                          className="flex items-center py-2 w-full last:border-b-0"
+                          className="flex items-center w-full py-2 last:border-b-0"
                           onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${slug}`)}
                         >
                           {groupName}
@@ -291,7 +368,6 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 </ul>
               )}
             >
-
               <button
                 type="button"
                 onClick={() => { toggleDropdown('indicator'); }}
@@ -300,19 +376,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 <span>{i18next.t('change')}</span>
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" />
               </button>
-
             </Tooltip>
+
             <Tooltip
               trigger="click"
               placement="bottom-start"
               maxHeight={400}
               onTrigger={() => setSubMenuVisibility({ menuVisibility: !compareMenuVisibility.menuVisibility, id: '' })}
               content={(
-                <ul className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10 shadow-sm">
+                <ul className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10">
                   {groups?.map(({
                     name: groupName, id, subgroups: subgroupsCompare, slug,
                   }) => (
-                    <li key={id} className="text-white first:rounded-t-xl last:rounded-b-xl divide-y divide-white divide-opacity-10">
+                    <li key={id} className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl divide-opacity-10">
                       <button
                         type="button"
                         aria-haspopup="listbox"
@@ -338,7 +414,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         tabIndex={-1}
                         role="listbox"
                         aria-labelledby="exp_elem"
-                        className={cx('shadow-sm', { hidden: id !== compareMenuVisibility.id })}
+                        className={cx('shadow-sm first:rounded-t-xl last:rounded-b-xl', { hidden: id !== compareMenuVisibility.id })}
                         aria-activedescendant="exp_elem_Pu"
                       >
                         {subgroupsCompare.map(({
@@ -346,12 +422,17 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                           id: subgroupId,
                           slug: subgroupCompareSlug,
                           default_indicator: compareIndicator,
-                        }) => (
+                        }, index) => (
                           <li
                             key={subgroupName}
                             id={`exp-elem_${subgroupId}`}
                             role="option"
-                            className="px-5 hover:bg-white hover:text-gray1"
+                            className={cx(
+                              'px-5 hover:bg-white hover:text-gray1',
+                              {
+                                'hover:rounded-b-xl': index === subgroupsCompare.length - 1,
+                              },
+                            )}
                             aria-selected="true"
                           >
                             <Link href={{
@@ -367,7 +448,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                             }}
                             >
                               <a
-                                className="flex items-center py-2 w-full last:border-b-0 "
+                                className="flex items-center w-full py-2 last:border-b-0 "
                                 href="/compare"
                               >
                                 {subgroupName}
@@ -394,14 +475,14 @@ const IndicatorData: FC<IndicatorDataProps> = ({
           {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
         </p>
         <div className="flex justify-between">
-          <div className="flex flex-col h-full w-full">
+          <div className="flex flex-col w-full h-full">
             <section className="flex flex-col w-full">
-              <div className="flex">
+              <div className="flex justify-between w-full">
                 {/* year filter */}
-                {['bar', 'pie', 'choropleth'].includes(visualizationType) && (
+                {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
                   <div className="flex items-center">
                     <span className="pr-2">Showing for:</span>
-                    {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]}</span>)}
+                    {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0].label}</span>)}
                     {years.length > 1 && (
                     <Tooltip
                       placement="bottom-start"
@@ -411,7 +492,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={years}
-                          id="year"
+                          keyEl="year"
                           onClick={handleChange}
                         />
                       )}
@@ -421,7 +502,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         onClick={() => { toggleDropdown('year'); }}
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
-                        <span>{year || i18next.t('dates')}</span>
+                        <span>{displayYear || i18next.t('dates')}</span>
                         <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                       </button>
                     </Tooltip>
@@ -430,13 +511,13 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 )}
 
                 {/* region filter */}
-                {(['line', 'pie'].includes(visualizationType) && !!regions.length) && (
+                {(['line', 'pie'].includes(visualization) && !!regions.length) && (
                   <div className="flex items-center">
                     <span className="pr-2">
                       {i18next.t('region')}
                       :
                     </span>
-                    {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]}</span>)}
+                    {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0].label}</span>)}
                     {regions.length > 1 && (
                     <Tooltip
                       placement="bottom-start"
@@ -446,7 +527,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={regions}
-                          id="region"
+                          keyEl="region"
                           onClick={handleChange}
                         />
                       )}
@@ -456,31 +537,90 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                         onClick={() => { toggleDropdown('region'); }}
                         className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                       >
-                        <span>{region || 'Select a region'}</span>
+                        <span>{displayRegion || 'Select a region'}</span>
                       </button>
                     </Tooltip>
                     )}
                   </div>
                 )}
-                {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+
+                {/* scenario filter */}
+                {['choropleth'].includes(visualization) && !!scenarios.length && (
+                <div className="flex items-center">
+                  <span className="pr-2">Scenario:</span>
+                  {scenarios.length > 1 && (
+                  <Tooltip
+                    placement="bottom-start"
+                    visible={dropdownVisibility.scenario}
+                    interactive
+                    onClickOutside={() => closeDropdown('scenario')}
+                    content={(
+                      <DropdownContent
+                        list={scenarios}
+                        keyEl="scenario"
+                        onClick={handleChange}
+                      />
+                      )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => { toggleDropdown('scenario'); }}
+                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                    >
+                      <span>{scenario || i18next.t('dates')}</span>
+                    </button>
+                  </Tooltip>
+                  )}
+                </div>
+                )}
+                {(!!filteredRecords.length && isSuccessRecords && !!units.length && visualization === 'choropleth') && (
+                <div className="flex items-center">
+                  <span className="pr-2">Unit:</span>
+                  <Tooltip
+                    placement="bottom-start"
+                    visible={dropdownVisibility.unit}
+                    interactive
+                    onClickOutside={() => closeDropdown('unit')}
+                    content={(
+                      <DropdownContent
+                        list={units}
+                        keyEl="unit"
+                        onClick={handleChange}
+                      />
+                      )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => { toggleDropdown('unit'); }}
+                      className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4"
+                    >
+
+                      <span>{displayUnit}</span>
+                    </button>
+                  </Tooltip>
+                </div>
+                )}
               </div>
-              <div className="flex h-full w-full min-h-1/2">
-                {isFetchingRecords && (
+
+              <div className="flex w-full h-full min-h-1/2">
+                {(isFetchingRecords && !filteredRecords.length) && (
                   <LoadingSpinner />
                 )}
-
-                {!isFetchingRecords && !filteredRecords.length && (
-                  <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                    <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                {isFetchedRecords
+                && !isFetchingRecords
+                && !filteredRecords.length
+                && !!visualization && !!unit && (!!region || !!year)
+                && (
+                  <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                    <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                     <p>Data not found</p>
                   </div>
                 )}
 
-                {(!!filteredRecords.length && !isFetchingRecords) && (
-                <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                {(!!filteredRecords.length && isSuccessRecords) && (
+                <div className="flex flex-col w-full h-full py-8 min-h-1/2">
+                  {visualization !== 'choropleth' && (
                   <div className="flex items-center">
-                    {visualizationType !== 'choropleth'
-                  && (
                     <Tooltip
                       placement="bottom-start"
                       visible={dropdownVisibility.unit}
@@ -489,7 +629,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       content={(
                         <DropdownContent
                           list={units}
-                          id="unit"
+                          keyEl="unit"
                           onClick={handleChange}
                         />
                       )}
@@ -497,14 +637,19 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       <button
                         type="button"
                         onClick={() => { toggleDropdown('unit'); }}
-                        className="text-sm flex items-center cursor-pointer text-gray1 text-opacity-50"
+                        className={cx(
+                          {
+                            'flex items-center text-sm text-opacity-50 cursor-pointer text-gray1': visualization !== 'choropleth',
+                            'flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
+                          },
+                        )}
                       >
-                        <span>{unit}</span>
+                        <span>{displayUnit}</span>
                       </button>
                     </Tooltip>
-                  )}
                   </div>
-                  {visualizationType !== 'choropleth'
+                  )}
+                  {visualization !== 'choropleth'
                   && (
                     <div className="w-full h-96">
                       <DynamicChart
@@ -514,11 +659,11 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                       />
                     </div>
                   )}
-                  {visualizationType === 'choropleth' && (
+
+                  {visualization === 'choropleth' && (
                   <div className="w-full h-96">
                     <MapContainer
-                      layers={widgetData.layers}
-                      categories={categories}
+                      layers={widgetData[0]?.layers || []}
                     />
                   </div>
                   )}
@@ -532,17 +677,17 @@ const IndicatorData: FC<IndicatorDataProps> = ({
             <section className="flex flex-col justify-between ml-8">
               {categories.length > 0 && (
               <Filters
-                visualizationType={visualizationType}
+                visualizationType={visualization}
                 categories={categories}
                 hasSubcategories={!!subcategories.length}
-                className="overflow-y-auto mb-4"
+                className="mb-4 overflow-y-auto"
                 onClick={setFilters}
               />
               )}
-              {categories.length > 0 && visualizationType !== 'choropleth' && (
+              {categories.length > 0 && visualization !== 'choropleth' && (
                 <Legend
-                  categories={category?.label === 'category_1' ? categories : subcategories}
-                  className="max-h-72 overflow-y-auto mb-4"
+                  className="mb-4 overflow-y-auto max-h-72"
+                  payload={LegendPayload}
                 />
               )}
               <DataSource indicatorSlug={indicatorSlug} />

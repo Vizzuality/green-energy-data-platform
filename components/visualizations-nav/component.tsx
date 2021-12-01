@@ -1,30 +1,41 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import cx from 'classnames';
 import i18next from 'i18next';
+
+import { useDispatch } from 'react-redux';
+import { setFilters } from 'store/slices/indicator';
+import { setCompareFilters } from 'store/slices/indicator_compare';
 
 // components
 import Icon from 'components/icon';
 
-import VisualizationsOptions from './constants';
+import { VisualizationsOptions } from './constants';
 
 export interface VisualizationsNavProps {
   visualizationTypes: string[],
   active: string;
   mobile?: boolean,
+  compareIndex?: number,
   className?: string;
-  onClick: (id: string) => void;
 }
-
 export const VisualizationsNav: FC<VisualizationsNavProps> = ({
   visualizationTypes,
   className,
   mobile = false,
+  compareIndex,
   active,
-  onClick,
 }: VisualizationsNavProps) => {
-  const handleVisualization = (id) => {
-    onClick(id);
-  };
+  const dispatch = useDispatch();
+
+  const handleVisualization = useCallback(
+    (id) => {
+      if (!compareIndex || compareIndex === 0) {
+        dispatch(setFilters({ visualization: id }));
+      } else {
+        dispatch(setCompareFilters({ visualization: id }));
+      }
+    }, [compareIndex, dispatch],
+  );
 
   return (
     <nav>

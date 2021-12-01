@@ -11,7 +11,7 @@ import {
 } from 'next-auth/client';
 import cx from 'classnames';
 
-import { signUp } from 'services/user';
+import API from 'lib/api';
 
 // components
 import LayoutPage from 'layout';
@@ -40,7 +40,7 @@ const SignupPage: FC = () => {
       [type]: e.currentTarget.value,
     });
   };
-  const handleSubmit = useCallback((evt) => {
+  const handleSubmit = useCallback(async (evt) => {
     evt.preventDefault();
 
     if (passwordInputRef?.current?.value.length < 6) {
@@ -52,15 +52,25 @@ const SignupPage: FC = () => {
       setErrorMessage("Passwords Don't Match");
       setTimeout(() => setErrorMessage(''), 3000);
     } else {
-      signUp(credentials).then(({ data, status }) => {
-        if (!!data && status === 201) {
+      try {
+        const signUpResponse = await API
+          .request({
+            method: 'POST',
+            url: '/users/signup',
+            headers: {
+              'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
+            },
+            data: credentials,
+          });
+        if (signUpResponse.status === 201) {
           router.push('signin');
         }
-      })
-        .catch(({ response: { data: { error } } }) => {
-          setErrorMessage(error);
-          setTimeout(() => setErrorMessage(''), 3000);
-        });
+      } catch (responseError) {
+        const errorMge = responseError?.response?.data?.error;
+
+        setErrorMessage(errorMge);
+        setTimeout(() => setErrorMessage(''), 3000);
+      }
     }
   }, [credentials]);
 
@@ -173,7 +183,7 @@ const SignupPage: FC = () => {
                       onChange={(e) => handleChange('password_confirmation', e)}
                       required
                     />
-                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-7',
                       { 'bg-gradient-color1': credentials.password_confirmation.length })}
                     />
                   </div>
@@ -200,7 +210,7 @@ const SignupPage: FC = () => {
                     required
                   />
                 </label>
-                <label htmlFor="privacy-policy" className="flex flex-row-reverse justify-end items-center text-sm text-gray1">
+                <label htmlFor="privacy-policy" className="flex flex-row-reverse justify-end items-center text-sm text-gray1 mb-8">
                   <span>
                     {i18next.t('agreement')}
                     <Link href={{ pathname: '/privacy-policy' }} passHref>

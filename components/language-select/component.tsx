@@ -28,7 +28,6 @@ const LanguageSelect = () => {
     highlightedIndex,
     getItemProps,
   } = useSelect({ items: languages, onSelectedItemChange });
-
   return (
     <div className="flex items-center relative">
       <button

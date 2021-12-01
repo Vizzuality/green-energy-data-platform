@@ -12,6 +12,7 @@ import ReactMapGL, {
   TRANSITION_EVENTS,
   ViewportProps,
   InteractiveMapProps,
+  FullscreenControl,
 } from 'react-map-gl';
 import { fitBounds } from '@math.gl/web-mercator';
 
@@ -20,6 +21,7 @@ import { easeCubic } from 'd3-ease';
 import { DEFAULT_VIEWPORT } from '../constants';
 
 export interface MapProps extends InteractiveMapProps {
+  hasInteraction: boolean,
   /** A function that returns the map instance */
   children?: React.ReactNode;
 
@@ -51,6 +53,7 @@ export interface MapProps extends InteractiveMapProps {
 }
 
 const Map = ({
+  hasInteraction,
   children,
   className,
   viewport,
@@ -227,6 +230,10 @@ const Map = ({
           && !!mapRef.current
           && typeof children === 'function'
           && children(mapRef.current)}
+        {hasInteraction && (
+          <FullscreenControl />
+        )}
+
       </ReactMapGL>
     </div>
   );

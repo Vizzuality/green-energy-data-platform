@@ -1,4 +1,4 @@
-const VisualizationsOptions = [
+export const VisualizationsOptions = [
   {
     id: 'line',
     icon: 'line',
