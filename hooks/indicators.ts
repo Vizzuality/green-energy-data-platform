@@ -75,6 +75,7 @@ export function useIndicator(
         records: [],
         categories: [],
         category_filters: {},
+        data_source: null,
         default_visualization: null,
         description: null,
         end_date: null,

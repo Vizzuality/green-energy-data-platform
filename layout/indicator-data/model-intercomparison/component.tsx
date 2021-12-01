@@ -109,6 +109,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
+      data_source: null,
       default_visualization: null,
       description: null,
       end_date: null,
@@ -123,6 +124,8 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   }));
+
+  const { data_source: dataSource } = indicatorData;
 
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 

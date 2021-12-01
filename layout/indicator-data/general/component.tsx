@@ -115,6 +115,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
+      data_source: null,
       default_visualization: null,
       description: null,
       end_date: null,
@@ -177,6 +178,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
 
   const {
     name,
+    data_source: dataSource,
   } = indicatorData;
 
   const categories = useMemo(
@@ -521,7 +523,10 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
             className="mb-4"
           />
           )}
-          <DataSource indicatorSlug={indicatorSlug} />
+          <DataSource
+            indicatorSlug={indicatorSlug}
+            dataSource={dataSource}
+          />
         </section>
       </div>
     </div>

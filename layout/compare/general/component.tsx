@@ -108,6 +108,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
+      data_source: null,
       default_visualization: null,
       description: null,
       end_date: null,
@@ -168,7 +169,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     enabled: !!indicatorSlug && !!visualization,
   });
 
-  const { name } = indicatorData;
+  const { name, data_source: dataSource } = indicatorData;
 
   const categories = useMemo(
     () => getCategoriesFromRecords(records, visualization), [records, visualization],
@@ -479,7 +480,10 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             className="mb-4"
           />
           )}
-          <DataSource indicatorSlug={indicatorSlug} />
+          <DataSource
+            indicatorSlug={indicatorSlug}
+            dataSource={dataSource}
+          />
         </section>
       </div>
     </div>

@@ -122,6 +122,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
+      data_source: null,
       default_visualization: null,
       description: null,
       end_date: null,
@@ -136,6 +137,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   }));
+
+  const { data_source: dataSource } = indicatorData;
 
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
@@ -442,7 +445,11 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           )}
         </section>
         <section className="flex flex-col justify-between ml-4 w-full">
-          <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
+          <DataSource
+            indicatorSlug={indicatorSlug}
+            dataSource={dataSource}
+            className="mb-4"
+          />
           {LegendPayload.length > 0 && visualization !== 'choropleth' && (
           <Legend
             ref={legendRef}

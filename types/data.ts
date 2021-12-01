@@ -71,6 +71,7 @@ export interface DataIdProps {
 export interface IndicatorProps {
   categories: [],
   category_filters: CategoryFilters | string[],
+  data_source: string,
   default_visualization: string,
   description: string;
   end_date: number,
