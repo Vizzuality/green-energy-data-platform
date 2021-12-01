@@ -364,6 +364,20 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     return null;
   }, [visualization]);
 
+  const LegendPayload = useMemo<{ label: string, color: string }[]>(
+    () => {
+      let legendData;
+      if (visualization === 'pie') {
+        legendData = widgetData;
+      } else legendData = category?.label === 'category_1' ? categories : subcategories;
+
+      return legendData.map((item, index) => ({
+        label: item.name || item,
+        color: colors[index],
+      }));
+    }, [colors, widgetData, categories, category, subcategories, visualization],
+  );
+
   return (
     <div className="py-24 text-gray1" key={compareIndex}>
       <Hero
@@ -702,9 +716,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   </div>
                 </div>
                 )}
-                {categories.length > 0 && visualization !== 'choropleth' && (
+                {LegendPayload.length > 0 && visualization !== 'choropleth' && (
                 <Legend
-                  categories={category?.label === 'category_1' ? categories : subcategories}
+                  payload={LegendPayload}
                   className="mb-4 overflow-y-auto"
                 />
                 )}
