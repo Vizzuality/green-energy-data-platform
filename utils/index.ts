@@ -169,6 +169,12 @@ export const filterRelatedIndicators = (
   return recordsByFilters;
 };
 
+interface Line {
+  year: number,
+  // visualizationTypes: string[],
+  [key: string]: string | number | string[],
+}
+
 export const getGroupedValues = (
   name: string,
   groupSlug: string | string[],
@@ -185,7 +191,7 @@ export const getGroupedValues = (
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
   let data = [];
-  const getLineData = (): {}[] => {
+  const getLineData = (): Line[] => {
     data = flatten(chain(filteredData)
       .groupBy('year')
       .map((value) => flatten(chain(value)
@@ -196,17 +202,14 @@ export const getGroupedValues = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
-            visualizationTypes: value[0].visualization_types,
+            visualizationTypes: value[0].visualization_types || [],
           }))
         .value()))
       .value());
-
     const dataByYear = groupBy(data, 'year');
-
     return Object.keys(dataByYear).map((year) => dataByYear[year]
       .reduce((acc, next) => {
         const { year: currentYear, ...rest } = next;
-
         return ({
           ...acc,
           ...rest,

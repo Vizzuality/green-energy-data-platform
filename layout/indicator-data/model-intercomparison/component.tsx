@@ -49,11 +49,6 @@ import ChartConfig from './config';
 
 import IndicatorDataProps from '../types';
 
-// interface WidgetDataTypes {
-//   visualizationTypes: string[];
-//   layers?: MapLayersProps[]
-// }
-
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
 }: IndicatorDataProps) => {
@@ -194,16 +189,17 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     () => getSubcategoriesFromRecords(records), [records],
   );
 
-  const widgetDataKeys = subcategories;
+  const widgetDataKeys = visualization === 'line' ? categories : subcategories;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[configType],
     [configType, widgetDataKeys],
   );
-  const widgetData = useMemo<Object[]>(
+
+  const widgetData = useMemo(
     () => getGroupedValues(
       name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ) as Object[], [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
@@ -471,8 +467,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                       {widgetData.map((data) => (
                         <BarChart
                           key={data.label}
-                          height={250}
-                          width={250}
                           widgetData={data}
                           widgetConfig={widgetConfig}
                           colors={colors}
