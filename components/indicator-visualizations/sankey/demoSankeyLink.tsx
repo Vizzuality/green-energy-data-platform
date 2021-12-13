@@ -1,15 +1,10 @@
 import React, { FC, useState } from 'react';
 import { Layer } from 'recharts';
 
-import COLORS from './constants';
-
-type Source = Readonly<{
-  name: string,
-  category: string
-}>;
+import { COLORS } from './constants';
 
 type Payload = Readonly<{
-  source: Source
+  class_en: string
 }>;
 
 interface DemoProps {
@@ -33,12 +28,25 @@ const Demo: FC<DemoProps> = ({
   linkWidth,
   payload,
   index,
+  ...props
 }: DemoProps) => {
   const [opacity, setOpacity] = useState(0.3);
+ console.log({ payload }, 'link')
 
-  const currentColor = COLORS.find((c) => payload.source.name.toLowerCase()
+  const currentColor = COLORS.find((c) => payload.class_en.toLowerCase()
     .includes(c.label.toLowerCase())) || { label: 'General', value: '#CCCCCC' };
-
+// console.log({
+//   sourceX,
+//   targetX,
+//   sourceY,
+//   targetY,
+//   sourceControlX,
+//   targetControlX,
+//   linkWidth,
+//   payload,
+//   index,
+//   props
+// })
   const gradientID = `linkGradient${index}`;
   return (
     <Layer key={`CustomLink${index}`}>

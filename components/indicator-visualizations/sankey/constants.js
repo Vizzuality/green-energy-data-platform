@@ -1,6 +1,6 @@
-export const colors = [
+export const COLORS = [
   {
-    label: 'Natural gas',
+    label: 'Natural',
     value: 'rgba(#FF7629, 0.3)',
   },
   {
@@ -48,11 +48,11 @@ export const colors = [
     value: '#8E9195',
   },
   {
-    label: 'Electricity',
+    label: 'Total emissions',
     value: '#6905E8',
   },
   {
-    label: 'Gases',
+    label: 'Natural gas',
     value: '#FF7629',
   },
   {
@@ -73,4 +73,6 @@ export const colors = [
   },
 ];
 
-export default colors;
+export const TITLE = ['ENERGY SOURCES', 'ENERGY TRANSFORMATION', 'FINAL CONSUMPTION'];
+
+export default { COLORS, TITLE };

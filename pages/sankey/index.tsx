@@ -9,8 +9,8 @@ import Sankey from 'components/indicator-visualizations/sankey';
 import LayoutPage from 'layout';
 import Hero from 'layout/hero';
 
-import data from 'components/indicator-visualizations/sankey/sankey_0609.json';
-import dataEmissions from 'components/indicator-visualizations/sankey/sankey_emissions_test.json';
+import data from 'components/indicator-visualizations/sankey/sankey_loops02122021.json';
+// 'components/indicator-visualizations/sankey/sankey_emissions_test.json';
 import CONFIG from 'components/indicator-visualizations/sankey/config';
 
 const SankeyPage: FC = () => (
@@ -20,12 +20,10 @@ const SankeyPage: FC = () => (
     </Hero>
     <div className="container m-auto">
       <section className="m-6 flex flex-1 h-full w-full">
-        <Sankey widgetData={data} widgetConfig={CONFIG} />
-      </section>
-    </div>
-    <div className="container m-auto">
-      <section className="m-6 flex flex-1 h-full w-full">
-        <Sankey widgetData={dataEmissions} widgetConfig={CONFIG} />
+        <Sankey
+          widgetData={data[0]}
+          widgetConfig={CONFIG}
+        />
       </section>
     </div>
   </LayoutPage>

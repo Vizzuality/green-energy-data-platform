@@ -35,7 +35,8 @@ const GroupCard: FC<GroupCardProps> = ({
   } = group;
 
   const defaultData = useDefaultIndicator(group);
-  const { default_indicator: { slug: indicatorSlug }, slug: subgroupSlug } = defaultData;
+  const { default_indicator: defaultIndicator, slug: subgroupSlug } = defaultData;
+  const { slug: indicatorSlug } = defaultIndicator || '';
 
   return (
     <div className={cx('w-full', { [className]: className })}>

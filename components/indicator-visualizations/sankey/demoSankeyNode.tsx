@@ -15,6 +15,22 @@ const DemoSankeyNode: FC<SankeyNodeProps> = ({
   x, y, width, height, index, payload, containerWidth,
 }: SankeyNodeProps) => {
   const isOut = x + width + 6 > containerWidth;
+
+  const breakString = (str, limit) => {
+    if (!str) return null;
+    const array = Array.from(str);
+    let brokenString = '';
+    return array.forEach((element, i) => {
+      if (i >= limit && element === ' ') {
+        brokenString += '\n';
+        return brokenString;
+      }
+      brokenString += element;
+      return brokenString;
+    });
+  };
+
+  // console.log(breakString(payload.name, 4));
   return (
     <Layer key={`CustomNode${index}`}>
       <Rectangle
@@ -34,6 +50,7 @@ const DemoSankeyNode: FC<SankeyNodeProps> = ({
         stroke="white"
         strokeWidth="0.5px"
         fill="#3A3F59"
+        width={20}
       >
         {payload.name}
       </text>
