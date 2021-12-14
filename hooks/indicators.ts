@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
-import { orderBy } from 'lodash';
+import { orderBy, uniq } from 'lodash';
 
 import {
   IndicatorProps,
@@ -160,12 +160,20 @@ export function useIndicatorMetadata(
   //   })), [data, visualization],
   // );
 
+  const dataFiltered = useMemo<string[]>(
+    () => {
+      if (data[visualization]) {
+        return uniq(data[visualization]?.scenarios);
+      }
+      return [];
+    }, [data, visualization],
+  );
+
   const scenarios = useMemo<{ label: string, value: string }[]>(
-    () => data[visualization]?.scenarios.map((s) => ({
+    () => dataFiltered.map((s) => ({
       label: s,
       value: s,
-    })), [data, visualization],
-
+    })), [dataFiltered],
   );
 
   const defaultScenario = useMemo<{ label: string, value: string }>(
