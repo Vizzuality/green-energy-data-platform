@@ -169,10 +169,21 @@ export const filterRelatedIndicators = (
   return recordsByFilters;
 };
 
+interface Data {
+  [key: string]: string | number | string[] | MapLayersProps,
+  layers?: MapLayersProps,
+  model?: string,
+  year?: number,
+}
+
 interface Line {
   year: number,
   // visualizationTypes: string[],
-  [key: string]: string | number | string[],
+  [Key: string]: string | number | string[] | Data[] | Data,
+}
+
+interface Bar {
+  [Key: string]: string | number | string[] | Data[] | Data,
 }
 
 export const getGroupedValues = (
@@ -549,6 +560,76 @@ export const getGroupedValues = (
       break;
     case 'choropleth':
       data = getChoroplethData();
+      break;
+    default:
+      data = [];
+  }
+  return data;
+};
+
+export const getModelIntercomparisonData = (
+  filters: IndicatorFilters,
+  records: Record[],
+): Line[] | Bar[] => {
+  const { category, visualization } = filters;
+  const label = category?.label;
+  const categorySelected = category?.value || 'Total';
+  const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
+
+  let data = [];
+  const getLineData = (): Line[] => {
+    data = flatten(chain(filteredData)
+      .groupBy('year')
+      .map((value) => flatten(chain(value)
+        .groupBy(label)
+        .map((res, key) => (
+          {
+            [key !== 'null' ? key : 'Total']: res.reduce(
+              (previous, current) => (current.value || 0) + previous, 0,
+            ),
+            year: res[0].year,
+            visualizationTypes: value[0].visualization_types || [],
+          }))
+        .value()))
+      .value());
+    const dataByYear = groupBy(data, 'year');
+    return Object.keys(dataByYear).map((year) => dataByYear[year]
+      .reduce((acc, next) => {
+        const { year: currentYear, ...rest } = next;
+        return ({
+          ...acc,
+          ...rest,
+        });
+      }, {
+        year,
+      }));
+  };
+
+  const getBarData = (): Bar[] => {
+    data = chain(records)
+      .groupBy('category_1')
+      .map((value) => flatten(chain(value)
+        .groupBy('year')
+        .map((res) => (
+          {
+            model: res[0].category_1,
+            [res[0].category_2]: res.reduce(
+              (previous, current) => (current.value || 0) + previous, 0,
+            ),
+            year: res[0].year,
+            visualizationTypes: value[0].visualization_types,
+          }))
+        .value()))
+      .value();
+    return data;
+  };
+
+  switch (visualization) {
+    case 'line':
+      data = getLineData();
+      break;
+    case 'bar':
+      data = getBarData();
       break;
     default:
       data = [];

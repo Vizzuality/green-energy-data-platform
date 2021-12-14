@@ -9,6 +9,10 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import dynamic from 'next/dynamic';
+
+import cx from 'classnames';
+
 import { useSelector, useDispatch } from 'react-redux';
 
 // hooks
@@ -24,13 +28,11 @@ import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 import LoadingSpinner from 'components/loading-spinner';
-import LineChart from 'components/indicator-visualizations/line';
-import BarChart from 'components/indicator-visualizations/bar';
 
 // utils
 import {
   filterRecords,
-  getGroupedValues,
+  getModelIntercomparisonData,
   getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
@@ -44,20 +46,26 @@ import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
 
-import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+// import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 
 import ChartConfig from './config';
 
 import IndicatorCompareDataProps from '../types';
 
-interface WidgetDataTypes {
-  name?: string,
-  value?: number,
-  region?: string,
-  year: number,
-  visualizationTypes: string[];
-  layers?: MapLayersProps[]
-}
+type ChartProps = {
+  widgetData: unknown,
+  widgetConfig: unknown,
+  colors: string[],
+};
+
+// interface WidgetDataTypes {
+//   name?: string,
+//   value?: number,
+//   region?: string,
+//   year?: number,
+//   visualizationTypes: string[];
+//   layers?: MapLayersProps[]
+// }
 
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   groupSlug,
@@ -158,7 +166,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && !!region,
+      enabled: !!visualization && !!unit && !!scenario && (!!region || !!year),
     },
   );
 
@@ -168,7 +176,6 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     defaultYear,
     regions,
     defaultRegion,
-    regionsGeometries,
     units,
     defaultUnit,
     scenarios,
@@ -177,8 +184,6 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     refetchOnWindowFocus: false,
     enabled: !!indicatorSlug && !!visualization,
   });
-
-  const { name } = indicatorData;
 
   const categories = useMemo(
     () => getCategoriesFromRecords(records, visualization), [records, visualization],
@@ -193,17 +198,27 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(records), [records],
   );
+  type Object = {
+    label: string | number,
+    value: string | number,
+  };
 
+  interface WdigetConfigTypes {
+    cartesianAxis?: Object,
+    cartesianGrid?: Object,
+    tooltip?: Object,
+    height?: number,
+  }
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualization],
+    () => ChartConfig(widgetDataKeys)[visualization] as WdigetConfigTypes,
     [visualization, widgetDataKeys],
   );
 
-  const widgetData = useMemo<WidgetDataTypes | WidgetDataTypes[]>(
-    () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+  const widgetData = useMemo(
+    () => getModelIntercomparisonData(
+      filters, filteredRecords,
+    ), [filters, filteredRecords],
   );
 
   const currentVisualization = useMemo<string>(
@@ -250,6 +265,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
+  const displayScenario = useMemo(() => scenarios.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
 
   useEffect(() => {
     dispatch(setFilters({
@@ -258,7 +274,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       ...defaultCategory && { category: defaultCategory },
       ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
+      ...((['choropleth'].includes(currentVisualization) || groupSlug === 'model-intercomparison') && defaultScenario) && { scenario: currentScenario },
     }));
   }, [
     dispatch,
@@ -271,6 +287,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     defaultScenario,
     currentScenario,
     currentVisualization,
+    groupSlug,
     indicatorSlug,
   ]);
 
@@ -287,6 +304,13 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       }));
     }, [colors, widgetData, categories, category, subcategories, visualization],
   );
+
+  const DynamicChart = useMemo(() => {
+    if (visualization && visualization !== 'choropleth') {
+      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
+    }
+    return null;
+  }, [visualization]);
 
   return (
     <section className={`flex flex-col  ${className}`}>
@@ -352,7 +376,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
               {i18next.t('scenario')}
               :
             </span>
-            {scenarios.length > 1 && (
+            {scenarios?.length > 1 && (
               <Tooltip
                 placement="bottom-start"
                 visible={dropdownVisibility.scenario}
@@ -364,14 +388,14 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                     keyEl="scenario"
                     onClick={handleChange}
                   />
-                      )}
+                )}
               >
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('scenario'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{scenario || i18next.t('selectScenario')}</span>
+                  <span>{displayScenario || i18next.t('selectScenario')}</span>
                 </button>
               </Tooltip>
             )}
@@ -417,29 +441,17 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   </button>
                 </Tooltip>
               </div>
-              {visualization === 'line'
-                  && (
-                    <div className="w-full h-96">
-                      <LineChart
-                        widgetData={widgetData}
-                        widgetConfig={widgetConfig}
-                        colors={colors}
-                      />
-                    </div>
-                  )}
-              {visualization === 'bar'
-                  && (
-                    <div className="w-full h-96 flex">
-                      {scenarios.map((s) => (
-                        <BarChart
-                          key={s}
-                          widgetData={widgetData}
-                          widgetConfig={widgetConfig}
-                          colors={colors}
-                        />
-                      ))}
-                    </div>
-                  )}
+
+              <div className={cx('w-full h-96', {
+                flex: visualization === 'bar',
+              })}
+              >
+                <DynamicChart
+                  widgetData={widgetData}
+                  widgetConfig={widgetConfig}
+                  colors={colors}
+                />
+              </div>
 
             </div>
             )}

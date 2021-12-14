@@ -9,6 +9,7 @@ export type SubgroupProps = Readonly<{
 }>;
 
 export type Scenario = Readonly<{
+  slug: string,
   name: string
 }>;
 
@@ -93,7 +94,7 @@ type VisualizationFilters = Readonly<{
   years: number[],
   regions: Filter,
   units: Filter,
-  scenarios: string[]
+  scenarios: Filter[]
 }>;
 
 export interface IndicatorMetadata {

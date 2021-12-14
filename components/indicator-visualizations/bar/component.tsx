@@ -13,9 +13,24 @@ import {
   YAxisProps,
 } from 'recharts';
 
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+
 type Object = {
   [key: string]: string | number | (() => void),
 };
+
+interface Data {
+  [key: string]: string | number | string[] | MapLayersProps,
+  layers?: MapLayersProps,
+  model?: string,
+  year?: number,
+}
+
+interface BarData {
+  year: number,
+  // visualizationTypes: string[],
+  [key: string]: string | number | string[] | Data[] | Data,
+}
 
 interface ConfigProps {
   bars: BarProps,
@@ -29,7 +44,7 @@ interface ConfigProps {
 interface ChartProps {
   width?: number,
   height?: number,
-  widgetData: Object[],
+  widgetData: BarData[],
   widgetConfig: ConfigProps,
   color?: string,
   colors: string[],

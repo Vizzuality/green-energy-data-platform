@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
-import { orderBy, uniq } from 'lodash';
+import { orderBy } from 'lodash';
 
 import {
   IndicatorProps,
@@ -152,11 +152,20 @@ export function useIndicatorMetadata(
     placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
+  // TO DO - modify when API gets ready
+  // const scenarios = useMemo<{ label: string, value: string }[]>(
+  //   () => (uniq(data[visualization]?.scenarios)).map((s) => ({
+  //     label: s.name,
+  //     value: s.id,
+  //   })), [data, visualization],
+  // );
+
   const scenarios = useMemo<{ label: string, value: string }[]>(
-    () => uniq(data[visualization]?.scenarios).map((scenario) => ({
-      label: scenario,
-      value: scenario,
-    })) || [], [data, visualization],
+    () => data[visualization]?.scenarios.map((s) => ({
+      label: s,
+      value: s,
+    })), [data, visualization],
+
   );
 
   const defaultScenario = useMemo<{ label: string, value: string }>(

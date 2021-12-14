@@ -15,10 +15,23 @@ import {
   YAxisProps,
 } from 'recharts';
 
+import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+
 type Object = {
   [key: string]: string | number | (() => void),
-  year: number,
 };
+
+interface Data {
+  [key: string]: string | number | string[] | MapLayersProps | unknown,
+  layers?: MapLayersProps,
+  model?: string,
+  year?: number,
+}
+
+interface LineData {
+  // visualizationTypes: string[],
+  [key: string]: string | number | string[] | Data[] | Data,
+}
 
 interface ConfigProps {
   lines: LineProps,
@@ -30,8 +43,15 @@ interface ConfigProps {
   height: number,
 }
 
+// interface ModelIntercomparisonData {
+//   [key: string]: string | number | (() => void) | string[],
+//   year?: number,
+//   model: string,
+//   visualizationTypes: string[]
+// }
+
 interface ChartProps {
-  widgetData: Object[],
+  widgetData: LineData[],
   widgetConfig: ConfigProps,
   color?: string,
   colors: string[],

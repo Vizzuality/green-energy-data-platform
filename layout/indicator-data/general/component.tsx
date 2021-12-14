@@ -46,22 +46,22 @@ import i18next from 'i18next';
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
-import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+// import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 
 import ChartConfig from './config';
 
 import IndicatorDataProps from '../types';
 
 type ChartProps = {
-  widgetData: any,
-  widgetConfig: any,
+  widgetData: unknown,
+  widgetConfig: unknown,
   colors: string[],
 };
 
-interface WidgetDataTypes {
-  visualizationTypes: string[];
-  layers?: MapLayersProps[]
-}
+// interface WidgetDataTypes {
+//   visualizationTypes: string[];
+//   layers?: MapLayersProps[],
+// }
 
 const IndicatorChart: FC<IndicatorDataProps> = ({
   className,
@@ -200,10 +200,10 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
     [visualization, widgetDataKeys],
   );
 
-  const widgetData = useMemo<WidgetDataTypes>(
+  const widgetData = useMemo(
     () => getGroupedValues(
       name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ) as WidgetDataTypes, [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
@@ -252,6 +252,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
+  const displayScenario = useMemo(() => scenarios.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
 
   useEffect(() => {
     dispatch(setFilters({
@@ -336,7 +337,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
               {['choropleth'].includes(visualization) && !!scenarios.length && (
               <div className="flex items-center">
                 <span className="pr-2">Scenario:</span>
-                {scenarios.length > 1 && (
+                {scenarios?.length > 1 && (
                 <Tooltip
                   placement="bottom-start"
                   visible={dropdownVisibility.scenario}
@@ -403,7 +404,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
             {['choropleth'].includes(visualization) && !!scenarios.length && (
             <div className="flex items-center">
               <span className="pr-2">Scenario:</span>
-              {scenarios.length > 1 && (
+              {scenarios?.length > 1 && (
               <Tooltip
                 placement="bottom-start"
                 visible={dropdownVisibility.scenario}
@@ -422,7 +423,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                   onClick={() => { toggleDropdown('scenario'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{scenario || i18next.t('dates')}</span>
+                  <span>{displayScenario || i18next.t('dates')}</span>
                 </button>
               </Tooltip>
               )}
@@ -505,7 +506,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
         <section className="flex flex-col justify-between ml-8">
           {categories.length > 0 && (
           <Filters
-            visualizationType={visualization}
+            visualization={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length}
             className="overflow-y-auto mb-4"

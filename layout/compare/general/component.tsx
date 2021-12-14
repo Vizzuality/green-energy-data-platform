@@ -52,7 +52,7 @@ import ChartConfig from './config';
 import IndicatorCompareDataProps from '../types';
 
 interface ChartProps {
-  widgetData: unknown[],
+  widgetData: unknown,
   widgetConfig: unknown,
   colors: string[]
 }
@@ -325,7 +325,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
               {['choropleth'].includes(visualization) && !!scenarios.length && (
               <div className="flex items-center">
                 <span className="pr-2">Scenario:</span>
-                {scenarios.length > 1 && (
+                {scenarios?.length > 1 && (
                 <Tooltip
                   placement="bottom-start"
                   visible={dropdownVisibility.scenario}
