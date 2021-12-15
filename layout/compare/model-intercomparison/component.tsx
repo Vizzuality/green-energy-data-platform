@@ -54,15 +54,6 @@ import ChartConfig from 'components/indicator-visualizations/config';
 import { ChartLine, ChartBar } from 'types/model-intercomparison';
 import IndicatorCompareDataProps from '../types';
 
-interface WidgetDataTypes {
-  name?: string,
-  value?: number,
-  region?: string,
-  year: number,
-  visualizationTypes: string[];
-  layers?: MapLayersProps[]
-}
-
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   groupSlug,
   subgroupSlug,

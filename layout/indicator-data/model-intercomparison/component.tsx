@@ -46,7 +46,6 @@ import i18next from 'i18next';
 
 import { useColors } from 'hooks/utils';
 
-import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import DropdownContent from 'layout/dropdown-content';
 
 import ChartConfig from 'components/indicator-visualizations/config';
@@ -54,7 +53,6 @@ import ChartConfig from 'components/indicator-visualizations/config';
 // types
 import { ChartLine, ChartBar } from 'types/model-intercomparison';
 import IndicatorDataProps from '../types';
-
 
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
@@ -423,7 +421,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
           )}
         </section>
         <section ref={legendContainerRef} className="flex flex-col justify-between ml-4 w-full">
-          <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
+          <DataSource indicatorSlug={indicatorSlug} dataSource={dataSource} className="mb-4" />
           {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
             ref={legendRef}

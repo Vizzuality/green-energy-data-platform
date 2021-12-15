@@ -62,6 +62,10 @@ interface CategoryFilters {
   [key: string]: string,
 }
 
+export interface ComponentTypes {
+  className?: string;
+}
+
 export interface DataIdProps {
   id: string,
   name: string,
@@ -75,7 +79,7 @@ export interface IndicatorProps {
   default_visualization: string,
   description: string;
   end_date: number,
-  id: number;
+  id: string;
   slug: string,
   name: string;
   published: boolean,

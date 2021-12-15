@@ -28,25 +28,11 @@ const Demo: FC<DemoProps> = ({
   linkWidth,
   payload,
   index,
-  ...props
 }: DemoProps) => {
   const [opacity, setOpacity] = useState(0.3);
- console.log({ payload }, 'link')
 
   const currentColor = COLORS.find((c) => payload.class_en.toLowerCase()
     .includes(c.label.toLowerCase())) || { label: 'General', value: '#CCCCCC' };
-// console.log({
-//   sourceX,
-//   targetX,
-//   sourceY,
-//   targetY,
-//   sourceControlX,
-//   targetControlX,
-//   linkWidth,
-//   payload,
-//   index,
-//   props
-// })
   const gradientID = `linkGradient${index}`;
   return (
     <Layer key={`CustomLink${index}`}>

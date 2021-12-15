@@ -8,8 +8,6 @@ import {
   Sankey,
 } from 'recharts';
 
-import { useSankeyData } from 'hooks/records';
-
 import CustomTooltip from './tooltip';
 
 import DemoSankeyNode from './demoSankeyNode';
@@ -24,10 +22,8 @@ const Chart: FC<ChartProps> = ({
 }: ChartProps) => {
   const width = 1220;
   const height = 800;
-  const year = 2015;
   const unit = '10000tce';
   const indicatorSlug = 'Energy flows';
-  const SankeyData = useSankeyData(widgetData, year);
   const TooltipContent: FC<TooltipProps> = ({
     payload,
   }: TooltipProps) => (
@@ -37,7 +33,6 @@ const Chart: FC<ChartProps> = ({
       payload={payload}
     />
   );
-  console.log({ widgetData });
 
   const sankeyRef = useRef(null);
 
@@ -49,7 +44,7 @@ const Chart: FC<ChartProps> = ({
         ref={sankeyRef}
         width={1200}
         height={height}
-        data={SankeyData}
+        data={widgetData}
         node={<DemoSankeyNode containerWidth={width} />}
         nodePadding={200}
         nodePaddingRatio={30}

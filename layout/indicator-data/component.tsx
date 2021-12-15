@@ -25,6 +25,7 @@ import VisualizationsNav from 'components/visualizations-nav';
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import General from './general';
+import EnergyFlow from './energy-flow';
 import ModelIntercomparison from './model-intercomparison';
 import CompareDropdownContent from './compare-dropdown/component';
 
@@ -106,6 +107,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
 
   const {
     name,
+    id: indicatorId,
     visualization_types: visualizationTypesIndicator,
     description,
   } = indicatorData;
@@ -184,7 +186,8 @@ const IndicatorData: FC<IndicatorDataProps> = ({
         <p className="text-sm py-7.5">
           {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
         </p>
-        {groupSlug !== 'model-intercomparison' && <General />}
+        {groupSlug !== 'model-intercomparison' && groupSlug !== 'energy-flows' && <General />}
+        {groupSlug === 'energy-flows' && <EnergyFlow />}
         {groupSlug === 'model-intercomparison' && <ModelIntercomparison />}
       </div>
     </div>

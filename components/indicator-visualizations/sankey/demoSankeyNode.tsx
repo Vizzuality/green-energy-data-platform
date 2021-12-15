@@ -30,7 +30,6 @@ const DemoSankeyNode: FC<SankeyNodeProps> = ({
     });
   };
 
-  // console.log(breakString(payload.name, 4));
   return (
     <Layer key={`CustomNode${index}`}>
       <Rectangle

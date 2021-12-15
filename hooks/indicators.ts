@@ -7,13 +7,8 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
-import { orderBy, uniq } from 'lodash';
+import { orderBy, uniq, flatten } from 'lodash';
 
-import {
-  IndicatorProps,
-  IndicatorMetadata,
-  Record,
-} from 'types/data';
 import {
   IndicatorFilters,
 } from 'store/slices/indicator';
@@ -24,12 +19,22 @@ import {
   fetchIndicator,
   fetchIndicatorRecords,
   fetchIndicatorMetadata,
+  fetchSankeyData,
 } from 'services/indicators';
 
 import {
   useRegions,
 } from 'hooks/regions';
 import { getCategoriesFromRecords } from 'utils';
+
+// types
+import {
+  IndicatorProps,
+  IndicatorMetadata,
+  Record,
+} from 'types/data';
+
+import { SankeyData } from 'components/indicator-visualizations/sankey/types';
 
 import ID_CHINA from 'utils/constants';
 
@@ -280,4 +285,56 @@ export function useIndicatorRecords(
       },
     })),
   }), [data, regions, query]);
+}
+
+export function useSankeyData(
+  id: string,
+  params = {
+    year: null,
+  },
+  queryOptions = {},
+) {
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+
+  const { year } = params;
+
+  const query = useQuery<SankeyData, Error>(['sankey-data', id, current],
+    () => fetchSankeyData(id, { locale: current, ...params }), {
+      placeholderData: {
+        nodes: [],
+        data: [],
+      },
+      ...queryOptions,
+    });
+
+  const {
+    data, isFetching, isFetched, isSuccess,
+  } = query;
+
+  const widgetData = useMemo(() => {
+    const nodes = data?.nodes.map(({ name_en }) => ({ name: name_en }));
+    const links = flatten(data?.data
+      .filter((d) => d.year === year)
+      .map((l) => l.links));
+    return ({
+      nodes,
+      links,
+    });
+  }, [data, year]);
+
+  return useMemo(() => ({
+    isFetching,
+    isFetched,
+    isSuccess,
+    data: widgetData,
+  }), [
+    isFetching,
+    isFetched,
+    isSuccess,
+    widgetData,
+  ]);
 }

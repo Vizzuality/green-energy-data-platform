@@ -14,7 +14,7 @@ const Legend: FC<WidgetLegendProps> = ({
       {payload.map(({ label, color }) => (
         <li
           key={label}
-          className="flex items-center w-full active:bg-color1 rounded-md focus:bg-blue text-left text-sm"
+          className="flex items-center active:bg-color1 rounded-md focus:bg-blue text-left text-sm"
         >
           <span
             className="w-4 h-4 ml-3 rounded-full"
