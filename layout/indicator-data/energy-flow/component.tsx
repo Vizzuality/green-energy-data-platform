@@ -9,7 +9,10 @@ import React, {
 import { useQueryClient } from 'react-query';
 import { uniqBy } from 'lodash';
 
-import { useSelector, useDispatch } from 'react-redux';
+import {
+  // useSelector,
+  useDispatch,
+} from 'react-redux';
 import { useRouter } from 'next/router';
 
 // hooks
@@ -28,12 +31,10 @@ import Sankey from 'components/indicator-visualizations/sankey';
 import { COLORS } from 'components/indicator-visualizations/sankey/constants';
 import CONFIG from 'components/indicator-visualizations/sankey/config';
 
-import { RootState } from 'store/store';
+// import { RootState } from 'store/store';
 
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
-
-import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
 
@@ -109,15 +110,16 @@ const SankeyChart: FC<ComponentTypes> = ({
   }));
 
   const { id: indicatorId } = indicatorData;
-  const years = [
+  const years = useMemo(() => [
     { label: 2000, value: 2000 },
     { label: 2015, value: 2015 },
     { label: 2020, value: 2020 },
-  ];
-  const units = [{ label: '10000tce', value: '10000tce' }];
+  ], []);
+  const units = useMemo(() => [
+    { label: '10000tce', value: '10000tce' }], []);
   const unit = '10000tce';
-  const defaultYear = years[0].value;
-  const defaultUnit = units[0].value;
+  // const defaultYear = years[0].value;
+  // const defaultUnit = units[0].value;
   const year = 2015;
   const visualization = 'sankey';
   const filters = { year };
@@ -164,25 +166,25 @@ const SankeyChart: FC<ComponentTypes> = ({
     [visualization, indicatorData],
   );
 
-  const currentYear = useMemo<number>(
-    () => {
-      if (years.find(({ value }) => value === year)) {
-        return year;
-      }
-      return defaultYear?.value;
-    },
-    [year, years, defaultYear],
-  );
+  // const currentYear = useMemo<number>(
+  //   () => {
+  //     if (years.find(({ value }) => value === year)) {
+  //       return year;
+  //     }
+  //     return defaultYear?.value;
+  //   },
+  //   [year, years, defaultYear],
+  // );
 
-  const currentUnit = useMemo<string>(
-    () => {
-      if (units.find(({ value }) => value === unit)) {
-        return unit;
-      }
-      return defaultUnit?.value;
-    },
-    [unit, units, defaultUnit],
-  );
+  // const currentUnit = useMemo<string>(
+  //   () => {
+  //     if (units.find(({ value }) => value === unit)) {
+  //       return unit;
+  //     }
+  //     return defaultUnit?.value;
+  //   },
+  //   [unit, units, defaultUnit],
+  // );
 
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
@@ -196,6 +198,8 @@ const SankeyChart: FC<ComponentTypes> = ({
       scenario: null,
     }));
   }, [
+    dispatch,
+    currentVisualization,
     // dispatch,
     // defaultYear,
     // currentYear,

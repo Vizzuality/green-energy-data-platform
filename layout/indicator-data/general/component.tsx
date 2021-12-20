@@ -48,8 +48,7 @@ import { useColors } from 'hooks/utils';
 import DropdownContent from 'layout/dropdown-content';
 
 import ChartConfig from 'components/indicator-visualizations/config';
-
-import IndicatorDataProps from '../types';
+import { ComponentTypes } from 'types/data';
 
 type ChartProps = {
   widgetData: unknown,
@@ -62,9 +61,9 @@ type ChartProps = {
 //   layers?: MapLayersProps[],
 // }
 
-const IndicatorChart: FC<IndicatorDataProps> = ({
+const IndicatorChart: FC<ComponentTypes> = ({
   className,
-}: IndicatorDataProps) => {
+}: ComponentTypes) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,

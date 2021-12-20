@@ -52,11 +52,11 @@ import ChartConfig from 'components/indicator-visualizations/config';
 
 // types
 import { ChartLine, ChartBar } from 'types/model-intercomparison';
-import IndicatorDataProps from '../types';
+import { ComponentTypes } from 'types/data';
 
-const ModelIntercomparison: FC<IndicatorDataProps> = ({
+const ModelIntercomparison: FC<ComponentTypes> = ({
   className,
-}: IndicatorDataProps) => {
+}: ComponentTypes) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,

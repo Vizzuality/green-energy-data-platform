@@ -90,6 +90,10 @@ export interface IndicatorProps {
   subgroup: DataIdProps,
 }
 
+export interface Component {
+  className?: string,
+}
+
 type Filter = Readonly<{
   id: string,
   name: string,
