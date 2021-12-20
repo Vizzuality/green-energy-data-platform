@@ -11,25 +11,25 @@ interface SankeyNodeProps {
   payload?: any,
 }
 
-const DemoSankeyNode: FC<SankeyNodeProps> = ({
-  x, y, width, height, index, payload, containerWidth,
-}: SankeyNodeProps) => {
+const DemoSankeyNode: FC<SankeyNodeProps> = (props: SankeyNodeProps) => {
+  const {
+    x, y, width, height, index, payload, containerWidth,
+  } = props;
   const isOut = x + width + 6 > containerWidth;
-
-  const breakString = (str, limit) => {
-    if (!str) return null;
-    const array = Array.from(str);
-    let brokenString = '';
-    return array.forEach((element, i) => {
-      if (i >= limit && element === ' ') {
-        brokenString += '\n';
-        return brokenString;
-      }
-      brokenString += element;
-      return brokenString;
-    });
+  const str = payload?.name;
+  const spaceCheck = (numero) => {
+    const isSpace = str?.charAt(numero) === ' ';
+    return (isSpace || numero > str.length)
+      ? [str.substr(0, numero), str.substr(numero + 1, str.length - 1)].filter((s) => s !== '')
+      : spaceCheck(numero + 1);
   };
 
+  const labelHeight = 15;
+  const labelSplitted = spaceCheck(15);
+  const isLabelSplitted = labelSplitted.length > 1;
+  const labelPositionFix = isLabelSplitted ? -(labelHeight / 4) : 0;
+  const heightFix = height / 2 > labelHeight ? labelHeight / 2 : labelHeight / 4;
+  const fullLabel = width > 640;
   return (
     <Layer key={`CustomNode${index}`}>
       <Rectangle
@@ -40,19 +40,45 @@ const DemoSankeyNode: FC<SankeyNodeProps> = ({
         fill="#3A3F59"
         fillOpacity="1"
       />
+      {fullLabel && (
       <text
         textAnchor="end"
-        x={isOut ? x - 6 : x + width - 16}
-        y={y + height / 2}
-        fontSize="20"
+        fontSize="12"
         fontWeight="bold"
         stroke="white"
         strokeWidth="0.5px"
         fill="#3A3F59"
         width={20}
       >
-        {payload.name}
+        <tspan
+          y={y + height / 2 + heightFix}
+          x={isOut ? x - 3 : x + width - 13}
+        >
+          {payload?.name}
+        </tspan>
       </text>
+      )}
+      {!fullLabel && (
+      <text
+        fontSize="12"
+        fontWeight="bold"
+        stroke="white"
+        strokeWidth="0.5px"
+        fill="#3A3F59"
+        width={20}
+      >
+        {labelSplitted.map((label, i) => (
+          <tspan
+            textAnchor="end"
+            key={label}
+            y={y + height / 2 + heightFix + labelPositionFix + i * (labelHeight / 2)}
+            x={isOut ? x - 6 : x + width - 16}
+          >
+            {label}
+          </tspan>
+        ))}
+      </text>
+      )}
     </Layer>
   );
 };

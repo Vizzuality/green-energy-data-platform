@@ -19,14 +19,18 @@ type Node = Readonly<{
 }>;
 
 type Link = Readonly<{
+  class_cn: string,
+  class_en: string,
+  source: number,
+  target: number,
+  value: number,
+}>;
+
+type Data = Readonly<{
   region_cn: string,
   region_en: string,
   units_cn: string,
   units_en: string
-  year: number
-}>;
-
-type Data = Readonly<{
   year: number,
   links: Link[]
 }>;

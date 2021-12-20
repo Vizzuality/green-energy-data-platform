@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 
 import { useQueryClient } from 'react-query';
+import { uniqBy } from 'lodash';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -24,6 +25,7 @@ import Legend from 'components/legend';
 import LoadingSpinner from 'components/loading-spinner';
 import Sankey from 'components/indicator-visualizations/sankey';
 
+import { COLORS } from 'components/indicator-visualizations/sankey/constants';
 import CONFIG from 'components/indicator-visualizations/sankey/config';
 
 import { RootState } from 'store/store';
@@ -182,11 +184,6 @@ const SankeyChart: FC<ComponentTypes> = ({
     [unit, units, defaultUnit],
   );
 
-  // const currentScenario = useMemo<string>(
-  //   () => (scenario || defaultScenario?.value),
-  //   [scenario, defaultScenario],
-  // );
-
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
@@ -211,12 +208,11 @@ const SankeyChart: FC<ComponentTypes> = ({
     // indicatorSlug,
   ]);
 
-  const colors = useColors(data.nodes.length);
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
-    () => data?.nodes.map((item, index) => ({
-      label: item.name,
-      color: colors[index],
-    })), [colors, data],
+    () => uniqBy(data?.links.map((item) => ({
+      label: item.class_en,
+      color: COLORS[item.class_en] || COLORS.Other,
+    })), 'label'), [data],
   );
 
   return (
@@ -240,7 +236,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                     keyEl="year"
                     onClick={handleChange}
                   />
-                      )}
+                )}
               >
                 <button
                   type="button"
@@ -269,7 +265,6 @@ const SankeyChart: FC<ComponentTypes> = ({
                     <p>Data not found</p>
                   </div>
                 )}
-
             {(!isFetchingRecords && isSuccessRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
               <div className="flex items-center">
@@ -295,7 +290,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   </button>
                 </Tooltip>
               </div>
-              <div className="w-full">
+              <div className="w-full min-h-screen">
                 <Sankey
                   widgetData={data}
                   widgetConfig={CONFIG}
@@ -306,10 +301,9 @@ const SankeyChart: FC<ComponentTypes> = ({
           </div>
         </section>
         <section className="flex flex-col justify-between ml-8 mb-4">
-
           <Legend
             payload={LegendPayload}
-            className="grid grid-cols-4"
+            className="grid lg:grid-cols-4 sm:grid-cols-3 "
           />
         </section>
       </div>

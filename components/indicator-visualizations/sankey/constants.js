@@ -1,77 +1,23 @@
-export const COLORS = [
-  {
-    label: 'Natural',
-    value: 'rgba(#FF7629, 0.3)',
-  },
-  {
-    label: 'Oil',
-    value: '#1D8190',
-  },
-  {
-    label: 'Coal',
-    value: '#0C3CC4',
-  },
-  {
-    label: 'Fossil',
-    value: '#A97500',
-  },
-  {
-    label: 'Geothermal',
-    value: '#CC1771',
-  },
-  {
-    label: 'Wind',
-    value: '#A880FF',
-  },
-  {
-    label: 'Solar',
-    value: '#FEB961',
-  },
-  {
-    label: 'Biomass',
-    value: '#14C176',
-  },
-  {
-    label: 'Hydro',
-    value: '#29C2DA',
-  },
-  {
-    label: 'Nuclear',
-    value: '#FF61CA',
-  },
-  {
-    label: 'Ocean',
-    value: '#00A3FE',
-  },
-  {
-    label: 'Other',
-    value: '#8E9195',
-  },
-  {
-    label: 'Total emissions',
-    value: '#6905E8',
-  },
-  {
-    label: 'Natural gas',
-    value: '#FF7629',
-  },
-  {
-    label: 'Heat',
-    value: '#CC1771',
-  },
-  {
-    label: 'Hydrogen',
-    value: '#FF7629',
-  },
-  {
-    label: 'Liquids',
-    value: '#006BFE',
-  },
-  {
-    label: 'Solid',
-    value: '#FD1A2F',
-  },
-];
+export const COLORS = {
+  'Natural gas': '#FF7629',
+  Oil: '#1D8190',
+  Coal: '#0C3CC4',
+  Fossil: '#A97500',
+  Geothermal: '#CC1771',
+  Wind: '#A880FF',
+  Solar: '#FEB961',
+  Biomass: '#14C176',
+  Hydro: '#29C2DA',
+  Nuclear: '#FF61CA',
+  Ocean: '#00A3FE',
+  Unknown: 'rgba(142, 145, 149, 0.9)',
+  Electricity: '#6905E8',
+  Gasses: '#FF7629',
+  Heat: '#CC1771',
+  Hydrogen: '#FF7629',
+  Liquids: '#006BFE',
+  Solid: '#FD1A2F',
+};
 
 export const TITLE = ['ENERGY SOURCES', 'ENERGY TRANSFORMATION', 'FINAL CONSUMPTION'];
 

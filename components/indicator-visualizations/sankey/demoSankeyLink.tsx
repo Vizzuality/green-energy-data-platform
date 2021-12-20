@@ -3,8 +3,13 @@ import { Layer } from 'recharts';
 
 import { COLORS } from './constants';
 
+type Target = Readonly<{
+  name: string,
+}>;
+
 type Payload = Readonly<{
-  class_en: string
+  class_en: string,
+  target: Target,
 }>;
 
 interface DemoProps {
@@ -31,16 +36,26 @@ const Demo: FC<DemoProps> = ({
 }: DemoProps) => {
   const [opacity, setOpacity] = useState(0.3);
 
-  const currentColor = COLORS.find((c) => payload.class_en.toLowerCase()
-    .includes(c.label.toLowerCase())) || { label: 'General', value: '#CCCCCC' };
+  const currentColor = COLORS[payload.class_en];
   const gradientID = `linkGradient${index}`;
+
+  // target link with losses to make gradient fade away
+  const targetLoss = payload?.target?.name.includes('losses');
+
   return (
     <Layer key={`CustomLink${index}`}>
       <defs>
+        {targetLoss && (
         <linearGradient id={gradientID}>
-          <stop offset="100%" stopColor={currentColor.value} stopOpacity={opacity} />
-          {/* <stop offset="20%" stopColor={currentColor.value} stopOpacity={0.5} /> */}
+          <stop offset="0%" stopColor={currentColor} stopOpacity={opacity} />
+          <stop offset="100%" stopColor="black" stopOpacity={0} />
         </linearGradient>
+        )}
+        {!targetLoss && (
+        <linearGradient id={gradientID}>
+          <stop offset="100%" stopColor={currentColor} stopOpacity={opacity} />
+        </linearGradient>
+        )}
       </defs>
       <path
         d={`
@@ -55,7 +70,7 @@ const Demo: FC<DemoProps> = ({
             Z
           `}
         fill={`url(#${gradientID})`}
-        opacity={0.5}
+        opacity={0.8}
         strokeWidth="10"
         onMouseEnter={() => setOpacity(1)}
         onMouseLeave={() => setOpacity(0.3)}

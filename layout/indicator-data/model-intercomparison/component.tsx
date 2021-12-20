@@ -426,6 +426,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
           <Legend
             ref={legendRef}
             payload={LegendPayload}
+            className="mb-4 overflow-y-auto"
           />
           )}
         </section>

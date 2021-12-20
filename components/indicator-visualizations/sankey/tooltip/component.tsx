@@ -1,10 +1,6 @@
 import React, { FC } from 'react';
 import cx from 'classnames';
 
-// import { format } from 'd3-format';
-
-// const formatValue = format(',.4p');
-
 import TooltipProps from './types';
 
 const Tooltip: FC<TooltipProps> = ({
@@ -28,7 +24,7 @@ const Tooltip: FC<TooltipProps> = ({
               key={name}
               className="flex flex-col w-full rounded-md focus:bg-blue items-start text-left"
             >
-              <span className="flex-1 py-1 px-6 border-b border-white border-opacity-20">{nameFormat}</span>
+              <span className="flex-1 py-1 w-full px-6 border-b border-white border-opacity-20">{nameFormat}</span>
               <div className="flex flex-col py-1 px-6">
                 <span>{indicatorSlug}</span>
                 <div className="flex items-center">

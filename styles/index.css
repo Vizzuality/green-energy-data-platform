@@ -59,6 +59,10 @@
     background-size: cover !important;
   }
 
+  .recharts-surface {
+    overflow: visible;
+  }
+
   /* News Gothic MT */
   @font-face {
     font-family: 'News Gothic MT';

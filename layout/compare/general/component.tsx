@@ -477,7 +477,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           {LegendPayload.length > 0 && visualization !== 'choropleth' && (
           <Legend
             payload={LegendPayload}
-            className="mb-4"
+            className="mb-4 overflow-y-auto"
           />
           )}
           <DataSource

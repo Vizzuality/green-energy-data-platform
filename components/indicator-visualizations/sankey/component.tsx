@@ -35,30 +35,32 @@ const Chart: FC<ChartProps> = ({
   );
 
   const sankeyRef = useRef(null);
-
   const positionX = sankeyRef?.current?.props?.width / 3;
+  const { margin: { left: marginFix } } = widgetConfig;
+  const nodePadding = width > 500 ? 7 : 20;
 
   return (
     <ResponsiveContainer width="100%" height={height}>
       <Sankey
         ref={sankeyRef}
-        width={1200}
-        height={height}
         data={widgetData}
+        height="100%"
+        width="100%"
         node={<DemoSankeyNode containerWidth={width} />}
-        nodePadding={200}
         nodePaddingRatio={30}
         linkCurvature={0.5}
         iterations={50}
         link={<DemoSankeyLink />}
+        className="overflow-visible"
+        nodePadding={nodePadding}
         {...widgetConfig}
       >
-
-        {TITLE.map((level, index) => (
-          <>
-            <text
+        <text>
+          {TITLE.map((level, index) => (
+            <tspan
+              key={level}
               textAnchor="middle"
-              x={index === 0 ? positionX : positionX * index + (positionX / index)}
+              x={positionX * index + (positionX / 2) + marginFix}
               y={10}
               fontSize="12"
               fontWeight="bold"
@@ -67,9 +69,9 @@ const Chart: FC<ChartProps> = ({
               fill="rgb(58, 63, 89)"
             >
               {level}
-            </text>
-          </>
-        ))}
+            </tspan>
+          ))}
+        </text>
         <Tooltip content={TooltipContent} />
       </Sankey>
     </ResponsiveContainer>
