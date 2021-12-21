@@ -152,28 +152,11 @@ export function useIndicatorMetadata(
     placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
-  // TO DO - modify when API gets ready
-  // const scenarios = useMemo<{ label: string, value: string }[]>(
-  //   () => (uniq(data[visualization]?.scenarios)).map((s) => ({
-  //     label: s.name,
-  //     value: s.id,
-  //   })), [data, visualization],
-  // );
-
-  const dataFiltered = useMemo<string[]>(
-    () => {
-      if (data[visualization]) {
-        return uniq(data[visualization]?.scenarios);
-      }
-      return [];
-    }, [data, visualization],
-  );
-
   const scenarios = useMemo<{ label: string, value: string }[]>(
-    () => dataFiltered.map((s) => ({
-      label: s,
-      value: s,
-    })), [dataFiltered],
+    () => (uniq(data[visualization]?.scenarios)).map((s) => ({
+      label: s.name,
+      value: s.id,
+    })), [data, visualization],
   );
 
   const defaultScenario = useMemo<{ label: string, value: string }>(

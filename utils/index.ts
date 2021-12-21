@@ -102,10 +102,9 @@ export const filterRecords = (
         && (d.unit.id === unit || !unit) // some idicators has no unit
         && d.scenario?.name === scenario) return true;
     }
-
     if (visualization === 'bar') {
       if ((groupSlug === 'model-intercomparison'
-          && d.scenario.name === scenario
+          && d.scenario.id === scenario
           && d.unit.id === unit)
           || (groupSlug !== 'model-intercomparison'
           && year === d.year

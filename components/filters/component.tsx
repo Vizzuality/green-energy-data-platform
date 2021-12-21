@@ -14,7 +14,7 @@ interface FiltersProps {
   categories: string[]
   hasSubcategories: boolean,
   className?: string,
-  onClick: (category: Record<string, unknown>) => void,
+  onClick: (category: Record<string, any>) => void,
 }
 
 const Filters: FC<FiltersProps> = ({

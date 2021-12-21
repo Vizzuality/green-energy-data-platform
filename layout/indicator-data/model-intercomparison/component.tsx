@@ -121,20 +121,21 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   const filtersIndicator = useMemo(() => {
     if (filterByRegion) {
       return ({
-        // scenario,
+        scenario,
         visualization,
         region,
         unit,
       });
     }
     return ({
+      scenario,
       visualization,
       unit,
       year,
     });
   }, [
     visualization,
-    // scenario,
+    scenario,
     region,
     unit,
     year,
@@ -176,7 +177,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     () => filterRecords(records, filters, categories, groupSlug),
     [records, filters, categories, groupSlug],
   );
-
   const colors = useColors(categories.length);
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(records), [records],
@@ -204,7 +204,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   interface Bar {
     [key: string]: string | number | string[] | Data[],
   }
-
   const widgetData = useMemo<Line[] | Bar[]>(
     () => getModelIntercomparisonData(
       filters, filteredRecords,
@@ -266,7 +265,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       ...defaultCategory && { category: defaultCategory },
       ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...((['choropleth'].includes(currentVisualization) || groupSlug === 'model-intercomparison') && { scenario: currentScenario }) || { scenario: null },
+      scenario: currentScenario || null,
     }));
   }, [
     dispatch,
@@ -430,8 +429,9 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 </Tooltip>
               </div>
 
-              <div className={cx('w-full h-96', {
+              <div className={cx('w-full', {
                 'flex flex-wrap': visualization === 'bar',
+                'h-96': visualization !== 'bar',
               })}
               >
                 {visualization === 'line' && (
@@ -442,10 +442,10 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 />
                 )}
                 {visualization === 'bar' && widgetData.map(
-                  (widget, index) => (
-                    <div key={widget[index]?.model}>
+                  (widget) => (
+                    <div key={widget.model}>
                       <Bar
-                        widgetData={widget[index]}
+                        widgetData={widget}
                         widgetConfig={widgetConfig}
                         colors={colors}
                       />
