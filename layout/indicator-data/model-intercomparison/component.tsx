@@ -443,7 +443,8 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 )}
                 {visualization === 'bar' && widgetData.map(
                   (widget) => (
-                    <div key={widget.model}>
+                    <div key={widget[0].model}>
+                      <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget[0].model}</span>
                       <Bar
                         widgetData={widget}
                         widgetConfig={widgetConfig}

@@ -12,7 +12,7 @@ type PayloadObject = {
 interface TickProps {
   x: number,
   y: number,
-  payload: PayloadObject
+  payload: PayloadObject,
 }
 
 interface TooltipProps {
@@ -25,7 +25,9 @@ const DefaultTick = {
   fontSize: '14px',
 };
 
-const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
+const Tick: FC<TickProps> = (({
+  x, y, payload,
+}: TickProps) => {
   const { value } = payload;
   return (
     <g transform={`translate(${x},${y})`}>
@@ -38,6 +40,28 @@ const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
         opacity={0.5}
         transform="rotate(270)"
         fontSize="14px"
+      >
+        {value}
+      </text>
+    </g>
+  );
+});
+
+const TickSmall: FC<TickProps> = (({
+  x, y, payload,
+}: TickProps) => {
+  const { value } = payload;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={-10}
+        dy={14}
+        textAnchor="end"
+        fill="#3A3F59"
+        opacity={0.5}
+        transform="rotate(270)"
+        fontSize="9px"
       >
         {value}
       </text>
@@ -210,10 +234,7 @@ const ChartConfig = (categories) => {
       xAxis: {
         dataKey: 'year',
         interval: 0,
-        tick: Tick,
-        label: {
-          content: LabelContent,
-        },
+        tick: TickSmall,
       },
       tooltip: {
         isAnimationActive: false,
