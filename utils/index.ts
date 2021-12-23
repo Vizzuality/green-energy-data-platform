@@ -175,9 +175,8 @@ interface Data {
   year?: number,
 }
 
-interface Line {
+interface ChartYear {
   year: number,
-  // visualizationTypes: string[],
   [Key: string]: string | number | string[] | Data[] | Data,
 }
 
@@ -201,7 +200,7 @@ export const getGroupedValues = (
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
 
   let data = [];
-  const getLineData = (): Line[] => {
+  const getLineData = (): ChartYear[] => {
     data = flatten(chain(filteredData)
       .groupBy('year')
       .map((value) => flatten(chain(value)
@@ -570,15 +569,17 @@ export const getModelIntercomparisonData = (
   filters: IndicatorFilters,
   records: Record[],
   activeModels: string[],
-): Line[] | Bar[] => {
+): ChartYear[] | Bar[] => {
   const { category, visualization } = filters;
   const label = category?.label;
-  const filteredData = !activeModels.length
-    ? records
-    : records.filter((record) => activeModels.includes(record.category_1));
+  const categorySelected = category?.value || 'Total';
+  const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
+  const filteredDataBars = activeModels.length
+    ? records.filter((record) => activeModels.includes(record.category_1))
+    : records;
 
   let data = [];
-  const getLineData = (): Line[] => {
+  const getLineData = (): ChartYear[] => {
     data = flatten(chain(filteredData)
       .groupBy('year')
       .map((value) => flatten(chain(value)
@@ -588,6 +589,7 @@ export const getModelIntercomparisonData = (
             [key !== 'null' ? key : 'Total']: res.reduce(
               (previous, current) => (current.value || 0) + previous, 0,
             ),
+            unit: res[0].unit.name,
             year: res[0].year,
             visualizationTypes: value[0].visualization_types || [],
           }))
@@ -634,8 +636,8 @@ export const getModelIntercomparisonData = (
       }));
   };
 
-  const getBarData = (): Line[] => {
-    data = chain(filteredData)
+  const getBarData = (): ChartYear[] => {
+    data = chain(filteredDataBars)
       .groupBy('category_1').map(
         (d) => ({
           model: d[0].category_1,

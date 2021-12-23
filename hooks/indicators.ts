@@ -153,7 +153,7 @@ export function useIndicatorMetadata(
   });
 
   const scenarios = useMemo<{ label: string, value: string }[]>(
-    () => (uniq(data[visualization]?.scenarios)).map((s) => ({
+    () => (uniq(data[visualization]?.scenarios)).map((s: { name: string, id: string }) => ({
       label: s.name,
       value: s.id,
     })), [data, visualization],

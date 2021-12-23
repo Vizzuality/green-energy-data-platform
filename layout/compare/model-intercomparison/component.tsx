@@ -1,5 +1,6 @@
 import React, {
   FC,
+  useRef,
   useEffect,
   useState,
   useMemo,
@@ -25,6 +26,7 @@ import {
 // components
 import Tooltip from 'components/tooltip';
 import Filters from 'components/filters';
+import FiltersMI from 'components/filters-model-intercomparison';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 import LoadingSpinner from 'components/loading-spinner';
@@ -48,24 +50,12 @@ import DropdownContent from 'layout/dropdown-content';
 
 // import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 
+import {
+  ChartProps, WdigetConfigTypes, Line, Bar,
+} from 'types/model-intercomparison';
+
 import ChartConfig from './config';
-
 import IndicatorCompareDataProps from '../types';
-
-type ChartProps = {
-  widgetData: unknown,
-  widgetConfig: unknown,
-  colors: string[],
-};
-
-// interface WidgetDataTypes {
-//   name?: string,
-//   value?: number,
-//   region?: string,
-//   year?: number,
-//   visualizationTypes: string[];
-//   layers?: MapLayersProps[]
-// }
 
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   groupSlug,
@@ -189,6 +179,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
 
+  const [activeModels, setActiveModel] = useState(categories);
+
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, categories, groupSlug),
     [records, filters, categories, groupSlug],
@@ -198,27 +190,17 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(records), [records],
   );
-  type Object = {
-    label: string | number,
-    value: string | number,
-  };
-
-  interface WdigetConfigTypes {
-    cartesianAxis?: Object,
-    cartesianGrid?: Object,
-    tooltip?: Object,
-    height?: number,
-  }
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[visualization] as WdigetConfigTypes,
     [visualization, widgetDataKeys],
   );
 
-  const widgetData = useMemo(
+  const widgetData = useMemo<Line[] | Bar[]>(
     () => getModelIntercomparisonData(
-      filters, filteredRecords,
-    ), [filters, filteredRecords],
+      filters, filteredRecords, activeModels,
+    ) as Line[] | Bar[],
+    [filters, filteredRecords, activeModels],
   );
 
   const currentVisualization = useMemo<string>(
@@ -312,24 +294,40 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     return null;
   }, [visualization]);
 
+  const legendRef = useRef(null);
+  const legendContainerRef = useRef(null);
+  const height = legendContainerRef?.current && legendContainerRef?.current?.clientHeight;
+
   return (
     <section className={`flex flex-col  ${className}`}>
       <div className="flex justify-between">
         <section className="w-full">
-          {categories.length > 0 && (
+          {categories.length > 0 && visualization === 'bar' && (
+          <FiltersMI
+            models={categories}
+            activeModels={activeModels}
+            onClick={setActiveModel}
+            height={height}
+          />
+          )}
+          {categories.length > 0 && visualization !== 'bar' && (
           <Filters
             visualization={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length}
-            className="overflow-y-auto mb-4"
+            className="overflow-y-auto"
             onClick={setFilters}
+            height={height}
           />
           )}
         </section>
         <section className="flex flex-col justify-between ml-4 w-full">
           <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
           {LegendPayload.length > 0 && visualization !== 'choropleth' && (
-          <Legend payload={LegendPayload} />
+          <Legend
+            ref={legendRef}
+            payload={LegendPayload}
+          />
           )}
         </section>
       </div>

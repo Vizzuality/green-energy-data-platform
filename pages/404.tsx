@@ -28,7 +28,7 @@ const NotFoundPage: FC = () => (
         <div className="flex justify-center">
           <Link href="/">
             <Button theme="primary-background" size="xlg" className="py-20">
-            {i18next.t('homepage')}
+              {i18next.t('homepage')}
             </Button>
           </Link>
         </div>

@@ -50,6 +50,22 @@ import ChartConfig from './config';
 
 import IndicatorDataProps from '../types';
 
+interface Data {
+  [key: string]: string | number | string[],
+  model?: string,
+  year?: number,
+}
+
+interface ChartLine {
+  year: number,
+  // visualizationTypes: string[],
+  [key: string]: string | number | string[] | Data,
+}
+
+interface ChartBar {
+  [key: string]: string | number | string[] | Data[],
+}
+
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
 }: IndicatorDataProps) => {
@@ -66,7 +82,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, unit, region, scenario, visualization,
+    year, unit, region, scenario, visualization, category,
   } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
@@ -186,32 +202,19 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     () => getSubcategoriesFromRecords(records), [records],
   );
 
-  const widgetDataKeys = (visualization === 'line') ? categories : subcategories;
+  const widgetDataKeysLine = category?.label === 'category_1' ? categories : subcategories;
+  const widgetDataKeysBar = subcategories;
+  const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys)[configType],
     [configType, widgetDataKeys],
   );
 
-  interface Data {
-    [key: string]: string | number | string[],
-    model?: string,
-    year?: number,
-  }
-
-  interface Line {
-    year: number,
-    // visualizationTypes: string[],
-    [key: string]: string | number | string[] | Data,
-  }
-
-  interface Bar {
-    [key: string]: string | number | string[] | Data[],
-  }
-  const widgetData = useMemo<Line[] | Bar[]>(
+  const widgetData = useMemo<ChartLine[] | ChartBar[]>(
     () => getModelIntercomparisonData(
       filters, filteredRecords, activeModels,
-    ) as Line[] | Bar[],
+    ) as ChartLine[] | ChartBar[],
     [filters, filteredRecords, activeModels],
   );
 
@@ -287,10 +290,10 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   ]);
 
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
-    () => subcategories.map((item, index) => ({
+    () => widgetDataKeys.map((item, index) => ({
       label: item,
       color: colors[index],
-    })), [colors, subcategories],
+    })), [colors, widgetDataKeys],
   );
 
   const legendRef = useRef(null);
@@ -299,6 +302,108 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
 
   return (
     <section className={`flex flex-col  ${className}`}>
+      <section className="flex items-center">
+        <span className="pr-2">Showing for:</span>
+        <div className="flex py-4 items-center">
+          {/* region filter */}
+          {(['line'].includes(visualization) && !!regions.length) && (
+          <div className="flex items-center">
+            {regions.length === 1 && (
+            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+              <span className="pr-2">
+                {i18next.t('region')}
+                :
+              </span>
+              <span>{regions[0]?.label}</span>
+            </div>
+            )}
+            {regions.length > 1 && (
+            <Tooltip
+              placement="bottom-start"
+              visible={dropdownVisibility.region}
+              interactive
+              onClickOutside={() => closeDropdown('region')}
+              content={(
+                <DropdownContent
+                  list={regions}
+                  keyEl="region"
+                  onClick={handleChange}
+                />
+                )}
+            >
+              <button
+                type="button"
+                onClick={() => { toggleDropdown('region'); }}
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+              >
+                <span className="pr-2">
+                  {i18next.t('region')}
+                  :
+                </span>
+                <span>{displayRegion || 'Select a region'}</span>
+              </button>
+            </Tooltip>
+            )}
+          </div>
+          )}
+          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+          {/* Scenario filter */}
+          {scenarios?.length > 1 && (
+          <Tooltip
+            placement="bottom-start"
+            visible={dropdownVisibility.scenario}
+            interactive
+            onClickOutside={() => closeDropdown('scenario')}
+            content={(
+              <DropdownContent
+                list={scenarios}
+                keyEl="scenario"
+                onClick={handleChange}
+              />
+              )}
+          >
+            <button
+              type="button"
+              onClick={() => { toggleDropdown('scenario'); }}
+              className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+            >
+              <span className="pr-2">
+                {i18next.t('scenario')}
+                :
+              </span>
+              <span>{displayScenario || i18next.t('selectScenario')}</span>
+            </button>
+          </Tooltip>
+            )}
+          <div className="flex items-center">
+            <Tooltip
+              placement="bottom-start"
+              visible={dropdownVisibility.unit}
+              interactive
+              onClickOutside={() => closeDropdown('unit')}
+              content={(
+                <DropdownContent
+                  list={units}
+                  keyEl="unit"
+                  onClick={handleChange}
+                />
+                  )}
+            >
+              <button
+                type="button"
+                onClick={() => { toggleDropdown('unit'); }}
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+              >
+                <span className="pr-2">
+                  {i18next.t('unit')}
+                  :
+                </span>
+                <span>{displayUnit}</span>
+              </button>
+            </Tooltip>
+          </div>
+        </div>
+      </section>
       <div className="flex justify-between mb-4">
         <section className="w-full">
           {categories.length > 0 && visualization === 'bar' && (
@@ -316,6 +421,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             hasSubcategories={!!subcategories.length}
             className="overflow-y-auto"
             onClick={setFilters}
+            height={height}
           />
           )}
         </section>
@@ -325,7 +431,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
           <Legend
             ref={legendRef}
             payload={LegendPayload}
-            className="max-h-72 overflow-y-auto"
           />
           )}
         </section>
@@ -333,70 +438,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       <div>
 
         <section className="flex flex-col w-full">
-          <div className="flex py-4 items-center">
-            {/* region filter */}
-            {(['line'].includes(visualization) && !!regions.length) && (
-            <div className="flex items-center">
-              <span className="pr-2">
-                {i18next.t('region')}
-                :
-              </span>
-              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]?.label}</span>)}
-              {regions.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.region}
-                interactive
-                onClickOutside={() => closeDropdown('region')}
-                content={(
-                  <DropdownContent
-                    list={regions}
-                    keyEl="region"
-                    onClick={handleChange}
-                  />
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('region'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
-                  <span>{displayRegion || 'Select a region'}</span>
-                </button>
-              </Tooltip>
-              )}
-            </div>
-            )}
-            {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
-            {/* Scenario filter */}
-            <span className="pr-2">
-              {i18next.t('scenario')}
-              :
-            </span>
-            {scenarios?.length > 1 && (
-            <Tooltip
-              placement="bottom-start"
-              visible={dropdownVisibility.scenario}
-              interactive
-              onClickOutside={() => closeDropdown('scenario')}
-              content={(
-                <DropdownContent
-                  list={scenarios}
-                  keyEl="scenario"
-                  onClick={handleChange}
-                />
-              )}
-            >
-              <button
-                type="button"
-                onClick={() => { toggleDropdown('scenario'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-              >
-                <span>{displayScenario || i18next.t('selectScenario')}</span>
-              </button>
-            </Tooltip>
-            )}
-          </div>
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
             <LoadingSpinner />
@@ -415,30 +456,6 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-              <div className="flex items-center">
-                <Tooltip
-                  placement="bottom-start"
-                  visible={dropdownVisibility.unit}
-                  interactive
-                  onClickOutside={() => closeDropdown('unit')}
-                  content={(
-                    <DropdownContent
-                      list={units}
-                      keyEl="unit"
-                      onClick={handleChange}
-                    />
-                  )}
-                >
-                  <button
-                    type="button"
-                    onClick={() => { toggleDropdown('unit'); }}
-                    className="flex items-center cursor-pointer text-sm text-gray1 text-opacity-50"
-                  >
-                    <span>{displayUnit}</span>
-                  </button>
-                </Tooltip>
-              </div>
-
               <div className={cx('w-full', {
                 'flex flex-wrap': visualization === 'bar',
                 'h-96': visualization !== 'bar',
@@ -464,12 +481,10 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                   ),
                 )}
               </div>
-
             </div>
             )}
           </div>
         </section>
-
       </div>
     </section>
   );

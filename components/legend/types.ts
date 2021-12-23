@@ -6,4 +6,5 @@ export type Payload = Readonly<{
 export interface WidgetLegendProps {
   className?: string,
   payload: Payload[],
+  ref?: unknown
 }

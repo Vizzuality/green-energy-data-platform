@@ -7,6 +7,7 @@ type PayloadObject = {
   value: number,
   color: string,
   fill: string,
+  year: number,
 };
 
 interface TickProps {
@@ -17,6 +18,7 @@ interface TickProps {
 
 interface TooltipProps {
   payload: PayloadObject[]
+  label?: string,
 }
 
 const DefaultTick = {
@@ -78,8 +80,9 @@ const LabelContent = () => (
 );
 
 const TooltipContent: FC<TooltipProps> = ({
+  label,
   payload,
-}: TooltipProps) => <Tooltip payload={payload} />;
+}: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
 const ChartConfig = (categories) => {
   const getLines = () => {
@@ -236,6 +239,7 @@ const ChartConfig = (categories) => {
         interval: 0,
         tick: TickSmall,
       },
+      year: 'year',
       tooltip: {
         isAnimationActive: false,
         content: TooltipContent,

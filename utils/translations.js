@@ -62,6 +62,8 @@ export const resources = {
       selectScenario: 'Select scenario',
       selectAll: 'Select all',
       history: 'Show history',
+      unit: 'Unit',
+      year: 'Year',
     },
   },
   cn: {
@@ -118,6 +120,8 @@ export const resources = {
       selectScenario: '选择场景',
       selectAll: '全选',
       history: '显示历史',
+      unit: '单元',
+      year: '年',
     },
   },
 };

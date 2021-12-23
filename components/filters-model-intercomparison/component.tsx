@@ -110,22 +110,6 @@ const FiltersMI: FC<FiltersProps> = ({
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-center p-3">
-        {/* <Icon
-          ariaLabel="category-up"
-          name="triangle_border"
-          size="xlg"
-          onClick={() => handleClick('down')}
-          className="cursor-pointer p-2 mr-3 border-gray1 border-2 border-opacity-30 rounded-full hover:bg-gray1 hover:bg-opacity-90 hover:text-white text-gray1"
-        />
-        <Icon
-          ariaLabel="category-down"
-          name="triangle_border"
-          size="xlg"
-          onClick={() => handleClick('up')}
-          className="cursor-pointer p-2 border-gray1 border-2 border-opacity-30 rounded-full transform rotate-180 hover:bg-gray1 hover:bg-opacity-90 hover:text-white"
-        /> */}
-      </div>
     </div>
   );
 };

@@ -10,5 +10,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
       slug: querySlug,
     },
   } = req;
-  res.status(200).json(SUBGROUPS.find(({ slug, id }) => (querySlug === slug) || (querySlug === id.toString())));
+  res.status(200).json(SUBGROUPS.find(
+    ({ slug, id }) => (querySlug === slug) || (querySlug === id.toString()),
+  ));
 };

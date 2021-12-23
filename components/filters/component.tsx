@@ -15,6 +15,7 @@ interface FiltersProps {
   hasSubcategories: boolean,
   className?: string,
   onClick: (category: Record<string, any>) => void,
+  height?: number,
 }
 
 const Filters: FC<FiltersProps> = ({
@@ -23,6 +24,7 @@ const Filters: FC<FiltersProps> = ({
   hasSubcategories,
   className = '',
   onClick,
+  height,
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
@@ -46,7 +48,6 @@ const Filters: FC<FiltersProps> = ({
   //     }
   //   }
   // }, [dispatch, onClick, categories, visualization, current]);
-
   useEffect(() => {
     if (visualization === 'choropleth') {
       const value = categories[0];
@@ -80,8 +81,10 @@ const Filters: FC<FiltersProps> = ({
   };
 
   return (
-    <div className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full',
-      { [className]: className })}
+    <div
+      className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full',
+        { [className]: className })}
+      style={{ height }}
     >
       <div className="flex justify-start py-3.75 px-6 ">
         <div className="flex">
@@ -92,7 +95,9 @@ const Filters: FC<FiltersProps> = ({
           </p>
         </div>
       </div>
-      <div className="flex flex-col max-h-36 overflow-y-auto items-start">
+      <div className={cx('flex flex-col overflow-y-auto items-start',
+        { 'max-h-36': !height })}
+      >
         {categories.map((category) => (
           <div
             key={category}
