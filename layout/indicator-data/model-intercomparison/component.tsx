@@ -1,5 +1,6 @@
 import React, {
   FC,
+  useRef,
   useEffect,
   useState,
   useMemo,
@@ -21,6 +22,7 @@ import {
 
 // components
 import Tooltip from 'components/tooltip';
+import FiltersMI from 'components/filters-model-intercomparison';
 import Filters from 'components/filters';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
@@ -64,7 +66,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, unit, region, category, scenario, visualization,
+    year, unit, region, scenario, visualization,
   } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
@@ -173,6 +175,8 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
     () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
 
+  const [activeModels, setActiveModel] = useState(categories);
+
   const filteredRecords = useMemo(
     () => filterRecords(records, filters, categories, groupSlug),
     [records, filters, categories, groupSlug],
@@ -206,9 +210,9 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   }
   const widgetData = useMemo<Line[] | Bar[]>(
     () => getModelIntercomparisonData(
-      filters, filteredRecords,
+      filters, filteredRecords, activeModels,
     ) as Line[] | Bar[],
-    [filters, filteredRecords],
+    [filters, filteredRecords, activeModels],
   );
 
   const currentVisualization = useMemo<string>(
@@ -283,39 +287,45 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   ]);
 
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
-    () => {
-      let legendData;
-      if (visualization === 'pie') {
-        legendData = widgetData;
-      } else legendData = category?.label === 'category_1' ? categories : subcategories;
-
-      return legendData.map((item, index) => ({
-        label: item.name || item,
-        color: colors[index],
-      }));
-    }, [colors, widgetData, categories, category, subcategories, visualization],
+    () => subcategories.map((item, index) => ({
+      label: item,
+      color: colors[index],
+    })), [colors, subcategories],
   );
+
+  const legendRef = useRef(null);
+  const legendContainerRef = useRef(null);
+  const height = legendContainerRef?.current && legendContainerRef?.current?.clientHeight;
 
   return (
     <section className={`flex flex-col  ${className}`}>
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-4">
         <section className="w-full">
-          {categories.length > 0 && (
+          {categories.length > 0 && visualization === 'bar' && (
+          <FiltersMI
+            models={categories}
+            activeModels={activeModels}
+            onClick={setActiveModel}
+            height={height}
+          />
+          )}
+          {categories.length > 0 && visualization !== 'bar' && (
           <Filters
             visualization={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length}
-            className="overflow-y-auto mb-4"
+            className="overflow-y-auto"
             onClick={setFilters}
           />
           )}
         </section>
-        <section className="flex flex-col justify-between ml-4 w-full">
+        <section ref={legendContainerRef} className="flex flex-col justify-between ml-4 w-full">
           <DataSource indicatorSlug={indicatorSlug} className="mb-4" />
           {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
+            ref={legendRef}
             payload={LegendPayload}
-            className="max-h-72 overflow-y-auto mb-4"
+            className="max-h-72 overflow-y-auto"
           />
           )}
         </section>
@@ -443,10 +453,10 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 )}
                 {visualization === 'bar' && widgetData.map(
                   (widget) => (
-                    <div key={widget[0].model}>
-                      <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget[0].model}</span>
+                    <div key={widget.model}>
+                      <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
                       <Bar
-                        widgetData={widget}
+                        widgetData={widget.data}
                         widgetConfig={widgetConfig}
                         colors={colors}
                       />

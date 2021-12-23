@@ -569,11 +569,13 @@ export const getGroupedValues = (
 export const getModelIntercomparisonData = (
   filters: IndicatorFilters,
   records: Record[],
+  activeModels: string[],
 ): Line[] | Bar[] => {
   const { category, visualization } = filters;
   const label = category?.label;
-  const categorySelected = category?.value || 'Total';
-  const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
+  const filteredData = !activeModels.length
+    ? records
+    : records.filter((record) => activeModels.includes(record.category_1));
 
   let data = [];
   const getLineData = (): Line[] => {
@@ -604,22 +606,42 @@ export const getModelIntercomparisonData = (
       }));
   };
 
-  const getBarData = (): Bar[] => {
-    data = chain(records)
-      .groupBy('category_1')
+  const getDataByYear = (dataByCat1) => {
+    const groupedData = flatten(chain(dataByCat1)
+      .groupBy('year')
       .map((value) => flatten(chain(value)
-        .groupBy('year')
-        .map((res) => (
+        .groupBy('category_2')
+        .map((res, key) => (
           {
-            model: res[0].category_1,
-            [res[0].category_2]: res.reduce(
+            [key !== 'null' ? key : 'Total']: res.reduce(
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
-            visualizationTypes: value[0].visualization_types,
+            visualizationTypes: value[0].visualization_types || [],
           }))
         .value()))
-      .value();
+      .value());
+    const dataByYear = groupBy(groupedData, 'year');
+    return Object.keys(dataByYear).map((year) => dataByYear[year]
+      .reduce((acc, next) => {
+        const { year: currentYear, ...rest } = next;
+        return ({
+          ...acc,
+          ...rest,
+        });
+      }, {
+        year,
+      }));
+  };
+
+  const getBarData = (): Line[] => {
+    data = chain(filteredData)
+      .groupBy('category_1').map(
+        (d) => ({
+          model: d[0].category_1,
+          data: getDataByYear(d),
+        }),
+      ).value();
     return data;
   };
 

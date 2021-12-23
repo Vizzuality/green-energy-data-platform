@@ -176,7 +176,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
                 type="button"
                 className="border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full"
               >
-                Compare
+                {i18next.t('compare')}
               </button>
             </Tooltip>
           </div>
