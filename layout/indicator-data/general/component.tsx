@@ -56,11 +56,6 @@ type ChartProps = {
   colors: string[],
 };
 
-// interface WidgetDataTypes {
-//   visualizationTypes: string[];
-//   layers?: MapLayersProps[],
-// }
-
 const IndicatorChart: FC<ComponentTypes> = ({
   className,
 }: ComponentTypes) => {

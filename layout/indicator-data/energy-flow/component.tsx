@@ -10,15 +10,18 @@ import { useQueryClient } from 'react-query';
 import { uniqBy } from 'lodash';
 
 import {
-  // useSelector,
+  useSelector,
   useDispatch,
 } from 'react-redux';
 import { useRouter } from 'next/router';
+
+import { RootState } from 'store/store';
 
 // hooks
 import {
   useIndicator,
   useSankeyData,
+  useIndicatorMetadata,
 } from 'hooks/indicators';
 
 // components
@@ -54,10 +57,10 @@ const SankeyChart: FC<ComponentTypes> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  // const filters = useSelector((state: RootState) => state.indicator);
-  // const {
-  //   year,
-  // } = filters;
+  const filters = useSelector((state: RootState) => state.indicator);
+  const {
+    year, region, visualization, unit,
+  } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -109,21 +112,7 @@ const SankeyChart: FC<ComponentTypes> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const { id: indicatorId } = indicatorData;
-  const years = useMemo(() => [
-    { label: 2000, value: 2000 },
-    { label: 2015, value: 2015 },
-    { label: 2020, value: 2020 },
-  ], []);
-  const units = useMemo(() => [
-    { label: '10000tce', value: '10000tce' }], []);
-  const unit = '10000tce';
-  // const defaultYear = years[0].value;
-  // const defaultUnit = units[0].value;
-  const year = 2015;
-  const visualization = 'sankey';
-  const filters = { year };
-
+  const { id: indicatorId, name: indicatorName } = indicatorData;
   const {
     data,
     isFetching: isFetchingRecords,
@@ -138,25 +127,51 @@ const SankeyChart: FC<ComponentTypes> = ({
     refetchOnWindowFocus: false,
   }));
 
-  // const {
-  //   defaultCategory,
-  //   years,
-  //   defaultYear,
-  //   regionsGeometries,
-  //   units,
-  //   defaultUnit,
-  //   scenarios,
-  //   defaultScenario,
-  // } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
-  //   refetchOnWindowFocus: false,
-  //   enabled: records && !!indicatorSlug && !!visualization,
-  // });
+  const {
+    years,
+    defaultYear,
+    units,
+    defaultUnit,
+    regions,
+    defaultRegion,
+  } = useIndicatorMetadata(indicatorSlug, visualization, data, {}, {
+    refetchOnWindowFocus: false,
+    enabled: data && !!indicatorSlug,
+  });
 
-  // const widgetData = useMemo(
-  //   () => getGroupedValues(
-  //     name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-  //   ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
-  // );
+  const currentYear = useMemo<number>(
+    () => {
+      if (years.find(({ value }) => value === year)) {
+        return year;
+      }
+      return defaultYear?.value;
+    },
+    [year, years, defaultYear],
+  );
+
+  const currentUnit = useMemo<string>(
+    () => {
+      if (units.find(({ label }) => label === unit)) {
+        return unit;
+      }
+      return defaultUnit?.label;
+    },
+    [unit, units, defaultUnit],
+  );
+
+  const currentRegion = useMemo<string>(
+    () => {
+      if (regions.find(({ label }) => label === region)) {
+        return region;
+      }
+      return defaultRegion?.label;
+    },
+    [region, regions, defaultRegion],
+  );
+
+  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
+  const displayRegion = useMemo(() => regions.find(({ label }) => label === region)?.label, [regions, region]) || '';
+  const displayUnit = useMemo(() => units.find(({ label }) => label === unit)?.label, [units, unit]) || '';
 
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
@@ -166,50 +181,24 @@ const SankeyChart: FC<ComponentTypes> = ({
     [visualization, indicatorData],
   );
 
-  // const currentYear = useMemo<number>(
-  //   () => {
-  //     if (years.find(({ value }) => value === year)) {
-  //       return year;
-  //     }
-  //     return defaultYear?.value;
-  //   },
-  //   [year, years, defaultYear],
-  // );
-
-  // const currentUnit = useMemo<string>(
-  //   () => {
-  //     if (units.find(({ value }) => value === unit)) {
-  //       return unit;
-  //     }
-  //     return defaultUnit?.value;
-  //   },
-  //   [unit, units, defaultUnit],
-  // );
-
-  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
-  const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
-
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
-      // ...(currentUnit && { unit: currentUnit }) || { unit: null },
-      region: null,
-      // year: currentYear || null,
+      ...(currentUnit && { unit: currentUnit }) || { unit: null },
+      category: null,
+      region: currentRegion || null,
+      year: currentYear || null,
       scenario: null,
     }));
   }, [
     dispatch,
+    defaultYear,
+    currentYear,
+    defaultUnit,
+    currentUnit,
+    currentRegion,
     currentVisualization,
-    // dispatch,
-    // defaultYear,
-    // currentYear,
-    // defaultUnit,
-    // currentUnit,
-    // defaultCategory,
-    // defaultScenario,
-    // currentScenario,
-    // currentVisualization,
-    // indicatorSlug,
+    indicatorSlug,
   ]);
 
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
@@ -224,10 +213,18 @@ const SankeyChart: FC<ComponentTypes> = ({
       <div className="flex flex-col h-full w-full">
         <section className="flex flex-col w-full">
           <div className="flex w-full justify-between">
+            {/* filters */}
             {/* year filter */}
             <div className="flex items-center">
               <span className="pr-2">Showing for:</span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0].label}</span>)}
+              {years.length === 1 && (
+              <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+                {i18next.t('year')}
+                :
+                {' '}
+                {years[0].label}
+              </span>
+              )}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -247,8 +244,87 @@ const SankeyChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('year'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>{displayYear || i18next.t('dates')}</span>
+                  <span>
+                    {i18next.t('year')}
+                    :
+                    {' '}
+                    {displayYear || i18next.t('dates')}
+                  </span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                </button>
+              </Tooltip>
+              )}
+              {/* unit filter */}
+              {units.length === 1 && (
+              <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+                {i18next.t('unit')}
+                :
+                {' '}
+                {units[0].label}
+              </span>
+              )}
+              {units.length > 1 && (
+              <Tooltip
+                placement="bottom-start"
+                visible={dropdownVisibility.unit}
+                interactive
+                onClickOutside={() => closeDropdown('unit')}
+                content={(
+                  <DropdownContent
+                    list={units}
+                    keyEl="unit"
+                    onClick={handleChange}
+                  />
+                )}
+              >
+                <button
+                  type="button"
+                  onClick={() => { toggleDropdown('unit'); }}
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                >
+                  <span>
+                    {i18next.t('unit')}
+                    :
+                    {' '}
+                    {displayUnit}
+                  </span>
+                </button>
+              </Tooltip>
+              )}
+              {/* region filter  */}
+              {regions.length === 1 && (
+              <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+                {' '}
+                {i18next.t('region')}
+                :
+                {' '}
+                {regions[0].label}
+              </span>
+              )}
+              {regions.length > 1 && (
+              <Tooltip
+                placement="bottom-start"
+                visible={dropdownVisibility.region}
+                interactive
+                onClickOutside={() => closeDropdown('region')}
+                content={(
+                  <DropdownContent
+                    list={regions}
+                    keyEl="region"
+                    onClick={handleChange}
+                  />
+                      )}
+              >
+                <button
+                  type="button"
+                  onClick={() => { toggleDropdown('region'); }}
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                >
+                  <span>
+                    {i18next.t('region')}
+                    :
+                    {displayRegion || 'Select a region'}
+                  </span>
                 </button>
               </Tooltip>
               )}
@@ -271,31 +347,10 @@ const SankeyChart: FC<ComponentTypes> = ({
                 )}
             {(!isFetchingRecords && isSuccessRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-              <div className="flex items-center">
-                <Tooltip
-                  placement="bottom-start"
-                  visible={dropdownVisibility.unit}
-                  interactive
-                  onClickOutside={() => closeDropdown('unit')}
-                  content={(
-                    <DropdownContent
-                      list={units}
-                      keyEl="unit"
-                      onClick={handleChange}
-                    />
-                      )}
-                >
-                  <button
-                    type="button"
-                    onClick={() => { toggleDropdown('unit'); }}
-                    className="flex items-center cursor-pointer text-sm  text-gray1 text-opacity-50"
-                  >
-                    <span>{displayUnit}</span>
-                  </button>
-                </Tooltip>
-              </div>
               <div className="w-full min-h-screen">
                 <Sankey
+                  indicatorName={indicatorName}
+                  indicatorSlug={indicatorSlug}
                   widgetData={data}
                   widgetConfig={CONFIG}
                 />

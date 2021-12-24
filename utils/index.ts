@@ -52,7 +52,7 @@ export const getCategoriesFromRecords = (
   records: Record[],
   visualization: string,
 ) => {
-  const categories = compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort()));
+  const categories = visualization !== 'sankey' ? compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort())) : [];
 
   if (visualization === 'choropleth') {
     return categories;

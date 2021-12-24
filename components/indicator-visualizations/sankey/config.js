@@ -5,7 +5,7 @@ const CONFIG = {
     top: 50,
     bottom: 20,
   },
-  iterations: 80,
+  iterations: 0,
 };
 
 export default CONFIG;

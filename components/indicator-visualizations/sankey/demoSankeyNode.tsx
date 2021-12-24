@@ -1,11 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, useRef } from 'react';
 import { Rectangle, Layer } from 'recharts';
+
+import { TITLE } from './constants';
 
 interface SankeyNodeProps {
   x?: number,
   y?: number,
   width?: number,
   containerWidth: number,
+  linkWidth: number,
+  indicatorSlug: string,
   height?: number,
   index?: number,
   payload?: any,
@@ -13,7 +17,7 @@ interface SankeyNodeProps {
 
 const DemoSankeyNode: FC<SankeyNodeProps> = (props: SankeyNodeProps) => {
   const {
-    x, y, width, height, index, payload, containerWidth,
+    x, y, width, height, index, payload, containerWidth, linkWidth, indicatorSlug,
   } = props;
   const isOut = x + width + 6 > containerWidth;
   const str = payload?.name;
@@ -30,9 +34,15 @@ const DemoSankeyNode: FC<SankeyNodeProps> = (props: SankeyNodeProps) => {
   const labelPositionFix = isLabelSplitted ? -(labelHeight / 4) : 0;
   const heightFix = height / 2 > labelHeight ? labelHeight / 2 : labelHeight / 4;
   const fullLabel = width > 640;
+
+  const nodeRef = useRef(null);
+  if (!nodeRef) return null;
+  const nodeWidth = nodeRef?.current?.props?.width;
+
   return (
     <Layer key={`CustomNode${index}`}>
       <Rectangle
+        ref={nodeRef}
         x={x}
         y={y}
         width={width}
@@ -40,6 +50,25 @@ const DemoSankeyNode: FC<SankeyNodeProps> = (props: SankeyNodeProps) => {
         fill="#3A3F59"
         fillOpacity="1"
       />
+
+      {/* TO - DO - add labels to API for different indicators */}
+      <text>
+        {x < 250 && !!linkWidth && indicatorSlug === 'energy-flows-energy-flows' && TITLE.map((level, i) => (
+          <tspan
+            key={level}
+            textAnchor="left"
+            x={50 + linkWidth * i - nodeWidth * i * 2}
+            y={10}
+            fontSize="12"
+            fontWeight="bold"
+            stroke="rgb(58, 63, 89)"
+            strokeWidth="0.5px"
+            fill="rgb(58, 63, 89)"
+          >
+            {level}
+          </tspan>
+        ))}
+      </text>
       {fullLabel && (
       <text
         textAnchor="end"

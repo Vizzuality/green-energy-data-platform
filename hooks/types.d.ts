@@ -1,15 +1,14 @@
-type Node = {
-  name_en: string,
-  name_cn: string,
-};
+type Node = Readonly<{
+  name: string,
+}>;
 
-type Link = {
-  class_cn: string,
-  class_en: string,
-  source: number,
-  target: number,
-  value: number,
-};
+type Link = Readonly<{
+  class_cn: string;
+  class_en: string;
+  source: number;
+  target: number;
+  value: number;
+}>;
 
 type Data = {
   links: Link[],
@@ -19,6 +18,13 @@ type Data = {
   units_en: string,
   year: number
 };
+
+export interface Sankey {
+  nodes: Node[],
+  links: Link[];
+  year: number;
+  region: string;
+}
 
 export interface IndicatorData {
   nodes: Node[],

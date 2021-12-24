@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import cx from 'classnames';
 
-import TooltipProps from './types';
+import { TooltipProps } from '../types';
 
 const Tooltip: FC<TooltipProps> = ({
   className,
   payload,
-  indicatorSlug,
+  indicatorName,
   unit,
 }: TooltipProps) => {
   if (!payload) return null;
@@ -26,7 +26,7 @@ const Tooltip: FC<TooltipProps> = ({
             >
               <span className="flex-1 py-1 w-full px-6 border-b border-white border-opacity-20">{nameFormat}</span>
               <div className="flex flex-col py-1 px-6">
-                <span>{indicatorSlug}</span>
+                <span>{indicatorName}</span>
                 <div className="flex items-center">
                   <span className="text-lg mr-2">{value.toFixed(2)}</span>
                   <span className="text-sm">{unit}</span>

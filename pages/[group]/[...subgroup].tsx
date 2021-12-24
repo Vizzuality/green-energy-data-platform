@@ -136,7 +136,7 @@ const GroupPage: FC = () => {
       <div className="container pb-20 m-auto">
         <section className="max-w-6xl m-auto -mt-40">
           <IndicatorData />
-          {!defaultVisualization.includes('sankey') && <WidgetsGrid />}
+          {!defaultVisualization?.includes('sankey') && <WidgetsGrid />}
         </section>
       </div>
 

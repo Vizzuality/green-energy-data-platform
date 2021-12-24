@@ -7,7 +7,9 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
-import { orderBy, uniq, flatten } from 'lodash';
+import {
+  orderBy, uniq, flatten,
+} from 'lodash';
 
 import {
   IndicatorFilters,
@@ -27,6 +29,8 @@ import {
 } from 'hooks/regions';
 import { getCategoriesFromRecords } from 'utils';
 
+import ID_CHINA from 'utils/constants';
+
 // types
 import {
   IndicatorProps,
@@ -35,8 +39,7 @@ import {
 } from 'types/data';
 
 import { SankeyData } from 'components/indicator-visualizations/sankey/types';
-
-import ID_CHINA from 'utils/constants';
+import { Sankey } from './types';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
@@ -100,7 +103,7 @@ export function useIndicator(
 export function useIndicatorMetadata(
   id: string,
   visualization: string,
-  records: Record[],
+  records: Record[] | Sankey,
   params = {},
   queryOptions = {},
 ) {
@@ -171,7 +174,10 @@ export function useIndicatorMetadata(
   );
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization) || [], [records, visualization],
+    () => {
+      if (visualization !== 'sankey') return [];
+      return getCategoriesFromRecords(records as Record[], visualization) || [];
+    }, [records, visualization],
   );
 
   const defaultCategory = useMemo(() => ({ label: 'category_1' }), []);
@@ -291,6 +297,8 @@ export function useSankeyData(
   id: string,
   params = {
     year: null,
+    region: null,
+    unit: null,
   },
   queryOptions = {},
 ) {
@@ -300,7 +308,7 @@ export function useSankeyData(
     (state: RootState) => (state.language),
   );
 
-  const { year } = params;
+  const { year, region, unit } = params;
 
   const query = useQuery<SankeyData, Error>(['sankey-data', id, current],
     () => fetchSankeyData(id, { locale: current, ...params }), {
@@ -316,15 +324,22 @@ export function useSankeyData(
   } = query;
 
   const widgetData = useMemo(() => {
+    // TODO - change to id when API adds it
+    const mockedUnit = '10000tce';
     const nodes = data?.nodes.map(({ name_en }) => ({ name: name_en }));
     const links = flatten(data?.data
-      .filter((d) => d.year === year)
+      .filter((d) => d.year === year
+      // TODO - change to id when API adds it
+      && d.region_en === region
+      && d.units_en === mockedUnit)
       .map((l) => l.links));
     return ({
       nodes,
       links,
+      year,
+      region,
     });
-  }, [data, year]);
+  }, [data, year, region]);
 
   return useMemo(() => ({
     isFetching,

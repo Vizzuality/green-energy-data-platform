@@ -1,16 +1,21 @@
 export interface ChartProps {
+  indicatorName: string,
+  indicatorSlug: string,
   widgetData: any,
   widgetConfig: any,
 }
 
 export type Payload = {
-  [key: string]: string | number | string[] | number[]
+  [key: string]: string | number | string[] | number[],
+  name: string,
+  value: number,
 };
 
 export interface TooltipProps {
   payload: Payload[],
-  indicatorSlug: string,
+  indicatorName: string,
   unit: string,
+  className?: string,
 }
 
 type Node = Readonly<{
