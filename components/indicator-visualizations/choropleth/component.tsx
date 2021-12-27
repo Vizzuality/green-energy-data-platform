@@ -98,7 +98,6 @@ const MapContainer: FC<MapContainerProps> = (
   const onChangeOrder = useCallback((ids) => {
     setSortArray(ids);
   }, []);
-
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
       <Map

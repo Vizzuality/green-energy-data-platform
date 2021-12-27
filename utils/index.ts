@@ -345,19 +345,20 @@ export const getGroupedValues = (
     const unitLabel = units.find((u) => u.value === unit)?.label;
     const legendTitle = unit ? `${name} (${unitLabel})` : name;
     const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
-
     if (layerType === 'Multipolygon' || layerType === 'Polygon') {
       data = [{
         visualizationTypes: visualizations,
+        data: dataWithGeometries,
         layers: [{
-          id: 'regions',
+          id: 'regions-with-color',
           type: 'geojson',
           source: {
             type: 'geojson',
             data: {
               type: 'FeatureCollection',
-              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }, index) => ({
                 type: 'Feature',
+                id: index,
                 geometry: geometry?.geometry,
                 properties: cat,
               })),
@@ -417,8 +418,8 @@ export const getGroupedValues = (
                     maxValue,
                     '#1C5183',
                   ],
-                  // 'fill-outline-color': '#35373E',
-                  'fill-opacity': 0.3,
+                  'fill-outline-color': '#35373E',
+                  'fill-opacity': 1,
                 },
               },
             ],
