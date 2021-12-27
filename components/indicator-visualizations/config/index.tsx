@@ -7,16 +7,18 @@ type PayloadObject = {
   value: number,
   color: string,
   fill: string,
+  year: number,
 };
 
 interface TickProps {
   x: number,
   y: number,
-  payload: PayloadObject
+  payload: PayloadObject,
 }
 
 interface TooltipProps {
   payload: PayloadObject[]
+  label?: string,
 }
 
 const DefaultTick = {
@@ -25,7 +27,9 @@ const DefaultTick = {
   fontSize: '14px',
 };
 
-const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
+const Tick: FC<TickProps> = (({
+  x, y, payload,
+}: TickProps) => {
   const { value } = payload;
   return (
     <g transform={`translate(${x},${y})`}>
@@ -45,6 +49,28 @@ const Tick: FC<TickProps> = (({ x, y, payload }: TickProps) => {
   );
 });
 
+const TickSmall: FC<TickProps> = (({
+  x, y, payload,
+}: TickProps) => {
+  const { value } = payload;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={-10}
+        dy={14}
+        textAnchor="end"
+        fill="#3A3F59"
+        opacity={0.5}
+        transform="rotate(270)"
+        fontSize="9px"
+      >
+        {value}
+      </text>
+    </g>
+  );
+});
+
 const LabelContent = () => (
   <g>
     <text x="50%" y={480} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
@@ -54,8 +80,9 @@ const LabelContent = () => (
 );
 
 const TooltipContent: FC<TooltipProps> = ({
+  label,
   payload,
-}: TooltipProps) => <Tooltip payload={payload} />;
+}: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
 const ChartConfig = (categories) => {
   const getLines = () => {
@@ -191,6 +218,31 @@ const ChartConfig = (categories) => {
       xAxis: {
         dataKey: 'province',
         tick: DefaultTick,
+      },
+    },
+    model_intercomparison_bar: {
+      margin: {
+        top: 20, right: 0, left: 0, bottom: 100,
+      },
+      width: 200,
+      height: 250,
+      cartesianGrid: {
+        vertical: false,
+      },
+      isAnimationActive: false,
+      bars: getBars(),
+      yAxis: {
+        tick: DefaultTick,
+      },
+      xAxis: {
+        dataKey: 'year',
+        interval: 0,
+        tick: TickSmall,
+      },
+      year: 'year',
+      tooltip: {
+        isAnimationActive: false,
+        content: TooltipContent,
       },
     },
     table: {

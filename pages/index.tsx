@@ -29,7 +29,7 @@ const HomePage: FC = () => {
         <h1 className="text-5.5xl pb-14">{i18next.t('landingTitle')}</h1>
         <h3 className="text-lg">Longer description about the site and benefits, lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.</h3>
       </Hero>
-      <div className="-mt-11 container m-auto lg:px-32 md:px-24 sm:px-16 px-8">
+      <div className="-mt-11 container m-auto lg:px-32 md:px-24 sm:px-16 px-8 mb-28">
         <Search
           items={groups}
           className="-mt-4 h-24 bg-white p-4 shadow-sm"
@@ -50,7 +50,7 @@ const HomePage: FC = () => {
           const textPosition = index % 2 !== 0 ? 'left' : 'right';
           return (
             <div key={group.id} className="container m-auto pb-28 lg:px-32 md:px-24 sm:px-16 px-8">
-              <GroupCard textPosition={textPosition} group={group} className={cx('flex justify-between', { 'flex-row-reverse': textPosition === 'left' })} />
+              <GroupCard textPosition={textPosition} group={group} className={cx('flex justify-between items-start', { 'flex-row-reverse': textPosition === 'left' })} />
             </div>
           );
         })}

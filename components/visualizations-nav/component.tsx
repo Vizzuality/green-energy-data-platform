@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import cx from 'classnames';
 import i18next from 'i18next';
 
@@ -9,9 +9,10 @@ import { setCompareFilters } from 'store/slices/indicator_compare';
 // components
 import Icon from 'components/icon';
 
-import { VisualizationsOptions } from './constants';
+import { GeneralVisualizationsOptions, ModelIntercomparisonVisualizationsOptions } from './constants';
 
 export interface VisualizationsNavProps {
+  groupSlug: string | string[];
   visualizationTypes: string[],
   active: string;
   mobile?: boolean,
@@ -19,6 +20,7 @@ export interface VisualizationsNavProps {
   className?: string;
 }
 export const VisualizationsNav: FC<VisualizationsNavProps> = ({
+  groupSlug,
   visualizationTypes,
   className,
   mobile = false,
@@ -29,13 +31,20 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
 
   const handleVisualization = useCallback(
     (id) => {
-      if (!compareIndex || compareIndex === 0) {
+      if (!compareIndex || compareIndex === 1) {
         dispatch(setFilters({ visualization: id }));
       } else {
         dispatch(setCompareFilters({ visualization: id }));
       }
     }, [compareIndex, dispatch],
   );
+
+  const VisualizationsOptions = useMemo(() => {
+    if (groupSlug === 'model-intercomparison') {
+      return ModelIntercomparisonVisualizationsOptions;
+    }
+    return GeneralVisualizationsOptions;
+  }, [groupSlug]);
 
   return (
     <nav>

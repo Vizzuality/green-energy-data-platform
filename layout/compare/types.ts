@@ -12,7 +12,23 @@ export interface CompareLayoutProps {
 }
 
 export type ChartProps = {
-  widgetData: any,
-  widgetConfig: any
+  widgetData: unknown,
+  widgetConfig: unknown
   colors: string[]
 };
+
+export interface IndicatorDataProps {
+  groupSlug: string | string[];
+  subgroupSlug: string | string[];
+  indicatorSlug: string;
+  className?: string;
+  visualization: string;
+}
+
+export default interface IndicatorCompareDataProps {
+  groupSlug: string | string[];
+  subgroupSlug: string | string[];
+  indicatorSlug: string;
+  className?: string;
+  compareIndex: number;
+}

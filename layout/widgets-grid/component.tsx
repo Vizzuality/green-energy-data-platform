@@ -20,7 +20,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
 }: WidgetsGridProps) => {
   const router = useRouter();
   const { query: { group: groupSlug } } = router;
-  const { data: group }: AxiosRequestConfig = useGroup(groupSlug as '', {
+  const { data: group }: AxiosRequestConfig = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
     placeholderData: {
       subgroups: [],

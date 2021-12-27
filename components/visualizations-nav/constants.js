@@ -1,4 +1,4 @@
-export const VisualizationsOptions = [
+export const GeneralVisualizationsOptions = [
   {
     id: 'line',
     icon: 'line',
@@ -26,4 +26,20 @@ export const VisualizationsOptions = [
   },
 ];
 
-export default VisualizationsOptions;
+export const ModelIntercomparisonVisualizationsOptions = [
+  {
+    id: 'line',
+    icon: 'line',
+    label: 'Global',
+  },
+  {
+    id: 'bar',
+    icon: 'bar',
+    label: 'Break-down (2035 - 2050)',
+  },
+  {
+    id: 'table',
+    icon: 'columns',
+    label: 'Table',
+  },
+];

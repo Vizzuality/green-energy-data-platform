@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
-import { orderBy } from 'lodash';
+import { orderBy, uniq } from 'lodash';
 
 import {
   IndicatorProps,
@@ -33,14 +33,14 @@ import { getCategoriesFromRecords } from 'utils';
 
 import ID_CHINA from 'utils/constants';
 
-export function useIndicators(group_id, subgroup_id) {
+export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
     current,
   } = useSelector(
     (state: RootState) => (state.language),
   );
   const query = useQuery(['fetch-indicators', current],
-    () => fetchIndicators(group_id, subgroup_id, { locale: current }));
+    () => fetchIndicators(group_id, subgroup_id, { locale: current }), { ...queryConfig });
 
   const {
     data, status, error, isSuccess, isLoading,
@@ -153,10 +153,10 @@ export function useIndicatorMetadata(
   });
 
   const scenarios = useMemo<{ label: string, value: string }[]>(
-    () => data[visualization]?.scenarios.map((scenario) => ({
-      label: scenario,
-      value: scenario,
-    })) || [], [data, visualization],
+    () => (uniq(data[visualization]?.scenarios)).map((s: { name: string, id: string }) => ({
+      label: s.name,
+      value: s.id,
+    })), [data, visualization],
   );
 
   const defaultScenario = useMemo<{ label: string, value: string }>(
@@ -227,6 +227,7 @@ export function useIndicatorRecords(
   const queryClient = useQueryClient();
 
   const { visualization } = params;
+
   const { data: regions } = useRegions({}, {
     refetchOnWindowsFocus: false,
     placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
