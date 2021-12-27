@@ -10,19 +10,21 @@ import { useDispatch } from 'react-redux';
 import Icon from 'components/icon';
 
 interface FiltersProps {
-  visualizationType: string,
+  visualization: string,
   categories: string[]
   hasSubcategories: boolean,
   className?: string,
-  onClick: (category: Record<string, unknown>) => void,
+  onClick: (category: Record<string, any>) => void,
+  height?: number,
 }
 
 const Filters: FC<FiltersProps> = ({
-  visualizationType,
+  visualization,
   categories,
   hasSubcategories,
   className = '',
   onClick,
+  height,
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
@@ -33,7 +35,7 @@ const Filters: FC<FiltersProps> = ({
   // );
 
   // useEffect(() => {
-  //   if (visualizationType === 'choropleth') {
+  //   if (visualization === 'choropleth') {
   //     const hasTotal = categories.includes('Total' || '全部的');
   //     if (hasTotal) {
   //       const value = current === 'cn' ? '全部的' : 'Total';
@@ -45,16 +47,15 @@ const Filters: FC<FiltersProps> = ({
   //       dispatch(onClick({ category: { label: 'category_2', value } }));
   //     }
   //   }
-  // }, [dispatch, onClick, categories, visualizationType, current]);
-
+  // }, [dispatch, onClick, categories, visualization, current]);
   useEffect(() => {
-    if (visualizationType === 'choropleth') {
+    if (visualization === 'choropleth') {
       const value = categories[0];
       setActive(value);
       dispatch(onClick({ category: { label: 'category_2', value } }));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, onClick, visualizationType]);
+  }, [dispatch, onClick, visualization]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
@@ -80,10 +81,12 @@ const Filters: FC<FiltersProps> = ({
   };
 
   return (
-    <div className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1',
-      { [className]: className })}
+    <div
+      className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full',
+        { [className]: className })}
+      style={{ height }}
     >
-      <div className="flex justify-start py-3.5 px-6 ">
+      <div className="flex justify-start py-3.75 px-6 ">
         <div className="flex">
           <Icon ariaLabel="filters" name="filter" size="lg" className="mr-5" />
           <p>
@@ -92,7 +95,9 @@ const Filters: FC<FiltersProps> = ({
           </p>
         </div>
       </div>
-      <div className="flex flex-col max-h-36 overflow-y-auto items-start">
+      <div className={cx('flex flex-col overflow-y-auto items-start',
+        { 'max-h-36': !height })}
+      >
         {categories.map((category) => (
           <div
             key={category}

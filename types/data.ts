@@ -8,7 +8,8 @@ export type SubgroupProps = Readonly<{
   default_indicator?: DataIdProps,
 }>;
 
-export type ScenarioProps = Readonly<{
+export type Scenario = Readonly<{
+  id: string,
   name: string
 }>;
 
@@ -23,17 +24,17 @@ export interface GroupProps {
   subgroups: SubgroupProps[],
 }
 
+interface Unit {
+  id: string,
+  name: string,
+}
+
 interface Geometry {
   geometry: {
     coordinates: number[],
     type: string,
   },
   type: string,
-}
-
-interface Unit {
-  id: string,
-  name: string,
 }
 
 interface RegionRecord {
@@ -54,7 +55,7 @@ export interface Record {
   geometry?: Geometry[]
   year: number,
   visualization_types: string[],
-  scenario: ScenarioProps
+  scenario: Scenario
 }
 
 interface CategoryFilters {
@@ -91,9 +92,9 @@ type Filter = Readonly<{
 
 type VisualizationFilters = Readonly<{
   years: number[],
-  regions: Filter,
-  units: Filter,
-  scenarios: string[]
+  regions: Filter[],
+  units: Filter[],
+  scenarios: Filter[]
 }>;
 
 export interface IndicatorMetadata {

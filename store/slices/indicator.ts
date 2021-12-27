@@ -10,7 +10,7 @@ export type IndicatorFilters = Readonly<{
   unit: string,
   category: CategoryObject,
   scenario: string,
-  visualization: string
+  visualization?: string
 }>;
 
 const initialState = {

@@ -21,6 +21,7 @@ export const Nav: React.FC<NavProps> = ({
   });
 
   const defaultGroupSlugs = useGroupsDefaults(groups);
+
   return (
     <nav>
       <ul className={cx('flex flex-grow text-white divide-x',

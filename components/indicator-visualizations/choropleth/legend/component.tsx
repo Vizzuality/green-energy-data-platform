@@ -29,10 +29,8 @@ export const Legend: FC<LegendProps> = ({
 
   return (
     <div
-      className={cx({
-        'absolute text-left bottom-2 left-2 w-3/6 bg-gray1 rounded-3xl text-sm text-white flex flex-col flex-grow': true,
-        [className]: !!className,
-      })}
+      className={cx('absolute text-left bottom-2 left-2 bg-gray1 rounded-3xl text-sm text-white flex flex-col flex-grow',
+        { [className]: !!className })}
     >
       <button
         type="button"

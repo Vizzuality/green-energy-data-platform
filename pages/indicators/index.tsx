@@ -58,7 +58,6 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
   };
 
   const results = searchValue === '' ? groupsFiltered : searchResults;
-  const noResults = !results.length;
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1 overflow-y-auto">
@@ -106,7 +105,6 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
             </div>
           </div>
         ))}
-
 
       </main>
     </LayoutPage>

@@ -74,6 +74,7 @@ export const filterRecords = (
   records: Record[],
   filters: IndicatorFilters,
   categories: unknown[],
+  groupSlug: string | string[],
 ) => {
   const {
     year,
@@ -97,20 +98,29 @@ export const filterRecords = (
     }
 
     if (visualization === 'choropleth') {
-      if (year === d.year
-        && (d.unit.id === unit || !unit) // some idicators has no unit
-        && d.scenario?.name === scenario) return true;
-    }
+      if ((groupSlug === 'model-intercomparison'
+        && d.scenario.id === scenario
+        && year === d.year
+        && (d.unit.id === unit || !unit)) // some idicators has no unit
+        || (groupSlug !== 'model-intercomparison'
+        && year === d.year
+        && (d.unit.id === unit || !unit)) // some idicators has no unit
 
+      ) return true;
+    }
     if (visualization === 'bar') {
-      if (year === d.year
-        && d.unit.id === unit
-        && d.region_id !== ID_CHINA
+      if ((groupSlug === 'model-intercomparison'
+          && d.scenario.id === scenario
+          && d.unit.id === unit)
+          || (groupSlug !== 'model-intercomparison'
+          && year === d.year
+          && d.unit.id === unit)
       ) return true;
     }
 
     return false;
   });
+
   return recordsByFilters;
 };
 
@@ -119,7 +129,9 @@ export const filterRelatedIndicators = (
   records: Record[],
   filters: IndicatorFilters,
 ) => {
-  const { region, category, visualization } = filters;
+  const {
+    year, unit, category, visualization, scenario,
+  } = filters;
   const label = category?.label;
   const categories = getCategoriesFromRecords(records, visualization);
 
@@ -141,11 +153,16 @@ export const filterRelatedIndicators = (
     }
 
     if (visualization === 'bar') {
-      if (d.region_id !== ID_CHINA) return true;
+      if (year === d.year
+        && d.unit.id === unit
+        && d.region_id !== ID_CHINA
+      ) return true;
     }
 
     if (visualization === 'choropleth') {
-      if (d.region_id === region) return true;
+      if (year === d.year
+        && (d.unit.id === unit || !unit) // some idicators has no unit
+        && d.scenario?.name === scenario) return true;
     }
 
     if (label !== 'category_2') {
@@ -156,6 +173,22 @@ export const filterRelatedIndicators = (
 
   return recordsByFilters;
 };
+
+interface Data {
+  [key: string]: string | number | string[] | MapLayersProps,
+  layers?: MapLayersProps,
+  model?: string,
+  year?: number,
+}
+
+interface ChartYear {
+  year: number,
+  [Key: string]: string | number | string[] | Data[] | Data,
+}
+
+interface Bar {
+  [Key: string]: string | number | string[] | Data[] | Data,
+}
 
 export const getGroupedValues = (
   name: string,
@@ -171,9 +204,8 @@ export const getGroupedValues = (
   const mapCategorySelected = 'Total';
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
-
   let data = [];
-  const getLineData = (): {}[] => {
+  const getLineData = (): ChartYear[] => {
     data = flatten(chain(filteredData)
       .groupBy('year')
       .map((value) => flatten(chain(value)
@@ -184,17 +216,14 @@ export const getGroupedValues = (
               (previous, current) => (current.value || 0) + previous, 0,
             ),
             year: res[0].year,
-            visualizationTypes: value[0].visualization_types,
+            visualizationTypes: value[0].visualization_types || [],
           }))
         .value()))
       .value());
-
     const dataByYear = groupBy(data, 'year');
-
     return Object.keys(dataByYear).map((year) => dataByYear[year]
       .reduce((acc, next) => {
         const { year: currentYear, ...rest } = next;
-
         return ({
           ...acc,
           ...rest,
@@ -219,32 +248,54 @@ export const getGroupedValues = (
     .value();
 
   const getBarData = () => {
-    data = flatten(chain(filteredData)
-      .groupBy('region.name')
-      .map((value) => flatten(chain(value)
-        .groupBy(label)
-        .map((res, key) => (
-          {
-            [key !== 'null' ? key : 'Total']: res.reduce(
-              (previous, current) => (current.value || 0) + previous, 0,
-            ),
-            province: res[0].region.name,
-            visualizationTypes: value[0].visualization_types,
-          }))
-        .value()))
-      .value());
-    const dataByProvince = groupBy(data, 'province');
-    return Object.keys(dataByProvince).map((province) => dataByProvince[province]
-      .reduce((acc, next) => {
-        const { province: currentProvince, ...rest } = next;
+    if (groupSlug !== 'model-intercomparison') {
+      data = flatten(chain(filteredData)
+        .groupBy('region_id')
+        .map((value) => flatten(chain(value)
+          .groupBy(label)
+          .map((res, key) => (
+            {
+              [key !== 'null' ? key : 'Total']: res.reduce(
+                (previous, current) => (current.value || 0) + previous, 0,
+              ),
+              province: res[0].region.name,
+              visualizationTypes: value[0].visualization_types,
+            }))
+          .value()))
+        .value());
+      const dataByProvince = groupBy(data, 'province');
+      return Object.keys(dataByProvince).map((province) => dataByProvince[province]
+        .reduce((acc, next) => {
+          const { province: currentProvince, ...rest } = next;
 
-        return ({
-          ...acc,
-          ...rest,
-        });
-      }, {
-        province,
-      }));
+          return ({
+            ...acc,
+            ...rest,
+          });
+        }, {
+          province,
+        }));
+    }
+
+    if (groupSlug === 'model-intercomparison') {
+      data = chain(records)
+        .groupBy('category_1')
+        .map((value) => flatten(chain(value)
+          .groupBy('year')
+          .map((res) => (
+            {
+              model: res[0].category_1,
+              [res[0].category_2]: res.reduce(
+                (previous, current) => (current.value || 0) + previous, 0,
+              ),
+              year: res[0].year,
+              visualizationTypes: value[0].visualization_types,
+            }))
+          .value()))
+        .value();
+      return data;
+    }
+    return data;
   };
 
   const getChoroplethData = (): {
@@ -294,19 +345,20 @@ export const getGroupedValues = (
     const unitLabel = units.find((u) => u.value === unit)?.label;
     const legendTitle = unit ? `${name} (${unitLabel})` : name;
     const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
-
     if (layerType === 'Multipolygon' || layerType === 'Polygon') {
       data = [{
         visualizationTypes: visualizations,
+        data: dataWithGeometries,
         layers: [{
-          id: 'regions',
+          id: 'regions-with-color',
           type: 'geojson',
           source: {
             type: 'geojson',
             data: {
               type: 'FeatureCollection',
-              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }, index) => ({
                 type: 'Feature',
+                id: index,
                 geometry: geometry?.geometry,
                 properties: cat,
               })),
@@ -366,8 +418,8 @@ export const getGroupedValues = (
                     maxValue,
                     '#1C5183',
                   ],
-                  // 'fill-outline-color': '#35373E',
-                  'fill-opacity': 0.3,
+                  'fill-outline-color': '#35373E',
+                  'fill-opacity': 1,
                 },
               },
             ],
@@ -519,6 +571,101 @@ export const getGroupedValues = (
   return data;
 };
 
+export const getModelIntercomparisonData = (
+  filters: IndicatorFilters,
+  records: Record[],
+  activeModels: string[],
+): ChartYear[] | Bar[] => {
+  const { category, visualization } = filters;
+  const label = category?.label;
+  const categorySelected = category?.value || 'Total';
+  const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
+  const filteredDataBars = activeModels.length
+    ? records.filter((record) => activeModels.includes(record.category_1))
+    : records;
+
+  let data = [];
+  const getLineData = (): ChartYear[] => {
+    data = flatten(chain(filteredData)
+      .groupBy('year')
+      .map((value) => flatten(chain(value)
+        .groupBy(label)
+        .map((res, key) => (
+          {
+            [key !== 'null' ? key : 'Total']: res.reduce(
+              (previous, current) => (current.value || 0) + previous, 0,
+            ),
+            unit: res[0].unit.name,
+            year: res[0].year,
+            visualizationTypes: value[0].visualization_types || [],
+          }))
+        .value()))
+      .value());
+    const dataByYear = groupBy(data, 'year');
+    return Object.keys(dataByYear).map((year) => dataByYear[year]
+      .reduce((acc, next) => {
+        const { year: currentYear, ...rest } = next;
+        return ({
+          ...acc,
+          ...rest,
+        });
+      }, {
+        year,
+      }));
+  };
+
+  const getDataByYear = (dataByCat1) => {
+    const groupedData = flatten(chain(dataByCat1)
+      .groupBy('year')
+      .map((value) => flatten(chain(value)
+        .groupBy('category_2')
+        .map((res, key) => (
+          {
+            [key !== 'null' ? key : 'Total']: res.reduce(
+              (previous, current) => (current.value || 0) + previous, 0,
+            ),
+            year: res[0].year,
+            visualizationTypes: value[0].visualization_types || [],
+          }))
+        .value()))
+      .value());
+    const dataByYear = groupBy(groupedData, 'year');
+    return Object.keys(dataByYear).map((year) => dataByYear[year]
+      .reduce((acc, next) => {
+        const { year: currentYear, ...rest } = next;
+        return ({
+          ...acc,
+          ...rest,
+        });
+      }, {
+        year,
+      }));
+  };
+
+  const getBarData = (): ChartYear[] => {
+    data = chain(filteredDataBars)
+      .groupBy('category_1').map(
+        (d) => ({
+          model: d[0].category_1,
+          data: getDataByYear(d),
+        }),
+      ).value();
+    return data;
+  };
+
+  switch (visualization) {
+    case 'line':
+      data = getLineData();
+      break;
+    case 'bar':
+      data = getBarData();
+      break;
+    default:
+      data = [];
+  }
+  return data;
+};
+
 export const getGroupedValuesRelatedIndicators = (
   categories: string[],
   filters: IndicatorFilters,
@@ -579,7 +726,7 @@ export const getGroupedValuesRelatedIndicators = (
   }
   if (visualization === 'bar') {
     data = flatten(chain(records)
-      .groupBy('region.name')
+      .groupBy('region_id')
       .map((value) => flatten(chain(value)
         .groupBy('category_1')
         .map((res, key) => (
@@ -609,7 +756,7 @@ export const getGroupedValuesRelatedIndicators = (
 
   if (visualization === 'choropleth') {
     const dataWithGeometries = records?.map(({ id, ...d }) => {
-      const geometry = filteredRegions?.find((r) => d.region.id === r.id);
+      const geometry = filteredRegions?.find((r) => d.region_id === r.id);
       return ({
         visualizationTypes: d.visualization_types,
         geometry,

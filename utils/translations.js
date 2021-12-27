@@ -58,6 +58,14 @@ export const resources = {
       homepage: 'Homepage',
       notFound: 'Oops, sorry we can’t find that page.',
       notFoundMessage: 'Either something went wrong or the page doesn’t exist anymore.',
+      scenario: 'Scenario',
+      selectScenario: 'Select scenario',
+      selectAll: 'Select all',
+      history: 'Show history',
+      unit: 'Unit',
+      year: 'Year',
+      showing: 'Showing for',
+
     },
   },
   cn: {
@@ -110,6 +118,13 @@ export const resources = {
       homepage: '主页',
       notFound: '哦，对不起，我们找不到那个页面。',
       notFoundMessage: '要么是出了问题，要么是该网页不存在了',
+      scenario: '设想',
+      selectScenario: '选择场景',
+      selectAll: '全选',
+      history: '显示历史',
+      unit: '单元',
+      year: '年',
+      showing: '播种为',
     },
   },
 };
