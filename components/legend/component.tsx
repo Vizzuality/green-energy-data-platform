@@ -12,13 +12,13 @@ const Legend: FC<WidgetLegendProps> = ({
       {payload.map(({ label, color }) => (
         <li
           key={label}
-          className="flex items-center active:bg-color1 rounded-md focus:bg-blue text-left text-sm whitespace-nowrap"
+          className="flex items-center rounded-md focus:bg-blue text-left text-sm whitespace-nowrap w-full text-ellipsis"
         >
           <span
             className="flex w-4 h-4 ml-3 rounded-full shrink"
             style={{ backgroundColor: color }}
           />
-          <span className="flex-1 py-1 pl-6 text-left">{label}</span>
+          <span className="py-1 pl-6 text-left">{label}</span>
         </li>
       ))}
     </ul>

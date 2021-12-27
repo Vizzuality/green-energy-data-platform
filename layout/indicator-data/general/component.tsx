@@ -325,7 +325,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('year'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
-                  <span>{displayYear || i18next.t('dates')}</span>
+                  <span>{displayYear || i18next.t('selectYear')}</span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                 </button>
               </Tooltip>
@@ -354,7 +354,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                     onClick={() => { toggleDropdown('scenario'); }}
                     className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                   >
-                    <span>{scenario || i18next.t('dates')}</span>
+                    <span>{scenario || i18next.t('selectScenario')}</span>
                   </button>
                 </Tooltip>
                 )}
@@ -421,7 +421,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('scenario'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
-                  <span>{displayScenario || i18next.t('dates')}</span>
+                  <span>{displayScenario || i18next.t('selectScenario')}</span>
                 </button>
               </Tooltip>
               )}
@@ -514,7 +514,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
           {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
             payload={LegendPayload}
-            className="mb-4 overflow-y-auto"
+            className="mb-4 overflow-y-scroll text-ellipsis"
           />
           )}
           <DataSource

@@ -182,8 +182,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const [activeModels, setActiveModel] = useState(categories);
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categories),
-    [records, filters, categories],
+    () => filterRecords(records, filters, categories, groupSlug),
+    [records, filters, categories, groupSlug],
   );
 
   const colors = useColors(categories.length);
@@ -319,12 +319,14 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           {(['line'].includes(visualization) && !!regions.length) && (
           <div className="flex items-center">
             {regions.length === 1 && (
-            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-              <span className="pr-2">
+            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
+              <span className="mr-2 hidden md:flex">
                 {i18next.t('region')}
                 :
               </span>
-              <span>{regions[0]?.label}</span>
+              <span>
+                {displayRegion || i18next.t('selectRegion')}
+              </span>
             </div>
             )}
             {regions.length > 1 && (
@@ -346,11 +348,13 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                 onClick={() => { toggleDropdown('region'); }}
                 className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
-                <span className="pr-2">
+                <span className="mr-2 hidden md:flex">
                   {i18next.t('region')}
                   :
                 </span>
-                <span>{displayRegion || 'Select a region'}</span>
+                <span>
+                  {displayRegion || i18next.t('selectRegion')}
+                </span>
               </button>
             </Tooltip>
             )}
@@ -358,6 +362,17 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           )}
           {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
           {/* Scenario filter */}
+          {scenarios.length === 1 && (
+            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4  whitespace-nowrap">
+              <span className="mr-2 hidden md:flex">
+                {i18next.t('scenario')}
+                :
+              </span>
+              <span>
+                {displayScenario || i18next.t('selectScenario')}
+              </span>
+            </div>
+          )}
           {scenarios?.length > 1 && (
           <Tooltip
             placement="bottom-start"
@@ -377,15 +392,29 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
               onClick={() => { toggleDropdown('scenario'); }}
               className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
             >
-              <span className="pr-2">
+              <span className="mr-2 hidden md:flex">
                 {i18next.t('scenario')}
                 :
               </span>
-              <span>{displayScenario || i18next.t('selectScenario')}</span>
+              <span>
+                {displayScenario || i18next.t('selectScenario')}
+              </span>
             </button>
           </Tooltip>
             )}
-          <div className="flex items-center">
+          {/* Units filter */}
+          {units.length === 1 && (
+            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
+              <span className="mr-2 hidden md:flex">
+                {i18next.t('unit')}
+                :
+              </span>
+              <span>
+                {displayUnit || i18next.t('selectUnit')}
+              </span>
+            </div>
+          )}
+          {units?.length > 1 && (
             <Tooltip
               placement="bottom-start"
               visible={dropdownVisibility.unit}
@@ -404,18 +433,20 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                 onClick={() => { toggleDropdown('unit'); }}
                 className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
-                <span className="pr-2">
+                <span className="mr-2 hidden md:flex">
                   {i18next.t('unit')}
                   :
                 </span>
-                <span>{displayUnit}</span>
+                <span>
+                  {displayUnit || i18next.t('selectUnit')}
+                </span>
               </button>
             </Tooltip>
-          </div>
+          )}
         </div>
       </section>
-      <div className="flex justify-between mb-4">
-        <section className="w-full">
+      <div className="flex justify-between mb-4 w-full">
+        <section className="w-1/2">
           {categories.length > 0 && visualization === 'bar' && (
           <FiltersMI
             models={categories}
@@ -435,7 +466,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           />
           )}
         </section>
-        <section className="flex flex-col justify-between ml-4 w-full">
+        <section className="flex flex-col justify-between ml-4 w-1/2">
           <DataSource
             indicatorSlug={indicatorSlug}
             dataSource={dataSource}
@@ -445,7 +476,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           <Legend
             ref={legendRef}
             payload={LegendPayload}
-            className="mb-4 overflow-y-auto"
+            className="mb-4 overflow-y-scroll overflow-x-hidden text-ellipsis"
           />
           )}
         </section>

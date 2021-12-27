@@ -176,8 +176,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   );
 
   const filteredRecords = useMemo(
-    () => filterRecords(records, filters, categories),
-    [records, filters, categories],
+    () => filterRecords(records, filters, categories, groupSlug),
+    [records, filters, categories, groupSlug],
   );
 
   const colors = useColors(categories.length);
@@ -299,7 +299,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 {i18next.t('showing')}
                 :
               </span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]?.label}</span>)}
+              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -319,7 +319,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                   onClick={() => { toggleDropdown('year'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
-                  <span>{displayYear || i18next.t('dates')}</span>
+                  <span>{displayYear || i18next.t('selectYear')}</span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                 </button>
               </Tooltip>
@@ -348,7 +348,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                     onClick={() => { toggleDropdown('scenario'); }}
                     className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                   >
-                    <span>{scenario || i18next.t('dates')}</span>
+                    <span>{scenario || i18next.t('selectScenario')}</span>
                   </button>
                 </Tooltip>
                 )}
@@ -477,7 +477,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           {LegendPayload.length > 0 && visualization !== 'choropleth' && (
           <Legend
             payload={LegendPayload}
-            className="mb-4 overflow-y-auto"
+            className="mb-4 overflow-y-scroll text-ellipsis"
           />
           )}
           <DataSource

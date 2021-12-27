@@ -357,12 +357,14 @@ export const getGroupedValues = (
             type: 'geojson',
             data: {
               type: 'FeatureCollection',
-              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }, index) => ({
-                type: 'Feature',
-                id: index,
-                geometry: geometry?.geometry,
-                properties: cat,
-              })),
+              features: dataWithGeometries.map(
+                ({ geometry, visualizationTypes, ...cat }, index) => ({
+                  type: 'Feature',
+                  id: index,
+                  geometry: geometry?.geometry,
+                  properties: cat,
+                }),
+              ),
             },
           },
           legendConfig: [{

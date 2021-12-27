@@ -204,7 +204,7 @@ const SankeyChart: FC<ComponentTypes> = ({
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
     () => uniqBy(data?.links.map((item) => ({
       label: item.class_en,
-      color: COLORS[item.class_en] || COLORS.Other,
+      color: COLORS[item.class_en] || COLORS['Other energy'],
     })), 'label'), [data],
   );
 
@@ -218,12 +218,15 @@ const SankeyChart: FC<ComponentTypes> = ({
             <div className="flex items-center">
               <span className="pr-2">Showing for:</span>
               {years.length === 1 && (
-              <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                {i18next.t('year')}
-                :
-                {' '}
-                {years[0].label}
-              </span>
+              <div className="items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 md:flex hidden">
+                <span className="mr-2 hidden md:flex">
+                  {i18next.t('year')}
+                  :
+                </span>
+                <span>
+                  {displayYear || i18next.t('selectYear')}
+                </span>
+              </div>
               )}
               {years.length > 1 && (
               <Tooltip
@@ -244,11 +247,12 @@ const SankeyChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('year'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>
+                  <span className="mr-2 hidden md:flex">
                     {i18next.t('year')}
                     :
-                    {' '}
-                    {displayYear || i18next.t('dates')}
+                  </span>
+                  <span>
+                    {displayYear || i18next.t('selectYear')}
                   </span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                 </button>
@@ -256,12 +260,15 @@ const SankeyChart: FC<ComponentTypes> = ({
               )}
               {/* unit filter */}
               {units.length === 1 && (
-              <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                {i18next.t('unit')}
-                :
-                {' '}
-                {units[0].label}
-              </span>
+              <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+                <span className="mr-2 hidden md:flex">
+                  {i18next.t('unit')}
+                  :
+                </span>
+                <span>
+                  {displayUnit || i18next.t('selectUnit')}
+                </span>
+              </div>
               )}
               {units.length > 1 && (
               <Tooltip
@@ -282,24 +289,27 @@ const SankeyChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('unit'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>
+                  <span className="mr-2 md:flex hidden">
                     {i18next.t('unit')}
                     :
-                    {' '}
-                    {displayUnit}
+                  </span>
+                  <span>
+                    {displayUnit || i18next.t('selectUnit')}
                   </span>
                 </button>
               </Tooltip>
               )}
               {/* region filter  */}
               {regions.length === 1 && (
-              <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                {' '}
-                {i18next.t('region')}
-                :
-                {' '}
-                {regions[0].label}
-              </span>
+              <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+                <span className="mr-2 hidden md:flex">
+                  {i18next.t('region')}
+                  :
+                </span>
+                <span>
+                  {displayRegion || i18next.t('selectRegion')}
+                </span>
+              </div>
               )}
               {regions.length > 1 && (
               <Tooltip
@@ -320,10 +330,12 @@ const SankeyChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('region'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span>
+                  <span className="mr-2 hidden md:flex">
                     {i18next.t('region')}
                     :
-                    {displayRegion || 'Select a region'}
+                  </span>
+                  <span>
+                    {displayRegion || i18next.t('selectRegion')}
                   </span>
                 </button>
               </Tooltip>

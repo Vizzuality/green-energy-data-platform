@@ -10,7 +10,7 @@ export const COLORS = {
   Hydro: '#29C2DA',
   Nuclear: '#FF61CA',
   Ocean: '#00A3FE',
-  Unknown: 'rgba(142, 145, 149, 0.9)',
+  'Other energy': 'rgba(142, 145, 149, 0.9)',
   Electricity: '#6905E8',
   Gasses: '#FF7629',
   Heat: '#CC1771',
