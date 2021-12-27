@@ -19,7 +19,7 @@ export const useGroups = (queryConfig = {}) => {
     });
 };
 
-export const useGroup = (id, queryConfig = {}) => {
+export const useGroup = (id: string | string[], queryConfig = {}) => {
   const {
     current,
   } = useSelector(
@@ -41,7 +41,7 @@ export const useGroupsDefaults = (groups: GroupProps[]) => groups.map((group) =>
 
   const indicatorSlug = group?.subgroups?.find(
     ({ slug }) => slug === subgroupSlug,
-  )?.default_indicator?.slug;
+  )?.default_indicator?.slug || '';
   return ({
     name: group.name,
     groupSlug: group.slug,

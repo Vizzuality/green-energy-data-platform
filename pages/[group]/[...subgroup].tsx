@@ -69,12 +69,14 @@ const GroupPage: FC = () => {
       name: null,
       published: false,
       start_date: null,
-      visualizationTypes: [],
+      visualization_types: [],
       group: null,
       subgroup: null,
     },
     refetchOnWindowFocus: false,
   }));
+
+  const { default_visualization: defaultVisualization } = data;
 
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
@@ -134,7 +136,7 @@ const GroupPage: FC = () => {
       <div className="container pb-20 m-auto">
         <section className="max-w-6xl m-auto -mt-40">
           <IndicatorData />
-          <WidgetsGrid />
+          {!defaultVisualization?.includes('sankey') && <WidgetsGrid />}
         </section>
       </div>
 

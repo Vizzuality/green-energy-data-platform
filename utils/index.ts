@@ -52,7 +52,7 @@ export const getCategoriesFromRecords = (
   records: Record[],
   visualization: string,
 ) => {
-  const categories = compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort()));
+  const categories = visualization !== 'sankey' ? compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort())) : [];
 
   if (visualization === 'choropleth') {
     return categories;
@@ -108,6 +108,7 @@ export const filterRecords = (
 
       ) return true;
     }
+
     if (visualization === 'bar') {
       if ((groupSlug === 'model-intercomparison'
           && d.scenario.id === scenario
@@ -356,12 +357,14 @@ export const getGroupedValues = (
             type: 'geojson',
             data: {
               type: 'FeatureCollection',
-              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }, index) => ({
-                type: 'Feature',
-                id: index,
-                geometry: geometry?.geometry,
-                properties: cat,
-              })),
+              features: dataWithGeometries.map(
+                ({ geometry, visualizationTypes, ...cat }, index) => ({
+                  type: 'Feature',
+                  id: index,
+                  geometry: geometry?.geometry,
+                  properties: cat,
+                }),
+              ),
             },
           },
           legendConfig: [{

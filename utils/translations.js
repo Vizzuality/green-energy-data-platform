@@ -65,7 +65,9 @@ export const resources = {
       unit: 'Unit',
       year: 'Year',
       showing: 'Showing for',
-
+      selectYear: 'Select year',
+      selectRegion: 'Select region',
+      selectUnit: 'Select unit',
     },
   },
   cn: {
@@ -125,6 +127,9 @@ export const resources = {
       unit: '单元',
       year: '年',
       showing: '播种为',
+      selectYear: '选择年份',
+      selectRegion: '选择地区',
+      selectUnit: '选择单位',
     },
   },
 };

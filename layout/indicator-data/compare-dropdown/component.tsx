@@ -36,6 +36,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
     placeholderData: [],
     refetchOnWindowFocus: false,
     enabled: !!groupSlug,
+    keepPreviousData: true,
   });
 
   const { data: indicators } = useIndicators(groupSlug, subgroupSlug, {
@@ -77,7 +78,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
                 id="exp_button"
                 onClick={() => handleClick('groupSlug', slug, 'forward')}
               >
-                <span>{name}</span>
+                <span className="text-left">{name}</span>
                 {' '}
                 <Icon
                   ariaLabel="arrow"
@@ -99,7 +100,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
             className="transform rotate-180 mr-2 cursor-pointer"
             onClick={() => setStep(1)}
           />
-          <span>{groupName}</span>
+          <span className="text-left">{groupName}</span>
           <Icon
             ariaLabel="arrow"
             name="arrow"
@@ -120,7 +121,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
                 id="exp_button"
                 onClick={() => handleClick('subgroupSlug', slug, 'forward')}
               >
-                <span>{name}</span>
+                <span className="text-left">{name}</span>
               </button>
             </li>
           ))}

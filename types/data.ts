@@ -62,6 +62,10 @@ interface CategoryFilters {
   [key: string]: string,
 }
 
+export interface ComponentTypes {
+  className?: string;
+}
+
 export interface DataIdProps {
   id: string,
   name: string,
@@ -71,10 +75,11 @@ export interface DataIdProps {
 export interface IndicatorProps {
   categories: [],
   category_filters: CategoryFilters | string[],
+  data_source: string,
   default_visualization: string,
   description: string;
   end_date: number,
-  id: number;
+  id: string;
   slug: string,
   name: string;
   published: boolean,
@@ -83,6 +88,10 @@ export interface IndicatorProps {
   records: Record[],
   group: DataIdProps,
   subgroup: DataIdProps,
+}
+
+export interface Component {
+  className?: string,
 }
 
 type Filter = Readonly<{
