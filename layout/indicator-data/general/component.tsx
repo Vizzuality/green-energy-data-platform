@@ -46,9 +46,8 @@ import i18next from 'i18next';
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
-// import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 
-import ChartConfig from './config';
+import ChartConfig from 'components/indicator-visualizations/config';
 
 import IndicatorDataProps from '../types';
 
@@ -306,7 +305,10 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
             <div className="flex items-center">
-              <span className="pr-2">Showing for:</span>
+              <span className="pr-2 whitespace-nowrap">
+                {i18next.t('showing')}
+                :
+              </span>
               {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0].label}</span>)}
               {years.length > 1 && (
               <Tooltip
@@ -325,7 +327,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('year'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayYear || i18next.t('dates')}</span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
@@ -354,7 +356,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('scenario'); }}
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                   >
                     <span>{scenario || i18next.t('dates')}</span>
                   </button>
@@ -391,7 +393,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('region'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayRegion || 'Select a region'}</span>
                 </button>
@@ -421,7 +423,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('scenario'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayScenario || i18next.t('dates')}</span>
                 </button>
@@ -467,7 +469,7 @@ const IndicatorChart: FC<IndicatorDataProps> = ({
                       <button
                         type="button"
                         onClick={() => { toggleDropdown('unit'); }}
-                        className={cx('flex items-center cursor-pointer',
+                        className={cx('flex items-center cursor-pointer whitespace-nowrap',
                           {
                             'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
                             'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',

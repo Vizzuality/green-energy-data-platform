@@ -64,6 +64,8 @@ export const resources = {
       history: 'Show history',
       unit: 'Unit',
       year: 'Year',
+      showing: 'Showing for',
+
     },
   },
   cn: {
@@ -122,6 +124,7 @@ export const resources = {
       history: '显示历史',
       unit: '单元',
       year: '年',
+      showing: '播种为',
     },
   },
 };

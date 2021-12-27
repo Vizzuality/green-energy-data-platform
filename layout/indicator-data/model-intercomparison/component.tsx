@@ -22,8 +22,8 @@ import {
 
 // components
 import Tooltip from 'components/tooltip';
-import FiltersMI from 'components/filters-model-intercomparison';
 import Filters from 'components/filters';
+import FiltersMI from 'components/filters-model-intercomparison';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 import LoadingSpinner from 'components/loading-spinner';
@@ -33,8 +33,8 @@ import Bar from 'components/indicator-visualizations/bar';
 // utils
 import {
   filterRecords,
-  getCategoriesFromRecords,
   getModelIntercomparisonData,
+  getCategoriesFromRecords,
   getSubcategoriesFromRecords,
 } from 'utils';
 
@@ -46,25 +46,12 @@ import i18next from 'i18next';
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
-import ChartConfig from './config';
 
+import ChartConfig from 'components/indicator-visualizations/config';
+
+// types
+import { ChartLine, ChartBar } from 'types/model-intercomparison';
 import IndicatorDataProps from '../types';
-
-interface Data {
-  [key: string]: string | number | string[],
-  model?: string,
-  year?: number,
-}
-
-interface ChartLine {
-  year: number,
-  // visualizationTypes: string[],
-  [key: string]: string | number | string[] | Data,
-}
-
-interface ChartBar {
-  [key: string]: string | number | string[] | Data[],
-}
 
 const ModelIntercomparison: FC<IndicatorDataProps> = ({
   className,
@@ -270,8 +257,8 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
       visualization: currentVisualization,
       ...(defaultUnit && { unit: currentUnit }) || { unit: null },
       ...defaultCategory && { category: defaultCategory },
-      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...((['line'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+      ...(['bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
       scenario: currentScenario || null,
     }));
   }, [
@@ -303,7 +290,10 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
   return (
     <section className={`flex flex-col  ${className}`}>
       <section className="flex items-center">
-        <span className="pr-2">Showing for:</span>
+        <span className="pr-2 whitespace-nowrap">
+          {i18next.t('showing')}
+          :
+        </span>
         <div className="flex py-4 items-center">
           {/* region filter */}
           {(['line'].includes(visualization) && !!regions.length) && (
@@ -334,7 +324,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
               <button
                 type="button"
                 onClick={() => { toggleDropdown('region'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
                 <span className="pr-2">
                   {i18next.t('region')}
@@ -365,7 +355,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
             <button
               type="button"
               onClick={() => { toggleDropdown('scenario'); }}
-              className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+              className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
             >
               <span className="pr-2">
                 {i18next.t('scenario')}
@@ -392,7 +382,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
               <button
                 type="button"
                 onClick={() => { toggleDropdown('unit'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
                 <span className="pr-2">
                   {i18next.t('unit')}
@@ -470,7 +460,7 @@ const ModelIntercomparison: FC<IndicatorDataProps> = ({
                 )}
                 {visualization === 'bar' && widgetData.map(
                   (widget) => (
-                    <div key={widget.model}>
+                    <div key={widget.model} className="mr-8">
                       <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
                       <Bar
                         widgetData={widget.data}

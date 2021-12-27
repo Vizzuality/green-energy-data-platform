@@ -9,7 +9,7 @@ export type Object = {
   value: string | number,
 };
 
-export interface WdigetConfigTypes {
+export interface WidgetConfigTypes {
   cartesianAxis?: Object,
   cartesianGrid?: Object,
   tooltip?: Object,
@@ -22,12 +22,12 @@ export interface Data {
   year?: number,
 }
 
-export interface Line {
+export interface ChartLine {
   year: number,
   // visualizationTypes: string[],
   [key: string]: string | number | string[] | Data,
 }
 
-export interface Bar {
+export interface ChartBar {
   [key: string]: string | number | string[] | Data[],
 }

@@ -30,5 +30,5 @@ export default interface IndicatorCompareDataProps {
   subgroupSlug: string | string[];
   indicatorSlug: string;
   className?: string;
-  visualization: string;
+  compareIndex: number;
 }

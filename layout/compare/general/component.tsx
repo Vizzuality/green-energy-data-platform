@@ -47,7 +47,7 @@ import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
 
-import ChartConfig from './config';
+import ChartConfig from 'components/indicator-visualizations/config';
 
 import IndicatorCompareDataProps from '../types';
 
@@ -294,7 +294,10 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && (
             <div className="flex items-center">
-              <span className="pr-2">Showing for:</span>
+              <span className="pr-2 whitespace-nowrap">
+                {i18next.t('showing')}
+                :
+              </span>
               {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0]?.label}</span>)}
               {years.length > 1 && (
               <Tooltip
@@ -313,7 +316,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('year'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayYear || i18next.t('dates')}</span>
                   <Icon ariaLabel="change date" name="calendar" className="ml-4" />
@@ -342,7 +345,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('scenario'); }}
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                   >
                     <span>{scenario || i18next.t('dates')}</span>
                   </button>
@@ -379,7 +382,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('region'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayRegion || 'Select a region'}</span>
                 </button>

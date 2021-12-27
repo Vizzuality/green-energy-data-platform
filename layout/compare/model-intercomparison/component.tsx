@@ -6,11 +6,8 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {
-  useQueryClient,
-} from 'react-query';
 
-import dynamic from 'next/dynamic';
+import { useQueryClient } from 'react-query';
 
 import cx from 'classnames';
 
@@ -30,6 +27,8 @@ import FiltersMI from 'components/filters-model-intercomparison';
 import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 import LoadingSpinner from 'components/loading-spinner';
+import Line from 'components/indicator-visualizations/line';
+import Bar from 'components/indicator-visualizations/bar';
 
 // utils
 import {
@@ -41,20 +40,18 @@ import {
 
 import { RootState } from 'store/store';
 
-import { IndicatorFilters, setFilters } from 'store/slices/indicator';
+import { setFilters } from 'store/slices/indicator';
+import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
 import { useColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
 
-// import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+import ChartConfig from 'components/indicator-visualizations/config';
 
-import {
-  ChartProps, WdigetConfigTypes, Line, Bar,
-} from 'types/model-intercomparison';
-
-import ChartConfig from './config';
+// types
+import { ChartLine, ChartBar } from 'types/model-intercomparison';
 import IndicatorCompareDataProps from '../types';
 
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
@@ -62,7 +59,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   subgroupSlug,
   indicatorSlug,
   className,
-  visualization,
+  compareIndex,
 }: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
@@ -75,9 +72,13 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+
+  const filters = useSelector(
+    (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
+  );
   const {
-    year, region, unit, category, scenario,
-  } = useSelector((state: RootState) => state.indicator);
+    year, unit, region, scenario, visualization, category,
+  } = filters;
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
@@ -94,21 +95,17 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   }, [dropdownVisibility]);
 
   const handleChange = useCallback((key, value) => {
-    dispatch(setFilters({ [key]: value }));
+    if (compareIndex === 1) {
+      dispatch(setFilters({ [key]: value }));
+    } else {
+      dispatch(setCompareFilters({ [key]: value }));
+    }
 
     setDropdownVisibility({
       ...dropdownVisibility,
       [key]: false,
     });
-  }, [dispatch, dropdownVisibility]);
-
-  const filters = useMemo<IndicatorFilters>(() => ({
-    year,
-    region,
-    unit,
-    category,
-    scenario,
-  }), [year, region, unit, category, scenario]);
+  }, [dispatch, dropdownVisibility, compareIndex]);
 
   const {
     data: indicatorData,
@@ -190,16 +187,19 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(records), [records],
   );
-  const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
+  const widgetDataKeysLine = category?.label === 'category_1' ? categories : subcategories;
+  const widgetDataKeysBar = subcategories;
+  const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
+  const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualization] as WdigetConfigTypes,
-    [visualization, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys)[configType],
+    [configType, widgetDataKeys],
   );
 
-  const widgetData = useMemo<Line[] | Bar[]>(
+  const widgetData = useMemo<ChartLine[] | ChartBar[]>(
     () => getModelIntercomparisonData(
       filters, filteredRecords, activeModels,
-    ) as Line[] | Bar[],
+    ) as ChartLine[] | ChartBar[],
     [filters, filteredRecords, activeModels],
   );
 
@@ -210,6 +210,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       ? visualization : indicatorData?.default_visualization),
     [visualization, indicatorData],
   );
+
   const currentYear = useMemo<number>(
     () => {
       if (years.find(({ value }) => value === year)) {
@@ -250,14 +251,25 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const displayScenario = useMemo(() => scenarios.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
 
   useEffect(() => {
-    dispatch(setFilters({
-      visualization: currentVisualization,
-      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-      ...defaultCategory && { category: defaultCategory },
-      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...((['choropleth'].includes(currentVisualization) || groupSlug === 'model-intercomparison') && defaultScenario) && { scenario: currentScenario },
-    }));
+    if (compareIndex === 1) {
+      dispatch(setFilters({
+        visualization: currentVisualization,
+        ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+        ...defaultCategory && { category: defaultCategory },
+        ...((['line'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+        ...(['bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+        ...((['choropleth'].includes(currentVisualization) || groupSlug === 'model-intercomparison') && defaultScenario) && { scenario: currentScenario },
+      }));
+    } else if (compareIndex === 2) {
+      dispatch(setCompareFilters({
+        visualization: currentVisualization,
+        ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+        ...defaultCategory && { category: defaultCategory },
+        ...((['line'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+        ...(['bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+        scenario: currentScenario || null,
+      }));
+    }
   }, [
     dispatch,
     defaultYear,
@@ -271,6 +283,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     currentVisualization,
     groupSlug,
     indicatorSlug,
+    compareIndex,
   ]);
 
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
@@ -287,20 +300,118 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     }, [colors, widgetData, categories, category, subcategories, visualization],
   );
 
-  const DynamicChart = useMemo(() => {
-    if (visualization && visualization !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
-    }
-    return null;
-  }, [visualization]);
-
   const legendRef = useRef(null);
   const legendContainerRef = useRef(null);
   const height = legendContainerRef?.current && legendContainerRef?.current?.clientHeight;
 
   return (
     <section className={`flex flex-col  ${className}`}>
-      <div className="flex justify-between">
+      <section className="flex items-center">
+        <span className="pr-2 whitespace-nowrap">
+          {i18next.t('showing')}
+          :
+        </span>
+        <div className="flex py-4 items-center">
+          {/* region filter */}
+          {(['line'].includes(visualization) && !!regions.length) && (
+          <div className="flex items-center">
+            {regions.length === 1 && (
+            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+              <span className="pr-2">
+                {i18next.t('region')}
+                :
+              </span>
+              <span>{regions[0]?.label}</span>
+            </div>
+            )}
+            {regions.length > 1 && (
+            <Tooltip
+              placement="bottom-start"
+              visible={dropdownVisibility.region}
+              interactive
+              onClickOutside={() => closeDropdown('region')}
+              content={(
+                <DropdownContent
+                  list={regions}
+                  keyEl="region"
+                  onClick={handleChange}
+                />
+                )}
+            >
+              <button
+                type="button"
+                onClick={() => { toggleDropdown('region'); }}
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+              >
+                <span className="pr-2">
+                  {i18next.t('region')}
+                  :
+                </span>
+                <span>{displayRegion || 'Select a region'}</span>
+              </button>
+            </Tooltip>
+            )}
+          </div>
+          )}
+          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+          {/* Scenario filter */}
+          {scenarios?.length > 1 && (
+          <Tooltip
+            placement="bottom-start"
+            visible={dropdownVisibility.scenario}
+            interactive
+            onClickOutside={() => closeDropdown('scenario')}
+            content={(
+              <DropdownContent
+                list={scenarios}
+                keyEl="scenario"
+                onClick={handleChange}
+              />
+              )}
+          >
+            <button
+              type="button"
+              onClick={() => { toggleDropdown('scenario'); }}
+              className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+            >
+              <span className="pr-2">
+                {i18next.t('scenario')}
+                :
+              </span>
+              <span>{displayScenario || i18next.t('selectScenario')}</span>
+            </button>
+          </Tooltip>
+            )}
+          <div className="flex items-center">
+            <Tooltip
+              placement="bottom-start"
+              visible={dropdownVisibility.unit}
+              interactive
+              onClickOutside={() => closeDropdown('unit')}
+              content={(
+                <DropdownContent
+                  list={units}
+                  keyEl="unit"
+                  onClick={handleChange}
+                />
+                  )}
+            >
+              <button
+                type="button"
+                onClick={() => { toggleDropdown('unit'); }}
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+              >
+                <span className="pr-2">
+                  {i18next.t('unit')}
+                  :
+                </span>
+                <span>{displayUnit}</span>
+              </button>
+            </Tooltip>
+          </div>
+        </div>
+      </section>
+      <div className="flex justify-between mb-4">
         <section className="w-full">
           {categories.length > 0 && visualization === 'bar' && (
           <FiltersMI
@@ -316,7 +427,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
             categories={categories}
             hasSubcategories={!!subcategories.length}
             className="overflow-y-auto"
-            onClick={setFilters}
+            onClick={compareIndex === 1 ? setFilters : setCompareFilters}
             height={height}
           />
           )}
@@ -334,123 +445,49 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       <div>
 
         <section className="flex flex-col w-full">
-          <div className="flex py-4 items-center">
-            {/* region filter */}
-            {(['line'].includes(visualization) && !!regions.length) && (
-            <div className="flex items-center">
-              <span className="pr-2">
-                {i18next.t('region')}
-                :
-              </span>
-              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]}</span>)}
-              {regions.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.region}
-                interactive
-                onClickOutside={() => closeDropdown('region')}
-                content={(
-                  <DropdownContent
-                    list={regions}
-                    keyEl="region"
-                    onClick={handleChange}
-                  />
-                      )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('region'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
-                  <span>{displayRegion || 'Select a region'}</span>
-                </button>
-              </Tooltip>
-              )}
-            </div>
-            )}
-            {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
-            {/* Scenario filter */}
-            <span className="pr-2">
-              {i18next.t('scenario')}
-              :
-            </span>
-            {scenarios?.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.scenario}
-                interactive
-                onClickOutside={() => closeDropdown('scenario')}
-                content={(
-                  <DropdownContent
-                    list={scenarios}
-                    keyEl="scenario"
-                    onClick={handleChange}
-                  />
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('scenario'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
-                  <span>{displayScenario || i18next.t('selectScenario')}</span>
-                </button>
-              </Tooltip>
-            )}
-          </div>
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
             <LoadingSpinner />
             )}
 
             {isFetchedRecords
-                && !isFetchingRecords
-                && !filteredRecords.length
-                && !!visualization && !!unit && (!!region || !!year)
-                && (
-                  <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
-                    <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-                    <p>Data not found</p>
-                  </div>
-                )}
+            && !isFetchingRecords
+            && !filteredRecords.length
+            && !!visualization && !!unit && (!!region || !!year)
+            && (
+            <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
+              <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+              <p>Data not found</p>
+            </div>
+            )}
 
-            {(!!filteredRecords.length && isSuccessRecords && !!units.length) && (
+            {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-              <div className="flex items-center">
-                <Tooltip
-                  placement="bottom-start"
-                  visible={dropdownVisibility.unit}
-                  interactive
-                  onClickOutside={() => closeDropdown('unit')}
-                  content={(
-                    <DropdownContent
-                      list={units}
-                      keyEl="unit"
-                      onClick={handleChange}
-                    />
-                      )}
-                >
-                  <button
-                    type="button"
-                    onClick={() => { toggleDropdown('unit'); }}
-                    className="flex items-center cursor-pointer text-sm text-gray1 text-opacity-50"
-                  >
-                    <span>{displayUnit}</span>
-                  </button>
-                </Tooltip>
-              </div>
-
-              <div className={cx('w-full h-96', {
-                flex: visualization === 'bar',
+              <div className={cx('w-full', {
+                'flex flex-wrap': visualization === 'bar',
+                'h-96': visualization !== 'bar',
               })}
               >
-                <DynamicChart
+                {visualization === 'line' && (
+                <Line
                   widgetData={widgetData}
                   widgetConfig={widgetConfig}
                   colors={colors}
                 />
+                )}
+                {visualization === 'bar' && widgetData.map(
+                  (widget) => (
+                    <div key={widget.model} className="mr-8">
+                      <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
+                      <Bar
+                        widgetData={widget.data}
+                        widgetConfig={widgetConfig}
+                        colors={colors}
+                      />
+                    </div>
+                  ),
+                )}
               </div>
-
             </div>
             )}
           </div>

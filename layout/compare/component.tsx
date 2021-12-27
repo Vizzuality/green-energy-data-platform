@@ -1,8 +1,6 @@
 import React, {
   FC,
-  useEffect,
   useState,
-  useMemo,
   useCallback,
 } from 'react';
 
@@ -11,22 +9,16 @@ import cx from 'classnames';
 
 import { RootState } from 'store/store';
 
-import { setFilters } from 'store/slices/indicator';
-import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
 import { useQueryClient } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 // hooks
 import { useGroup, useGroups, useGroupsDefaults } from 'hooks/groups';
 import { useSubgroup } from 'hooks/subgroups';
-import {
-  useIndicator,
-  useIndicatorRecords,
-  useIndicatorMetadata,
-} from 'hooks/indicators';
+import { useIndicator } from 'hooks/indicators';
 
 // components
 import Hero from 'layout/hero';
@@ -60,13 +52,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   });
 
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
   const {
-    year,
-    region,
-    unit,
-    category,
-    scenario,
     visualization,
   } = useSelector(
     (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
@@ -143,15 +129,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const filters = useMemo(() => ({
-    year,
-    region,
-    unit,
-    category,
-    scenario,
-    visualization,
-  }), [year, region, unit, category, scenario, visualization]);
-
   const {
     data: indicatorData,
   }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
@@ -173,35 +150,10 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   }));
 
   const {
-    data: records,
-  } = useIndicatorRecords(groupSlug, subgroupSlug, indicatorSlug, filters, {
-    refetchOnWindowFocus: false,
-  });
-
-  const {
-    defaultCategory,
-    defaultYear,
-    defaultRegion,
-    defaultUnit,
-    defaultScenario,
-  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
-    refetchOnWindowFocus: false,
-    enabled: !!indicatorSlug && !!visualization,
-  });
-
-  const {
     name,
     visualization_types: visualizationTypes,
     description,
   }: IndicatorProps = indicatorData;
-
-  const {
-    default_visualization: defaultVisualization,
-  } = indicatorData;
-
-  useEffect(() => {
-    setFilters({ ...filters, visualization: defaultVisualization });
-  }, [indicatorData, defaultVisualization, filters]);
 
   const { data: group } = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
@@ -212,63 +164,6 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   });
 
   const { name: groupName } = group;
-
-  const currentVisualization = useMemo(
-    // if the current visualization is not allowed when the user changes the indicator,
-    // it will fallback into the default one. If it is, it will remain.
-    () => (indicatorData?.visualization_types.includes(visualization)
-      ? visualization : indicatorData?.default_visualization),
-    [visualization, indicatorData],
-  );
-
-  const currentYear = useMemo<number>(
-    () => (year || defaultYear?.value),
-    [year, defaultYear],
-  );
-
-  const currentUnit = useMemo<string>(
-    () => (unit || defaultUnit?.value),
-    [unit, defaultUnit],
-  );
-
-  const currentRegion = useMemo<string>(
-    () => (region || defaultRegion?.value),
-    [region, defaultRegion],
-  );
-
-  const currentScenario = useMemo<string>(
-    () => (scenario || defaultScenario?.value),
-    [scenario, defaultScenario],
-  );
-
-  useEffect(() => {
-    const newFilters = {
-      visualization: currentVisualization,
-      ...(defaultUnit && { unit: currentUnit }) || { unit: '' },
-      ...defaultCategory && { category: defaultCategory },
-      ...(['line', 'pie'].includes(currentVisualization)) && { region: currentRegion },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
-    };
-    if (compareIndex === 1) {
-      dispatch(setFilters(newFilters));
-    } else {
-      dispatch(setCompareFilters(newFilters));
-    }
-  }, [
-    dispatch,
-    defaultYear,
-    currentYear,
-    currentRegion,
-    defaultUnit,
-    currentUnit,
-    defaultCategory,
-    defaultScenario,
-    currentScenario,
-    currentVisualization,
-    indicatorSlug,
-    compareIndex,
-  ]);
 
   return (
     <div className="py-24 text-gray1" key={compareIndex}>
@@ -397,6 +292,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
           className="w-full px-11 py-7"
           visualizationTypes={visualizationTypes}
           mobile
+          compareIndex={compareIndex}
         />
         <div className="flex flex-col w-full p-11">
           <div className="flex items-baseline justify-between w-full">
@@ -453,7 +349,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               groupSlug={groupSlug}
               subgroupSlug={subgroupSlug}
               indicatorSlug={indicatorSlug}
-              visualization={visualization}
+              compareIndex={compareIndex}
             />
           )}
           {groupSlug === 'model-intercomparison' && (
@@ -461,7 +357,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               groupSlug={groupSlug}
               subgroupSlug={subgroupSlug}
               indicatorSlug={indicatorSlug}
-              visualization={visualization}
+              compareIndex={compareIndex}
             />
           )}
         </div>
