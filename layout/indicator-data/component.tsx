@@ -122,7 +122,7 @@ const IndicatorData: FC<IndicatorDataProps> = ({
       />
       <div className="flex flex-col w-full px-16 lg:px-32 md:px-24 py-11">
         <div className="flex items-center justify-between w-full">
-          <h2 className="flex text-3.5xl max-w-6xl">
+          <h2 className="flex text-3.5xl max-w-6xl mr-4 whitespace-nowrap">
             {name}
           </h2>
           <div className="flex">

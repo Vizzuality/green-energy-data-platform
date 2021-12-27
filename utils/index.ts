@@ -98,9 +98,15 @@ export const filterRecords = (
     }
 
     if (visualization === 'choropleth') {
-      if (year === d.year
-        && (d.unit.id === unit || !unit) // some idicators has no unit
-        && d.scenario?.name === scenario) return true;
+      if ((groupSlug === 'model-intercomparison'
+        && d.scenario.id === scenario
+        && year === d.year
+        && (d.unit.id === unit || !unit)) // some idicators has no unit
+        || (groupSlug !== 'model-intercomparison'
+        && year === d.year
+        && (d.unit.id === unit || !unit)) // some idicators has no unit
+
+      ) return true;
     }
     if (visualization === 'bar') {
       if ((groupSlug === 'model-intercomparison'
@@ -198,7 +204,6 @@ export const getGroupedValues = (
   const mapCategorySelected = 'Total';
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
-
   let data = [];
   const getLineData = (): ChartYear[] => {
     data = flatten(chain(filteredData)
