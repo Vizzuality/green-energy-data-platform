@@ -39,10 +39,17 @@ const GroupCard: FC<GroupCardProps> = ({
 
   return (
     <div className={cx('w-full', { [className]: className })}>
-      <div className="my-16 max-w-md">
+      <div className={cx('max-w-md sm:my-8',
+        {
+          'ml-12 ': textPosition === 'left',
+          'mr-12 ': textPosition === 'right',
+        })}
+      >
         <h3 className="text-3.5xl text-gray3">{name}</h3>
         <h4 className="text-2.5xl text-color1 pb-2 text-bold leading-loose">{subtitle}</h4>
-        <p className="text-sm leading-7 my-9 cursor-pointer">{description}</p>
+        <p className="text-sm leading-7 my-9 cursor-pointer">
+          {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.'}
+        </p>
         <Link href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} passHref>
           <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="py-3 px-6 text-sm text-white rounded-full bg-gradient-color1">{i18next.t('discover')}</a>
         </Link>
@@ -50,7 +57,7 @@ const GroupCard: FC<GroupCardProps> = ({
       <img
         src={headerImage || `/images/landing/${slug}.png`}
         alt={slug}
-        className={cx('rounded-4xl max-w-sm my-16',
+        className={cx('rounded-4xl max-w-sm lg:w-full w-72',
           {
             'shadow-md-left': textPosition === 'left',
             'shadow-md-right': textPosition === 'right',
