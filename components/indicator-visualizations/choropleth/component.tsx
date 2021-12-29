@@ -12,10 +12,15 @@ import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
 import { Popup } from 'react-map-gl';
 
+// hooks
+import { useCoalPowerPlantTooltip } from 'hooks/map';
+// import { ReactMapboxGlCluster } from 'react-mapbox-gl-cluster';
+
 // authentication,
 import { withAuthentication } from 'hoc/auth';
 
 // Controls
+import i18next from 'i18next';
 import ZoomControl from './zoom';
 
 import Legend from './legend';
@@ -64,12 +69,13 @@ const MapContainer: FC<MapContainerProps> = (
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const [hoverInteractions, setHoverInteractions] = useState({}
     || {
-      regions: {},
+      regions: layers[0].name,
       cluster: {
         point_count: null,
+        name: '',
       },
     });
-  const [lngLat, setLngLat] = useState(null);
+  const [lngLat, setLngLat] = useState([0, 0]);
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
   }, []);
@@ -94,6 +100,11 @@ const MapContainer: FC<MapContainerProps> = (
     return itms || [];
   }, [sortArray, layers]);
 
+  const {
+    tooltipInfo,
+    tooltipInfoHeaders,
+  } = useCoalPowerPlantTooltip(hoverInteractions?.cluster);
+
   // Callbacks
   const onChangeOrder = useCallback((ids) => {
     setSortArray(ids);
@@ -105,11 +116,14 @@ const MapContainer: FC<MapContainerProps> = (
         width="100%"
         height="100%"
         viewport={viewport}
+        className="z-10"
         onMapViewportChange={handleViewportChange}
         onHover={(e) => {
           if (e && e.features) {
             e.features.forEach((f) => setHoverInteractions({
               [f.source]: f.properties,
+              ...f,
+              ...e,
             }));
             setLngLat(e.lngLat);
           }
@@ -120,6 +134,8 @@ const MapContainer: FC<MapContainerProps> = (
         }}
 
       >
+        {/* <ReactMapboxGlCluster data={layers[0].source.data} /> */}
+        {/* <GeoJSONLayer data={firstCircle} /> */}
         {(map) => (
           <>
             <LayerManager map={map} plugin={PluginMapboxGl}>
@@ -140,18 +156,33 @@ const MapContainer: FC<MapContainerProps> = (
                 {numberFormat(Object.values(hoverInteractions.regions))}
               </Popup>
             )}
-            {lngLat && hoverInteractions.cluster && (
-            <Popup
-              latitude={lngLat[1]}
-              longitude={lngLat[0]}
-              closeButton={false}
-              className="rounded-2xl"
-            >
-              Total count
-              :
-                {' '}
-                {hoverInteractions.cluster.point_count}
-            </Popup>
+            {hoverInteractions?.cluster?.point_count && (
+              <Popup
+                latitude={lngLat[1]}
+                longitude={lngLat[0]}
+                closeButton={false}
+                tipSize={10}
+                className="z-20 rounded-2xl"
+              >
+                <div className="flex">
+                  <span className="mr-2">
+                    {i18next.t('numberPlants')}
+                    :
+                  </span>
+                  <span>{hoverInteractions?.cluster?.point_count}</span>
+                </div>
+
+                {!!tooltipInfoHeaders.length && (
+                <ul>
+                  {tooltipInfoHeaders.map((t) => (
+                    <li key={`${t}-${tooltipInfo[t]}`}>
+                      <span className="mr-2 text-color6">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      <span className="text-color9">{tooltipInfo[t]}</span>
+                    </li>
+                  ))}
+                </ul>
+                )}
+              </Popup>
             )}
           </>
         )}

@@ -29,20 +29,24 @@ const ComparePage: FC<ComparePageProps> = ({
       <Head title="Green Energy Data Platform" />
       <Hero theme="transparent" rounded className="lg:px-32 md:px-24 sm:px-16 px-8" />
       <section className="w-full flex space-x-3 container m-auto max-w-7xl">
-        <Compare
-          groupSlug={g1}
-          subgroupSlug={sg1}
-          indicatorSlug={ind1}
-          onClose={handleClose}
-          compareIndex={1}
-        />
-        <Compare
-          groupSlug={g2}
-          subgroupSlug={sg2}
-          indicatorSlug={ind2}
-          onClose={handleClose}
-          compareIndex={2}
-        />
+        <div className="w-1/2">
+          <Compare
+            groupSlug={g1}
+            subgroupSlug={sg1}
+            indicatorSlug={ind1}
+            onClose={() => handleClose(g2, sg2, ind2)}
+            compareIndex={1}
+          />
+        </div>
+        <div className="w-1/2">
+          <Compare
+            groupSlug={g2}
+            subgroupSlug={sg2}
+            indicatorSlug={ind2}
+            onClose={() => handleClose(g1, sg1, ind1)}
+            compareIndex={2}
+          />
+        </div>
       </section>
       <section className="flex pb-21">
         <PreFooter />

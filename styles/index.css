@@ -59,6 +59,14 @@
     background-size: cover !important;
   }
 
+  .mapboxgl-popup-content {
+    z-index: 500;
+  }
+
+  .recharts-surface {
+    overflow: visible;
+  }
+
   /* News Gothic MT */
   @font-face {
     font-family: 'News Gothic MT';
@@ -95,7 +103,7 @@
       filter: drop-shadow(40px 40px 4px rgba(22, 26, 47, 0.24));
     }
     .bg-shadow {
-      filter: drop-shadow(0px 10px 20px rgba(14, 48, 114, 0.1));
+      filter: drop-shadow(0px 10px 10px rgba(14, 48, 114, 0.1));
     }
   }
 }

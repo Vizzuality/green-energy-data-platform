@@ -57,9 +57,9 @@ const Menu: FC<MenuProps> = ({
                   { 'bg-gray1 bg-opacity-5': index === selectedIndex.index && subIndex === selectedIndex.subIndex })}
                 key={sgSlug}
               >
-                <Link key={sgId} href={`/${slug}/${sgSlug}/${default_indicator.slug}`}>
+                <Link key={sgId} href={`/${slug}/${sgSlug}/${default_indicator?.slug}`}>
                   <a
-                    href={`/${slug}/${sgSlug}/${default_indicator.slug}`}
+                    href={`/${slug}/${sgSlug}/${default_indicator?.slug}`}
                     className="text-gray1"
                     onMouseEnter={() => { setSelectedIndex({ index, subIndex }); }}
                   >

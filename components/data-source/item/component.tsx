@@ -20,7 +20,8 @@ interface LinkProps {
 interface ItemProps {
   icon: string,
   name: string,
-  links: LinkProps[],
+  links?: LinkProps[],
+  source?: string,
   indSlug: string,
   className?: string,
 }
@@ -29,6 +30,7 @@ const Item: FC<ItemProps> = ({
   icon,
   name,
   links,
+  source,
   indSlug,
   className = '',
 }: ItemProps) => {
@@ -55,13 +57,20 @@ const Item: FC<ItemProps> = ({
         <Icon ariaLabel={name} color="text-color1" name={icon} size="lg" className="mr-5" />
         <div className="flex flex-col">
           <p className="inline-flex text-base hover:text-gray-700">{name}</p>
+          {!source && (
           <ul className="flex">
-            {links.map(({ label, format }) => (
+            {links?.map(({ label, format }) => (
               <li className="text-color1 text-sm pr-3.75" key={label}>
                 <button className="cursor-pointer hover:font-bold underline" type="button" onClick={() => handleDownload(format)}>{label}</button>
               </li>
             ))}
           </ul>
+          )}
+          {source && (
+          <span className="text-left text-color1 text-sm pr-3.75 hover:font-bold underline">
+            {source}
+          </span>
+          )}
         </div>
       </div>
     </div>

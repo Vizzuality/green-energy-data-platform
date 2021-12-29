@@ -35,10 +35,11 @@ const GroupCard: FC<GroupCardProps> = ({
   } = group;
 
   const defaultData = useDefaultIndicator(group);
-  const { default_indicator: { slug: indicatorSlug }, slug: subgroupSlug } = defaultData;
+  const { default_indicator: defaultIndicator, slug: subgroupSlug } = defaultData;
+  const { slug: indicatorSlug } = defaultIndicator || '';
 
   return (
-    <div className={cx('w-full', { [className]: className })}>
+    <div className={cx('w-full items-center', { [className]: className })}>
       <div className={cx('max-w-md sm:my-8',
         {
           'ml-12 ': textPosition === 'left',
@@ -57,7 +58,7 @@ const GroupCard: FC<GroupCardProps> = ({
       <img
         src={headerImage || `/images/landing/${slug}.png`}
         alt={slug}
-        className={cx('rounded-4xl max-w-sm lg:w-full w-72',
+        className={cx('rounded-2xl max-w-sm lg:w-full w-72',
           {
             'shadow-md-left': textPosition === 'left',
             'shadow-md-right': textPosition === 'right',
