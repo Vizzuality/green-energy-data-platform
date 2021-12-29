@@ -346,6 +346,16 @@ export const getGroupedValues = (
     const unitLabel = units.find((u) => u.value === unit)?.label;
     const legendTitle = unit ? `${name} (${unitLabel})` : name;
     const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
+
+    const getTooltipProperties = (tooltipData) => {
+      const properties = tooltipData.map(({
+        name_en, name_cn, value_en, value_cn,
+      }) => ({
+        [name_en || name_cn]: value_en || value_cn,
+      }));
+      return Object.assign({}, ...properties);
+    };
+
     if (layerType === 'Multipolygon' || layerType === 'Polygon') {
       data = [{
         visualizationTypes: visualizations,
@@ -430,7 +440,6 @@ export const getGroupedValues = (
         }],
       }];
     }
-
     if (layerType === 'Point') {
       data = [{
         visualizationTypes: visualizations,
@@ -439,7 +448,7 @@ export const getGroupedValues = (
         layers: [{
           id: 'cluster',
           type: 'geojson',
-          filter: ['has', 'point_count'],
+          // filter: ['has', 'point_count'],
           source: {
             type: 'geojson',
             data: {
@@ -447,21 +456,28 @@ export const getGroupedValues = (
               features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
                 type: 'Feature',
                 geometry: geometry?.geometry,
-                properties: cat,
+                properties: {
+                  name: geometry?.name,
+                  region_type: geometry?.region_type,
+                  ...getTooltipProperties(geometry?.geometry?.tooltip_properties),
+                  ...cat,
+                },
               })),
             },
             cluster: true,
-            clusterMaxZoom: 14,
-            clusterRadius: 45,
+            clusterMaxZoom: 20,
+            clusterRadius: 10,
           },
           render: {
             layers: [
               {
                 type: 'circle',
+                filter: ['has', 'point_count'],
+                // filter: ['!=', 'cluster', true],
                 paint: {
                 // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
-                  // 'circle-stroke-opacity': 0.7,
+                  'circle-stroke-opacity': 0.4,
                   'circle-stroke-color': [
                     'interpolate',
                     ['linear'],
@@ -473,11 +489,11 @@ export const getGroupedValues = (
                     maxValue,
                     '#dd96ab',
                   ],
-                  'circle-stroke-width': 1,
+                  'circle-stroke-width': 3,
                   'circle-color': [
                     'step',
                     ['get', 'point_count'],
-                    '#dd96ab',
+                    '#c73a63',
                     minValue,
                     '#d46f8c',
                     media,
@@ -489,13 +505,25 @@ export const getGroupedValues = (
                     'step',
                     ['get', 'point_count'],
                     10,
-                    minValue,
+                    minValue / 2,
                     15,
-                    media,
+                    minValue,
                     20,
-                    maxValue,
+                    media,
                     25,
+                    maxValue,
+                    30,
                   ],
+                },
+              },
+              {
+                id: 'cluster-line',
+                type: 'line',
+                layout: {
+                  'text-allow-overlap': true,
+                  'text-ignore-placement': true,
+                  'text-field': '{point_count_abbreviated}',
+                  'text-size': 12,
                 },
               },
               {
@@ -519,8 +547,9 @@ export const getGroupedValues = (
                 paint: {
                   'circle-color': '#e7b092',
                   'circle-radius': 4,
-                  'circle-stroke-width': 1,
-                  'circle-stroke-color': '#fff',
+                  'circle-stroke-width': 0.5,
+                  'circle-stroke-color': '#e7b092',
+                  'circle-stroke-opacity': 0.3,
                 },
               },
             // {

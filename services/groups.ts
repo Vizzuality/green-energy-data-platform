@@ -12,7 +12,7 @@ export const fetchGroups = (
   .then((data) => data);
 
 export const fetchGroup = (
-  id: string,
+  id: string | string[],
   params = {},
   headers = {},
 ) => API.get(`/groups/${id}`, {

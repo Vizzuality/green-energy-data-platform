@@ -29,12 +29,14 @@ interface Unit {
   name: string,
 }
 
+interface TooltipCoalPowerPlants {
+  [key: string]: string
+}
+
 interface Geometry {
-  geometry: {
-    coordinates: number[],
-    type: string,
-  },
+  coordinates: number[],
   type: string,
+  tooltip_properties: TooltipCoalPowerPlants[],
 }
 
 interface RegionRecord {

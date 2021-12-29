@@ -12,6 +12,10 @@ import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
 import { Popup } from 'react-map-gl';
 
+// hooks
+import { useCoalPowerPlantTooltip } from 'hooks/map';
+// import { ReactMapboxGlCluster } from 'react-mapbox-gl-cluster';
+
 // authentication,
 import { withAuthentication } from 'hoc/auth';
 
@@ -64,12 +68,13 @@ const MapContainer: FC<MapContainerProps> = (
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const [hoverInteractions, setHoverInteractions] = useState({}
     || {
-      regions: {},
+      regions: layers[0].name,
       cluster: {
         point_count: null,
+        name: '',
       },
     });
-  const [lngLat, setLngLat] = useState(null);
+  const [lngLat, setLngLat] = useState([0, 0]);
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
   }, []);
@@ -94,10 +99,16 @@ const MapContainer: FC<MapContainerProps> = (
     return itms || [];
   }, [sortArray, layers]);
 
+  const {
+    tooltipInfo,
+    tooltipInfoHeaders,
+  } = useCoalPowerPlantTooltip(hoverInteractions?.cluster);
+
   // Callbacks
   const onChangeOrder = useCallback((ids) => {
     setSortArray(ids);
   }, []);
+
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
       <Map
@@ -105,11 +116,14 @@ const MapContainer: FC<MapContainerProps> = (
         width="100%"
         height="100%"
         viewport={viewport}
+        className="z-10"
         onMapViewportChange={handleViewportChange}
         onHover={(e) => {
           if (e && e.features) {
             e.features.forEach((f) => setHoverInteractions({
               [f.source]: f.properties,
+              ...f,
+              ...e,
             }));
             setLngLat(e.lngLat);
           }
@@ -120,6 +134,8 @@ const MapContainer: FC<MapContainerProps> = (
         }}
 
       >
+        {/* <ReactMapboxGlCluster data={layers[0].source.data} /> */}
+        {/* <GeoJSONLayer data={firstCircle} /> */}
         {(map) => (
           <>
             <LayerManager map={map} plugin={PluginMapboxGl}>
@@ -140,18 +156,38 @@ const MapContainer: FC<MapContainerProps> = (
                 {numberFormat(Object.values(hoverInteractions.regions))}
               </Popup>
             )}
-            {lngLat && hoverInteractions.cluster && (
-            <Popup
-              latitude={lngLat[1]}
-              longitude={lngLat[0]}
-              closeButton={false}
-              className="rounded-2xl"
-            >
-              Total count
-              :
-                {' '}
-                {hoverInteractions.cluster.point_count}
-            </Popup>
+            {(
+              <Popup
+                latitude={lngLat[1]}
+                longitude={lngLat[0]}
+                closeButton={false}
+                tipSize={20}
+                className="z-20 rounded-2xl"
+              >
+                {hoverInteractions?.cluster?.point_count && (
+                  <div className="flex">
+                    <span className="mr-2">Total count:</span>
+                    <span>{hoverInteractions?.cluster?.point_count}</span>
+                  </div>
+                  )}
+                <div className="flex">
+                  <span className="mr-2 text-red-500 text-lg">{hoverInteractions?.cluster?.name}</span>
+                  {/* <span>{hoverInteractions?.cluster?.region_type}</span> */}
+                </div>
+
+                {!!tooltipInfoHeaders.length && (
+                <ul>
+                  {tooltipInfoHeaders.map((t) => (
+                    <li key={`${t}-${tooltipInfo[t]}`}>
+                      <span className="mr-2 text-color6">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      <span className="text-color9">{tooltipInfo[t]}</span>
+                    </li>
+                  ))}
+                </ul>
+                )}
+
+                {/* {hoverInteractions.cluster.tooltip.value} */}
+              </Popup>
             )}
           </>
         )}
