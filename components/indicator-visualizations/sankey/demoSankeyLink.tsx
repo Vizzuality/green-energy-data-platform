@@ -5,6 +5,7 @@ import { COLORS } from './constants';
 
 type Target = Readonly<{
   name: string,
+  name_en: string,
 }>;
 
 type Payload = Readonly<{
