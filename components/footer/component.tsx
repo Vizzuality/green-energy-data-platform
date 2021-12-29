@@ -31,6 +31,7 @@ const Footer: FC<FooterProps> = ({
           <a href="/terms-conditions" className="px-4 cursor-pointer">{i18next.t('terms')}</a>
         </Link>
       </div>
+      <LanguageSelect />
     </div>
   </section>
 );

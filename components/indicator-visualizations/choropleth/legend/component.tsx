@@ -4,6 +4,8 @@ import cx from 'classnames';
 
 import { useId } from '@react-aria/utils';
 
+import Icon from 'components/icon';
+
 import SortableList from './sortable/list';
 
 interface LegendProps {
@@ -36,10 +38,16 @@ export const Legend: FC<LegendProps> = ({
         type="button"
         aria-expanded={active}
         aria-controls={id}
-        className="relative flex items-center w-full px-5 py-3 space-x-2 text-xs text-white uppercase font-heading"
+        className="relative flex items-center w-full px-5 py-1.5 space-x-2 text-sm text-white font-heading"
         onClick={onToggleActive}
       >
         <span>Legend</span>
+        <Icon
+          ariaLabel={active ? 'collapse dropdown' : 'expand dropdown'}
+          name="triangle_border"
+          size="sm"
+          className={cx({ 'transform rotate-180': active })}
+        />
 
       </button>
 

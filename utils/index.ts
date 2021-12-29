@@ -321,7 +321,6 @@ export const getGroupedValues = (
       (d) => d[mapCategorySelected],
     )
       .map((r) => r[mapCategorySelected]) as number[];
-
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
     const colors = chroma.scale(['#e7b092', '#dd96ab']).colors(8);
@@ -449,7 +448,7 @@ export const getGroupedValues = (
         layers: [{
           id: 'cluster',
           type: 'geojson',
-          // filter: ['has', 'point_count'],
+          filter: ['has', 'point_count'],
           source: {
             type: 'geojson',
             data: {
@@ -476,8 +475,7 @@ export const getGroupedValues = (
             layers: [
               {
                 type: 'circle',
-                filter: ['has', 'total'],
-                // filter: ['!=', 'cluster', true],
+                filter: ['has', 'point_count'],
                 paint: {
                 // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
@@ -485,23 +483,23 @@ export const getGroupedValues = (
                   'circle-stroke-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', 'point_count'],
+                    ['get', 'total'],
                     minValue,
-                    '#c73a63',
+                    '#edc58a',
                     media,
-                    '#d06182',
+                    '#df7463',
                     maxValue,
-                    '#dd96ab',
+                    '#ca184a',
                   ],
-                  'circle-stroke-width': 3,
+                  'circle-stroke-width': 1.5,
                   'circle-color': [
                     'step',
                     ['get', 'total'],
                     '#e7b092',
                     minValue,
-                    '#df7463',
+                    '#edc58a',
                     media,
-                    '#df9cbo',
+                    '#df7463',
                     maxValue,
                     '#ca184a',
                   ],

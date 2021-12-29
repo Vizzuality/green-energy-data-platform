@@ -68,6 +68,7 @@ export const resources = {
       selectYear: 'Select year',
       selectRegion: 'Select region',
       selectUnit: 'Select unit',
+      numberPlants: 'Number of plants',
     },
   },
   cn: {
@@ -130,6 +131,7 @@ export const resources = {
       selectYear: '选择年份',
       selectRegion: '选择地区',
       selectUnit: '选择单位',
+      numberPlants: '燃煤电厂数量',
     },
   },
 };

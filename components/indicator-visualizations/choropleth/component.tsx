@@ -20,6 +20,7 @@ import { useCoalPowerPlantTooltip } from 'hooks/map';
 import { withAuthentication } from 'hoc/auth';
 
 // Controls
+import i18next from 'i18next';
 import ZoomControl from './zoom';
 
 import Legend from './legend';
@@ -155,20 +156,22 @@ const MapContainer: FC<MapContainerProps> = (
                 {numberFormat(Object.values(hoverInteractions.regions))}
               </Popup>
             )}
-            {(
+            {hoverInteractions?.cluster?.point_count && (
               <Popup
                 latitude={lngLat[1]}
                 longitude={lngLat[0]}
                 closeButton={false}
-                tipSize={20}
+                tipSize={10}
                 className="z-20 rounded-2xl"
               >
-                {hoverInteractions?.cluster?.point_count && (
-                  <div className="flex">
-                    <span className="mr-2">Number of plants:</span>
-                    <span>{hoverInteractions?.cluster?.point_count}</span>
-                  </div>
-                  )}
+                <div className="flex">
+                  <span className="mr-2">
+                    {i18next.t('numberPlants')}
+                    :
+                  </span>
+                  <span>{hoverInteractions?.cluster?.point_count}</span>
+                </div>
+
                 {!!tooltipInfoHeaders.length && (
                 <ul>
                   {tooltipInfoHeaders.map((t) => (
@@ -179,8 +182,6 @@ const MapContainer: FC<MapContainerProps> = (
                   ))}
                 </ul>
                 )}
-
-                {/* {hoverInteractions.cluster.tooltip.value} */}
               </Popup>
             )}
           </>
