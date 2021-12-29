@@ -24,7 +24,7 @@ const DemoSankeyNode: FC<SankeyNodeProps> = (props: SankeyNodeProps) => {
   const spaceCheck = (numero) => {
     const isSpace = str?.charAt(numero) === ' ';
     return (isSpace || numero > str.length)
-      ? [str.substr(0, numero), str.substr(numero + 1, str.length - 1)].filter((s) => s !== '')
+      ? [str.substr(0, numero), '...'].filter((s) => s !== '')
       : spaceCheck(numero + 1);
   };
 
@@ -96,16 +96,14 @@ const DemoSankeyNode: FC<SankeyNodeProps> = (props: SankeyNodeProps) => {
         fill="#3A3F59"
         width={20}
       >
-        {labelSplitted.map((label, i) => (
-          <tspan
-            textAnchor="end"
-            key={label}
-            y={y + height / 2 + heightFix + labelPositionFix + i * (labelHeight / 2)}
-            x={isOut ? x - 6 : x + width - 16}
-          >
-            {label}
-          </tspan>
-        ))}
+        <tspan
+          textAnchor="end"
+          y={y + height / 2 + heightFix + labelPositionFix * (labelHeight / 2)}
+          x={isOut ? x - 6 : x + width - 16}
+        >
+          {labelSplitted[0]}
+          {labelSplitted[1]}
+        </tspan>
       </text>
       )}
     </Layer>

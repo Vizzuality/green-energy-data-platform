@@ -308,7 +308,7 @@ export function useSankeyData(
     (state: RootState) => (state.language),
   );
 
-  const { year, region, unit } = params;
+  const { year, region } = params;
 
   const query = useQuery<SankeyData, Error>(['sankey-data', id, current],
     () => fetchSankeyData(id, { locale: current, ...params }), {

@@ -59,6 +59,10 @@
     background-size: cover !important;
   }
 
+  .mapboxgl-popup-content {
+    z-index: 500;
+  }
+
   .recharts-surface {
     overflow: visible;
   }

@@ -321,7 +321,6 @@ export const getGroupedValues = (
       (d) => d[mapCategorySelected],
     )
       .map((r) => r[mapCategorySelected]) as number[];
-
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
     const colors = chroma.scale(['#e7b092', '#dd96ab']).colors(8);
@@ -346,6 +345,17 @@ export const getGroupedValues = (
     const unitLabel = units.find((u) => u.value === unit)?.label;
     const legendTitle = unit ? `${name} (${unitLabel})` : name;
     const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
+
+    const getTooltipProperties = (tooltipData) => {
+      if (!tooltipData) return null;
+      const properties = tooltipData?.map(({
+        name_en, name_cn, value_en, value_cn,
+      }) => ({
+        [name_en || name_cn]: value_en || value_cn,
+      }));
+      return Object.assign({}, ...properties);
+    };
+
     if (layerType === 'Multipolygon' || layerType === 'Polygon') {
       data = [{
         visualizationTypes: visualizations,
@@ -430,7 +440,6 @@ export const getGroupedValues = (
         }],
       }];
     }
-
     if (layerType === 'Point') {
       data = [{
         visualizationTypes: visualizations,
@@ -447,55 +456,76 @@ export const getGroupedValues = (
               features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
                 type: 'Feature',
                 geometry: geometry?.geometry,
-                properties: cat,
+                properties: {
+                  name: geometry?.name,
+                  region_type: geometry?.region_type,
+                  ...getTooltipProperties(geometry?.geometry?.tooltip_properties),
+                  ...cat,
+                },
               })),
             },
             cluster: true,
-            clusterMaxZoom: 14,
-            clusterRadius: 45,
+            clusterMaxZoom: 20,
+            clusterRadius: 10,
+            clusterProperties: {
+              total: ['max', ['get', 'Total']],
+            },
           },
           render: {
             layers: [
               {
                 type: 'circle',
+                filter: ['has', 'point_count'],
                 paint: {
                 // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
-                  // 'circle-stroke-opacity': 0.7,
+                  'circle-stroke-opacity': 0.4,
                   'circle-stroke-color': [
                     'interpolate',
                     ['linear'],
-                    ['get', 'point_count'],
+                    ['get', 'total'],
                     minValue,
-                    '#c73a63',
+                    '#edc58a',
                     media,
-                    '#d06182',
+                    '#df7463',
                     maxValue,
-                    '#dd96ab',
+                    '#ca184a',
                   ],
-                  'circle-stroke-width': 1,
+                  'circle-stroke-width': 1.5,
                   'circle-color': [
                     'step',
-                    ['get', 'point_count'],
-                    '#dd96ab',
+                    ['get', 'total'],
+                    '#e7b092',
                     minValue,
-                    '#d46f8c',
+                    '#edc58a',
                     media,
-                    '#cd5478',
+                    '#df7463',
                     maxValue,
-                    '#c73a63',
+                    '#ca184a',
                   ],
                   'circle-radius': [
                     'step',
                     ['get', 'point_count'],
                     10,
-                    minValue,
+                    minValue / 2,
                     15,
-                    media,
+                    minValue,
                     20,
-                    maxValue,
+                    media,
                     25,
+                    maxValue,
+                    30,
                   ],
+                },
+              },
+              {
+                id: 'cluster-line',
+                type: 'line',
+                layout: {
+                  'text-allow-overlap': true,
+                  'text-ignore-placement': true,
+                  'text-field': '{point_count_abbreviated}',
+                  'text-size': 12,
                 },
               },
               {
@@ -507,7 +537,6 @@ export const getGroupedValues = (
                 layout: {
                   'text-allow-overlap': true,
                   'text-ignore-placement': true,
-                  'text-field': '{point_count_abbreviated}',
                   'text-size': 12,
                 },
               },
@@ -519,8 +548,9 @@ export const getGroupedValues = (
                 paint: {
                   'circle-color': '#e7b092',
                   'circle-radius': 4,
-                  'circle-stroke-width': 1,
-                  'circle-stroke-color': '#fff',
+                  'circle-stroke-width': 0.5,
+                  'circle-stroke-color': '#e7b092',
+                  'circle-stroke-opacity': 0.3,
                 },
               },
             // {
