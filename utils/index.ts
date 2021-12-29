@@ -348,7 +348,8 @@ export const getGroupedValues = (
     const visualizations = dataWithGeometries[0]?.visualizationTypes as string[];
 
     const getTooltipProperties = (tooltipData) => {
-      const properties = tooltipData.map(({
+      if (!tooltipData) return null;
+      const properties = tooltipData?.map(({
         name_en, name_cn, value_en, value_cn,
       }) => ({
         [name_en || name_cn]: value_en || value_cn,
@@ -467,12 +468,15 @@ export const getGroupedValues = (
             cluster: true,
             clusterMaxZoom: 20,
             clusterRadius: 10,
+            clusterProperties: {
+              total: ['max', ['get', 'Total']],
+            },
           },
           render: {
             layers: [
               {
                 type: 'circle',
-                filter: ['has', 'point_count'],
+                filter: ['has', 'total'],
                 // filter: ['!=', 'cluster', true],
                 paint: {
                 // 'fill-color': '#00ffff',
@@ -492,14 +496,14 @@ export const getGroupedValues = (
                   'circle-stroke-width': 3,
                   'circle-color': [
                     'step',
-                    ['get', 'point_count'],
-                    '#c73a63',
+                    ['get', 'total'],
+                    '#e7b092',
                     minValue,
-                    '#d46f8c',
+                    '#df7463',
                     media,
-                    '#cd5478',
+                    '#df9cbo',
                     maxValue,
-                    '#c73a63',
+                    '#ca184a',
                   ],
                   'circle-radius': [
                     'step',
@@ -535,7 +539,6 @@ export const getGroupedValues = (
                 layout: {
                   'text-allow-overlap': true,
                   'text-ignore-placement': true,
-                  'text-field': '{point_count_abbreviated}',
                   'text-size': 12,
                 },
               },

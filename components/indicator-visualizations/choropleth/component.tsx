@@ -108,7 +108,6 @@ const MapContainer: FC<MapContainerProps> = (
   const onChangeOrder = useCallback((ids) => {
     setSortArray(ids);
   }, []);
-
   return (
     <div className="relative h-full border-4 border-gray5 rounded" style={style}>
       <Map
@@ -166,15 +165,10 @@ const MapContainer: FC<MapContainerProps> = (
               >
                 {hoverInteractions?.cluster?.point_count && (
                   <div className="flex">
-                    <span className="mr-2">Total count:</span>
+                    <span className="mr-2">Number of plants:</span>
                     <span>{hoverInteractions?.cluster?.point_count}</span>
                   </div>
                   )}
-                <div className="flex">
-                  <span className="mr-2 text-red-500 text-lg">{hoverInteractions?.cluster?.name}</span>
-                  {/* <span>{hoverInteractions?.cluster?.region_type}</span> */}
-                </div>
-
                 {!!tooltipInfoHeaders.length && (
                 <ul>
                   {tooltipInfoHeaders.map((t) => (
