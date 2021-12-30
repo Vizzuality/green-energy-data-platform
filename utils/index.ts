@@ -374,9 +374,8 @@ export const getGroupedValues = (
             data: {
               type: 'FeatureCollection',
               features: dataWithGeometries.map(
-                ({ geometry, visualizationTypes, ...cat }, index) => ({
+                ({ geometry, visualizationTypes, ...cat }) => ({
                   type: 'Feature',
-                  id: index,
                   geometry: geometry?.geometry,
                   properties: cat,
                 }),
@@ -482,7 +481,6 @@ export const getGroupedValues = (
               {
                 id: 'coal-power-plants-clusters',
                 type: 'circle',
-                filter: ['has', 'point_count'],
                 paint: {
                 // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,

@@ -7,7 +7,6 @@ import { useId } from '@react-aria/utils';
 import Icon from 'components/icon';
 
 import i18next from 'i18next';
-
 import SortableList from './sortable/list';
 
 interface LegendProps {

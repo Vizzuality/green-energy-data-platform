@@ -35,6 +35,7 @@
     "@types/file-saver": "^2.0.3",
     "@types/lodash.orderby": "^4.6.6",
     "@types/react-map-gl": "^5.2.9",
+    "@types/supercluster": "^5.0.3",
     "autoprefixer": "^10.1.0",
     "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",

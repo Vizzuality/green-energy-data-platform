@@ -15,6 +15,7 @@ import makeStore from 'store/store';
 import Icons from 'components/icons';
 
 // styles
+import 'mapbox-gl/dist/mapbox-gl.css';
 import 'styles/index.css';
 
 initializeLanguage();

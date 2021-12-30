@@ -147,16 +147,18 @@ const SankeyChart: FC<ComponentTypes> = ({
     },
     [year, years, defaultYear],
   );
+  // TODO - change when API is ready
+  // const currentUnit = useMemo<string>(
+  //   () => {
+  //     if (units.find(({ label }) => label === unit)) {
+  //       return unit;
+  //     }
+  //     return defaultUnit?.label;
+  //   },
+  //   [unit, units, defaultUnit],
+  // );
 
-  const currentUnit = useMemo<string>(
-    () => {
-      if (units.find(({ label }) => label === unit)) {
-        return unit;
-      }
-      return defaultUnit?.label;
-    },
-    [unit, units, defaultUnit],
-  );
+  const currentUnit = indicatorSlug === 'energy-flows-emission-flows' ? '10000t' : '10000tce';
 
   const currentRegion = useMemo<string>(
     () => {
@@ -170,7 +172,9 @@ const SankeyChart: FC<ComponentTypes> = ({
 
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayRegion = useMemo(() => regions.find(({ label }) => label === region)?.label, [regions, region]) || '';
-  const displayUnit = useMemo(() => units.find(({ label }) => label === unit)?.label, [units, unit]) || '';
+  // TODO - change when API is ready
+  // const displayUnit = useMemo(() => units.find(({ label }) => label === unit)?.label, [units, unit]) || '';
+  const displayUnit = indicatorSlug === 'energy-flows-emission-flows' ? '10000t' : '10000tce';
 
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
@@ -183,7 +187,7 @@ const SankeyChart: FC<ComponentTypes> = ({
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
-      ...(currentUnit && { unit: currentUnit }) || { unit: null },
+      // ...(currentUnit && { unit: currentUnit }) || { unit: null },
       category: null,
       region: currentRegion || null,
       year: currentYear || null,
