@@ -19,6 +19,8 @@ import Search from 'components/search';
 
 import i18next from 'i18next';
 
+import { InView } from 'react-intersection-observer';
+
 const HomePage: FC = () => {
   const { data: groups, isLoading } = useGroups();
 
@@ -49,12 +51,15 @@ const HomePage: FC = () => {
         : groups?.map((group, index) => {
           const textPosition = index % 2 !== 0 ? 'left' : 'right';
           return (
-            <div key={group.id} className="container m-auto pb-28 lg:px-32 md:px-24 sm:px-16 px-8">
-              <GroupCard textPosition={textPosition} group={group} className={cx('flex justify-between items-start', { 'flex-row-reverse': textPosition === 'left' })} />
-            </div>
+            <InView key={group} triggerOnce>
+              {({ ref, inView }) => (
+                <div ref={ref} key={group.id} className="container m-auto pb-28 lg:px-32 md:px-24 sm:px-16 px-8">
+                  {inView && <GroupCard textPosition={textPosition} group={group} className={cx('flex justify-between items-start', { 'flex-row-reverse': textPosition === 'left' })} />}
+                </div>
+              )}
+            </InView>
           );
         })}
-
       <section className="flex pb-23">
         <PreFooter />
       </section>
