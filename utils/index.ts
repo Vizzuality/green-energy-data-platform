@@ -28,7 +28,6 @@ import { MapLayersProps } from 'components/indicator-visualizations/choropleth/c
 import ID_CHINA from 'utils/constants';
 
 const numberFormat = ValueFormat('.2s');
-
 export const initializeLanguage = () => i18n.init({
   resources,
   lng: 'en',
@@ -475,14 +474,15 @@ export const getGroupedValues = (
             clusterProperties: {
               total: ['max', ['get', mapCategorySelected]],
             },
+            // clusterAggregate: [mapCategorySelected],
           },
           render: {
             layers: [
               {
                 id: 'coal-power-plants-clusters',
                 type: 'circle',
+                filter: ['has', 'point_count'],
                 paint: {
-                // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
                   'circle-stroke-opacity': 0.4,
                   'circle-stroke-color': [
@@ -557,23 +557,6 @@ export const getGroupedValues = (
                   'circle-stroke-color': '#e7b092',
                 },
               },
-            // {
-            //   id: 'media',
-            //   metadata: {
-            //     position: 'top',
-            //   },
-            //   type: 'symbol',
-            //   paint: {
-            //     'icon-color': '#F00',
-            //   },
-            //   layout: {
-            //     'icon-ignore-placement': true,
-            //     'icon-allow-overlap': true,
-            //     'icon-image': '',
-            //     'icon-color': 'red',
-            //     'icon-size': 10,
-            //   },
-            // },
             ],
           },
           legendConfig: [{
@@ -583,6 +566,58 @@ export const getGroupedValues = (
             type: 'gradient',
             items: ITEMS,
           }],
+        }],
+      },
+      {
+        visualizationTypes: visualizations,
+        data: dataWithGeometries,
+        mapValues,
+        layers: [{
+          id: 'cluster-points',
+          type: 'geojson',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+                type: 'Feature',
+                geometry: geometry?.geometry,
+                properties: {
+                  name: geometry?.name,
+                  geometry: geometry?.geometry.coordinates,
+                  region_type: geometry?.region_type,
+                  ...getTooltipProperties(geometry?.geometry?.tooltip_properties),
+                  ...cat,
+                },
+              })),
+            },
+          },
+          render: {
+            layers: [
+              {
+                type: 'circle',
+                paint: {
+                // 'fill-color': '#00ffff',
+                  'circle-opacity': 0.5,
+                  'circle-stroke-opacity': 0.4,
+                  'circle-stroke-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'total'],
+                    minValue,
+                    '#edc58a',
+                    media,
+                    '#df7463',
+                    maxValue,
+                    '#ca184a',
+                  ],
+                  'circle-stroke-width': 1.5,
+                  'circle-color': 'blue',
+                  'circle-radius': 10,
+                },
+              },
+            ],
+          },
         }],
       }];
     }

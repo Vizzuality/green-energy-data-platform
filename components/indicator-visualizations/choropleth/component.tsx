@@ -10,7 +10,7 @@ import React, {
 // Layer manager
 import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
-import { Popup } from 'react-map-gl';
+import { Popup, Marker, FlyToInterpolator } from 'react-map-gl';
 
 // hooks
 import { useCoalPowerPlantTooltip } from 'hooks/map';
@@ -25,12 +25,12 @@ import { format } from 'd3-format';
 // Controls
 import ZoomControl from './zoom';
 
-import Disclaimer from './disclaimer';
 
 import Legend from './legend';
 import LegendItem from './legend/item';
 import LegendTypeChoropleth from './legend/choropleth';
 import LegendTypeGradient from './legend/gradient';
+import Disclaimer from './disclaimer';
 
 // Map
 import { DEFAULT_VIEWPORT } from './constants';
@@ -73,6 +73,9 @@ const MapContainer: FC<MapContainerProps> = (
 ) => {
   const mapRef = useRef(null);
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
+  const [hoverInteractionsClick, setHoverInteractionsClick] = useState(
+    { cluster: false, clusterId: null, pointCount: null },
+  );
   const [hoverInteractions, setHoverInteractions] = useState({}
     || {
       regions: layers[0].name,
@@ -86,6 +89,7 @@ const MapContainer: FC<MapContainerProps> = (
         Total: null,
       },
     });
+
   const [lngLat, setLngLat] = useState([0, 0]);
   const [sortArray, setSortArray] = useState([]);
   const [disclaimerVisibility, setDisclaimerVisibility] = useState(true);
@@ -111,6 +115,8 @@ const MapContainer: FC<MapContainerProps> = (
     );
     return itms || [];
   }, [sortArray, layers]);
+
+  const { cluster, clusterId, pointCount } = hoverInteractionsClick;
 
   const {
     tooltipInfo,
@@ -290,6 +296,13 @@ const MapContainer: FC<MapContainerProps> = (
           );
         })}
       </Legend>
+      )}
+      {hasInteraction && disclaimerVisibility && (
+        <Disclaimer
+          className="top-4 left-1/2 transform  -translate-x-1/2"
+          message="Change to full screen for a better view of the map"
+          onDisclaimerClose={setDisclaimerVisibility}
+        />
       )}
     </div>
   );

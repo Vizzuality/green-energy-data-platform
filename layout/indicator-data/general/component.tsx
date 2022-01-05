@@ -75,7 +75,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, unit, region, category, scenario, visualization,
+    year, unit, region, category, scenario, visualization = 'choropleth',
   } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;

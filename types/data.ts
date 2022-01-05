@@ -136,6 +136,22 @@ export interface IndicatorMetadata {
   pie?: VisualizationFilters,
 }
 
+type Node = Readonly<{
+  name: string,
+}>;
+
+type Link = Readonly<{
+  class: string,
+  source: number,
+  target: number,
+  value: number,
+}>;
+
+export interface SankeyChartData {
+  nodes: Node[],
+  links: Link[]
+}
+
 // pages
 export interface ComparePageProps {
   g1: string,

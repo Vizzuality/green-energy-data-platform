@@ -135,6 +135,21 @@
     @apply shadow;
   }
 
+  button.mapboxgl-ctrl-icon.mapboxgl-ctrl-fullscreen {
+    width: 24px !important;
+    height: 24px !important;
+    background-image: url('/images/enlarge.svg') !important;
+    padding: 5px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 50% !important;
+
+
+  }
+  .mapboxgl-ctrl-icon > span {
+    display: none ! important;
+  }
+
   @supports (filter: drop-shadow(40px 40px 4px rgba(22, 26, 47, 0.24))) {
     .bg-shadow-sm {
       filter: drop-shadow(40px 40px 4px rgba(22, 26, 47, 0.24));
