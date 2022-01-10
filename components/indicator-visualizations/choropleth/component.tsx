@@ -3,6 +3,7 @@ import React, {
   useState,
   useCallback,
   useMemo,
+  useRef,
 } from 'react';
 
 import { format } from 'd3-format';
@@ -14,7 +15,7 @@ import { Popup } from 'react-map-gl';
 
 // hooks
 import { useCoalPowerPlantTooltip } from 'hooks/map';
-// import { ReactMapboxGlCluster } from 'react-mapbox-gl-cluster';
+import MapboxglSpiderifier from 'mapboxgl-spiderifier';
 
 // authentication,
 import { withAuthentication } from 'hoc/auth';
@@ -66,6 +67,7 @@ const MapContainer: FC<MapContainerProps> = (
     style = {},
   }: MapContainerProps,
 ) => {
+  const mapRef = useRef(null);
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const [hoverInteractions, setHoverInteractions] = useState({}
     || {
@@ -109,8 +111,47 @@ const MapContainer: FC<MapContainerProps> = (
   const onChangeOrder = useCallback((ids) => {
     setSortArray(ids);
   }, []);
+
+  const mapRefCurrent = mapRef.current;
+
+  const spiderifier = useMemo(() => {
+    if (mapRefCurrent !== null) {
+      return new MapboxglSpiderifier(mapRefCurrent, {
+        onClick(e, spiderLeg) {
+          console.log('Clicked on ', spiderLeg);
+        },
+        markerWidth: 40,
+        markerHeight: 40,
+      });
+    }
+    return null;
+  }, [mapRefCurrent]);
+
+  const onClickCluster = useCallback((e) => {
+    const features = mapRefCurrent.queryRenderedFeatures(e.point, {
+      layers: ['coal-power-plants-clusters'],
+    });
+
+    spiderifier.unspiderfy();
+    if (!features.length) return null;
+
+    mapRefCurrent.getSource('coal-power-plants').getClusterLeaves(
+      features[0].properties.cluster_id,
+      100,
+      0,
+      (err, leafFeatures) => {
+        if (err) {
+          throw new Error(`error while getting leaves of a cluster: ${err}`);
+        }
+        const markers = leafFeatures.map((leafFeature) => leafFeature.properties);
+        spiderifier.spiderfy(features[0].geometry.coordinates, markers);
+      },
+    );
+    return true;
+  }, [mapRefCurrent, spiderifier]);
+
   return (
-    <div className="relative h-full border-4 border-gray5 rounded" style={style}>
+    <div className="relative h-full border-4 rounded border-gray5" style={style}>
       <Map
         hasInteraction={hasInteraction}
         width="100%"
@@ -118,6 +159,7 @@ const MapContainer: FC<MapContainerProps> = (
         viewport={viewport}
         className="z-10"
         onMapViewportChange={handleViewportChange}
+        onClick={onClickCluster}
         onHover={(e) => {
           if (e && e.features) {
             e.features.forEach((f) => setHoverInteractions({
@@ -132,7 +174,7 @@ const MapContainer: FC<MapContainerProps> = (
           setHoverInteractions({});
           setLngLat(null);
         }}
-
+        onMapLoad={({ map }) => { mapRef.current = map; }}
       >
         {/* <ReactMapboxGlCluster data={layers[0].source.data} /> */}
         {/* <GeoJSONLayer data={firstCircle} /> */}

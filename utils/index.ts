@@ -446,7 +446,7 @@ export const getGroupedValues = (
         data: dataWithGeometries,
         mapValues,
         layers: [{
-          id: 'cluster',
+          id: 'coal-power-plants',
           type: 'geojson',
           filter: ['has', 'point_count'],
           source: {
@@ -474,6 +474,7 @@ export const getGroupedValues = (
           render: {
             layers: [
               {
+                id: 'coal-power-plants-clusters',
                 type: 'circle',
                 filter: ['has', 'point_count'],
                 paint: {
@@ -518,41 +519,41 @@ export const getGroupedValues = (
                   ],
                 },
               },
-              {
-                id: 'cluster-line',
-                type: 'line',
-                layout: {
-                  'text-allow-overlap': true,
-                  'text-ignore-placement': true,
-                  'text-field': '{point_count_abbreviated}',
-                  'text-size': 12,
-                },
-              },
-              {
-                id: 'media-cluster-count',
-                metadata: {
-                  position: 'top',
-                },
-                type: 'symbol',
-                layout: {
-                  'text-allow-overlap': true,
-                  'text-ignore-placement': true,
-                  'text-size': 12,
-                },
-              },
-              {
-                id: 'unclustered-point',
-                type: 'circle',
-                source: 'earthquakes',
-                filter: ['!', ['has', 'point_count']],
-                paint: {
-                  'circle-color': '#e7b092',
-                  'circle-radius': 4,
-                  'circle-stroke-width': 0.5,
-                  'circle-stroke-color': '#e7b092',
-                  'circle-stroke-opacity': 0.3,
-                },
-              },
+              // {
+              //   id: 'cluster-line',
+              //   type: 'line',
+              //   layout: {
+              //     'text-allow-overlap': true,
+              //     'text-ignore-placement': true,
+              //     'text-field': '{point_count_abbreviated}',
+              //     'text-size': 12,
+              //   },
+              // },
+              // {
+              //   id: 'media-cluster-count',
+              //   metadata: {
+              //     position: 'top',
+              //   },
+              //   type: 'symbol',
+              //   layout: {
+              //     'text-allow-overlap': true,
+              //     'text-ignore-placement': true,
+              //     'text-size': 12,
+              //   },
+              // },
+              // {
+              //   id: 'unclustered-point',
+              //   type: 'circle',
+              //   source: 'earthquakes',
+              //   filter: ['!', ['has', 'point_count']],
+              //   paint: {
+              //     'circle-color': '#e7b092',
+              //     'circle-radius': 4,
+              //     'circle-stroke-width': 0.5,
+              //     'circle-stroke-color': '#e7b092',
+              //     'circle-stroke-opacity': 0.3,
+              //   },
+              // },
             // {
             //   id: 'media',
             //   metadata: {
@@ -709,7 +710,7 @@ export const getGroupedValuesRelatedIndicators = (
 
   const { category, visualization } = filters;
   const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
-  const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
+  const mapCategorySelected = 'Nitrogen Oxides' || categories.includes('Total') ? 'Total' : categories[0];
 
   const filteredRegions: Region[] = regions?.filter((r) => r.geometry !== null);
 
