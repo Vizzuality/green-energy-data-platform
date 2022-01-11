@@ -234,7 +234,10 @@ const MapContainer: FC<MapContainerProps> = (
                 <Layer key={l.id} {...l} />
               ))}
             </LayerManager>
-            {((!!hoverInteractions?.properties?.total || !!hoverInteractions?.properties?.Total || spiderTooltipInfoHeaders.length > 0) && hasInteraction && (
+            {((!!hoverInteractions?.properties?.total
+            || !!hoverInteractions?.properties?.Total
+            || spiderTooltipInfoHeaders.length > 0)
+            && hasInteraction && (
               <Popup
                 latitude={lngLat[1]}
                 longitude={lngLat[0]}

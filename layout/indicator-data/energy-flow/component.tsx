@@ -30,6 +30,7 @@ import Tooltip from 'components/tooltip';
 import Legend from 'components/legend';
 import LoadingSpinner from 'components/loading-spinner';
 import Sankey from 'components/indicator-visualizations/sankey';
+import SankeyLoops from 'components/indicator-visualizations/sankey-loops';
 
 import { COLORS } from 'components/indicator-visualizations/sankey/constants';
 import CONFIG from 'components/indicator-visualizations/sankey/config';
@@ -362,12 +363,17 @@ const SankeyChart: FC<ComponentTypes> = ({
             {(!isFetchingRecords && isSuccessRecords) && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
               <div className="w-full min-h-screen">
-                <Sankey
+                {/* <Sankey
                   indicatorName={indicatorName}
                   indicatorSlug={indicatorSlug}
                   unit={currentUnit}
                   widgetData={data}
                   widgetConfig={CONFIG}
+                /> */}
+                <SankeyLoops
+                  indicatorName={indicatorName}
+                  indicatorSlug={indicatorSlug}
+                  datos={data}
                 />
               </div>
             </div>

@@ -29,6 +29,8 @@ import {
 } from 'hooks/regions';
 import { getCategoriesFromRecords } from 'utils';
 
+import mocked from 'components/indicator-visualizations/sankey-loops/sankey_with_loops21122021.json';
+
 import ID_CHINA from 'utils/constants';
 
 // types
@@ -51,8 +53,11 @@ export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
     () => fetchIndicators(group_id, subgroup_id, { locale: current }), { ...queryConfig });
 
   const {
-    data, status, error, isSuccess, isLoading,
+    // data,
+    status, error, isSuccess, isLoading,
   } = query;
+
+  const data = mocked[1];
 
   const relatedIndicators = useMemo(() => data, [data]);
 
