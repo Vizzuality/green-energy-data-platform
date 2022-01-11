@@ -79,7 +79,10 @@ export const resources = {
       dataSource: 'Data Source',
       fullscreenDisclaimer: 'Change to full screen for a better view of the map',
       otherIndicators: 'View datasets for other indicators',
+<<<<<<< HEAD
       total: 'Total',
+=======
+>>>>>>> translations and dropdown fixes
     },
   },
   cn: {
@@ -153,7 +156,10 @@ export const resources = {
       dataSource: '数据源',
       fullscreenDisclaimer: '更改为全屏以更好地查看地图',
       otherIndicators: '查看其他指标的数据集',
+<<<<<<< HEAD
       total: '全部的',
+=======
+>>>>>>> translations and dropdown fixes
     },
   },
 };

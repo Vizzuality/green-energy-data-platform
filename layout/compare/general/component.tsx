@@ -161,7 +161,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && (!!region || !!year),
+      enabled: !!visualization && (!!region || !!year),
     },
   );
 
@@ -184,7 +184,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const { name, data_source: dataSource } = indicatorData;
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+    () => getCategoriesFromRecords(records, visualization),
+    [records, visualization],
   );
 
   const filteredRecords = useMemo(
@@ -438,7 +439,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             {isFetchedRecords
                 && !isFetchingRecords
                 && !filteredRecords.length
-                && !!visualization && !!unit && (!!region || !!year)
+                && !!visualization && (!!region || !!year)
                 && (
                   <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
                     <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />

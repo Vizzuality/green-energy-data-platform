@@ -153,7 +153,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && (!!region || !!year),
+      enabled: !!visualization && (!!region || !!year),
     },
   );
 
@@ -179,7 +179,8 @@ const IndicatorChart: FC<ComponentTypes> = ({
   } = indicatorData;
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+    () => getCategoriesFromRecords(records, visualization),
+    [records, visualization],
   );
 
   const filteredRecords = useMemo(
@@ -373,7 +374,10 @@ const IndicatorChart: FC<ComponentTypes> = ({
             {/* scenario filter */}
             {['choropleth'].includes(visualization) && !!scenarios.length && (
             <div className="flex items-center">
-              <span className="pr-2">Scenario:</span>
+              <span className="pr-2">
+                {i18next.t('scenario')}
+                :
+              </span>
               {scenarios?.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -408,7 +412,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             {isFetchedRecords
                 && !isFetchingRecords
                 && !filteredRecords.length
-                && !!visualization && !!unit && (!!region || !!year)
+                && !!visualization && (!!region || !!year)
                 && (
                   <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
                     <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />

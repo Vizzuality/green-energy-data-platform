@@ -55,6 +55,10 @@ export const getCategoriesFromRecords = (
   records: Record[],
   visualization: string,
 ) => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> translations and dropdown fixes
   const categories = visualization !== 'sankey' ? compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort())) : [];
   if (visualization === 'choropleth') {
     return categories;
@@ -207,7 +211,7 @@ export const getGroupedValues = (
   const { category, unit, visualization } = filters;
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
-  const mapCategorySelected = 'Total';
+  const mapCategorySelected = category?.label === 'category_1' ? 'Total' : category?.value;
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
   let data = [];
@@ -462,6 +466,7 @@ export const getGroupedValues = (
                 geometry: geometry?.geometry,
                 properties: {
                   name: geometry?.name,
+                  geometry: geometry?.region_type,
                   region_type: geometry?.region_type,
                   ...getTooltipProperties(geometry?.geometry?.tooltip_properties),
                   ...cat,
@@ -473,8 +478,8 @@ export const getGroupedValues = (
             clusterRadius: 5,
             clusterProperties: {
               total: ['max', ['get', mapCategorySelected]],
-            },
             // clusterAggregate: [mapCategorySelected],
+            },
           },
           render: {
             layers: [
@@ -749,7 +754,6 @@ export const getGroupedValuesRelatedIndicators = (
   const { category, visualization } = filters;
   const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
-
   const filteredRegions: Region[] = regions?.filter((r) => r.geometry !== null);
 
   if (visualization === 'pie') {

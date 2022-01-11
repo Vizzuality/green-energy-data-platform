@@ -13,7 +13,8 @@ const DefaultLayout = {
   width: 300,
 };
 
-const CONFIG = (categories) => {
+const CONFIG = (categories, language) => {
+  const KEY = language === 'cn' ? '全部的' : 'Total';
   const getLines = () => {
     if (categories.length) {
       return categories.map((category) => ({
@@ -24,7 +25,7 @@ const CONFIG = (categories) => {
     }
     return ([{
       type: 'monotone',
-      dataKey: 'Total',
+      dataKey: KEY,
       dot: false,
     }]);
   };
@@ -38,7 +39,7 @@ const CONFIG = (categories) => {
     }
     return ([{
       stackId: 'a',
-      dataKey: 'Total',
+      dataKey: KEY,
     }]);
   };
   return ({

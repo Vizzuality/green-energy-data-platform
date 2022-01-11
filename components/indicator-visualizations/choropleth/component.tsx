@@ -116,8 +116,6 @@ const MapContainer: FC<MapContainerProps> = (
     return itms || [];
   }, [sortArray, layers]);
 
-  const { cluster, clusterId, pointCount } = hoverInteractionsClick;
-
   const {
     tooltipInfo,
     tooltipInfoHeaders,
@@ -300,7 +298,7 @@ const MapContainer: FC<MapContainerProps> = (
       {hasInteraction && disclaimerVisibility && (
         <Disclaimer
           className="top-4 left-1/2 transform  -translate-x-1/2"
-          message="Change to full screen for a better view of the map"
+          message={i18next.t('fullscreenDisclaimer')}
           onDisclaimerClose={setDisclaimerVisibility}
         />
       )}
