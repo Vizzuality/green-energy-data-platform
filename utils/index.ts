@@ -478,7 +478,6 @@ export const getGroupedValues = (
             clusterRadius: 5,
             clusterProperties: {
               total: ['max', ['get', mapCategorySelected]],
-            // clusterAggregate: [mapCategorySelected],
             },
           },
           render: {
