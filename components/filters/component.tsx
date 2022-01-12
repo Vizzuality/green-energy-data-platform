@@ -4,7 +4,12 @@ import React, {
 import cx from 'classnames';
 import i18next from 'i18next';
 
-import { useDispatch } from 'react-redux';
+import {
+  useDispatch,
+  // useSelector
+} from 'react-redux';
+
+// import { RootState } from 'store/store';
 
 // components
 import Icon from 'components/icon';
@@ -39,15 +44,16 @@ const Filters: FC<FiltersProps> = ({
   //     const hasTotal = categories.includes('Total' || '全部的');
   //     if (hasTotal) {
   //       const value = current === 'cn' ? '全部的' : 'Total';
-  //       setActive(value);
+  //       // () => setActive(value);
   //       dispatch(onClick({ category: { label: 'category_2', value } }));
-  //     } else {
+  //     } else if (!hasTotal) {
   //       const value = categories[0];
-  //       setActive(value);
+  //       // setActive(value);
   //       dispatch(onClick({ category: { label: 'category_2', value } }));
   //     }
   //   }
   // }, [dispatch, onClick, categories, visualization, current]);
+
   useEffect(() => {
     if (visualization === 'choropleth') {
       const value = categories[0];

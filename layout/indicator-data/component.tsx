@@ -124,7 +124,7 @@ const IndicatorData: FC<Component> = ({
       />
       <div className="flex flex-col w-full px-16 lg:px-32 md:px-24 py-11">
         <div className="flex items-center justify-between w-full">
-          <h2 className="flex text-3.5xl max-w-6xl mr-4 whitespace-nowrap">
+          <h2 className="flex flex-wrap text-3.5xl max-w-6xl mr-4">
             {name}
           </h2>
           <div className="flex">

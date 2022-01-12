@@ -1,12 +1,11 @@
 import React, {
   FC,
   useState,
+  useEffect,
   useCallback,
   useMemo,
   useRef,
 } from 'react';
-
-import { format } from 'd3-format';
 
 // Layer manager
 import { LayerManager, Layer } from 'layer-manager/dist/components';
@@ -23,6 +22,8 @@ import { withAuthentication } from 'hoc/auth';
 // Controls
 import i18next from 'i18next';
 import ZoomControl from './zoom';
+
+import Disclaimer from './disclaimer';
 
 import Legend from './legend';
 import LegendItem from './legend/item';
@@ -59,7 +60,6 @@ interface MapContainerProps {
   style?: Object,
 }
 
-const numberFormat = format('.2s');
 const MapContainer: FC<MapContainerProps> = (
   {
     layers,
@@ -76,8 +76,14 @@ const MapContainer: FC<MapContainerProps> = (
         point_count: null,
         name: '',
       },
+      properties: {
+        point_count: null,
+      },
     });
   const [lngLat, setLngLat] = useState([0, 0]);
+  const [sortArray, setSortArray] = useState([]);
+  const [disclaimerVisibility, setDisclaimerVisibility] = useState(true);
+
   const handleViewportChange = useCallback((v) => {
     setViewport(v);
   }, []);
@@ -92,8 +98,6 @@ const MapContainer: FC<MapContainerProps> = (
     [viewport],
   );
 
-  const [sortArray, setSortArray] = useState([]);
-
   // Sorted
   const sortedItems = useMemo(() => {
     const itms = layers[0]?.legendConfig?.sort(
@@ -105,7 +109,7 @@ const MapContainer: FC<MapContainerProps> = (
   const {
     tooltipInfo,
     tooltipInfoHeaders,
-  } = useCoalPowerPlantTooltip(hoverInteractions?.cluster);
+  } = useCoalPowerPlantTooltip(hoverInteractions?.['coal-power-plants']);
 
   // Callbacks
   const onChangeOrder = useCallback((ids) => {
@@ -117,27 +121,25 @@ const MapContainer: FC<MapContainerProps> = (
   const spiderifier = useMemo(() => {
     if (mapRefCurrent !== null) {
       return new MapboxglSpiderifier(mapRefCurrent, {
-        onClick(e, spiderLeg) {
-          console.log('Clicked on ', spiderLeg);
-        },
-        markerWidth: 40,
+        // onClick(e, spiderLeg) {
+        //   return setClusterProperties(spiderLeg);
+        // },
+        markerWidth: 70,
         markerHeight: 40,
       });
     }
     return null;
   }, [mapRefCurrent]);
-
   const onClickCluster = useCallback((e) => {
     const features = mapRefCurrent.queryRenderedFeatures(e.point, {
       layers: ['coal-power-plants-clusters'],
     });
-
     spiderifier.unspiderfy();
     if (!features.length) return null;
 
     mapRefCurrent.getSource('coal-power-plants').getClusterLeaves(
       features[0].properties.cluster_id,
-      100,
+      200,
       0,
       (err, leafFeatures) => {
         if (err) {
@@ -150,6 +152,12 @@ const MapContainer: FC<MapContainerProps> = (
     return true;
   }, [mapRefCurrent, spiderifier]);
 
+  useEffect(() => {
+    if (hoverInteractions?.cluster?.point_count) {
+      setDisclaimerVisibility(false);
+    }
+  }, [hoverInteractions, setDisclaimerVisibility]);
+
   return (
     <div className="relative h-full border-4 rounded border-gray5" style={style}>
       <Map
@@ -159,7 +167,17 @@ const MapContainer: FC<MapContainerProps> = (
         viewport={viewport}
         className="z-10"
         onMapViewportChange={handleViewportChange}
-        onClick={onClickCluster}
+        onClick={(e) => {
+          const { zoom, maxZoom } = viewport;
+          e.stopPropagation();
+          const clusterProperties = e?.features[0]?.properties;
+          const { point_count: count } = clusterProperties;
+
+          if (count > 10) {
+            handleZoomChange(zoom + 1 > maxZoom ? maxZoom : zoom + 1);
+          }
+          return onClickCluster;
+        }}
         onHover={(e) => {
           if (e && e.features) {
             e.features.forEach((f) => setHoverInteractions({
@@ -176,8 +194,6 @@ const MapContainer: FC<MapContainerProps> = (
         }}
         onMapLoad={({ map }) => { mapRef.current = map; }}
       >
-        {/* <ReactMapboxGlCluster data={layers[0].source.data} /> */}
-        {/* <GeoJSONLayer data={firstCircle} /> */}
         {(map) => (
           <>
             <LayerManager map={map} plugin={PluginMapboxGl}>
@@ -185,46 +201,36 @@ const MapContainer: FC<MapContainerProps> = (
                 <Layer key={l.id} {...l} />
               ))}
             </LayerManager>
-            {lngLat && hoverInteractions.regions && (
-              <Popup
-                latitude={lngLat[1]}
-                longitude={lngLat[0]}
-                closeButton={false}
-                className="rounded-2xl"
-              >
-                {Object.keys(hoverInteractions.regions)}
-                :
-                {' '}
-                {numberFormat(Object.values(hoverInteractions.regions))}
-              </Popup>
-            )}
-            {hoverInteractions?.cluster?.point_count && (
-              <Popup
-                latitude={lngLat[1]}
-                longitude={lngLat[0]}
-                closeButton={false}
-                tipSize={10}
-                className="z-20 rounded-2xl"
-              >
-                <div className="flex">
-                  <span className="mr-2">
-                    {i18next.t('numberPlants')}
-                    :
-                  </span>
-                  <span>{hoverInteractions?.cluster?.point_count}</span>
+            {hoverInteractions?.properties && (
+            <Popup
+              latitude={lngLat[1]}
+              longitude={lngLat[0]}
+              closeButton={false}
+              tipSize={10}
+              className="z-20 rounded-2xl"
+            >
+              {hoverInteractions?.properties?.point_count > 1 && (
+                <div className="flex flex-col">
+                  <div className="flex">
+                    <span className="mr-2 text-sm">
+                      {i18next.t('numberPlants')}
+                    </span>
+                    <span className="mr-2 text-sm">{hoverInteractions?.properties?.point_count}</span>
+                  </div>
                 </div>
-
-                {!!tooltipInfoHeaders.length && (
-                <ul>
-                  {tooltipInfoHeaders.map((t) => (
-                    <li key={`${t}-${tooltipInfo[t]}`}>
-                      <span className="mr-2 text-color6">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                      <span className="text-color9">{tooltipInfo[t]}</span>
-                    </li>
-                  ))}
-                </ul>
                 )}
-              </Popup>
+
+              {!!tooltipInfoHeaders.length && (
+              <ul>
+                {tooltipInfoHeaders.map((t) => (
+                  <li key={`${t}-${tooltipInfo[t]}`}>
+                    <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                    <span className="text-sm">{tooltipInfo[t]}</span>
+                  </li>
+                ))}
+              </ul>
+              )}
+            </Popup>
             )}
           </>
         )}
@@ -234,6 +240,23 @@ const MapContainer: FC<MapContainerProps> = (
           viewport={viewport}
           onZoomChange={handleZoomChange}
         />
+      )}
+      {/* {!!tooltipInfoHeaders.length && (
+      <ul>
+        {tooltipInfoHeaders.map((t) => (
+          <li key={`${t}-${tooltipInfo[t]}`}>
+            <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+            <span className="text-sm">{tooltipInfo[t]}</span>
+          </li>
+        ))}
+      </ul>
+      )} */}
+      {hasInteraction && disclaimerVisibility && (
+      <Disclaimer
+        className="top-4 left-1/2 transform  -translate-x-1/2"
+        message={i18next.t('fullscreenDisclaimer')}
+        onDisclaimerClose={setDisclaimerVisibility}
+      />
       )}
       {hasInteraction
       && (

@@ -6,6 +6,8 @@ import { useId } from '@react-aria/utils';
 
 import Icon from 'components/icon';
 
+import i18next from 'i18next';
+
 import SortableList from './sortable/list';
 
 interface LegendProps {
@@ -41,7 +43,7 @@ export const Legend: FC<LegendProps> = ({
         className="relative flex items-center w-full px-5 py-1.5 space-x-2 text-sm text-white font-heading"
         onClick={onToggleActive}
       >
-        <span>Legend</span>
+        <span>{i18next.t('legend')}</span>
         <Icon
           ariaLabel={active ? 'collapse dropdown' : 'expand dropdown'}
           name="triangle_border"

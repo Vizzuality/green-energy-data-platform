@@ -5,11 +5,10 @@ import { COLORS } from './constants';
 
 type Target = Readonly<{
   name: string,
-  name_en: string,
 }>;
 
 type Payload = Readonly<{
-  class_en: string,
+  class: string,
   target: Target,
 }>;
 
@@ -37,7 +36,7 @@ const Demo: FC<DemoProps> = ({
 }: DemoProps) => {
   const [opacity, setOpacity] = useState(0.3);
 
-  const currentColor = COLORS[payload.class_en];
+  const currentColor = COLORS[payload.class];
   const gradientID = `linkGradient${index}`;
 
   // target link with losses to make gradient fade away
