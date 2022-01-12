@@ -325,13 +325,19 @@ export function useSankeyData(
     });
 
   const {
-    data, isFetching, isFetched, isSuccess,
+    isFetching, isFetched, isSuccess,
   } = query;
 
-  const widgetData = useMemo<SankeyChartData>(() => {
-    const nodes = data?.nodes.map(({ name }) => ({ name }));
-    const links = flatten(data?.data
-      .map((l) => l.links));
+  const data = mocked[1];
+
+  const widgetData = useMemo(() => {
+    const nodes = data?.nodes.map(({ name_en: name }) => ({ name, depth: 10 }));
+    const links = flatten(data?.data)
+      .map((_link) => ({
+        ..._link,
+        source: nodes[_link.source],
+        target: nodes[_link.target],
+      }));
     return ({
       nodes,
       links,
