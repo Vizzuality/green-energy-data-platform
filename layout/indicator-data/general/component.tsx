@@ -70,6 +70,9 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+
+  const { current } = useSelector((state: RootState) => (state.language));
+
   const filters = useSelector((state: RootState) => state.indicator);
   const {
     year, unit, region, category, scenario, visualization,
@@ -191,14 +194,14 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualization],
-    [visualization, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys, current)[visualization],
+    [visualization, widgetDataKeys, current],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ), [categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
@@ -514,7 +517,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
           {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
             payload={LegendPayload}
-            className="mb-4 overflow-y-scroll text-ellipsis"
+            className="mb-4 overflow-y-scroll text-ellipsis w-full"
           />
           )}
           <DataSource

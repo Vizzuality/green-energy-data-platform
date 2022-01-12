@@ -8,6 +8,8 @@ import {
 
 import chroma from 'chroma-js';
 
+import { format as ValueFormat } from 'd3-format';
+
 import i18n from 'i18next';
 
 import { saveAs } from 'file-saver';
@@ -24,6 +26,8 @@ import {
 import resources from 'utils/translations';
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import ID_CHINA from 'utils/constants';
+
+const numberFormat = ValueFormat('.2s');
 
 export const initializeLanguage = () => i18n.init({
   resources,
@@ -53,14 +57,13 @@ export const getCategoriesFromRecords = (
   visualization: string,
 ) => {
   const categories = visualization !== 'sankey' ? compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort())) : [];
-
   if (visualization === 'choropleth') {
     return categories;
   }
 
   return categories.filter((category) => {
     if (categories.length > 1) {
-      return category !== 'Total' && category !== null;
+      return category !== 'Total' && category !== '全部的' && category !== null;
     }
     return category || 'Total';
   });
@@ -68,7 +71,9 @@ export const getCategoriesFromRecords = (
 
 export const getSubcategoriesFromRecords = (
   records: Record[],
-) => compact(sortedUniq(records?.map((d) => (d.category_2 === null ? 'Total' : d.category_2)).sort()));
+) => compact(sortedUniq(records?.map(
+  (d) => (d.category_2 === null ? 'Total' : d.category_2),
+).sort()));
 
 export const filterRecords = (
   records: Record[],
@@ -192,6 +197,7 @@ interface Bar {
 }
 
 export const getGroupedValues = (
+  categories: string[],
   name: string,
   groupSlug: string | string[],
   filters: IndicatorFilters,
@@ -310,15 +316,14 @@ export const getGroupedValues = (
       return ({
         geometry,
         visualizationTypes: d.visualization_types,
-        Total: d.value,
+        [mapCategorySelected]: d.value,
       });
     });
-
     const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
 
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries?.filter(
-      (d) => d[mapCategorySelected],
+      (d) => numberFormat(d[mapCategorySelected]),
     )
       .map((r) => r[mapCategorySelected]) as number[];
     const minValue = Math.min(...mapValues);
@@ -360,8 +365,9 @@ export const getGroupedValues = (
       data = [{
         visualizationTypes: visualizations,
         data: dataWithGeometries,
+        mapValues,
         layers: [{
-          id: 'regions-with-color',
+          id: 'regions',
           type: 'geojson',
           source: {
             type: 'geojson',
@@ -446,7 +452,7 @@ export const getGroupedValues = (
         data: dataWithGeometries,
         mapValues,
         layers: [{
-          id: 'cluster',
+          id: 'coal-power-plants',
           type: 'geojson',
           filter: ['has', 'point_count'],
           source: {
@@ -466,14 +472,15 @@ export const getGroupedValues = (
             },
             cluster: true,
             clusterMaxZoom: 20,
-            clusterRadius: 10,
+            clusterRadius: 5,
             clusterProperties: {
-              total: ['max', ['get', 'Total']],
+              total: ['max', ['get', mapCategorySelected]],
             },
           },
           render: {
             layers: [
               {
+                id: 'coal-power-plants-clusters',
                 type: 'circle',
                 filter: ['has', 'point_count'],
                 paint: {
@@ -518,28 +525,28 @@ export const getGroupedValues = (
                   ],
                 },
               },
-              {
-                id: 'cluster-line',
-                type: 'line',
-                layout: {
-                  'text-allow-overlap': true,
-                  'text-ignore-placement': true,
-                  'text-field': '{point_count_abbreviated}',
-                  'text-size': 12,
-                },
-              },
-              {
-                id: 'media-cluster-count',
-                metadata: {
-                  position: 'top',
-                },
-                type: 'symbol',
-                layout: {
-                  'text-allow-overlap': true,
-                  'text-ignore-placement': true,
-                  'text-size': 12,
-                },
-              },
+              // {
+              //   id: 'cluster-line',
+              //   type: 'line',
+              //   layout: {
+              //     'text-allow-overlap': true,
+              //     'text-ignore-placement': true,
+              //     'text-field': '{point_count_abbreviated}',
+              //     'text-size': 12,
+              //   },
+              // },
+              // {
+              //   id: 'media-cluster-count',
+              //   metadata: {
+              //     position: 'top',
+              //   },
+              //   type: 'symbol',
+              //   layout: {
+              //     'text-allow-overlap': true,
+              //     'text-ignore-placement': true,
+              //     'text-size': 12,
+              //   },
+              // },
               {
                 id: 'unclustered-point',
                 type: 'circle',
@@ -547,10 +554,9 @@ export const getGroupedValues = (
                 filter: ['!', ['has', 'point_count']],
                 paint: {
                   'circle-color': '#e7b092',
-                  'circle-radius': 4,
-                  'circle-stroke-width': 0.5,
+                  'circle-stroke-width': 1.5,
+                  'circle-stroke-opacity': 0.5,
                   'circle-stroke-color': '#e7b092',
-                  'circle-stroke-opacity': 0.3,
                 },
               },
             // {

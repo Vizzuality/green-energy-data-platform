@@ -41,6 +41,7 @@ import {
 import { RootState } from 'store/store';
 
 import { setFilters } from 'store/slices/indicator';
+import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
 import { useColors } from 'hooks/utils';
@@ -62,6 +63,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   subgroupSlug,
   indicatorSlug,
   className,
+  compareIndex,
 }: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
@@ -74,10 +76,18 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const filters = useSelector((state: RootState) => state.indicator);
+  const filters = useSelector(
+    (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
+  );
   const {
     year, unit, region, category, scenario, visualization,
   } = filters;
+
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
@@ -94,13 +104,15 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   }, [dropdownVisibility]);
 
   const handleChange = useCallback((key, value) => {
-    dispatch(setFilters({ [key]: value }));
+    if (compareIndex === 1) {
+      dispatch(setFilters({ [key]: value }));
+    } else dispatch(setCompareFilters({ [key]: value }));
 
     setDropdownVisibility({
       ...dropdownVisibility,
       [key]: false,
     });
-  }, [dispatch, dropdownVisibility]);
+  }, [dispatch, compareIndex, dropdownVisibility]);
 
   const {
     data: indicatorData,
@@ -187,14 +199,14 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualization],
-    [visualization, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys, current)[visualization],
+    [visualization, widgetDataKeys, current],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ), [categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
@@ -244,15 +256,27 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
 
   useEffect(() => {
-    dispatch(setFilters({
-      visualization: currentVisualization,
-      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-      ...defaultCategory && { category: defaultCategory },
-      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
-    }));
+    if (compareIndex === 1) {
+      dispatch(setFilters({
+        visualization: currentVisualization,
+        ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+        ...defaultCategory && { category: defaultCategory },
+        ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+        ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+        ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
+      }));
+    } else {
+      dispatch(setCompareFilters({
+        visualization: currentVisualization,
+        ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+        ...defaultCategory && { category: defaultCategory },
+        ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
+        ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+        ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
+      }));
+    }
   }, [
+    compareIndex,
     dispatch,
     defaultYear,
     currentYear,
@@ -288,8 +312,17 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   }, [visualization]);
 
   return (
-    <div className={`flex justify-between ${className}`}>
+    <div className={`flex flex-col ${className}`}>
       <div className="flex flex-col h-full w-full">
+        {categories.length > 0 && (
+        <Filters
+          visualization={visualization}
+          categories={categories}
+          hasSubcategories={!!subcategories.length}
+          className="overflow-y-auto mb-4"
+          onClick={compareIndex === 1 ? setFilters : setCompareFilters}
+        />
+        )}
         <section className="flex flex-col w-full">
           <div className="flex">
             {/* year filter */}
@@ -463,29 +496,22 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           </div>
         </section>
       </div>
-      <div className="flex">
-        <section className="flex flex-col justify-between ml-8">
-          {categories.length > 0 && (
-          <Filters
-            visualization={visualization}
-            categories={categories}
-            hasSubcategories={!!subcategories.length}
-            className="overflow-y-auto mb-4"
-            onClick={setFilters}
-          />
-          )}
-          {LegendPayload.length > 0 && visualization !== 'choropleth' && (
-          <Legend
-            payload={LegendPayload}
-            className="mb-4 overflow-y-scroll text-ellipsis"
-          />
-          )}
-          <DataSource
-            indicatorSlug={indicatorSlug}
-            dataSource={dataSource}
-          />
-        </section>
-      </div>
+      <section className="flex flex-col flex-1 justify-between">
+        {LegendPayload.length > 0 && visualization !== 'choropleth' && (
+          <div className="mb-4">
+            <Legend
+              payload={LegendPayload}
+              className="overflow-y-scroll text-ellipsis"
+            />
+          </div>
+        )}
+        <DataSource
+          indicatorSlug={indicatorSlug}
+          type="horizontal"
+          dataSource={dataSource}
+          className="flex-1"
+        />
+      </section>
     </div>
   );
 };

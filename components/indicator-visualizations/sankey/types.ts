@@ -1,6 +1,7 @@
 export interface ChartProps {
   indicatorName: string,
   indicatorSlug: string,
+  unit?: string,
   widgetData: unknown | SankeyData,
   widgetConfig: any,
 }
@@ -20,22 +21,18 @@ export interface TooltipProps {
 
 type Node = Readonly<{
   name: string,
-  name_en: string,
 }>;
 
 type Link = Readonly<{
-  class_cn: string,
-  class_en: string,
+  class: string,
   source: number,
   target: number,
   value: number,
 }>;
 
 type Data = Readonly<{
-  region_cn: string,
-  region_en: string,
-  units_cn: string,
-  units_en: string
+  region: string,
+  units: string,
   year: number,
   links: Link[]
 }>;

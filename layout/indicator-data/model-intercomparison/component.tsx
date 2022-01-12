@@ -68,6 +68,8 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+
+  const { current } = useSelector((state: RootState) => (state.language));
   const filters = useSelector((state: RootState) => state.indicator);
   const {
     year, unit, region, scenario, visualization, category,
@@ -199,8 +201,8 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[configType],
-    [configType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys, current)[configType],
+    [configType, widgetDataKeys, current],
   );
 
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(

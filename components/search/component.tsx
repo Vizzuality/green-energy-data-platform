@@ -10,6 +10,8 @@ import { setSearchValue } from 'store/slices/search';
 
 import { useSearch } from 'hooks/search';
 
+import i18next from 'i18next';
+
 // types
 import { GroupProps } from 'types/data';
 
@@ -74,7 +76,7 @@ const Search: FC<SearchProps> = ({
             ref={inputRef}
             type="search"
             className="search-input bg-transparent ml-6 w-56 flex-1"
-            placeholder="Search data indicator..."
+            placeholder={`${i18next.t('searchIndicator')}...`}
             value={searchValue}
             onChange={updateSearch}
           />

@@ -36,10 +36,10 @@ import {
   IndicatorProps,
   IndicatorMetadata,
   Record,
+  SankeyChartData,
 } from 'types/data';
 
 import { SankeyData } from 'components/indicator-visualizations/sankey/types';
-import { Sankey } from './types';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
@@ -103,7 +103,7 @@ export function useIndicator(
 export function useIndicatorMetadata(
   id: string,
   visualization: string,
-  records: Record[] | Sankey,
+  records: Record[] | SankeyChartData,
   params = {},
   queryOptions = {},
 ) {
@@ -278,28 +278,25 @@ export function useIndicatorRecords(
     });
 
   const { data } = query;
+  const KEY = current === 'cn' ? '全部的' : 'Total';
 
   return useMemo(() => ({
     ...query,
     data: data?.map((d) => ({
       ...d,
-      category_1: d.category_1 === null ? 'Total' : d.category_1,
-      category_2: d.category_2 === null ? 'Total' : d.category_2,
+      category_1: d.category_1 === null ? KEY : d.category_1,
+      category_2: d.category_2 === null ? KEY : d.category_2,
       region: {
         id: d.region_id,
         name: (regions.find(({ id }) => d.region_id === id) || {}).name || '-',
       },
     })),
-  }), [data, regions, query]);
+  }), [data, regions, query, KEY]);
 }
 
 export function useSankeyData(
   id: string,
-  params = {
-    year: null,
-    region: null,
-    unit: null,
-  },
+  params,
   queryOptions = {},
 ) {
   const {
@@ -308,10 +305,13 @@ export function useSankeyData(
     (state: RootState) => (state.language),
   );
 
-  const { year, region } = params;
+  const {
+    visualization,
+    ...restParams
+  } = params;
 
-  const query = useQuery<SankeyData, Error>(['sankey-data', id, current],
-    () => fetchSankeyData(id, { locale: current, ...params }), {
+  const query = useQuery<SankeyData, Error>(['sankey-data', id, current, params],
+    () => fetchSankeyData(id, { locale: current, ...restParams }), {
       placeholderData: {
         nodes: [],
         data: [],
@@ -323,23 +323,15 @@ export function useSankeyData(
     data, isFetching, isFetched, isSuccess,
   } = query;
 
-  const widgetData = useMemo(() => {
-    // TODO - change to id when API adds it
-    const mockedUnit = '10000tce';
-    const nodes = data?.nodes.map(({ name_en }) => ({ name: name_en }));
+  const widgetData = useMemo<SankeyChartData>(() => {
+    const nodes = data?.nodes.map(({ name }) => ({ name }));
     const links = flatten(data?.data
-      .filter((d) => d.year === year
-      // TODO - change to id when API adds it
-      && d.region_en === region
-      && d.units_en === mockedUnit)
       .map((l) => l.links));
     return ({
       nodes,
       links,
-      year,
-      region,
     });
-  }, [data, year, region]);
+  }, [data]);
 
   return useMemo(() => ({
     isFetching,

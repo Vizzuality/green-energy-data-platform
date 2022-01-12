@@ -31,6 +31,7 @@ import { CompareLayoutProps } from './types';
 
 import General from './general';
 import ModelIntercomparison from './model-intercomparison';
+import EnergyFlow from './energy-flow';
 
 const CompareLayout: FC<CompareLayoutProps> = ({
   groupSlug,
@@ -344,7 +345,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
           </p>
 
-          {groupSlug !== 'model-intercomparison' && (
+          {groupSlug !== 'model-intercomparison' && groupSlug !== 'energy-flows' && (
             <General
               groupSlug={groupSlug}
               subgroupSlug={subgroupSlug}
@@ -359,6 +360,14 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               indicatorSlug={indicatorSlug}
               compareIndex={compareIndex}
             />
+          )}
+          {groupSlug === 'energy-flows' && (
+          <EnergyFlow
+            groupSlug={groupSlug}
+            subgroupSlug={subgroupSlug}
+            indicatorSlug={indicatorSlug}
+            compareIndex={compareIndex}
+          />
           )}
         </div>
       </div>
