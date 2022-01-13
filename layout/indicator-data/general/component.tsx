@@ -484,10 +484,12 @@ const IndicatorChart: FC<ComponentTypes> = ({
           />
           )}
           {categories.length > 0 && visualization !== 'choropleth' && (
-          <Legend
-            payload={LegendPayload}
-            className="mb-4 overflow-y-scroll text-ellipsis w-full"
-          />
+            <div className="mb-4">
+              <Legend
+                payload={LegendPayload}
+                className="mb-4 overflow-y-scroll text-ellipsis w-full"
+              />
+            </div>
           )}
           <DataSource
             indicatorSlug={indicatorSlug}
