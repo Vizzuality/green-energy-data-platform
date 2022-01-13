@@ -182,7 +182,7 @@ const MapContainer: FC<MapContainerProps> = (
           if (count > 10) {
             handleZoomChange(zoom + 1 > maxZoom ? maxZoom : zoom + 1);
           }
-          return onClickCluster;
+          onClickCluster(e);
         }}
         onHover={(e) => {
           if (e && e.features) {
