@@ -203,8 +203,8 @@ const SankeyChart: FC<ComponentTypes> = ({
   const parsedLinks = useMemo(() => uniqBy(data?.links, 'class'), [data]);
   const LegendPayload = useMemo(
     () => parsedLinks.map((item) => ({
-      label: item.class,
-      color: COLORS[item.class] || COLORS['Other energy'],
+      label: item.class.charAt(0).toUpperCase() + item.class.slice(1),
+      color: COLORS[item.class.toLowerCase()] || COLORS['other energy'],
     })), [parsedLinks],
   );
 
@@ -215,7 +215,7 @@ const SankeyChart: FC<ComponentTypes> = ({
           <div className="flex w-full justify-between">
             {/* filters */}
             {/* year filter */}
-            <div className="flex items-center">
+            <div className="flex items-center flex-wrap">
               <span className="pr-2">
                 {i18next.t('showing')}
                 :

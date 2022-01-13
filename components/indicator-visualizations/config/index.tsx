@@ -239,6 +239,8 @@ const ChartConfig = (categories, language) => {
         dataKey: 'year',
         interval: 0,
         tick: TickSmall,
+        strokeDasharray: '3 3',
+        strokeOpacity: 0.2,
       },
       year: 'year',
       tooltip: {
