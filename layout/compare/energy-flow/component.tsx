@@ -13,7 +13,6 @@ import {
   useSelector,
   useDispatch,
 } from 'react-redux';
-import { useRouter } from 'next/router';
 
 import { RootState } from 'store/store';
 
@@ -37,15 +36,20 @@ import CONFIG from 'components/indicator-visualizations/sankey/config';
 // import { RootState } from 'store/store';
 
 import { setFilters } from 'store/slices/indicator';
+import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
 import DropdownContent from 'layout/dropdown-content';
 
-import { ComponentTypes } from 'types/data';
+import IndicatorCompareDataProps from '../types';
 
-const SankeyChart: FC<ComponentTypes> = ({
+const SankeyChart: FC<IndicatorCompareDataProps> = ({
+  groupSlug,
+  subgroupSlug,
+  indicatorSlug,
+  compareIndex,
   className,
-}: ComponentTypes) => {
+}: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -57,15 +61,12 @@ const SankeyChart: FC<ComponentTypes> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
-  const filters = useSelector((state: RootState) => state.indicator);
+  const filters = useSelector(
+    (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
+  );
   const {
     year, region, visualization, unit,
   } = filters;
-  const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
-
-  const subgroupSlug = subgroupQuery?.[0];
-  const indicatorSlug = subgroupQuery?.[1];
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
@@ -82,13 +83,17 @@ const SankeyChart: FC<ComponentTypes> = ({
   }, [dropdownVisibility]);
 
   const handleChange = useCallback((key, value) => {
-    dispatch(setFilters({ [key]: value }));
+    if (compareIndex === 1) {
+      dispatch(setFilters({ [key]: value }));
+    } else if (compareIndex === 2) {
+      dispatch(setCompareFilters({ [key]: value }));
+    }
 
     setDropdownVisibility({
       ...dropdownVisibility,
       [key]: false,
     });
-  }, [dispatch, dropdownVisibility]);
+  }, [dispatch, compareIndex, dropdownVisibility]);
 
   const {
     data: indicatorData,
@@ -133,7 +138,7 @@ const SankeyChart: FC<ComponentTypes> = ({
     defaultUnit,
     regions,
     defaultRegion,
-  } = useIndicatorMetadata(indicatorSlug, visualization, data, {}, {
+  } = useIndicatorMetadata(indicatorSlug, 'sankey', data, {}, {
     refetchOnWindowFocus: false,
     enabled: data && !!indicatorSlug,
   });
@@ -181,16 +186,28 @@ const SankeyChart: FC<ComponentTypes> = ({
   );
 
   useEffect(() => {
-    dispatch(setFilters({
-      visualization: currentVisualization,
-      ...(currentUnit && { unit: currentUnit }) || { unit: null },
-      category: null,
-      region: currentRegion || null,
-      year: currentYear || null,
-      scenario: null,
-    }));
+    if (compareIndex === 1) {
+      dispatch(setFilters({
+        visualization: currentVisualization,
+        ...(currentUnit && { unit: currentUnit }) || { unit: null },
+        category: null,
+        region: currentRegion || null,
+        year: currentYear || null,
+        scenario: null,
+      }));
+    } else {
+      dispatch(setCompareFilters({
+        visualization: currentVisualization,
+        ...(currentUnit && { unit: currentUnit }) || { unit: null },
+        category: null,
+        region: currentRegion || null,
+        year: currentYear || null,
+        scenario: null,
+      }));
+    }
   }, [
     dispatch,
+    compareIndex,
     defaultYear,
     currentYear,
     defaultUnit,
@@ -361,7 +378,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   </div>
                 )}
             {(!isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+            <div className="flex flex-col h-full w-full min-h-1/2 py-4">
               <div className="w-full min-h-screen">
                 <Sankey
                   indicatorName={indicatorName}

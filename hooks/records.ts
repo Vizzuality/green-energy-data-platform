@@ -6,7 +6,7 @@ import { IndicatorData } from './types.js';
 
 export function useSankeyData(data: IndicatorData, year: number) {
   const nodes = useMemo<{ name: string }[]>(
-    () => data?.nodes.map(({ name_en }) => ({ name: name_en })), [data],
+    () => data?.nodes.map(({ name }) => ({ name })), [data],
   );
   const links = useMemo(() => flatten(data.data
     .filter((d) => d.year === year)

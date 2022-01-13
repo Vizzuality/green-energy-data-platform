@@ -1,3 +1,5 @@
+import i18next from 'i18next';
+
 export const COLORS = {
   'Natural gas': '#FF7629',
   Oil: '#1D8190',
@@ -19,6 +21,6 @@ export const COLORS = {
   Solid: '#FD1A2F',
 };
 
-export const TITLE = ['ENERGY SOURCES', 'ENERGY TRANSFORMATION', 'FINAL CONSUMPTION'];
+export const TITLE = [i18next.t('energySources'), i18next.t('energyTransformation'), i18next.t('finalConsumption')];
 
 export default { COLORS, TITLE };

@@ -68,10 +68,31 @@ export interface ComponentTypes {
   className?: string;
 }
 
+export interface ComponentCompareTypes {
+  className?: string;
+  compareIndex: number,
+}
+
 export interface DataIdProps {
   id: string,
   name: string,
   slug: string,
+}
+
+type Node = Readonly<{
+  name: string,
+}>;
+
+type Link = Readonly<{
+  class: string,
+  source: number,
+  target: number,
+  value: number,
+}>;
+
+export interface SankeyChartData {
+  nodes: Node[],
+  links: Link[]
 }
 
 export interface IndicatorProps {

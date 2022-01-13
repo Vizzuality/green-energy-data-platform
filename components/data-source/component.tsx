@@ -3,6 +3,7 @@ import cx from 'classnames';
 
 import { useRouter } from 'next/router';
 
+import i18next from 'i18next';
 import Item from './item';
 
 interface DataProps {
@@ -36,7 +37,7 @@ const Card: FC<DataProps> = ({
     >
       <Item
         icon="download"
-        name="Download"
+        name={i18next.t('download')}
         links={downloadLinks}
         className={cx('p-6',
           { 'justify-center rounded-l-2xl': type === 'horizontal' },
@@ -45,8 +46,7 @@ const Card: FC<DataProps> = ({
       />
       <Item
         icon="data"
-        name="Data
-      Source"
+        name={i18next.t('dataSource')}
         source={dataSource}
         className={cx('p-6',
           { 'justify-center rounded-r-2xl': type === 'horizontal' },

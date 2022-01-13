@@ -73,6 +73,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
+  const { current } = useSelector((state: RootState) => (state.language));
   const filters = useSelector(
     (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
   );
@@ -156,7 +157,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && !!scenario && (!!region || !!year),
+      enabled: !!visualization && !!scenario && (!!region || !!year),
     },
   );
 
@@ -176,7 +177,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   });
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+    () => getCategoriesFromRecords(records, visualization),
+    [records, visualization],
   );
 
   const [activeModels, setActiveModel] = useState(categories);
@@ -195,8 +197,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[configType],
-    [configType, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys, current)[configType],
+    [configType, widgetDataKeys, current],
   );
 
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(
@@ -448,12 +450,14 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       <div className="flex justify-between mb-4 w-full">
         <section className="w-1/2">
           {categories.length > 0 && visualization === 'bar' && (
-          <FiltersMI
-            models={categories}
-            activeModels={activeModels}
-            onClick={setActiveModel}
-            height={height}
-          />
+            <div className="max-h-128">
+              <FiltersMI
+                models={categories}
+                activeModels={activeModels}
+                onClick={setActiveModel}
+                height={height}
+              />
+            </div>
           )}
           {categories.length > 0 && visualization !== 'bar' && (
           <Filters
@@ -492,7 +496,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
             {isFetchedRecords
             && !isFetchingRecords
             && !filteredRecords.length
-            && !!visualization && !!unit && (!!region || !!year)
+            && !!visualization && (!!region || !!year)
             && (
             <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
               <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
@@ -501,7 +505,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
             )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+            <div className="flex flex-col h-full w-full min-h-1/2 py-4">
               <div className={cx('w-full', {
                 'flex flex-wrap': visualization === 'bar',
                 'h-96': visualization !== 'bar',
@@ -516,7 +520,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                 )}
                 {visualization === 'bar' && widgetData.map(
                   (widget) => (
-                    <div key={widget.model} className="mr-8">
+                    <div key={widget.model} className="mr-2">
                       <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
                       <Bar
                         widgetData={widget.data}

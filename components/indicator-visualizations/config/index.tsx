@@ -84,7 +84,8 @@ const TooltipContent: FC<TooltipProps> = ({
   payload,
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
-const ChartConfig = (categories) => {
+const ChartConfig = (categories, language) => {
+  const KEY = language === 'cn' ? '全部的' : 'Total';
   const getLines = () => {
     if (categories.length) {
       return categories.map((category) => ({
@@ -93,7 +94,7 @@ const ChartConfig = (categories) => {
       }));
     }
     return ([{
-      dataKey: 'Total',
+      dataKey: KEY,
       strokeWidth: 2,
     }]);
   };
@@ -107,7 +108,7 @@ const ChartConfig = (categories) => {
     }
     return ([{
       stackId: 'a',
-      dataKey: 'Total',
+      dataKey: KEY,
     }]);
   };
 

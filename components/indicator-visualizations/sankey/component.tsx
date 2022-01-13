@@ -19,12 +19,12 @@ import { TooltipProps, ChartProps } from './types';
 const Chart: FC<ChartProps> = ({
   indicatorName,
   indicatorSlug,
+  unit,
   widgetData,
   widgetConfig,
 }: ChartProps) => {
   const width = 1220;
   const height = 800;
-  const unit = '10000tce';
 
   const TooltipContent: FC<TooltipProps> = ({
     payload,

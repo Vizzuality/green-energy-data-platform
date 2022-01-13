@@ -70,6 +70,9 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+
+  const { current } = useSelector((state: RootState) => (state.language));
+
   const filters = useSelector((state: RootState) => state.indicator);
   const {
     year, unit, region, category, scenario, visualization,
@@ -191,14 +194,14 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys)[visualization],
-    [visualization, widgetDataKeys],
+    () => ChartConfig(widgetDataKeys, current)[visualization],
+    [visualization, widgetDataKeys, current],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ), [categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
@@ -305,7 +308,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                 {i18next.t('showing')}
                 :
               </span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0].label}</span>)}
+              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -330,37 +333,6 @@ const IndicatorChart: FC<ComponentTypes> = ({
                 </button>
               </Tooltip>
               )}
-
-              {/* scenario filter */}
-              {['choropleth'].includes(visualization) && !!scenarios.length && (
-              <div className="flex items-center">
-                <span className="pr-2">Scenario:</span>
-                {scenarios?.length > 1 && (
-                <Tooltip
-                  placement="bottom-start"
-                  visible={dropdownVisibility.scenario}
-                  interactive
-                  onClickOutside={() => closeDropdown('scenario')}
-                  content={(
-                    <DropdownContent
-                      list={scenarios}
-                      keyEl="scenario"
-                      onClick={handleChange}
-                    />
-                      )}
-                >
-                  <button
-                    type="button"
-                    onClick={() => { toggleDropdown('scenario'); }}
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
-                  >
-                    <span>{scenario || i18next.t('selectScenario')}</span>
-                  </button>
-                </Tooltip>
-                )}
-              </div>
-              )}
-
             </div>
             )}
 
@@ -371,7 +343,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                 {i18next.t('region')}
                 :
               </span>
-              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0].label}</span>)}
+              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayRegion}</span>)}
               {regions.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -512,10 +484,12 @@ const IndicatorChart: FC<ComponentTypes> = ({
           />
           )}
           {categories.length > 0 && visualization !== 'choropleth' && (
-          <Legend
-            payload={LegendPayload}
-            className="mb-4 overflow-y-scroll text-ellipsis"
-          />
+            <div className="mb-4">
+              <Legend
+                payload={LegendPayload}
+                className="mb-4 overflow-y-scroll text-ellipsis w-full"
+              />
+            </div>
           )}
           <DataSource
             indicatorSlug={indicatorSlug}

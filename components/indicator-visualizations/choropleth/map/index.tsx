@@ -231,7 +231,7 @@ const Map = ({
           && typeof children === 'function'
           && children(mapRef.current)}
         {hasInteraction && (
-          <FullscreenControl />
+          <FullscreenControl className="text-white" />
         )}
 
       </ReactMapGL>
