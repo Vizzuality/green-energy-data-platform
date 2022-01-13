@@ -450,12 +450,14 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       <div className="flex justify-between mb-4 w-full">
         <section className="w-1/2">
           {categories.length > 0 && visualization === 'bar' && (
-          <FiltersMI
-            models={categories}
-            activeModels={activeModels}
-            onClick={setActiveModel}
-            height={height}
-          />
+            <div className="max-h-128">
+              <FiltersMI
+                models={categories}
+                activeModels={activeModels}
+                onClick={setActiveModel}
+                height={height}
+              />
+            </div>
           )}
           {categories.length > 0 && visualization !== 'bar' && (
           <Filters
