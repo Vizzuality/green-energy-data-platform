@@ -500,7 +500,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 )}
                 {visualization === 'bar' && widgetData.map(
                   (widget) => (
-                    <div key={widget.model} className="mr-8">
+                    <div key={widget.model} className="mr-2">
                       <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
                       <Bar
                         widgetData={widget.data}

@@ -254,6 +254,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
+  const displayScenario = useMemo(() => scenarios.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
 
   useEffect(() => {
     if (compareIndex === 1) {
@@ -361,7 +362,10 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
               {/* scenario filter */}
               {['choropleth'].includes(visualization) && !!scenarios.length && (
               <div className="flex items-center">
-                <span className="pr-2">Scenario:</span>
+                <span className="pr-2">
+                  {i18next.t('scenario')}
+                  :
+                </span>
                 {scenarios?.length > 1 && (
                 <Tooltip
                   placement="bottom-start"
@@ -381,7 +385,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                     onClick={() => { toggleDropdown('scenario'); }}
                     className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                   >
-                    <span>{scenario || i18next.t('selectScenario')}</span>
+                    <span>{displayScenario || i18next.t('selectScenario')}</span>
                   </button>
                 </Tooltip>
                 )}
