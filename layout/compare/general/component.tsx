@@ -241,6 +241,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
       if (regions.find(({ value }) => value === region)) {
         return region;
       }
+
       return defaultRegion?.value;
     },
     [region, regions, defaultRegion],
@@ -401,7 +402,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 {i18next.t('region')}
                 :
               </span>
-              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0]}</span>)}
+              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayRegion}</span>)}
               {regions.length > 1 && (
               <Tooltip
                 placement="bottom-start"

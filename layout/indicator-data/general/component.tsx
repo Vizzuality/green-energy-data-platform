@@ -308,7 +308,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                 {i18next.t('showing')}
                 :
               </span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{years[0].label}</span>)}
+              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -343,7 +343,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                 {i18next.t('region')}
                 :
               </span>
-              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{regions[0].label}</span>)}
+              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayRegion}</span>)}
               {regions.length > 1 && (
               <Tooltip
                 placement="bottom-start"
