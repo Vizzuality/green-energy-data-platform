@@ -19,8 +19,10 @@ import MapboxglSpiderifier from 'mapboxgl-spiderifier';
 // authentication,
 import { withAuthentication } from 'hoc/auth';
 
-// Controls
 import i18next from 'i18next';
+import { format } from 'd3-format';
+
+// Controls
 import ZoomControl from './zoom';
 
 import Disclaimer from './disclaimer';
@@ -60,6 +62,8 @@ interface MapContainerProps {
   style?: Object,
 }
 
+const numberFormat = format('.2f');
+
 const MapContainer: FC<MapContainerProps> = (
   {
     layers,
@@ -78,6 +82,8 @@ const MapContainer: FC<MapContainerProps> = (
       },
       properties: {
         point_count: null,
+        total: null,
+        Total: null,
       },
     });
   const [lngLat, setLngLat] = useState([0, 0]);
@@ -171,12 +177,12 @@ const MapContainer: FC<MapContainerProps> = (
           const { zoom, maxZoom } = viewport;
           e.stopPropagation();
           const clusterProperties = e?.features[0]?.properties;
-          const { point_count: count } = clusterProperties;
+          const count = clusterProperties?.point_count;
 
           if (count > 10) {
             handleZoomChange(zoom + 1 > maxZoom ? maxZoom : zoom + 1);
           }
-          return onClickCluster;
+          onClickCluster(e);
         }}
         onHover={(e) => {
           if (e && e.features) {
@@ -201,7 +207,8 @@ const MapContainer: FC<MapContainerProps> = (
                 <Layer key={l.id} {...l} />
               ))}
             </LayerManager>
-            {hoverInteractions?.properties && (
+            {(!!hoverInteractions?.properties?.total || !!hoverInteractions?.properties?.Total)
+            && hasInteraction && (
             <Popup
               latitude={lngLat[1]}
               longitude={lngLat[0]}
@@ -209,7 +216,9 @@ const MapContainer: FC<MapContainerProps> = (
               tipSize={10}
               className="z-20 rounded-2xl"
             >
-              {hoverInteractions?.properties?.point_count > 1 && (
+              {hasInteraction
+              && hoverInteractions?.properties?.point_count > 1
+              && (
                 <div className="flex flex-col">
                   <div className="flex">
                     <span className="mr-2 text-sm">
@@ -218,14 +227,16 @@ const MapContainer: FC<MapContainerProps> = (
                     <span className="mr-2 text-sm">{hoverInteractions?.properties?.point_count}</span>
                   </div>
                 </div>
-                )}
+              )}
 
               {!!tooltipInfoHeaders.length && (
               <ul>
                 {tooltipInfoHeaders.map((t) => (
                   <li key={`${t}-${tooltipInfo[t]}`}>
                     <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                    <span className="text-sm">{tooltipInfo[t]}</span>
+                    {(t === 'Total' || t === 'total')
+                      ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
+                      : <span className="text-sm">{tooltipInfo[t]}</span>}
                   </li>
                 ))}
               </ul>

@@ -830,7 +830,7 @@ export const getGroupedValuesRelatedIndicators = (
               features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
                 type: 'Feature',
                 geometry: geometry?.geometry,
-                properties: cat,
+                ...cat,
               })),
             },
             cluster: true,
@@ -860,13 +860,13 @@ export const getGroupedValuesRelatedIndicators = (
                   'circle-color': [
                     'step',
                     ['get', 'point_count'],
-                    '#dd96ab',
+                    '#e7b092',
                     minValue,
-                    '#d46f8c',
+                    '#edc58a',
                     media,
-                    '#cd5478',
+                    '#df7463',
                     maxValue,
-                    '#c73a63',
+                    '#ca184a',
                   ],
                   'circle-radius': [
                     'step',
@@ -881,19 +881,19 @@ export const getGroupedValuesRelatedIndicators = (
                   ],
                 },
               },
-              {
-                id: 'media-cluster-count',
-                metadata: {
-                  position: 'top',
-                },
-                type: 'symbol',
-                layout: {
-                  'text-allow-overlap': true,
-                  'text-ignore-placement': true,
-                  'text-field': '{point_count_abbreviated}',
-                  'text-size': 12,
-                },
-              },
+              // {
+              //   id: 'media-cluster-count',
+              //   metadata: {
+              //     position: 'top',
+              //   },
+              //   type: 'symbol',
+              //   layout: {
+              //     'text-allow-overlap': true,
+              //     'text-ignore-placement': true,
+              //     'text-field': '{point_count_abbreviated}',
+              //     'text-size': 12,
+              //   },
+              // },
               {
                 id: 'unclustered-point',
                 type: 'circle',

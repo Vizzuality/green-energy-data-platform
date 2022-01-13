@@ -436,12 +436,14 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
       <div className="flex justify-between mb-4 w-full">
         <section className="w-1/2">
           {categories.length > 0 && visualization === 'bar' && (
-          <FiltersMI
-            models={categories}
-            activeModels={activeModels}
-            onClick={setActiveModel}
-            height={height}
-          />
+            <div className="max-h-128">
+              <FiltersMI
+                models={categories}
+                activeModels={activeModels}
+                onClick={setActiveModel}
+                height={height}
+              />
+            </div>
           )}
           {categories.length > 0 && visualization !== 'bar' && (
           <Filters
@@ -500,7 +502,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 )}
                 {visualization === 'bar' && widgetData.map(
                   (widget) => (
-                    <div key={widget.model} className="mr-8">
+                    <div key={widget.model} className="mr-2">
                       <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
                       <Bar
                         widgetData={widget.data}

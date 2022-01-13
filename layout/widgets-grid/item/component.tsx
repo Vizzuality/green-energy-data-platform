@@ -168,14 +168,14 @@ const GridItem: FC<GridItemProps> = ({
         </div>
       )}
 
-      {!!isFetchedRecords && !records.length && (
+      {!!isFetchedRecords && !records?.length && (
       <div className="flex flex-col items-center justify-center w-full h-full">
         <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
         <p>Data not found</p>
       </div>
       )}
 
-      {!isFetchingRecords && !!records.length && (
+      {!isFetchingRecords && !!records?.length && (
         (defaultVisualization === 'pie' && (
           <PieChart
             widgetData={widgetData}
