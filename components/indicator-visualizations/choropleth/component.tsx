@@ -113,10 +113,10 @@ const MapContainer: FC<MapContainerProps> = (
   }, [sortArray, layers]);
 
   const [spiderInfo, setSpiderInfo] = useState(null);
-  // const {
-  //   tooltipInfo,
-  //   tooltipInfoHeaders,
-  // } = useCoalPowerPlantTooltip(hoverInteractions?.['coal-power-plants']);
+  const {
+    tooltipInfo,
+    tooltipInfoHeaders,
+  } = useCoalPowerPlantTooltip(hoverInteractions?.['coal-power-plants']);
 
   const {
     tooltipInfo: spiderTooltipInfo,
@@ -135,17 +135,29 @@ const MapContainer: FC<MapContainerProps> = (
         onClick(e, spiderLeg) {
           // e.stopPropagation();
 
+          const {
+            elements: {
+              container,
+            },
+          } = spiderLeg;
+
+          container.onmouseleave = () => {
+            setSpiderInfo(null);
+          };
+
+          const {
+            lat,
+            lng,
+          } = spiderLeg.mapboxMarker.getLngLat();
+          setLngLat([lng, lat]);
           setSpiderInfo(spiderLeg.feature);
-          setLngLat([spiderLeg.mapboxMarker.lngLat.lng,
-            spiderLeg.mapboxMarker.lngLat.lng]);
         },
         markerWidth: 70,
         markerHeight: 40,
       });
     }
     return null;
-  }, [mapRefCurrent, spiderInfo]);
-  console.log(spiderInfo);
+  }, [mapRefCurrent]);
   const onClickCluster = useCallback((e) => {
     const features = mapRefCurrent.queryRenderedFeatures(e.point, {
       layers: ['coal-power-plants-clusters'],
@@ -188,14 +200,18 @@ const MapContainer: FC<MapContainerProps> = (
           const clusterProperties = e?.features[0]?.properties;
           const count = clusterProperties?.point_count;
 
+          if (!count || count < 1) {
+            spiderifier.unspiderfy();
+          }
+
           if (count > 10) {
             handleZoomChange(zoom + 1 > maxZoom ? maxZoom : zoom + 1);
           }
           onClickCluster(e);
-          setTimeout(() => {
-            setSpiderInfo({});
-            spiderifier.unspiderfy();
-          }, 150000);
+          // setTimeout(() => {
+          //   setSpiderInfo({});
+
+          // }, 150000);
         }}
         onHover={(e) => {
           if (e && e.features) {
@@ -220,16 +236,15 @@ const MapContainer: FC<MapContainerProps> = (
                 <Layer key={l.id} {...l} />
               ))}
             </LayerManager>
-            {(!!hoverInteractions?.properties?.total || !!hoverInteractions?.properties?.Total)
-            && hasInteraction && (
-            <Popup
-              latitude={lngLat[1]}
-              longitude={lngLat[0]}
-              closeButton={false}
-              tipSize={10}
-              className="z-20 rounded-2xl"
-            >
-              {hasInteraction
+            {((!!hoverInteractions?.properties?.total || !!hoverInteractions?.properties?.Total || spiderTooltipInfoHeaders.length > 0) && hasInteraction && (
+              <Popup
+                latitude={lngLat[1]}
+                longitude={lngLat[0]}
+                closeButton={false}
+                tipSize={10}
+                className="z-20 max-w-sm rounded-2xl"
+              >
+                {hasInteraction
               && !spiderInfo
               && hoverInteractions?.properties?.point_count > 1
               && (
@@ -243,33 +258,33 @@ const MapContainer: FC<MapContainerProps> = (
                 </div>
               )}
 
-              {/* {!!tooltipInfoHeaders.length && (
-              <ul>
-                {tooltipInfoHeaders.map((t) => (
-                  <li key={`${t}-${tooltipInfo[t]}`}>
-                    <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                    {(t === 'Total' || t === 'total')
-                      ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
-                      : <span className="text-sm">{tooltipInfo[t]}</span>}
-                  </li>
-                ))}
-              </ul>
-              )} */}
-              {console.log(spiderTooltipInfoHeaders)}
-              {!!spiderTooltipInfoHeaders.length && (
-              <ul>
-                {spiderTooltipInfoHeaders.map((t) => (
-                  <li key={`${t}-${spiderTooltipInfo[t]}`}>
-                    <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                    {(t === 'Total' || t === 'total')
-                      ? <span className="text-sm">{numberFormat(spiderTooltipInfo[t])}</span>
-                      : <span className="text-sm">{spiderTooltipInfo[t]}</span>}
-                  </li>
-                ))}
-              </ul>
-              )}
-            </Popup>
-            )}
+                {!!tooltipInfoHeaders.length && (
+                <ul>
+                  {tooltipInfoHeaders.map((t) => (
+                    <li key={`${t}-${tooltipInfo[t]}`}>
+                      <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      {(t === 'Total' || t === 'total')
+                        ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
+                        : <span className="text-sm">{tooltipInfo[t]}</span>}
+                    </li>
+                  ))}
+                </ul>
+                )}
+
+                {spiderTooltipInfoHeaders.length > 0 && (
+                <ul>
+                  {spiderTooltipInfoHeaders.map((t) => (
+                    <li key={`${t}-${spiderTooltipInfo[t]}`}>
+                      <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      {(t === 'Total' || t === 'total')
+                        ? <span className="text-sm">{numberFormat(spiderTooltipInfo[t])}</span>
+                        : <span className="text-sm">{spiderTooltipInfo[t]}</span>}
+                    </li>
+                  ))}
+                </ul>
+                )}
+              </Popup>
+            ))}
           </>
         )}
       </Map>
@@ -291,7 +306,7 @@ const MapContainer: FC<MapContainerProps> = (
       )} */}
       {hasInteraction && disclaimerVisibility && (
       <Disclaimer
-        className="top-4 left-1/2 transform  -translate-x-1/2"
+        className="transform -translate-x-1/2 top-4 left-1/2"
         message={i18next.t('fullscreenDisclaimer')}
         onDisclaimerClose={setDisclaimerVisibility}
       />
@@ -320,7 +335,7 @@ const MapContainer: FC<MapContainerProps> = (
       )}
       {hasInteraction && disclaimerVisibility && (
         <Disclaimer
-          className="top-4 left-1/2 transform  -translate-x-1/2"
+          className="transform -translate-x-1/2 top-4 left-1/2"
           message={i18next.t('fullscreenDisclaimer')}
           onDisclaimerClose={setDisclaimerVisibility}
         />
