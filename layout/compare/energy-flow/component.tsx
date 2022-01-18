@@ -24,7 +24,6 @@ import {
 } from 'hooks/indicators';
 
 // components
-import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import Legend from 'components/legend';
 import LoadingSpinner from 'components/loading-spinner';
@@ -40,6 +39,7 @@ import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
 import DropdownContent from 'layout/dropdown-content';
+import DropdownButton from 'layout/dropdown-button';
 
 import IndicatorCompareDataProps from '../types';
 
@@ -220,8 +220,8 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
   const parsedLinks = useMemo(() => uniqBy(data?.links, 'class'), [data]);
   const LegendPayload = useMemo(
     () => parsedLinks.map((item) => ({
-      label: item.class,
-      color: COLORS[item.class] || COLORS['Other energy'],
+      label: item.class.charAt(0).toUpperCase() + item.class.slice(1),
+      color: COLORS[item.class.toLowerCase()] || COLORS['other energy'],
     })), [parsedLinks],
   );
 
@@ -231,105 +231,20 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
         <section className="flex flex-col w-full">
           <div className="flex w-full justify-between">
             {/* filters */}
-            {/* year filter */}
-            <div className="flex items-center">
+
+            <div className="flex items-center flex-wrap">
               <span className="pr-2">
                 {i18next.t('showing')}
                 :
               </span>
-              {years.length === 1 && (
-              <div className="items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 md:flex hidden">
-                <span className="mr-2 hidden md:flex">
-                  {i18next.t('year')}
-                  :
-                </span>
-                <span>
-                  {displayYear || i18next.t('selectYear')}
-                </span>
-              </div>
-              )}
-              {years.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.year}
-                interactive
-                onClickOutside={() => closeDropdown('year')}
-                content={(
-                  <DropdownContent
-                    list={years}
-                    keyEl="year"
-                    onClick={handleChange}
-                  />
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('year'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
-                  <span className="mr-2 hidden md:flex">
-                    {i18next.t('year')}
-                    :
-                  </span>
-                  <span>
-                    {displayYear || i18next.t('selectYear')}
-                  </span>
-                  <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                </button>
-              </Tooltip>
-              )}
-              {/* unit filter */}
-              {units.length === 1 && (
-              <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                <span className="mr-2 hidden md:flex">
-                  {i18next.t('unit')}
-                  :
-                </span>
-                <span>
-                  {displayUnit || i18next.t('selectUnit')}
-                </span>
-              </div>
-              )}
-              {units.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.unit}
-                interactive
-                onClickOutside={() => closeDropdown('unit')}
-                content={(
-                  <DropdownContent
-                    list={units}
-                    keyEl="unit"
-                    onClick={handleChange}
-                  />
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('unit'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
-                  <span className="mr-2 md:flex hidden">
-                    {i18next.t('unit')}
-                    :
-                  </span>
-                  <span>
-                    {displayUnit || i18next.t('selectUnit')}
-                  </span>
-                </button>
-              </Tooltip>
-              )}
+
               {/* region filter  */}
               {regions.length === 1 && (
-              <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                <span className="mr-2 hidden md:flex">
-                  {i18next.t('region')}
-                  :
-                </span>
-                <span>
-                  {displayRegion || i18next.t('selectRegion')}
-                </span>
-              </div>
+              <DropdownButton
+                display={displayRegion}
+                elKey="region"
+                translationKey="selectRegion"
+              />
               )}
               {regions.length > 1 && (
               <Tooltip
@@ -350,13 +265,84 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
                   onClick={() => { toggleDropdown('region'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span className="mr-2 hidden md:flex">
-                    {i18next.t('region')}
-                    :
-                  </span>
-                  <span>
-                    {displayRegion || i18next.t('selectRegion')}
-                  </span>
+                  <DropdownButton
+                    display={displayRegion}
+                    elKey="region"
+                    translationKey="selectRegion"
+                  />
+                </button>
+              </Tooltip>
+              )}
+
+              {/* year filter */}
+              {years.length === 1 && (
+              <DropdownButton
+                display={displayYear}
+                elKey="year"
+                translationKey="selectYear"
+                icon={!displayYear && 'calendar'}
+                iconLabel={!displayYear && 'Select dates'}
+              />
+              )}
+              {years.length > 1 && (
+              <Tooltip
+                placement="bottom-start"
+                visible={dropdownVisibility.year}
+                interactive
+                onClickOutside={() => closeDropdown('year')}
+                content={(
+                  <DropdownContent
+                    list={years}
+                    keyEl="year"
+                    onClick={handleChange}
+                  />
+                )}
+              >
+                <button
+                  type="button"
+                  onClick={() => { toggleDropdown('year'); }}
+                >
+                  <DropdownButton
+                    display={displayYear}
+                    elKey="year"
+                    translationKey="selectYear"
+                    icon={!displayYear && 'calendar'}
+                    iconLabel={!displayYear && 'Select dates'}
+                  />
+                </button>
+              </Tooltip>
+              )}
+              {/* unit filter */}
+              {units.length === 1 && (
+              <DropdownButton
+                display={displayUnit}
+                elKey="unit"
+                translationKey="selectUnit"
+              />
+              )}
+              {units.length > 1 && (
+              <Tooltip
+                placement="bottom-start"
+                visible={dropdownVisibility.unit}
+                interactive
+                onClickOutside={() => closeDropdown('unit')}
+                content={(
+                  <DropdownContent
+                    list={units}
+                    keyEl="unit"
+                    onClick={handleChange}
+                  />
+                )}
+              >
+                <button
+                  type="button"
+                  onClick={() => { toggleDropdown('unit'); }}
+                >
+                  <DropdownButton
+                    display={displayUnit}
+                    elKey="unit"
+                    translationKey="selectUnit"
+                  />
                 </button>
               </Tooltip>
               )}

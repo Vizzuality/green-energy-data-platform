@@ -161,7 +161,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && (!!region || !!year),
+      enabled: !!visualization && (!!region || !!year),
     },
   );
 
@@ -184,7 +184,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const { name, data_source: dataSource } = indicatorData;
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+    () => getCategoriesFromRecords(records, visualization),
+    [records, visualization],
   );
 
   const filteredRecords = useMemo(
@@ -329,12 +330,13 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           <div className="flex">
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && (
-            <div className="flex items-center">
+            <div className="flex items-center flex-wrap">
               <span className="pr-2 whitespace-nowrap">
                 {i18next.t('showing')}
                 :
               </span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
+              {years.length === 1 && (
+              <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"
@@ -438,7 +440,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             {isFetchedRecords
                 && !isFetchingRecords
                 && !filteredRecords.length
-                && !!visualization && !!unit && (!!region || !!year)
+                && !!visualization && (!!region || !!year)
                 && (
                   <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
                     <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />

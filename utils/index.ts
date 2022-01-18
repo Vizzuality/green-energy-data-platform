@@ -28,7 +28,6 @@ import { MapLayersProps } from 'components/indicator-visualizations/choropleth/c
 import ID_CHINA from 'utils/constants';
 
 const numberFormat = ValueFormat('.2s');
-
 export const initializeLanguage = () => i18n.init({
   resources,
   lng: 'en',
@@ -208,7 +207,7 @@ export const getGroupedValues = (
   const { category, unit, visualization } = filters;
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
-  const mapCategorySelected = 'Total';
+  const mapCategorySelected = category?.label === 'category_1' ? 'Total' : category?.value;
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
   let data = [];
@@ -374,9 +373,8 @@ export const getGroupedValues = (
             data: {
               type: 'FeatureCollection',
               features: dataWithGeometries.map(
-                ({ geometry, visualizationTypes, ...cat }, index) => ({
+                ({ geometry, visualizationTypes, ...cat }) => ({
                   type: 'Feature',
-                  id: index,
                   geometry: geometry?.geometry,
                   properties: cat,
                 }),
@@ -464,6 +462,7 @@ export const getGroupedValues = (
                 geometry: geometry?.geometry,
                 properties: {
                   name: geometry?.name,
+                  geometry: geometry?.region_type,
                   region_type: geometry?.region_type,
                   ...getTooltipProperties(geometry?.geometry?.tooltip_properties),
                   ...cat,
@@ -484,7 +483,6 @@ export const getGroupedValues = (
                 type: 'circle',
                 filter: ['has', 'point_count'],
                 paint: {
-                // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
                   'circle-stroke-opacity': 0.4,
                   'circle-stroke-color': [
@@ -559,23 +557,6 @@ export const getGroupedValues = (
                   'circle-stroke-color': '#e7b092',
                 },
               },
-            // {
-            //   id: 'media',
-            //   metadata: {
-            //     position: 'top',
-            //   },
-            //   type: 'symbol',
-            //   paint: {
-            //     'icon-color': '#F00',
-            //   },
-            //   layout: {
-            //     'icon-ignore-placement': true,
-            //     'icon-allow-overlap': true,
-            //     'icon-image': '',
-            //     'icon-color': 'red',
-            //     'icon-size': 10,
-            //   },
-            // },
             ],
           },
           legendConfig: [{
@@ -585,6 +566,58 @@ export const getGroupedValues = (
             type: 'gradient',
             items: ITEMS,
           }],
+        }],
+      },
+      {
+        visualizationTypes: visualizations,
+        data: dataWithGeometries,
+        mapValues,
+        layers: [{
+          id: 'cluster-points',
+          type: 'geojson',
+          source: {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: dataWithGeometries.map(({ geometry, visualizationTypes, ...cat }) => ({
+                type: 'Feature',
+                geometry: geometry?.geometry,
+                properties: {
+                  name: geometry?.name,
+                  geometry: geometry?.geometry.coordinates,
+                  region_type: geometry?.region_type,
+                  ...getTooltipProperties(geometry?.geometry?.tooltip_properties),
+                  ...cat,
+                },
+              })),
+            },
+          },
+          render: {
+            layers: [
+              {
+                type: 'circle',
+                paint: {
+                // 'fill-color': '#00ffff',
+                  'circle-opacity': 0.5,
+                  'circle-stroke-opacity': 0.4,
+                  'circle-stroke-color': [
+                    'interpolate',
+                    ['linear'],
+                    ['get', 'total'],
+                    minValue,
+                    '#edc58a',
+                    media,
+                    '#df7463',
+                    maxValue,
+                    '#ca184a',
+                  ],
+                  'circle-stroke-width': 1.5,
+                  'circle-color': 'blue',
+                  'circle-radius': 10,
+                },
+              },
+            ],
+          },
         }],
       }];
     }
@@ -716,7 +749,6 @@ export const getGroupedValuesRelatedIndicators = (
   const { category, visualization } = filters;
   const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
-
   const filteredRegions: Region[] = regions?.filter((r) => r.geometry !== null);
 
   if (visualization === 'pie') {

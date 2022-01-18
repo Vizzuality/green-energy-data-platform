@@ -70,10 +70,14 @@
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    margin-left: -11.5px;
-    margin-top: -10px;
+    /* margin-left: -11.5px;
+    margin-top: -10px; */
     background-color: rgba(231,176,146,0.57) !important;
     background-image: none !important;
+  }
+
+  .spider-leg-container .spider-leg-line {
+    background-color: #3A3F59;
   }
 
   .mapboxgl-popup-content {
@@ -107,12 +111,47 @@
   color: white;
 }
 
+.spiderifier-marker-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	color: rgb(255, 255, 255);
+	background-color: rgb(195, 38, 94);
+	border-color: rgb(255, 255, 255);
+	border-width: 1px;
+	border-radius: 50%;
+	margin-left: -14px;
+	margin-top: -14px;
+	box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.29);
+	font-size: 8px;
+	font-weight: bold;
+	text-align: center;
+	border: 1px solid;
+}
+
   @layer utilities {
   .bg-shadow-sm {
     @apply shadow;
   }
   .bg-shadow {
     @apply shadow;
+  }
+
+  button.mapboxgl-ctrl-icon.mapboxgl-ctrl-fullscreen {
+    width: 24px !important;
+    height: 24px !important;
+    background-image: url('/images/enlarge.svg') !important;
+    padding: 5px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 50% !important;
+
+
+  }
+  .mapboxgl-ctrl-icon > span {
+    display: none ! important;
   }
 
   @supports (filter: drop-shadow(40px 40px 4px rgba(22, 26, 47, 0.24))) {

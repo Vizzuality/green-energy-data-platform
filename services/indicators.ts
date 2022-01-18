@@ -73,8 +73,8 @@ export const fetchIndicatorMetadata = (
 
 export const fetchSankeyData = (
   id: string,
-  headers = {},
   params = {},
+  headers = {},
 ) => API.get(`indicators/${id}/sandkey`, {
   headers: {
     ...headers,

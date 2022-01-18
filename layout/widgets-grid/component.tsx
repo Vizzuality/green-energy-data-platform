@@ -9,6 +9,7 @@ import { useGroup } from 'hooks/groups';
 
 import { AxiosRequestConfig } from 'axios';
 
+import i18next from 'i18next';
 import GridItem from './item';
 
 interface WidgetsGridProps {
@@ -75,7 +76,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
       >
         <Link href="/indicators" passHref>
           <a href="/indicators" className="w-full h-full items-center flex justify-center m-auto p-6 text-lg">
-            View datasets for other indicators
+            {i18next.t('otherIndicators')}
           </a>
         </Link>
       </div>

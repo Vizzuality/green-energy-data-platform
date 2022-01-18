@@ -25,12 +25,11 @@ import { format } from 'd3-format';
 // Controls
 import ZoomControl from './zoom';
 
-import Disclaimer from './disclaimer';
-
 import Legend from './legend';
 import LegendItem from './legend/item';
 import LegendTypeChoropleth from './legend/choropleth';
 import LegendTypeGradient from './legend/gradient';
+import Disclaimer from './disclaimer';
 
 // Map
 import { DEFAULT_VIEWPORT } from './constants';
@@ -86,6 +85,7 @@ const MapContainer: FC<MapContainerProps> = (
         Total: null,
       },
     });
+
   const [lngLat, setLngLat] = useState([0, 0]);
   const [sortArray, setSortArray] = useState([]);
   const [disclaimerVisibility, setDisclaimerVisibility] = useState(true);
@@ -112,10 +112,16 @@ const MapContainer: FC<MapContainerProps> = (
     return itms || [];
   }, [sortArray, layers]);
 
+  const [spiderInfo, setSpiderInfo] = useState(null);
   const {
     tooltipInfo,
     tooltipInfoHeaders,
   } = useCoalPowerPlantTooltip(hoverInteractions?.['coal-power-plants']);
+
+  const {
+    tooltipInfo: spiderTooltipInfo,
+    tooltipInfoHeaders: spiderTooltipInfoHeaders,
+  } = useCoalPowerPlantTooltip(spiderInfo);
 
   // Callbacks
   const onChangeOrder = useCallback((ids) => {
@@ -123,13 +129,28 @@ const MapContainer: FC<MapContainerProps> = (
   }, []);
 
   const mapRefCurrent = mapRef.current;
-
   const spiderifier = useMemo(() => {
     if (mapRefCurrent !== null) {
       return new MapboxglSpiderifier(mapRefCurrent, {
-        // onClick(e, spiderLeg) {
-        //   return setClusterProperties(spiderLeg);
-        // },
+        onClick(e, spiderLeg) {
+          // e.stopPropagation();
+
+          const {
+            elements: {
+              container,
+            },
+          } = spiderLeg;
+          container.onmouseleave = () => {
+            setSpiderInfo(null);
+          };
+
+          const {
+            lat,
+            lng,
+          } = spiderLeg.mapboxMarker.getLngLat();
+          setLngLat([lng, lat]);
+          setSpiderInfo(spiderLeg.feature);
+        },
         markerWidth: 70,
         markerHeight: 40,
       });
@@ -140,7 +161,6 @@ const MapContainer: FC<MapContainerProps> = (
     const features = mapRefCurrent.queryRenderedFeatures(e.point, {
       layers: ['coal-power-plants-clusters'],
     });
-    spiderifier.unspiderfy();
     if (!features.length) return null;
 
     mapRefCurrent.getSource('coal-power-plants').getClusterLeaves(
@@ -155,6 +175,7 @@ const MapContainer: FC<MapContainerProps> = (
         spiderifier.spiderfy(features[0].geometry.coordinates, markers);
       },
     );
+    setDisclaimerVisibility(false);
     return true;
   }, [mapRefCurrent, spiderifier]);
 
@@ -174,10 +195,14 @@ const MapContainer: FC<MapContainerProps> = (
         className="z-10"
         onMapViewportChange={handleViewportChange}
         onClick={(e) => {
+          setDisclaimerVisibility(false);
           const { zoom, maxZoom } = viewport;
           e.stopPropagation();
           const clusterProperties = e?.features[0]?.properties;
           const count = clusterProperties?.point_count;
+          if (!count || count < 1) {
+            spiderifier.unspiderfy();
+          }
 
           if (count > 10) {
             handleZoomChange(zoom + 1 > maxZoom ? maxZoom : zoom + 1);
@@ -185,6 +210,7 @@ const MapContainer: FC<MapContainerProps> = (
           onClickCluster(e);
         }}
         onHover={(e) => {
+          setDisclaimerVisibility(false);
           if (e && e.features) {
             e.features.forEach((f) => setHoverInteractions({
               [f.source]: f.properties,
@@ -195,6 +221,7 @@ const MapContainer: FC<MapContainerProps> = (
           }
         }}
         onMouseLeave={() => {
+          setDisclaimerVisibility(true);
           setHoverInteractions({});
           setLngLat(null);
         }}
@@ -207,16 +234,16 @@ const MapContainer: FC<MapContainerProps> = (
                 <Layer key={l.id} {...l} />
               ))}
             </LayerManager>
-            {(!!hoverInteractions?.properties?.total || !!hoverInteractions?.properties?.Total)
-            && hasInteraction && (
-            <Popup
-              latitude={lngLat[1]}
-              longitude={lngLat[0]}
-              closeButton={false}
-              tipSize={10}
-              className="z-20 rounded-2xl"
-            >
-              {hasInteraction
+            {((!!hoverInteractions?.properties?.total || !!hoverInteractions?.properties?.Total || spiderTooltipInfoHeaders.length > 0) && hasInteraction && (
+              <Popup
+                latitude={lngLat[1]}
+                longitude={lngLat[0]}
+                closeButton={false}
+                tipSize={10}
+                className="z-20 max-w-sm rounded-2xl"
+              >
+                {hasInteraction
+              && !spiderInfo
               && hoverInteractions?.properties?.point_count > 1
               && (
                 <div className="flex flex-col">
@@ -229,20 +256,33 @@ const MapContainer: FC<MapContainerProps> = (
                 </div>
               )}
 
-              {!!tooltipInfoHeaders.length && (
-              <ul>
-                {tooltipInfoHeaders.map((t) => (
-                  <li key={`${t}-${tooltipInfo[t]}`}>
-                    <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                    {(t === 'Total' || t === 'total')
-                      ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
-                      : <span className="text-sm">{tooltipInfo[t]}</span>}
-                  </li>
-                ))}
-              </ul>
-              )}
-            </Popup>
-            )}
+                {!!tooltipInfoHeaders.length && (
+                <ul>
+                  {tooltipInfoHeaders.map((t) => (
+                    <li key={`${t}-${tooltipInfo[t]}`}>
+                      <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      {(t === 'Total' || t === 'total')
+                        ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
+                        : <span className="text-sm">{tooltipInfo[t]}</span>}
+                    </li>
+                  ))}
+                </ul>
+                )}
+
+                {spiderTooltipInfoHeaders.length > 0 && (
+                <ul>
+                  {spiderTooltipInfoHeaders.map((t) => (
+                    <li key={`${t}-${spiderTooltipInfo[t]}`}>
+                      <span className="mr-4 text-xs">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      {(t === 'Total' || t === 'total')
+                        ? <span className="text-xs">{numberFormat(spiderTooltipInfo[t])}</span>
+                        : <span className="text-xs">{spiderTooltipInfo[t]}</span>}
+                    </li>
+                  ))}
+                </ul>
+                )}
+              </Popup>
+            ))}
           </>
         )}
       </Map>
@@ -252,19 +292,9 @@ const MapContainer: FC<MapContainerProps> = (
           onZoomChange={handleZoomChange}
         />
       )}
-      {/* {!!tooltipInfoHeaders.length && (
-      <ul>
-        {tooltipInfoHeaders.map((t) => (
-          <li key={`${t}-${tooltipInfo[t]}`}>
-            <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-            <span className="text-sm">{tooltipInfo[t]}</span>
-          </li>
-        ))}
-      </ul>
-      )} */}
       {hasInteraction && disclaimerVisibility && (
       <Disclaimer
-        className="top-4 left-1/2 transform  -translate-x-1/2"
+        className="transform -translate-x-1/2 top-4 left-1/2"
         message={i18next.t('fullscreenDisclaimer')}
         onDisclaimerClose={setDisclaimerVisibility}
       />
@@ -290,6 +320,13 @@ const MapContainer: FC<MapContainerProps> = (
           );
         })}
       </Legend>
+      )}
+      {hasInteraction && disclaimerVisibility && (
+        <Disclaimer
+          className="transform -translate-x-1/2 top-4 left-1/2"
+          message={i18next.t('fullscreenDisclaimer')}
+          onDisclaimerClose={setDisclaimerVisibility}
+        />
       )}
     </div>
   );
