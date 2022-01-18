@@ -10,7 +10,7 @@ import React, {
 // Layer manager
 import { LayerManager, Layer } from 'layer-manager/dist/components';
 import { PluginMapboxGl } from 'layer-manager';
-import { Popup, Marker, FlyToInterpolator } from 'react-map-gl';
+import { Popup } from 'react-map-gl';
 
 // hooks
 import { useCoalPowerPlantTooltip } from 'hooks/map';
@@ -24,7 +24,6 @@ import { format } from 'd3-format';
 
 // Controls
 import ZoomControl from './zoom';
-
 
 import Legend from './legend';
 import LegendItem from './legend/item';
@@ -73,9 +72,6 @@ const MapContainer: FC<MapContainerProps> = (
 ) => {
   const mapRef = useRef(null);
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
-  const [hoverInteractionsClick, setHoverInteractionsClick] = useState(
-    { cluster: false, clusterId: null, pointCount: null },
-  );
   const [hoverInteractions, setHoverInteractions] = useState({}
     || {
       regions: layers[0].name,
@@ -116,10 +112,16 @@ const MapContainer: FC<MapContainerProps> = (
     return itms || [];
   }, [sortArray, layers]);
 
+  const [spiderInfo, setSpiderInfo] = useState(null);
+  // const {
+  //   tooltipInfo,
+  //   tooltipInfoHeaders,
+  // } = useCoalPowerPlantTooltip(hoverInteractions?.['coal-power-plants']);
+
   const {
-    tooltipInfo,
-    tooltipInfoHeaders,
-  } = useCoalPowerPlantTooltip(hoverInteractions?.['coal-power-plants']);
+    tooltipInfo: spiderTooltipInfo,
+    tooltipInfoHeaders: spiderTooltipInfoHeaders,
+  } = useCoalPowerPlantTooltip(spiderInfo);
 
   // Callbacks
   const onChangeOrder = useCallback((ids) => {
@@ -127,24 +129,27 @@ const MapContainer: FC<MapContainerProps> = (
   }, []);
 
   const mapRefCurrent = mapRef.current;
-
   const spiderifier = useMemo(() => {
     if (mapRefCurrent !== null) {
       return new MapboxglSpiderifier(mapRefCurrent, {
-        // onClick(e, spiderLeg) {
-        //   return setClusterProperties(spiderLeg);
-        // },
+        onClick(e, spiderLeg) {
+          // e.stopPropagation();
+
+          setSpiderInfo(spiderLeg.feature);
+          setLngLat([spiderLeg.mapboxMarker.lngLat.lng,
+            spiderLeg.mapboxMarker.lngLat.lng]);
+        },
         markerWidth: 70,
         markerHeight: 40,
       });
     }
     return null;
-  }, [mapRefCurrent]);
+  }, [mapRefCurrent, spiderInfo]);
+  console.log(spiderInfo);
   const onClickCluster = useCallback((e) => {
     const features = mapRefCurrent.queryRenderedFeatures(e.point, {
       layers: ['coal-power-plants-clusters'],
     });
-    spiderifier.unspiderfy();
     if (!features.length) return null;
 
     mapRefCurrent.getSource('coal-power-plants').getClusterLeaves(
@@ -187,6 +192,10 @@ const MapContainer: FC<MapContainerProps> = (
             handleZoomChange(zoom + 1 > maxZoom ? maxZoom : zoom + 1);
           }
           onClickCluster(e);
+          setTimeout(() => {
+            setSpiderInfo({});
+            spiderifier.unspiderfy();
+          }, 150000);
         }}
         onHover={(e) => {
           if (e && e.features) {
@@ -221,6 +230,7 @@ const MapContainer: FC<MapContainerProps> = (
               className="z-20 rounded-2xl"
             >
               {hasInteraction
+              && !spiderInfo
               && hoverInteractions?.properties?.point_count > 1
               && (
                 <div className="flex flex-col">
@@ -233,7 +243,7 @@ const MapContainer: FC<MapContainerProps> = (
                 </div>
               )}
 
-              {!!tooltipInfoHeaders.length && (
+              {/* {!!tooltipInfoHeaders.length && (
               <ul>
                 {tooltipInfoHeaders.map((t) => (
                   <li key={`${t}-${tooltipInfo[t]}`}>
@@ -241,6 +251,19 @@ const MapContainer: FC<MapContainerProps> = (
                     {(t === 'Total' || t === 'total')
                       ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
                       : <span className="text-sm">{tooltipInfo[t]}</span>}
+                  </li>
+                ))}
+              </ul>
+              )} */}
+              {console.log(spiderTooltipInfoHeaders)}
+              {!!spiderTooltipInfoHeaders.length && (
+              <ul>
+                {spiderTooltipInfoHeaders.map((t) => (
+                  <li key={`${t}-${spiderTooltipInfo[t]}`}>
+                    <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                    {(t === 'Total' || t === 'total')
+                      ? <span className="text-sm">{numberFormat(spiderTooltipInfo[t])}</span>
+                      : <span className="text-sm">{spiderTooltipInfo[t]}</span>}
                   </li>
                 ))}
               </ul>
@@ -256,7 +279,7 @@ const MapContainer: FC<MapContainerProps> = (
           onZoomChange={handleZoomChange}
         />
       )}
-      {/* {!!tooltipInfoHeaders.length && (
+      {/* {!!spiderTooltipInfoHeaders.length && (
       <ul>
         {tooltipInfoHeaders.map((t) => (
           <li key={`${t}-${tooltipInfo[t]}`}>
