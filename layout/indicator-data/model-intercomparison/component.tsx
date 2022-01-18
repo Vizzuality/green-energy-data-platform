@@ -296,7 +296,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   return (
     <section className={`flex flex-col  ${className}`}>
-      <section className="flex items-center">
+      <section className="flex items-center flex-wrap">
         <span className="pr-2 whitespace-nowrap">
           {i18next.t('showing')}
           :

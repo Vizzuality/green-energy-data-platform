@@ -1,24 +1,24 @@
 import i18next from 'i18next';
 
 export const COLORS = {
-  'Natural gas': '#FF7629',
-  Oil: '#1D8190',
-  Coal: '#0C3CC4',
-  Fossil: '#A97500',
+  'natural gas': '#FF7629',
+  oil: '#1D8190',
+  coal: '#0C3CC4',
+  'oil products': '#A97500',
   Geothermal: '#CC1771',
-  Wind: '#A880FF',
+  'coal products': '#A880FF',
   Solar: '#FEB961',
-  Biomass: '#14C176',
+  'crude oil': '#14C176',
   Hydro: '#29C2DA',
   Nuclear: '#FF61CA',
-  Ocean: '#00A3FE',
-  'Other energy': 'rgba(142, 145, 149, 0.9)',
-  Electricity: '#6905E8',
+  'raw coal': '#00A3FE',
+  'other energy': 'rgba(142, 145, 149, 0.9)',
+  electricity: '#6905E8',
   Gasses: '#FF7629',
-  Heat: '#CC1771',
+  heat: '#CC1771',
   Hydrogen: '#FF7629',
   Liquids: '#006BFE',
-  Solid: '#FD1A2F',
+  natural: '#FD1A2F',
 };
 
 export const TITLE = [i18next.t('energySources'), i18next.t('energyTransformation'), i18next.t('finalConsumption')];

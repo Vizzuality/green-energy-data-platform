@@ -330,12 +330,13 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           <div className="flex">
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && (
-            <div className="flex items-center">
+            <div className="flex items-center flex-wrap">
               <span className="pr-2 whitespace-nowrap">
                 {i18next.t('showing')}
                 :
               </span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
+              {years.length === 1 && (
+              <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
               {years.length > 1 && (
               <Tooltip
                 placement="bottom-start"

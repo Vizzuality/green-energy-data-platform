@@ -176,6 +176,7 @@ const MapContainer: FC<MapContainerProps> = (
         spiderifier.spiderfy(features[0].geometry.coordinates, markers);
       },
     );
+    setDisclaimerVisibility(false);
     return true;
   }, [mapRefCurrent, spiderifier]);
 
@@ -195,6 +196,7 @@ const MapContainer: FC<MapContainerProps> = (
         className="z-10"
         onMapViewportChange={handleViewportChange}
         onClick={(e) => {
+          setDisclaimerVisibility(false);
           const { zoom, maxZoom } = viewport;
           e.stopPropagation();
           const clusterProperties = e?.features[0]?.properties;
@@ -214,6 +216,7 @@ const MapContainer: FC<MapContainerProps> = (
           // }, 150000);
         }}
         onHover={(e) => {
+          setDisclaimerVisibility(false);
           if (e && e.features) {
             e.features.forEach((f) => setHoverInteractions({
               [f.source]: f.properties,
@@ -224,6 +227,7 @@ const MapContainer: FC<MapContainerProps> = (
           }
         }}
         onMouseLeave={() => {
+          setDisclaimerVisibility(true);
           setHoverInteractions({});
           setLngLat(null);
         }}

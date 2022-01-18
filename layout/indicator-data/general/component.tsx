@@ -304,7 +304,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
           <div className="flex w-full justify-between">
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
-            <div className="flex items-center">
+            <div className="flex items-center flex-wrap">
               <span className="pr-2 whitespace-nowrap">
                 {i18next.t('showing')}
                 :
