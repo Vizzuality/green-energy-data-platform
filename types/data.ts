@@ -79,22 +79,6 @@ export interface DataIdProps {
   slug: string,
 }
 
-type Node = Readonly<{
-  name: string,
-}>;
-
-type Link = Readonly<{
-  class: string,
-  source: number,
-  target: number,
-  value: number,
-}>;
-
-export interface SankeyChartData {
-  nodes: Node[],
-  links: Link[]
-}
-
 export interface IndicatorProps {
   categories: [],
   category_filters: CategoryFilters | string[],

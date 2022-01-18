@@ -70,10 +70,14 @@
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    margin-left: -11.5px;
-    margin-top: -10px;
+    /* margin-left: -11.5px;
+    margin-top: -10px; */
     background-color: rgba(231,176,146,0.57) !important;
     background-image: none !important;
+  }
+
+  .spider-leg-container .spider-leg-line {
+    background-color: #3A3F59;
   }
 
   .mapboxgl-popup-content {

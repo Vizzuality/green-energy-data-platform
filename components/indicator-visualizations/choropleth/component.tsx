@@ -140,7 +140,6 @@ const MapContainer: FC<MapContainerProps> = (
               container,
             },
           } = spiderLeg;
-
           container.onmouseleave = () => {
             setSpiderInfo(null);
           };
@@ -201,7 +200,6 @@ const MapContainer: FC<MapContainerProps> = (
           e.stopPropagation();
           const clusterProperties = e?.features[0]?.properties;
           const count = clusterProperties?.point_count;
-
           if (!count || count < 1) {
             spiderifier.unspiderfy();
           }
@@ -210,10 +208,6 @@ const MapContainer: FC<MapContainerProps> = (
             handleZoomChange(zoom + 1 > maxZoom ? maxZoom : zoom + 1);
           }
           onClickCluster(e);
-          // setTimeout(() => {
-          //   setSpiderInfo({});
-
-          // }, 150000);
         }}
         onHover={(e) => {
           setDisclaimerVisibility(false);
@@ -279,10 +273,10 @@ const MapContainer: FC<MapContainerProps> = (
                 <ul>
                   {spiderTooltipInfoHeaders.map((t) => (
                     <li key={`${t}-${spiderTooltipInfo[t]}`}>
-                      <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      <span className="mr-4 text-xs">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
                       {(t === 'Total' || t === 'total')
-                        ? <span className="text-sm">{numberFormat(spiderTooltipInfo[t])}</span>
-                        : <span className="text-sm">{spiderTooltipInfo[t]}</span>}
+                        ? <span className="text-xs">{numberFormat(spiderTooltipInfo[t])}</span>
+                        : <span className="text-xs">{spiderTooltipInfo[t]}</span>}
                     </li>
                   ))}
                 </ul>
@@ -298,16 +292,6 @@ const MapContainer: FC<MapContainerProps> = (
           onZoomChange={handleZoomChange}
         />
       )}
-      {/* {!!spiderTooltipInfoHeaders.length && (
-      <ul>
-        {tooltipInfoHeaders.map((t) => (
-          <li key={`${t}-${tooltipInfo[t]}`}>
-            <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-            <span className="text-sm">{tooltipInfo[t]}</span>
-          </li>
-        ))}
-      </ul>
-      )} */}
       {hasInteraction && disclaimerVisibility && (
       <Disclaimer
         className="transform -translate-x-1/2 top-4 left-1/2"
