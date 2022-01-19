@@ -92,18 +92,19 @@ const GridItem: FC<GridItemProps> = ({
     () => (scenario || defaultScenario?.value),
     [scenario, defaultScenario],
   );
+
   const {
     data: records,
     isFetching: isFetchingRecords,
     isFetched: isFetchedRecords,
   } = useIndicatorRecords(group, subgroup, indicator, {
     visualization: defaultVisualization,
-    ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+    unit: currentUnit || null,
     ...defaultCategory && { category: defaultCategory },
     ...['line', 'pie'].includes(defaultVisualization) ? { region: currentRegion } : { region: null },
     ...['pie', 'choropleth', 'bar'].includes(defaultVisualization) ? { year: currentYear } : { year: null },
   }, {
-    enabled: !!isFetched && !!isSuccess && !!defaultUnit,
+    enabled: !!isFetched && !!isSuccess,
     refetchOnWindowFocus: false,
   });
 
@@ -140,8 +141,8 @@ const GridItem: FC<GridItemProps> = ({
   const colors = useColors(categories.length);
 
   const widgetConfig = useMemo(
-    () => CONFIG(categories)[defaultVisualization],
-    [defaultVisualization, categories],
+    () => CONFIG(categories, current)[defaultVisualization],
+    [defaultVisualization, categories, current],
   );
 
   const newFilters = useMemo(() => ({

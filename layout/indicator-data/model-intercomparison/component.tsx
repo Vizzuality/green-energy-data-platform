@@ -162,7 +162,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
       refetchOnWindowFocus: false,
-      enabled: !!visualization && !!unit && !!scenario && (!!region || !!year),
+      enabled: !!visualization && !!scenario && (!!region || !!year),
     },
   );
 
@@ -296,7 +296,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   return (
     <section className={`flex flex-col  ${className}`}>
-      <section className="flex items-center">
+      <section className="flex items-center flex-wrap">
         <span className="pr-2 whitespace-nowrap">
           {i18next.t('showing')}
           :
@@ -478,7 +478,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
             {isFetchedRecords
             && !isFetchingRecords
             && !filteredRecords.length
-            && !!visualization && !!unit && (!!region || !!year)
+            && !!visualization && (!!region || !!year)
             && (
             <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
               <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />

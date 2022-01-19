@@ -1,0 +1,1844 @@
+[
+  {
+      "id": 1155,
+      "iso": "WORLDWIDE",
+      "location_id": "worldwide",
+      "location_type": "worldwide",
+      "name": "Worldwide"
+  },
+  {
+      "id": 1012,
+      "iso": "ARE",
+      "location_id": "2_00000000000000000b7a",
+      "location_type": "wdpa",
+      "name": "Al Zorah"
+  },
+  {
+      "id": 1114,
+      "iso": "BRA",
+      "location_id": "2_000000000000000009c2",
+      "location_type": "wdpa",
+      "name": "Amazon Estuary and its Mangroves"
+  },
+  {
+      "id": 992,
+      "iso": "AGO",
+      "location_id": "1_2_97",
+      "location_type": "country",
+      "name": "Angola"
+  },
+  {
+      "id": 964,
+      "iso": "ATG",
+      "location_id": "1_2_69",
+      "location_type": "country",
+      "name": "Antigua & Barbuda"
+  },
+  {
+      "id": 1050,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007ad",
+      "location_type": "wdpa",
+      "name": "Área de Protección de Flora y Fauna Laguna de Términos"
+  },
+  {
+      "id": 1016,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000265",
+      "location_type": "wdpa",
+      "name": "Área de Protección de Flora y Fauna Yum Balam"
+  },
+  {
+      "id": 1007,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000a29",
+      "location_type": "wdpa",
+      "name": "Ashmore Reef National Nature Reserve"
+  },
+  {
+      "id": 1113,
+      "iso": "BRA",
+      "location_id": "2_00000000000000000969",
+      "location_type": "wdpa",
+      "name": "Atol das Rocas Biological Reserve"
+  },
+  {
+      "id": 993,
+      "iso": "AUS",
+      "location_id": "1_2_98",
+      "location_type": "country",
+      "name": "Australia"
+  },
+  {
+      "id": 1072,
+      "iso": "SLV",
+      "location_id": "2_00000000000000000290",
+      "location_type": "wdpa",
+      "name": "Bahía de Jiquilisco"
+  },
+  {
+      "id": 968,
+      "iso": "BHR",
+      "location_id": "1_2_73",
+      "location_type": "country",
+      "name": "Bahrain"
+  },
+  {
+      "id": 967,
+      "iso": "BGD",
+      "location_id": "1_2_72",
+      "location_type": "country",
+      "name": "Bangladesh"
+  },
+  {
+      "id": 1091,
+      "iso": "MDG",
+      "location_id": "2_00000000000000000591",
+      "location_type": "wdpa",
+      "name": "Barrière de Corail Nosy Ve Androka"
+  },
+  {
+      "id": 1103,
+      "iso": "GUF",
+      "location_id": "2_0000000000000000084c",
+      "location_type": "wdpa",
+      "name": "Basse-Mana"
+  },
+  {
+      "id": 970,
+      "iso": "BLZ",
+      "location_id": "1_2_75",
+      "location_type": "country",
+      "name": "Belize"
+  },
+  {
+      "id": 965,
+      "iso": "BEN",
+      "location_id": "1_2_70",
+      "location_type": "country",
+      "name": "Benin"
+  },
+  {
+      "id": 966,
+      "iso": "BES",
+      "location_id": "1_2_71",
+      "location_type": "country",
+      "name": "Bonaire, Sint-Eustasius, Saba"
+  },
+  {
+      "id": 1002,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000694",
+      "location_type": "wdpa",
+      "name": "Bowling Green Bay"
+  },
+  {
+      "id": 971,
+      "iso": "BRA",
+      "location_id": "1_2_76",
+      "location_type": "country",
+      "name": "Brazil"
+  },
+  {
+      "id": 972,
+      "iso": "BRN",
+      "location_id": "1_2_77",
+      "location_type": "country",
+      "name": "Brunei"
+  },
+  {
+      "id": 1107,
+      "iso": "CUB",
+      "location_id": "2_000000000000000008db",
+      "location_type": "wdpa",
+      "name": "Buenavista"
+  },
+  {
+      "id": 1011,
+      "iso": "ARE",
+      "location_id": "2_00000000000000000b79",
+      "location_type": "wdpa",
+      "name": "Bul Syayeef"
+  },
+  {
+      "id": 933,
+      "iso": "KHM",
+      "location_id": "1_2_38",
+      "location_type": "country",
+      "name": "Cambodia"
+  },
+  {
+      "id": 896,
+      "iso": "CMR",
+      "location_id": "1_2_1",
+      "location_type": "country",
+      "name": "Cameroon"
+  },
+  {
+      "id": 1100,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b6",
+      "location_type": "wdpa",
+      "name": "Canal del Infiernillo y esteros del territorio Comcaac"
+  },
+  {
+      "id": 900,
+      "iso": "CYM",
+      "location_id": "1_2_5",
+      "location_type": "country",
+      "name": "Cayman Is."
+  },
+  {
+      "id": 973,
+      "iso": "CHN",
+      "location_id": "1_2_78",
+      "location_type": "country",
+      "name": "China"
+  },
+  {
+      "id": 1137,
+      "iso": "CHN",
+      "location_id": "2_00000000000000000ba7",
+      "location_type": "wdpa",
+      "name": "Chongming Dongtan Nature Reserve, Shanghai"
+  },
+  {
+      "id": 1083,
+      "iso": "CUB",
+      "location_id": "2_0000000000000000029b",
+      "location_type": "wdpa",
+      "name": "Ciénaga de Lanier y Sur de la Isla de la Juventud"
+  },
+  {
+      "id": 1076,
+      "iso": "VEN",
+      "location_id": "2_00000000000000000294",
+      "location_type": "wdpa",
+      "name": "Ciénaga de Los Olivitos"
+  },
+  {
+      "id": 1101,
+      "iso": "CUB",
+      "location_id": "2_0000000000000000084a",
+      "location_type": "wdpa",
+      "name": "Ciénaga de Zapata"
+  },
+  {
+      "id": 997,
+      "iso": "AUS",
+      "location_id": "2_000000000000000003d0",
+      "location_type": "wdpa",
+      "name": "Cobourg Peninsula"
+  },
+  {
+      "id": 1102,
+      "iso": "ATG",
+      "location_id": "2_0000000000000000084b",
+      "location_type": "wdpa",
+      "name": "Codrington Lagoon"
+  },
+  {
+      "id": 995,
+      "iso": "COL",
+      "location_id": "1_2_100",
+      "location_type": "country",
+      "name": "Colombia"
+  },
+  {
+      "id": 897,
+      "iso": "COM",
+      "location_id": "1_2_2",
+      "location_type": "country",
+      "name": "Comoros"
+  },
+  {
+      "id": 1069,
+      "iso": "SLV",
+      "location_id": "2_0000000000000000028d",
+      "location_type": "wdpa",
+      "name": "Complejo Jaltepeque"
+  },
+  {
+      "id": 994,
+      "iso": "COD",
+      "location_id": "1_2_99",
+      "location_type": "country",
+      "name": "Congo, DRC"
+  },
+  {
+      "id": 1001,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000693",
+      "location_type": "wdpa",
+      "name": "Coral Sea Reserves (Coringa-Herald and Lihou Reefs and Cays)"
+  },
+  {
+      "id": 1029,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000798",
+      "location_type": "wdpa",
+      "name": "Corredor Costero La Asamblea - San Francisquito"
+  },
+  {
+      "id": 898,
+      "iso": "CRI",
+      "location_id": "1_2_3",
+      "location_type": "country",
+      "name": "Costa Rica"
+  },
+  {
+      "id": 895,
+      "iso": "CIV",
+      "location_id": "1_2_0",
+      "location_type": "country",
+      "name": "Cote d'Ivoire"
+  },
+  {
+      "id": 1085,
+      "iso": "VEN",
+      "location_id": "2_0000000000000000029d",
+      "location_type": "wdpa",
+      "name": "Cuare"
+  },
+  {
+      "id": 899,
+      "iso": "CUB",
+      "location_id": "1_2_4",
+      "location_type": "country",
+      "name": "Cuba"
+  },
+  {
+      "id": 1063,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007bb",
+      "location_type": "wdpa",
+      "name": "Cuencas y corales de la zona costera de Huatulco"
+  },
+  {
+      "id": 1138,
+      "iso": "CHN",
+      "location_id": "2_00000000000000000ba8",
+      "location_type": "wdpa",
+      "name": "Dafeng National Nature Reserve"
+  },
+  {
+      "id": 1128,
+      "iso": "SEN",
+      "location_id": "2_000000000000000009ed",
+      "location_type": "wdpa",
+      "name": "Delta du Saloum"
+  },
+  {
+      "id": 1144,
+      "iso": "IRN",
+      "location_id": "2_00000000000000000bae",
+      "location_type": "wdpa",
+      "name": "Deltas of Rud-e-Gaz & Rud-e-Hara"
+  },
+  {
+      "id": 1142,
+      "iso": "IRN",
+      "location_id": "2_00000000000000000bac",
+      "location_type": "wdpa",
+      "name": "Deltas of Rud-e-Shur, Rud-e-Shirin and Rud-e-Minab"
+  },
+  {
+      "id": 901,
+      "iso": "DJI",
+      "location_id": "1_2_6",
+      "location_type": "country",
+      "name": "Djibouti"
+  },
+  {
+      "id": 996,
+      "iso": "DOM",
+      "location_id": "1_2_101",
+      "location_type": "country",
+      "name": "Dominican Republic"
+  },
+  {
+      "id": 1013,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000262",
+      "location_type": "wdpa",
+      "name": "Dzilam"
+  },
+  {
+      "id": 902,
+      "iso": "ECU",
+      "location_id": "1_2_7",
+      "location_type": "country",
+      "name": "Ecuador"
+  },
+  {
+      "id": 903,
+      "iso": "EGY",
+      "location_id": "1_2_8",
+      "location_type": "country",
+      "name": "Egypt"
+  },
+  {
+      "id": 999,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000470",
+      "location_type": "wdpa",
+      "name": "Eighty-mile Beach"
+  },
+  {
+      "id": 1006,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000698",
+      "location_type": "wdpa",
+      "name": "Elizabeth and Middleton Reefs Marine National Nature Reserve"
+  },
+  {
+      "id": 910,
+      "iso": "SLV",
+      "location_id": "1_2_15",
+      "location_type": "country",
+      "name": "El Salvador"
+  },
+  {
+      "id": 1041,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a4",
+      "location_type": "wdpa",
+      "name": "Ensenada de Pabellones"
+  },
+  {
+      "id": 923,
+      "iso": "GNQ",
+      "location_id": "1_2_28",
+      "location_type": "country",
+      "name": "Equatorial Guinea"
+  },
+  {
+      "id": 904,
+      "iso": "ERI",
+      "location_id": "1_2_9",
+      "location_type": "country",
+      "name": "Eritrea"
+  },
+  {
+      "id": 1031,
+      "iso": "MEX",
+      "location_id": "2_0000000000000000079a",
+      "location_type": "wdpa",
+      "name": "Estero de Punta Banda"
+  },
+  {
+      "id": 1154,
+      "iso": "GUF",
+      "location_id": "2_0000000000000000084e",
+      "location_type": "wdpa",
+      "name": "Estuaire du fleuve Sinnamary"
+  },
+  {
+      "id": 1105,
+      "iso": "USA",
+      "location_id": "2_00000000000000000858",
+      "location_type": "wdpa",
+      "name": "Everglades National Park"
+  },
+  {
+      "id": 1115,
+      "iso": "BRA",
+      "location_id": "2_000000000000000009c3",
+      "location_type": "wdpa",
+      "name": "Fernando de Noronha Archipelago"
+  },
+  {
+      "id": 905,
+      "iso": "FJI",
+      "location_id": "1_2_10",
+      "location_type": "country",
+      "name": "Fiji"
+  },
+  {
+      "id": 926,
+      "iso": "GUF",
+      "location_id": "1_2_31",
+      "location_type": "country",
+      "name": "French Guiana"
+  },
+  {
+      "id": 907,
+      "iso": "GAB",
+      "location_id": "1_2_12",
+      "location_type": "country",
+      "name": "Gabon"
+  },
+  {
+      "id": 1073,
+      "iso": "CRI",
+      "location_id": "2_00000000000000000291",
+      "location_type": "wdpa",
+      "name": "Gandoca-Manzanillo"
+  },
+  {
+      "id": 919,
+      "iso": "GHA",
+      "location_id": "1_2_24",
+      "location_type": "country",
+      "name": "Ghana"
+  },
+  {
+      "id": 1086,
+      "iso": "PAN",
+      "location_id": "2_0000000000000000029e",
+      "location_type": "wdpa",
+      "name": "Golfo de Montijo"
+  },
+  {
+      "id": 1110,
+      "iso": "GLP",
+      "location_id": "2_000000000000000008de",
+      "location_type": "wdpa",
+      "name": "Grand Cul-de-Sac Marin de la Guadeloupe"
+  },
+  {
+      "id": 1108,
+      "iso": "CUB",
+      "location_id": "2_000000000000000008dc",
+      "location_type": "wdpa",
+      "name": "Gran Humedal del Norte de Ciego de Ávila"
+  },
+  {
+      "id": 1003,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000695",
+      "location_type": "wdpa",
+      "name": "Great Sandy Strait (including Great Sandy Strait, Tin Can Bay and Tin Can Inlet)"
+  },
+  {
+      "id": 924,
+      "iso": "GRD",
+      "location_id": "1_2_29",
+      "location_type": "country",
+      "name": "Grenada"
+  },
+  {
+      "id": 974,
+      "iso": "GLP",
+      "location_id": "1_2_79",
+      "location_type": "country",
+      "name": "Guadeloupe"
+  },
+  {
+      "id": 1136,
+      "iso": "CHN",
+      "location_id": "2_00000000000000000ba6",
+      "location_type": "wdpa",
+      "name": "Guangdong Nanpeng Archipelago Wetlands"
+  },
+  {
+      "id": 925,
+      "iso": "GTM",
+      "location_id": "1_2_30",
+      "location_type": "country",
+      "name": "Guatemala"
+  },
+  {
+      "id": 920,
+      "iso": "GIN",
+      "location_id": "1_2_25",
+      "location_type": "country",
+      "name": "Guinea"
+  },
+  {
+      "id": 922,
+      "iso": "GNB",
+      "location_id": "1_2_27",
+      "location_type": "country",
+      "name": "Guinea-Bissau"
+  },
+  {
+      "id": 1090,
+      "iso": "MMR",
+      "location_id": "2_00000000000000000590",
+      "location_type": "wdpa",
+      "name": "Gulf of Mottama"
+  },
+  {
+      "id": 975,
+      "iso": "GUY",
+      "location_id": "1_2_80",
+      "location_type": "country",
+      "name": "Guyana"
+  },
+  {
+      "id": 989,
+      "iso": "HTI",
+      "location_id": "1_2_94",
+      "location_type": "country",
+      "name": "Haiti"
+  },
+  {
+      "id": 1151,
+      "iso": "BES",
+      "location_id": "2_000000000000000002d1",
+      "location_type": "wdpa",
+      "name": "Het Lac"
+  },
+  {
+      "id": 1152,
+      "iso": "BES",
+      "location_id": "2_000000000000000002d2",
+      "location_type": "wdpa",
+      "name": "Het Pekelmeer"
+  },
+  {
+      "id": 927,
+      "iso": "HND",
+      "location_id": "1_2_32",
+      "location_type": "country",
+      "name": "Honduras"
+  },
+  {
+      "id": 1075,
+      "iso": "CUB",
+      "location_id": "2_00000000000000000293",
+      "location_type": "wdpa",
+      "name": "Humedal Delta del Cauto"
+  },
+  {
+      "id": 1032,
+      "iso": "MEX",
+      "location_id": "2_0000000000000000079b",
+      "location_type": "wdpa",
+      "name": "Humedales de Bahía Adaír"
+  },
+  {
+      "id": 1023,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000792",
+      "location_type": "wdpa",
+      "name": "Humedales de Bahía San Jorge"
+  },
+  {
+      "id": 1071,
+      "iso": "DOM",
+      "location_id": "2_0000000000000000028f",
+      "location_type": "wdpa",
+      "name": "Humedales de Jaragua"
+  },
+  {
+      "id": 1051,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007ae",
+      "location_type": "wdpa",
+      "name": "Humedales de la Laguna La Popotera"
+  },
+  {
+      "id": 1036,
+      "iso": "MEX",
+      "location_id": "2_0000000000000000079f",
+      "location_type": "wdpa",
+      "name": "Humedales de Yavaros - Moroncarit"
+  },
+  {
+      "id": 1084,
+      "iso": "CUB",
+      "location_id": "2_0000000000000000029c",
+      "location_type": "wdpa",
+      "name": "Humedal Río Máximo-Cagüey"
+  },
+  {
+      "id": 1122,
+      "iso": "GIN",
+      "location_id": "2_000000000000000009e6",
+      "location_type": "wdpa",
+      "name": "Ile Alcatraz"
+  },
+  {
+      "id": 1127,
+      "iso": "GIN",
+      "location_id": "2_000000000000000009eb",
+      "location_type": "wdpa",
+      "name": "Ile Blanche"
+  },
+  {
+      "id": 1089,
+      "iso": "MDG",
+      "location_id": "2_0000000000000000058f",
+      "location_type": "wdpa",
+      "name": "Iles Barren"
+  },
+  {
+      "id": 1124,
+      "iso": "GIN",
+      "location_id": "2_000000000000000009e8",
+      "location_type": "wdpa",
+      "name": "Iles Tristao"
+  },
+  {
+      "id": 929,
+      "iso": "IND",
+      "location_id": "1_2_34",
+      "location_type": "country",
+      "name": "India"
+  },
+  {
+      "id": 928,
+      "iso": "IDN",
+      "location_id": "1_2_33",
+      "location_type": "country",
+      "name": "Indonesia"
+  },
+  {
+      "id": 930,
+      "iso": "IRN",
+      "location_id": "1_2_35",
+      "location_type": "country",
+      "name": "Iran"
+  },
+  {
+      "id": 1097,
+      "iso": "GNQ",
+      "location_id": "2_00000000000000000597",
+      "location_type": "wdpa",
+      "name": "Isla de Annobón"
+  },
+  {
+      "id": 1030,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000799",
+      "location_type": "wdpa",
+      "name": "Isla Rasa"
+  },
+  {
+      "id": 1024,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000793",
+      "location_type": "wdpa",
+      "name": "Islas Marietas"
+  },
+  {
+      "id": 931,
+      "iso": "JAM",
+      "location_id": "1_2_36",
+      "location_type": "country",
+      "name": "Jamaica"
+  },
+  {
+      "id": 932,
+      "iso": "JPN",
+      "location_id": "1_2_37",
+      "location_type": "country",
+      "name": "Japan"
+  },
+  {
+      "id": 1010,
+      "iso": "ARE",
+      "location_id": "2_00000000000000000b78",
+      "location_type": "wdpa",
+      "name": "Jazirat Sir Bu Naair"
+  },
+  {
+      "id": 998,
+      "iso": "AUS",
+      "location_id": "2_000000000000000003d1",
+      "location_type": "wdpa",
+      "name": "Kakadu National Park"
+  },
+  {
+      "id": 976,
+      "iso": "KEN",
+      "location_id": "1_2_81",
+      "location_type": "country",
+      "name": "Kenya"
+  },
+  {
+      "id": 1148,
+      "iso": "JPN",
+      "location_id": "2_00000000000000000bb2",
+      "location_type": "wdpa",
+      "name": "Kerama-shoto Coral Reef"
+  },
+  {
+      "id": 1145,
+      "iso": "IRN",
+      "location_id": "2_00000000000000000baf",
+      "location_type": "wdpa",
+      "name": "Khuran Straits"
+  },
+  {
+      "id": 1150,
+      "iso": "BES",
+      "location_id": "2_000000000000000002d0",
+      "location_type": "wdpa",
+      "name": "Klein Bonaire Island & adjacent sea"
+  },
+  {
+      "id": 1132,
+      "iso": "KHM",
+      "location_id": "2_00000000000000000a9f",
+      "location_type": "wdpa",
+      "name": "Koh Kapik and Associated Islets"
+  },
+  {
+      "id": 1123,
+      "iso": "GIN",
+      "location_id": "2_000000000000000009e7",
+      "location_type": "wdpa",
+      "name": "Konkouré"
+  },
+  {
+      "id": 1096,
+      "iso": "MYS",
+      "location_id": "2_00000000000000000596",
+      "location_type": "wdpa",
+      "name": "Kota Kinabalu Wetland"
+  },
+  {
+      "id": 1057,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b4",
+      "location_type": "wdpa",
+      "name": "Laguna Costera El Caimán"
+  },
+  {
+      "id": 1053,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b0",
+      "location_type": "wdpa",
+      "name": "Laguna de Cuyutlán vasos III y IV"
+  },
+  {
+      "id": 1040,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a3",
+      "location_type": "wdpa",
+      "name": "Laguna Madre"
+  },
+  {
+      "id": 1034,
+      "iso": "MEX",
+      "location_id": "2_0000000000000000079d",
+      "location_type": "wdpa",
+      "name": "Laguna Ojo de Liebre"
+  },
+  {
+      "id": 1033,
+      "iso": "MEX",
+      "location_id": "2_0000000000000000079c",
+      "location_type": "wdpa",
+      "name": "Laguna Playa Colorada-Santa Marea La Reforma"
+  },
+  {
+      "id": 1035,
+      "iso": "MEX",
+      "location_id": "2_0000000000000000079e",
+      "location_type": "wdpa",
+      "name": "Laguna San Ignacio"
+  },
+  {
+      "id": 1038,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a1",
+      "location_type": "wdpa",
+      "name": "Lagunas de Santa María-Topolobampo-Ohuira"
+  },
+  {
+      "id": 1047,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007aa",
+      "location_type": "wdpa",
+      "name": "Laguna Xola-Paramán"
+  },
+  {
+      "id": 1026,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000795",
+      "location_type": "wdpa",
+      "name": "La Mancha y El Llano"
+  },
+  {
+      "id": 1153,
+      "iso": "MYT",
+      "location_id": "2_000000000000000005bf",
+      "location_type": "wdpa",
+      "name": "La Vasière des Badamiers"
+  },
+  {
+      "id": 935,
+      "iso": "LBR",
+      "location_id": "1_2_40",
+      "location_type": "country",
+      "name": "Liberia"
+  },
+  {
+      "id": 939,
+      "iso": "MDG",
+      "location_id": "1_2_44",
+      "location_type": "country",
+      "name": "Madagascar"
+  },
+  {
+      "id": 977,
+      "iso": "MYS",
+      "location_id": "1_2_82",
+      "location_type": "country",
+      "name": "Malaysia"
+  },
+  {
+      "id": 1077,
+      "iso": "ECU",
+      "location_id": "2_00000000000000000295",
+      "location_type": "wdpa",
+      "name": "Manglares Churute"
+  },
+  {
+      "id": 1080,
+      "iso": "PER",
+      "location_id": "2_00000000000000000298",
+      "location_type": "wdpa",
+      "name": "Manglares de San Pedro de Vice"
+  },
+  {
+      "id": 1054,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b1",
+      "location_type": "wdpa",
+      "name": "Manglares y humedales de la Laguna de Sontecomapan"
+  },
+  {
+      "id": 1018,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000267",
+      "location_type": "wdpa",
+      "name": "Manglares y Humedales del Norte de Isla Cozumel"
+  },
+  {
+      "id": 1025,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000794",
+      "location_type": "wdpa",
+      "name": "Manglares y humedales de Tuxpan"
+  },
+  {
+      "id": 1008,
+      "iso": "ARE",
+      "location_id": "2_00000000000000000b6e",
+      "location_type": "wdpa",
+      "name": "Mangrove and Alhafeya Protected Area in Khor Kalba"
+  },
+  {
+      "id": 1088,
+      "iso": "MDG",
+      "location_id": "2_0000000000000000058e",
+      "location_type": "wdpa",
+      "name": "Mangroves de Tsiribihina"
+  },
+  {
+      "id": 1146,
+      "iso": "JPN",
+      "location_id": "2_00000000000000000bb0",
+      "location_type": "wdpa",
+      "name": "Manko"
+  },
+  {
+      "id": 1104,
+      "iso": "GUF",
+      "location_id": "2_0000000000000000084d",
+      "location_type": "wdpa",
+      "name": "Marais De Kaw"
+  },
+  {
+      "id": 990,
+      "iso": "MTQ",
+      "location_id": "1_2_95",
+      "location_type": "country",
+      "name": "Martinique"
+  },
+  {
+      "id": 943,
+      "iso": "MUS",
+      "location_id": "1_2_48",
+      "location_type": "country",
+      "name": "Mauritius"
+  },
+  {
+      "id": 944,
+      "iso": "MYT",
+      "location_id": "1_2_49",
+      "location_type": "country",
+      "name": "Mayotte"
+  },
+  {
+      "id": 1098,
+      "iso": "MMR",
+      "location_id": "2_00000000000000000598",
+      "location_type": "wdpa",
+      "name": "Meinmahla Kyun Wildlife Sanctuary"
+  },
+  {
+      "id": 940,
+      "iso": "MEX",
+      "location_id": "1_2_45",
+      "location_type": "country",
+      "name": "Mexico"
+  },
+  {
+      "id": 906,
+      "iso": "FSM",
+      "location_id": "1_2_11",
+      "location_type": "country",
+      "name": "Micronesia"
+  },
+  {
+      "id": 1004,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000696",
+      "location_type": "wdpa",
+      "name": "Moreton Bay"
+  },
+  {
+      "id": 942,
+      "iso": "MOZ",
+      "location_id": "1_2_47",
+      "location_type": "country",
+      "name": "Mozambique"
+  },
+  {
+      "id": 1129,
+      "iso": "THA",
+      "location_id": "2_00000000000000000a9c",
+      "location_type": "wdpa",
+      "name": "Mu Koh Ang Thong Marine National Park"
+  },
+  {
+      "id": 941,
+      "iso": "MMR",
+      "location_id": "1_2_46",
+      "location_type": "country",
+      "name": "Myanmar"
+  },
+  {
+      "id": 1147,
+      "iso": "JPN",
+      "location_id": "2_00000000000000000bb1",
+      "location_type": "wdpa",
+      "name": "Nagura Ampuru"
+  },
+  {
+      "id": 1093,
+      "iso": "PHL",
+      "location_id": "2_00000000000000000593",
+      "location_type": "wdpa",
+      "name": "Negros Occidental Coastal Wetlands Conservation Area (NOCWCA)"
+  },
+  {
+      "id": 978,
+      "iso": "NCL",
+      "location_id": "1_2_83",
+      "location_type": "country",
+      "name": "New Caledonia"
+  },
+  {
+      "id": 946,
+      "iso": "NZL",
+      "location_id": "1_2_51",
+      "location_type": "country",
+      "name": "New Zealand"
+  },
+  {
+      "id": 979,
+      "iso": "NIC",
+      "location_id": "1_2_84",
+      "location_type": "country",
+      "name": "Nicaragua"
+  },
+  {
+      "id": 945,
+      "iso": "NGA",
+      "location_id": "1_2_50",
+      "location_type": "country",
+      "name": "Nigeria"
+  },
+  {
+      "id": 1109,
+      "iso": "TCA",
+      "location_id": "2_000000000000000008dd",
+      "location_type": "wdpa",
+      "name": "North, Middle & East Caicos Islands"
+  },
+  {
+      "id": 947,
+      "iso": "OMN",
+      "location_id": "1_2_52",
+      "location_type": "country",
+      "name": "Oman"
+  },
+  {
+      "id": 948,
+      "iso": "PAK",
+      "location_id": "1_2_53",
+      "location_type": "country",
+      "name": "Pakistan"
+  },
+  {
+      "id": 951,
+      "iso": "PLW",
+      "location_id": "1_2_56",
+      "location_type": "country",
+      "name": "Palau"
+  },
+  {
+      "id": 1066,
+      "iso": "JAM",
+      "location_id": "2_0000000000000000028a",
+      "location_type": "wdpa",
+      "name": "Palisadoes - Port Royal"
+  },
+  {
+      "id": 949,
+      "iso": "PAN",
+      "location_id": "1_2_54",
+      "location_type": "country",
+      "name": "Panama"
+  },
+  {
+      "id": 952,
+      "iso": "PNG",
+      "location_id": "1_2_57",
+      "location_type": "country",
+      "name": "Papua New Guinea"
+  },
+  {
+      "id": 1081,
+      "iso": "PER",
+      "location_id": "2_00000000000000000299",
+      "location_type": "wdpa",
+      "name": "Paracas"
+  },
+  {
+      "id": 1120,
+      "iso": "GAB",
+      "location_id": "2_000000000000000009d6",
+      "location_type": "wdpa",
+      "name": "Parc National Akanda"
+  },
+  {
+      "id": 1094,
+      "iso": "GAB",
+      "location_id": "2_00000000000000000594",
+      "location_type": "wdpa",
+      "name": "Parc National Pongara"
+  },
+  {
+      "id": 1121,
+      "iso": "GNB",
+      "location_id": "2_000000000000000009d7",
+      "location_type": "wdpa",
+      "name": "Parc Naturel des Mangroves du Fleuve Cacheu (PNTC)"
+  },
+  {
+      "id": 1043,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a6",
+      "location_type": "wdpa",
+      "name": "Parque Nacional Arrecife Alacranes"
+  },
+  {
+      "id": 1019,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000268",
+      "location_type": "wdpa",
+      "name": "Parque Nacional Arrecife de Cozumel"
+  },
+  {
+      "id": 1017,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000266",
+      "location_type": "wdpa",
+      "name": "Parque Nacional Arrecife de Puerto Morelos"
+  },
+  {
+      "id": 1022,
+      "iso": "MEX",
+      "location_id": "2_0000000000000000026b",
+      "location_type": "wdpa",
+      "name": "Parque Nacional Arrecifes de Xcalak"
+  },
+  {
+      "id": 1037,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a0",
+      "location_type": "wdpa",
+      "name": "Parque Nacional Bahía de Loreto"
+  },
+  {
+      "id": 1014,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000263",
+      "location_type": "wdpa",
+      "name": "Parque Nacional Isla Contoy"
+  },
+  {
+      "id": 1044,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a7",
+      "location_type": "wdpa",
+      "name": "Parque Nacional Isla Isabel"
+  },
+  {
+      "id": 1049,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007ac",
+      "location_type": "wdpa",
+      "name": "Parque Nacional Sistema Arrecifal Veracruzano"
+  },
+  {
+      "id": 980,
+      "iso": "PER",
+      "location_id": "1_2_85",
+      "location_type": "country",
+      "name": "Peru"
+  },
+  {
+      "id": 950,
+      "iso": "PHL",
+      "location_id": "1_2_55",
+      "location_type": "country",
+      "name": "Philippines"
+  },
+  {
+      "id": 1064,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007bc",
+      "location_type": "wdpa",
+      "name": "Playa Tortuguera Cahuitán"
+  },
+  {
+      "id": 1065,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007bd",
+      "location_type": "wdpa",
+      "name": "Playa Tortuguera Chenkán"
+  },
+  {
+      "id": 1042,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a5",
+      "location_type": "wdpa",
+      "name": "Playa Tortuguera El Verde Camacho"
+  },
+  {
+      "id": 1020,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000269",
+      "location_type": "wdpa",
+      "name": "Playa Tortuguera X'cacel-X'cacelito"
+  },
+  {
+      "id": 1056,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b3",
+      "location_type": "wdpa",
+      "name": "Playón Mexiquillo"
+  },
+  {
+      "id": 1130,
+      "iso": "MUS",
+      "location_id": "2_00000000000000000a9d",
+      "location_type": "wdpa",
+      "name": "Pointe d'Esny Wetland"
+  },
+  {
+      "id": 962,
+      "iso": "-",
+      "location_id": "1_2_67",
+      "location_type": "country",
+      "name": "Protected zone Australia/Papua New Guinea"
+  },
+  {
+      "id": 981,
+      "iso": "PRI",
+      "location_id": "1_2_86",
+      "location_type": "country",
+      "name": "Puerto Rico"
+  },
+  {
+      "id": 1078,
+      "iso": "GTM",
+      "location_id": "2_00000000000000000296",
+      "location_type": "wdpa",
+      "name": "Punta de Manabique"
+  },
+  {
+      "id": 1079,
+      "iso": "PAN",
+      "location_id": "2_00000000000000000297",
+      "location_type": "wdpa",
+      "name": "Punta Patiño"
+  },
+  {
+      "id": 953,
+      "iso": "QAT",
+      "location_id": "1_2_58",
+      "location_type": "country",
+      "name": "Qatar"
+  },
+  {
+      "id": 1099,
+      "iso": "FJI",
+      "location_id": "2_000000000000000006df",
+      "location_type": "wdpa",
+      "name": "Qoliqoli Cokovata"
+  },
+  {
+      "id": 1009,
+      "iso": "ARE",
+      "location_id": "2_00000000000000000b77",
+      "location_type": "wdpa",
+      "name": "Ras Al Khor"
+  },
+  {
+      "id": 1112,
+      "iso": "BRA",
+      "location_id": "2_00000000000000000968",
+      "location_type": "wdpa",
+      "name": "Reentrancias Maranhenses"
+  },
+  {
+      "id": 1028,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000797",
+      "location_type": "wdpa",
+      "name": "Reserva de la Biosfera Archipiélago de Revillagigedo"
+  },
+  {
+      "id": 1021,
+      "iso": "MEX",
+      "location_id": "2_0000000000000000026a",
+      "location_type": "wdpa",
+      "name": "Reserva de la Biosfera Banco Chinchorro"
+  },
+  {
+      "id": 1048,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007ab",
+      "location_type": "wdpa",
+      "name": "Reserva de la Biosfera Chamela-Cuixmala"
+  },
+  {
+      "id": 1060,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b8",
+      "location_type": "wdpa",
+      "name": "Reserva de la Biosfera La Encrucijada"
+  },
+  {
+      "id": 1046,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a9",
+      "location_type": "wdpa",
+      "name": "Reserva de la Biosfera Los Petenes"
+  },
+  {
+      "id": 1058,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b5",
+      "location_type": "wdpa",
+      "name": "Reserva de la Biosfera Ría Celestún"
+  },
+  {
+      "id": 1045,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a8",
+      "location_type": "wdpa",
+      "name": "Reserva Estatal El Palmar"
+  },
+  {
+      "id": 1118,
+      "iso": "GNQ",
+      "location_id": "2_000000000000000009d4",
+      "location_type": "wdpa",
+      "name": "Reserva Natural del Estuario del Muni"
+  },
+  {
+      "id": 1117,
+      "iso": "SEN",
+      "location_id": "2_000000000000000009ce",
+      "location_type": "wdpa",
+      "name": "Réserve Naturelle Communautaire de Palmarin"
+  },
+  {
+      "id": 1116,
+      "iso": "SEN",
+      "location_id": "2_000000000000000009c4",
+      "location_type": "wdpa",
+      "name": "Réserve Naturelle d'Intérêt Communautaire de la Somone"
+  },
+  {
+      "id": 1125,
+      "iso": "GIN",
+      "location_id": "2_000000000000000009e9",
+      "location_type": "wdpa",
+      "name": "Rio Kapatchez"
+  },
+  {
+      "id": 1126,
+      "iso": "GIN",
+      "location_id": "2_000000000000000009ea",
+      "location_type": "wdpa",
+      "name": "Rio Pongo"
+  },
+  {
+      "id": 1000,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000471",
+      "location_type": "wdpa",
+      "name": "Roebuck Bay"
+  },
+  {
+      "id": 893,
+      "iso": "TZA",
+      "location_id": "1_1_1_00000000000000000000",
+      "location_type": "aoi",
+      "name": "Rufiji Delta"
+  },
+  {
+      "id": 1149,
+      "iso": "TZA",
+      "location_id": "2_0000000000000000059e",
+      "location_type": "wdpa",
+      "name": "Rufiji-Mafia-Kilwa"
+  },
+  {
+      "id": 938,
+      "iso": "MAF",
+      "location_id": "1_2_43",
+      "location_type": "country",
+      "name": "Saint Martin"
+  },
+  {
+      "id": 1111,
+      "iso": "MAF",
+      "location_id": "2_00000000000000000901",
+      "location_type": "wdpa",
+      "name": "Saint-Martin"
+  },
+  {
+      "id": 955,
+      "iso": "VCT",
+      "location_id": "1_2_60",
+      "location_type": "country",
+      "name": "Saint Vincent and the Grenadines"
+  },
+  {
+      "id": 894,
+      "iso": "SEN",
+      "location_id": "1_1_2_00000000000000000000",
+      "location_type": "aoi",
+      "name": "Saloum  Delta"
+  },
+  {
+      "id": 959,
+      "iso": "WSM",
+      "location_id": "1_2_64",
+      "location_type": "country",
+      "name": "Samoa"
+  },
+  {
+      "id": 1070,
+      "iso": "PAN",
+      "location_id": "2_0000000000000000028e",
+      "location_type": "wdpa",
+      "name": "San San-Pond Sak"
+  },
+  {
+      "id": 1082,
+      "iso": "PER",
+      "location_id": "2_0000000000000000029a",
+      "location_type": "wdpa",
+      "name": "Santuario Nacional Lagunas de Mejía"
+  },
+  {
+      "id": 1087,
+      "iso": "PER",
+      "location_id": "2_0000000000000000029f",
+      "location_type": "wdpa",
+      "name": "Santuario Nacional Los Manglares de Tumbes"
+  },
+  {
+      "id": 1052,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007af",
+      "location_type": "wdpa",
+      "name": "Santuario Playa Boca de Apiza-El Chupadero-El Tecuanillo"
+  },
+  {
+      "id": 954,
+      "iso": "SAU",
+      "location_id": "1_2_59",
+      "location_type": "country",
+      "name": "Saudi Arabia"
+  },
+  {
+      "id": 908,
+      "iso": "SEN",
+      "location_id": "1_2_13",
+      "location_type": "country",
+      "name": "Senegal"
+  },
+  {
+      "id": 911,
+      "iso": "SYC",
+      "location_id": "1_2_16",
+      "location_type": "country",
+      "name": "Seychelles"
+  },
+  {
+      "id": 1143,
+      "iso": "CHN",
+      "location_id": "2_00000000000000000bad",
+      "location_type": "wdpa",
+      "name": "Shankou Mangrove Nature Reserve"
+  },
+  {
+      "id": 1141,
+      "iso": "IRN",
+      "location_id": "2_00000000000000000bab",
+      "location_type": "wdpa",
+      "name": "Sheedvar Island"
+  },
+  {
+      "id": 1005,
+      "iso": "AUS",
+      "location_id": "2_00000000000000000697",
+      "location_type": "wdpa",
+      "name": "Shoalwater and Corio Bays Area (Shoalwater Bay Training Area, in part - Corio Bay)"
+  },
+  {
+      "id": 1015,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000264",
+      "location_type": "wdpa",
+      "name": "Sian Ka'an"
+  },
+  {
+      "id": 909,
+      "iso": "SLE",
+      "location_id": "1_2_14",
+      "location_type": "country",
+      "name": "Sierra Leone"
+  },
+  {
+      "id": 983,
+      "iso": "SGP",
+      "location_id": "1_2_88",
+      "location_type": "country",
+      "name": "Singapore"
+  },
+  {
+      "id": 1068,
+      "iso": "HND",
+      "location_id": "2_0000000000000000028c",
+      "location_type": "wdpa",
+      "name": "Sistema de Humedales de Santa Elena"
+  },
+  {
+      "id": 1027,
+      "iso": "MEX",
+      "location_id": "2_00000000000000000796",
+      "location_type": "wdpa",
+      "name": "Sistema de Lagunas Interdunarias de la Ciudad de Veracruz"
+  },
+  {
+      "id": 1059,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b7",
+      "location_type": "wdpa",
+      "name": "Sistema Estuarino Boca del Cielo"
+  },
+  {
+      "id": 1055,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b2",
+      "location_type": "wdpa",
+      "name": "Sistema Lagunar Alvarado"
+  },
+  {
+      "id": 1039,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007a2",
+      "location_type": "wdpa",
+      "name": "Sistema Lagunar San Ignacio - Navachiste - Macapule"
+  },
+  {
+      "id": 1095,
+      "iso": "MDG",
+      "location_id": "2_00000000000000000595",
+      "location_type": "wdpa",
+      "name": "Site Bioculturel d'Antrema"
+  },
+  {
+      "id": 984,
+      "iso": "SLB",
+      "location_id": "1_2_89",
+      "location_type": "country",
+      "name": "Solomon Is."
+  },
+  {
+      "id": 985,
+      "iso": "SOM",
+      "location_id": "1_2_90",
+      "location_type": "country",
+      "name": "Somalia"
+  },
+  {
+      "id": 961,
+      "iso": "ZAF",
+      "location_id": "1_2_66",
+      "location_type": "country",
+      "name": "South Africa"
+  },
+  {
+      "id": 937,
+      "iso": "LKA",
+      "location_id": "1_2_42",
+      "location_type": "country",
+      "name": "Sri Lanka"
+  },
+  {
+      "id": 934,
+      "iso": "KNA",
+      "location_id": "1_2_39",
+      "location_type": "country",
+      "name": "St. Kitts & Nevis"
+  },
+  {
+      "id": 936,
+      "iso": "LCA",
+      "location_id": "1_2_41",
+      "location_type": "country",
+      "name": "St. Lucia"
+  },
+  {
+      "id": 982,
+      "iso": "SDN",
+      "location_id": "1_2_87",
+      "location_type": "country",
+      "name": "Sudan"
+  },
+  {
+      "id": 1135,
+      "iso": "BGD",
+      "location_id": "2_00000000000000000b96",
+      "location_type": "wdpa",
+      "name": "Sundarbans Reserved Forest"
+  },
+  {
+      "id": 986,
+      "iso": "SUR",
+      "location_id": "1_2_91",
+      "location_type": "country",
+      "name": "Suriname"
+  },
+  {
+      "id": 916,
+      "iso": "TWN",
+      "location_id": "1_2_21",
+      "location_type": "country",
+      "name": "Taiwan"
+  },
+  {
+      "id": 1074,
+      "iso": "CRI",
+      "location_id": "2_00000000000000000292",
+      "location_type": "wdpa",
+      "name": "Tamarindo"
+  },
+  {
+      "id": 1119,
+      "iso": "GMB",
+      "location_id": "2_000000000000000009d5",
+      "location_type": "wdpa",
+      "name": "Tanbi Wetland Complex"
+  },
+  {
+      "id": 917,
+      "iso": "TZA",
+      "location_id": "1_2_22",
+      "location_type": "country",
+      "name": "Tanzania"
+  },
+  {
+      "id": 913,
+      "iso": "THA",
+      "location_id": "1_2_18",
+      "location_type": "country",
+      "name": "Thailand"
+  },
+  {
+      "id": 969,
+      "iso": "BHS",
+      "location_id": "1_2_74",
+      "location_type": "country",
+      "name": "The Bahamas"
+  },
+  {
+      "id": 921,
+      "iso": "GMB",
+      "location_id": "1_2_26",
+      "location_type": "country",
+      "name": "The Gambia"
+  },
+  {
+      "id": 914,
+      "iso": "TLS",
+      "location_id": "1_2_19",
+      "location_type": "country",
+      "name": "Timor-Leste"
+  },
+  {
+      "id": 915,
+      "iso": "TON",
+      "location_id": "1_2_20",
+      "location_type": "country",
+      "name": "Tonga"
+  },
+  {
+      "id": 987,
+      "iso": "TTO",
+      "location_id": "1_2_92",
+      "location_type": "country",
+      "name": "Trinidad & Tobago"
+  },
+  {
+      "id": 1134,
+      "iso": "PHL",
+      "location_id": "2_00000000000000000aa1",
+      "location_type": "wdpa",
+      "name": "Tubbataha Reefs Natural Park"
+  },
+  {
+      "id": 912,
+      "iso": "TCA",
+      "location_id": "1_2_17",
+      "location_type": "country",
+      "name": "Turks & Caicos Is."
+  },
+  {
+      "id": 963,
+      "iso": "ARE",
+      "location_id": "1_2_68",
+      "location_type": "country",
+      "name": "United Arab Emirates"
+  },
+  {
+      "id": 918,
+      "iso": "USA",
+      "location_id": "1_2_23",
+      "location_type": "country",
+      "name": "United States"
+  },
+  {
+      "id": 991,
+      "iso": "VIR",
+      "location_id": "1_2_96",
+      "location_type": "country",
+      "name": "United States Virgin Islands"
+  },
+  {
+      "id": 988,
+      "iso": "VUT",
+      "location_id": "1_2_93",
+      "location_type": "country",
+      "name": "Vanuatu"
+  },
+  {
+      "id": 956,
+      "iso": "VEN",
+      "location_id": "1_2_61",
+      "location_type": "country",
+      "name": "Venezuela"
+  },
+  {
+      "id": 958,
+      "iso": "VNM",
+      "location_id": "1_2_63",
+      "location_type": "country",
+      "name": "Vietnam"
+  },
+  {
+      "id": 957,
+      "iso": "VGB",
+      "location_id": "1_2_62",
+      "location_type": "country",
+      "name": "Virgin Islands, British"
+  },
+  {
+      "id": 1106,
+      "iso": "VGB",
+      "location_id": "2_0000000000000000088a",
+      "location_type": "wdpa",
+      "name": "Western Ponds"
+  },
+  {
+      "id": 1131,
+      "iso": "VNM",
+      "location_id": "2_00000000000000000a9e",
+      "location_type": "wdpa",
+      "name": "Xuan Thuy Natural Wetland Reserve"
+  },
+  {
+      "id": 1139,
+      "iso": "CHN",
+      "location_id": "2_00000000000000000ba9",
+      "location_type": "wdpa",
+      "name": "Yancheng National Nature Reserve"
+  },
+  {
+      "id": 960,
+      "iso": "YEM",
+      "location_id": "1_2_65",
+      "location_type": "country",
+      "name": "Yemen"
+  },
+  {
+      "id": 1133,
+      "iso": "MOZ",
+      "location_id": "2_00000000000000000aa0",
+      "location_type": "wdpa",
+      "name": "Zambezi Delta"
+  },
+  {
+      "id": 1140,
+      "iso": "CHN",
+      "location_id": "2_00000000000000000baa",
+      "location_type": "wdpa",
+      "name": "Zhanjiang Mangrove National Nature Reserve"
+  },
+  {
+      "id": 1067,
+      "iso": "ECU",
+      "location_id": "2_0000000000000000028b",
+      "location_type": "wdpa",
+      "name": "Zona Marina Parque Nacional Machalilla"
+  },
+  {
+      "id": 1061,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007b9",
+      "location_type": "wdpa",
+      "name": "Zona Sujeta a Conservación Ecológica Cabildo - Amatal"
+  },
+  {
+      "id": 1062,
+      "iso": "MEX",
+      "location_id": "2_000000000000000007ba",
+      "location_type": "wdpa",
+      "name": "Zona Sujeta a Conservación Ecológica El Gancho - Murillo"
+  },
+  {
+      "id": 1092,
+      "iso": "MDG",
+      "location_id": "2_00000000000000000592",
+      "location_type": "wdpa",
+      "name": "Zones Humides de Sahamalaza"
+  }
+]
+

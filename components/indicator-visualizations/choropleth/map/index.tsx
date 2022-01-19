@@ -16,6 +16,7 @@ import ReactMapGL, {
 } from 'react-map-gl';
 import { fitBounds } from '@math.gl/web-mercator';
 
+import Supercluster from 'supercluster';
 import { easeCubic } from 'd3-ease';
 
 import { DEFAULT_VIEWPORT } from '../constants';
@@ -189,6 +190,7 @@ const Map = ({
       ...viewport,
     }));
   }, [viewport]);
+
   return (
     <div
       ref={mapContainerRef}
@@ -225,6 +227,7 @@ const Map = ({
         transitionInterpolator={new FlyToInterpolator()}
         transitionEasing={easeCubic}
       >
+
         {ready
           && loaded
           && !!mapRef.current

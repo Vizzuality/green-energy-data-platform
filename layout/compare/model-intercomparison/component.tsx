@@ -29,6 +29,7 @@ import DataSource from 'components/data-source';
 import LoadingSpinner from 'components/loading-spinner';
 import Line from 'components/indicator-visualizations/line';
 import Bar from 'components/indicator-visualizations/bar';
+import DropdownButton from 'layout/dropdown-button';
 
 // utils
 import {
@@ -311,7 +312,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   return (
     <section className={`flex flex-col  ${className}`}>
-      <section className="flex items-center">
+      <section className="flex items-center flex-wrap">
         <span className="pr-2 whitespace-nowrap">
           {i18next.t('showing')}
           :
@@ -321,15 +322,11 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           {(['line'].includes(visualization) && !!regions.length) && (
           <div className="flex items-center">
             {regions.length === 1 && (
-            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
-              <span className="mr-2 hidden md:flex">
-                {i18next.t('region')}
-                :
-              </span>
-              <span>
-                {displayRegion || i18next.t('selectRegion')}
-              </span>
-            </div>
+              <DropdownButton
+                display={displayRegion}
+                elKey="region"
+                translationKey="selectRegion"
+              />
             )}
             {regions.length > 1 && (
             <Tooltip
@@ -348,15 +345,12 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
               <button
                 type="button"
                 onClick={() => { toggleDropdown('region'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
-                <span className="mr-2 hidden md:flex">
-                  {i18next.t('region')}
-                  :
-                </span>
-                <span>
-                  {displayRegion || i18next.t('selectRegion')}
-                </span>
+                <DropdownButton
+                  display={displayRegion}
+                  elKey="region"
+                  translationKey="selectRegion"
+                />
               </button>
             </Tooltip>
             )}
@@ -365,15 +359,11 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
           {/* Scenario filter */}
           {scenarios.length === 1 && (
-            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4  whitespace-nowrap">
-              <span className="mr-2 hidden md:flex">
-                {i18next.t('scenario')}
-                :
-              </span>
-              <span>
-                {displayScenario || i18next.t('selectScenario')}
-              </span>
-            </div>
+          <DropdownButton
+            display={displayScenario}
+            elKey="scenario"
+            translationKey="selectScenario"
+          />
           )}
           {scenarios?.length > 1 && (
           <Tooltip
@@ -392,29 +382,22 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
             <button
               type="button"
               onClick={() => { toggleDropdown('scenario'); }}
-              className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
             >
-              <span className="mr-2 hidden md:flex">
-                {i18next.t('scenario')}
-                :
-              </span>
-              <span>
-                {displayScenario || i18next.t('selectScenario')}
-              </span>
+              <DropdownButton
+                display={displayScenario}
+                elKey="scenario"
+                translationKey="selectScenario"
+              />
             </button>
           </Tooltip>
             )}
           {/* Units filter */}
           {units.length === 1 && (
-            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
-              <span className="mr-2 hidden md:flex">
-                {i18next.t('unit')}
-                :
-              </span>
-              <span>
-                {displayUnit || i18next.t('selectUnit')}
-              </span>
-            </div>
+          <DropdownButton
+            display={displayUnit}
+            elKey="unit"
+            translationKey="selectUnit"
+          />
           )}
           {units?.length > 1 && (
             <Tooltip
@@ -433,31 +416,26 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
               <button
                 type="button"
                 onClick={() => { toggleDropdown('unit'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
-                <span className="mr-2 hidden md:flex">
-                  {i18next.t('unit')}
-                  :
-                </span>
-                <span>
-                  {displayUnit || i18next.t('selectUnit')}
-                </span>
+                <DropdownButton
+                  display={displayUnit}
+                  elKey="unit"
+                  translationKey="selectUnit"
+                />
               </button>
             </Tooltip>
           )}
         </div>
       </section>
       <div className="flex justify-between mb-4 w-full">
-        <section className="w-1/2">
+        <section className="w-1/2 max-h-128">
           {categories.length > 0 && visualization === 'bar' && (
-            <div className="max-h-128">
-              <FiltersMI
-                models={categories}
-                activeModels={activeModels}
-                onClick={setActiveModel}
-                height={height}
-              />
-            </div>
+          <FiltersMI
+            models={categories}
+            activeModels={activeModels}
+            onClick={setActiveModel}
+            height={height}
+          />
           )}
           {categories.length > 0 && visualization !== 'bar' && (
           <Filters

@@ -23,6 +23,7 @@ import { fetchGroups } from 'services/groups';
 
 // types
 import { GroupProps } from 'types/data';
+import i18next from 'i18next';
 
 interface IndicatorsPageProps {
   groups: GroupProps[]
@@ -64,7 +65,10 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
       <Head title="Green Energy Data Platform" />
       <Hero items={groupsFiltered}>
         <div className="flex container m-auto py-6 lg:px-32 md:px-24 px-16">
-          <p className="py-2 mr-5">Filter by:</p>
+          <p className="py-2 mr-5">
+            {i18next.t('filterBy')}
+            :
+          </p>
           <div className="flex flex-wrap flex-1">
             {groups.map(({ id, slug, name }) => (
               <Button
