@@ -29,13 +29,9 @@ import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import Legend from 'components/legend';
 import LoadingSpinner from 'components/loading-spinner';
-import Sankey from 'components/indicator-visualizations/sankey';
 import SankeyLoops from 'components/indicator-visualizations/sankey-loops';
 
-import { COLORS } from 'components/indicator-visualizations/sankey/constants';
-import CONFIG from 'components/indicator-visualizations/sankey/config';
-
-// import { RootState } from 'store/store';
+import { COLORS } from 'components/indicator-visualizations/sankey-loops/constants';
 
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
@@ -113,7 +109,7 @@ const SankeyChart: FC<ComponentTypes> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const { id: indicatorId, name: indicatorName } = indicatorData;
+  const { id: indicatorId } = indicatorData;
   const {
     data,
     isFetching: isFetchingRecords,
@@ -201,6 +197,7 @@ const SankeyChart: FC<ComponentTypes> = ({
   ]);
 
   const parsedLinks = useMemo(() => uniqBy(data?.links, 'class'), [data]);
+
   const LegendPayload = useMemo(
     () => parsedLinks.map((item) => ({
       label: item.class.charAt(0).toUpperCase() + item.class.slice(1),
@@ -361,8 +358,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   </div>
                 )}
             {(!isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col w-full h-full py-8 min-h-1/2">
-              <div className="w-full">
+            <div className="flex flex-col flex-1 w-96 py-8 h-600">
                 {/* <Sankey
                   indicatorName={indicatorName}
                   indicatorSlug={indicatorSlug}
@@ -370,17 +366,15 @@ const SankeyChart: FC<ComponentTypes> = ({
                   widgetData={data}
                   widgetConfig={CONFIG}
                 /> */}
-                <SankeyLoops
-                  indicatorName={indicatorName}
-                  indicatorSlug={indicatorSlug}
-                  data={data}
-                />
-              </div>
+              <SankeyLoops
+                unit={currentUnit}
+                data={data}
+              />
             </div>
             )}
           </div>
         </section>
-        <section className="flex flex-col justify-between mb-4 ml-8">
+        <section className="flex flex-col justify-between mb-4">
           <Legend
             payload={LegendPayload}
             className="grid lg:grid-cols-4 sm:grid-cols-3 "

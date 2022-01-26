@@ -5,38 +5,69 @@ export interface ChartProps {
   widgetConfig: any,
 }
 
-export type Payload = {
-  [key: string]: string | number | string[] | number[],
-  name: string,
-  value: number,
-};
-
-export interface TooltipProps {
-  payload: Payload[],
-  indicatorName: string,
-  unit: string,
-  className?: string,
-}
-
-type Node = Readonly<{
+export type Target = Readonly<{
   name: string,
 }>;
 
-type Link = Readonly<{
-  class: string,
-  source: number,
-  target: number,
+export type Payload = Readonly<{
+  source: Target,
+  target: Target,
   value: number,
 }>;
 
-type Data = Readonly<{
-  region: string,
-  units: string,
-  year: number,
-  links: Link[]
+export type Node = Readonly<{
+  circular?: boolean
+  class?: string,
+  class_cn?: string,
+  index?: number,
+  path?: string,
+  source?: SankeyElement,
+  target?: SankeyElement,
+  value?: number,
+  width?: number,
+  y0?: number,
+  y1?: number,
 }>;
 
 export interface SankeyData {
   nodes: Node[],
-  data: Data[]
+  links: Node[],
+}
+
+export type SankeyChart = Readonly<{
+  data: SankeyData,
+  unit: string,
+}>;
+
+export interface SankeyChartProps {
+  top: number,
+  left: number,
+  className?: string,
+  data: unknown,
+  size: unknown,
+  nodeId: (string: any) => number | string,
+  nodeAlign?: string,
+  nodeWidth: number,
+  nodePadding: number,
+  nodePaddingRatio: number,
+  extent?: unknown,
+  iterations: number,
+  circularLinkGap?: boolean,
+  children: ({ data: any }) => unknown;
+}
+
+type SankeyElement = Readonly<{
+  name: string,
+  index: number,
+  sourceLinks: any,
+  targetLinks: any,
+  partOfCycle: boolean,
+}>;
+
+export interface TooltipProps {
+  payload?: Payload[],
+  indicatorName?: string,
+  unit?: string,
+  className?: string,
+  data?: Node,
 }

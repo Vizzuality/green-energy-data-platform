@@ -120,20 +120,31 @@ export interface IndicatorMetadata {
   pie?: VisualizationFilters,
 }
 
-type Node = Readonly<{
+type SankeyElement = Readonly<{
   name: string,
+  index: number,
+  sourceLinks: any,
+  targetLinks: any,
+  partOfCycle: boolean,
 }>;
 
-type Link = Readonly<{
-  class: string,
-  source: number,
-  target: number,
-  value: number,
+export type Node = Readonly<{
+  circular?: boolean
+  class?: string,
+  class_cn?: string,
+  index?: number,
+  path?: string,
+  source?: SankeyElement,
+  target?: SankeyElement,
+  value?: number,
+  width?: number,
+  y0?: number,
+  y1?: number,
 }>;
 
 export interface SankeyChartData {
   nodes: Node[],
-  links: Link[]
+  links: Node[],
 }
 
 // pages

@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { FC } from 'react';
 import cx from 'classnames';
 import { Group } from '@vx/group';
 import { sankeyCircular as d3Sankey } from 'd3-sankey-circular';
-import { HierarchyDefaultNode as DefaultNode } from '@vx/hierarchy';
 
-const Sankey = ({
+import { SankeyChartProps } from './types';
+
+const Sankey: FC<SankeyChartProps> = ({
   top,
   left,
   className,
   data,
   size,
-
   nodeId,
   nodeAlign,
   nodeWidth,
@@ -20,9 +20,9 @@ const Sankey = ({
   iterations,
   circularLinkGap,
   children,
-}) => {
-  const sankey = d3Sankey();
-
+}: SankeyChartProps) => {
+  if (!data) return null;
+  const sankey = d3Sankey(data);
   if (size) sankey.size(size);
   if (nodeId) sankey.nodeId(nodeId);
   if (nodeAlign) sankey.nodeAlign(nodeAlign);
@@ -33,16 +33,13 @@ const Sankey = ({
   if (iterations) sankey.iterations(iterations);
   if (circularLinkGap) sankey.circularLinkGap(circularLinkGap);
 
-  if (!data) return null;
   const sankeyData = sankey(data);
-
-  if (children) {
-    return (
-      <Group top={top} left={left} className={cx('vx-sankey', className)}>
-        {children({ data: sankeyData })}
-      </Group>
-    );
-  }
+  if (!children) return null;
+  return (
+    <Group top={top} left={left} className={cx('vx-sankey', className)}>
+      {children({ data: sankeyData })}
+    </Group>
+  );
 };
 
 export default Sankey;

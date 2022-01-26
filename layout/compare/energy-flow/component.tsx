@@ -378,7 +378,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
             )}
           </div>
         </section>
-        <section className="flex flex-col justify-between ml-8 mb-4">
+        <section className="flex flex-col justify-between mb-4">
           <Legend
             payload={LegendPayload}
             className="grid lg:grid-cols-4 sm:grid-cols-3 "

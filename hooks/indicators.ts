@@ -7,6 +7,8 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
+import { useRouter } from 'next/router';
+
 import {
   orderBy, uniq, flatten,
 } from 'lodash';
@@ -38,10 +40,10 @@ import {
   IndicatorProps,
   IndicatorMetadata,
   Record,
-  SankeyChartData,
 } from 'types/data';
 
-import { SankeyData } from 'components/indicator-visualizations/sankey/types';
+import { SankeyLoopsData } from 'components/indicator-visualizations/sankey-loops/types';
+import { Sankey } from './types';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
@@ -108,7 +110,7 @@ export function useIndicator(
 export function useIndicatorMetadata(
   id: string,
   visualization: string,
-  records: Record[] | SankeyChartData,
+  records: Record[] | Sankey | SankeyLoopsData,
   params = {},
   queryOptions = {},
 ) {
@@ -283,20 +285,19 @@ export function useIndicatorRecords(
     });
 
   const { data } = query;
-  const KEY = current === 'cn' ? '全部的' : 'Total';
 
   return useMemo(() => ({
     ...query,
     data: data?.map((d) => ({
       ...d,
-      category_1: d.category_1 === null ? KEY : d.category_1,
-      category_2: d.category_2 === null ? KEY : d.category_2,
+      category_1: d.category_1 === null ? 'Total' : d.category_1,
+      category_2: d.category_2 === null ? 'Total' : d.category_2,
       region: {
         id: d.region_id,
         name: (regions.find(({ id }) => d.region_id === id) || {}).name || '-',
       },
     })),
-  }), [data, regions, query, KEY]);
+  }), [data, regions, query]);
 }
 
 export function useSankeyData(
@@ -310,16 +311,21 @@ export function useSankeyData(
     (state: RootState) => (state.language),
   );
 
+  const router = useRouter();
+
+  const indicator = router.query.subgroup[1];
+  const indicatorIndex = indicator === 'energy-flows-energy-flows' ? 0 : 1;
+
   const {
     visualization,
     ...restParams
   } = params;
 
-  const query = useQuery<SankeyData, Error>(['sankey-data', id, current, params],
+  const query = useQuery<SankeyLoopsData, Error>(['sankey-data', id, current, params],
     () => fetchSankeyData(id, { locale: current, ...restParams }), {
       placeholderData: {
         nodes: [],
-        data: [],
+        links: [],
       },
       ...queryOptions,
     });
@@ -328,11 +334,13 @@ export function useSankeyData(
     isFetching, isFetched, isSuccess,
   } = query;
 
-  const data = mocked[1];
+  const data = useMemo(() => mocked[indicatorIndex], [indicatorIndex]);
 
   const widgetData = useMemo(() => {
-    const nodes = data?.nodes.map(({ name_en: name }) => ({ name, depth: 10 }));
-    const links = flatten(data?.data)
+    const nodes = data?.nodes.map(({ name_en: name }) => ({ name }));
+
+    // remove filter by year when data gets updated to the API
+    const links = flatten(data?.data.filter((d) => d.year === params.year).map((l) => l.links))
       .map((_link) => ({
         ..._link,
         source: nodes[_link.source],
@@ -342,7 +350,7 @@ export function useSankeyData(
       nodes,
       links,
     });
-  }, [data]);
+  }, [data, params]);
 
   return useMemo(() => ({
     isFetching,
