@@ -88,6 +88,11 @@
     overflow: visible;
   }
 
+  .visx-tooltip {
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
   /* News Gothic MT */
   @font-face {
     font-family: 'News Gothic MT';

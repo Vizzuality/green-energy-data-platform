@@ -31,7 +31,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
   const { subgroups } = group;
 
   return (
-    <section className="grid grid-cols-3 grid-flow gap-x-3 gap-y-6.5 py-11">
+    <section className="z-00 grid grid-cols-3 grid-flow gap-x-3 gap-y-6.5 py-11">
       {subgroups.map(({
         slug: subgroupSlug,
         default_indicator,

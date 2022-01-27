@@ -15,6 +15,7 @@ const Tooltip: FC<TooltipProps> = ({
   <Tippy
     {...props}
     interactive
+    zIndex={1000}
     // render={() => (
     //   <div className="relative">
     //     {content}

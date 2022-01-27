@@ -29,12 +29,9 @@ import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import Legend from 'components/legend';
 import LoadingSpinner from 'components/loading-spinner';
-import Sankey from 'components/indicator-visualizations/sankey';
+import SankeyLoops from 'components/indicator-visualizations/sankey-loops';
 
-import { COLORS } from 'components/indicator-visualizations/sankey/constants';
-import CONFIG from 'components/indicator-visualizations/sankey/config';
-
-// import { RootState } from 'store/store';
+import { COLORS } from 'components/indicator-visualizations/sankey-loops/constants';
 
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
@@ -112,7 +109,7 @@ const SankeyChart: FC<ComponentTypes> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const { id: indicatorId, name: indicatorName } = indicatorData;
+  const { id: indicatorId } = indicatorData;
   const {
     data,
     isFetching: isFetchingRecords,
@@ -200,6 +197,7 @@ const SankeyChart: FC<ComponentTypes> = ({
   ]);
 
   const parsedLinks = useMemo(() => uniqBy(data?.links, 'class'), [data]);
+
   const LegendPayload = useMemo(
     () => parsedLinks.map((item) => ({
       label: item.class.charAt(0).toUpperCase() + item.class.slice(1),
@@ -211,7 +209,7 @@ const SankeyChart: FC<ComponentTypes> = ({
     <div className={`flex ${className}`}>
       <div className="flex flex-col h-full w-full">
         <section className="flex flex-col w-full">
-          <div className="flex w-full justify-between">
+          <div className="flex justify-between w-full">
             {/* filters */}
             {/* year filter */}
             <div className="flex items-center flex-wrap">
@@ -221,7 +219,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               </span>
               {years.length === 1 && (
               <div className="items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 md:flex hidden">
-                <span className="mr-2 hidden md:flex">
+                <span className="hidden mr-2 md:flex">
                   {i18next.t('year')}
                   :
                 </span>
@@ -249,7 +247,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('year'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span className="mr-2 hidden md:flex">
+                  <span className="hidden mr-2 md:flex">
                     {i18next.t('year')}
                     :
                   </span>
@@ -263,7 +261,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               {/* unit filter */}
               {units.length === 1 && (
               <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                <span className="mr-2 hidden md:flex">
+                <span className="hidden mr-2 md:flex">
                   {i18next.t('unit')}
                   :
                 </span>
@@ -291,7 +289,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('unit'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span className="mr-2 md:flex hidden">
+                  <span className="hidden mr-2 md:flex">
                     {i18next.t('unit')}
                     :
                   </span>
@@ -304,7 +302,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               {/* region filter  */}
               {regions.length === 1 && (
               <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                <span className="mr-2 hidden md:flex">
+                <span className="hidden mr-2 md:flex">
                   {i18next.t('region')}
                   :
                 </span>
@@ -332,7 +330,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   onClick={() => { toggleDropdown('region'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
-                  <span className="mr-2 hidden md:flex">
+                  <span className="hidden mr-2 md:flex">
                     {i18next.t('region')}
                     :
                   </span>
@@ -345,7 +343,7 @@ const SankeyChart: FC<ComponentTypes> = ({
             </div>
           </div>
 
-          <div className="flex h-full w-full min-h-1/2">
+          <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
             <LoadingSpinner />
             )}
@@ -354,27 +352,30 @@ const SankeyChart: FC<ComponentTypes> = ({
                 && !isFetchingRecords
                 && !!visualization && !!year
                 && (
-                  <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                    <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                  <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                    <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                     <p>Data not found</p>
                   </div>
                 )}
             {(!isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-              <div className="w-full min-h-screen">
-                <Sankey
+            <div className="flex flex-col flex-1 w-96 py-8 h-600">
+                {/* <Sankey
                   indicatorName={indicatorName}
                   indicatorSlug={indicatorSlug}
                   unit={currentUnit}
                   widgetData={data}
                   widgetConfig={CONFIG}
-                />
-              </div>
+                /> */}
+              <SankeyLoops
+                unit={currentUnit}
+                data={data}
+                indicator={indicatorId}
+              />
             </div>
             )}
           </div>
         </section>
-        <section className="flex flex-col justify-between ml-8 mb-4">
+        <section className="flex flex-col justify-between mb-4">
           <Legend
             payload={LegendPayload}
             className="grid lg:grid-cols-4 sm:grid-cols-3 "

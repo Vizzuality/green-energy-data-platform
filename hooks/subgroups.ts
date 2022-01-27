@@ -18,7 +18,7 @@ export function useSubgroup(group_id, subgroup_id, queryConfig = {}) {
     {
       enabled: !!group_id && !!subgroup_id,
       ...queryConfig,
-      // keepPreviousData: true,
+      keepPreviousData: true,
     });
 }
 
