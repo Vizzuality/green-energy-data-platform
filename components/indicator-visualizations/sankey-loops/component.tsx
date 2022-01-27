@@ -15,6 +15,7 @@ import Tooltip from './tooltip';
 import { SankeyChart, Node } from './types';
 
 const SankeyLoops: FC<SankeyChart> = ({
+  indicator,
   data,
   unit,
 }: SankeyChart) => {
@@ -42,27 +43,28 @@ const SankeyLoops: FC<SankeyChart> = ({
 
   const [linkIndex, setOpacityLinkIndex] = useState(null);
   const tooltipPayload = useMemo<Node | {}>(() => tooltipData, [tooltipData]);
+  const widthFix = indicator === '77531248-7467-482f-977b-fcdb39adb3ed' ? 80 : 150;
 
   return (
     <ParentSize>
       {(parent) => (
         <svg
           ref={containerRef}
-          width={parent.width - (parent.left - parent.top)}
+          width={parent.width - (parent.left)}
           height={parent.height}
         >
           <Sankey
             top={parent.top}
             left={0}
             data={data}
-            size={[parent.width - 100, parent.height]}
-      // extent={[[0, 500], [500, 896]]}
-            nodeWidth={10}
+            size={[parent.width - widthFix, parent.height]}
+            extent={[[1, 1], [parent.width - widthFix, parent.height - 6]]}
+            nodeWidth={7}
             nodePadding={10}
             nodePaddingRatio={0.1}
         // nodeAlign="left"
             nodeId={(d) => d.name}
-            iterations={5}
+            iterations={4}
           >
             {({ data: parsedData }) => (
               // const indexNodes = parsedData.nodes
@@ -72,28 +74,30 @@ const SankeyLoops: FC<SankeyChart> = ({
               // const filteredLinks = parsedData.links
               // .filter(({ source, target }) => !indexNodes
               // .includes(source.index) && !indexNodes.includes(target.index))
-              <Group>
+
+              <Group style={{ zIndex: 500 }}>
                 {parsedData.nodes.map((node) => (
-                  <Group top={node.y0} left={node.x0} key={`node-${node.index}`}>
+                  <Group top={node.y0} left={node.x0} key={`node-${node.index}`} style={{ zIndex: 500 }}>
                     <rect
                       id={`rect-${node.index}`}
                       width={node.x1 - node.x0}
                       height={node.y1 - node.y0}
                       fill="#3A3F59"
-                      fillOpacity="1"
+                      fillOpacity="0.5"
                       stroke="white"
                       strokeWidth={2}
+                      style={{ zIndex: 100 }}
                     />
-
                     {
-            (node.y1 - node.y0 > 15)
+            (node.y1 - node.y0 > 15 && node.name !== 'Raw coal production')
             && (
               <Text
-                x={15}
+                x={10}
                 y={((node.y1 - node.y0) / 2)}
                 verticalAnchor="middle"
                 style={{
                   font: '10px sans-serif',
+                  zIndex: 200,
                 }}
               >
                 {node.name}
@@ -105,20 +109,26 @@ const SankeyLoops: FC<SankeyChart> = ({
                 ))}
 
                 <Group strokeOpacity={0.2}>
-                  {parsedData.links.map((link) => (
-                    <path
-                      key={`link-${link.index}`}
-                      d={link.path}
-                      stroke={COLORS[link.class.toLowerCase()]}
-                      strokeWidth={Math.max(1, link.width)}
-                      opacity={linkIndex === link.index ? 0.7 : 0.3}
-                      fill="none"
-                      onMouseEnter={(event) => {
-                        setOpacityLinkIndex(link.index);
-                        handleMouseOver(event, link);
-                      }}
-                    />
-                  ))}
+                  {parsedData.links.map((link) => {
+                    const linkRes = linkIndex === link.index ? 1 : 0.2;
+                    return (
+                      <path
+                        key={`link-${link.index}`}
+                        d={link.path}
+                        stroke={COLORS[link.class.toLowerCase()]}
+                        strokeWidth={Math.max(1, link.width)}
+                        opacity={!linkIndex ? 1 : linkRes}
+                        fill="none"
+                        onMouseEnter={(event) => {
+                          setOpacityLinkIndex(link.index);
+                          handleMouseOver(event, link);
+                        }}
+                        onMouseLeave={() => {
+                          setOpacityLinkIndex(null);
+                        }}
+                      />
+                    );
+                  })}
                 </Group>
               </Group>
             )}

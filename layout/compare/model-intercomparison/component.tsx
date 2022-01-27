@@ -189,7 +189,6 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     [records, filters, categories, groupSlug],
   );
 
-  const colors = useColors(categories.length);
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(records), [records],
   );
@@ -201,7 +200,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     () => ChartConfig(widgetDataKeys, current)[configType],
     [configType, widgetDataKeys, current],
   );
-
+  const colors = useColors(widgetDataKeys.length);
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(
     () => getModelIntercomparisonData(
       filters, filteredRecords, activeModels,

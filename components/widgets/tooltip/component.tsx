@@ -32,7 +32,7 @@ const Tooltip: FC<TooltipProps> = ({
   const unit = payload[0]?.payload?.unit;
 
   return (
-    <div className={cx('inline-flex flex-col justify-center text-white text-center bg-gray1 rounded-2xl hover:opacity-90 px-5 py-2 z-50',
+    <div className={cx('inline-flex flex-col justify-center text-white text-center bg-gray1 rounded-2xl hover:opacity-90 px-5 py-2',
       { [className]: className })}
     >
       {label && unit && (
@@ -51,7 +51,7 @@ const Tooltip: FC<TooltipProps> = ({
         </span>
       </div>
       )}
-      <ul className="flex flex-col items-center  text-sm">
+      <ul className="flex flex-col items-center text-sm max-h-128 overflow-auto pointer-events-auto">
         {payload.map(({
           name, value, color, payload: { fill },
         }) => (

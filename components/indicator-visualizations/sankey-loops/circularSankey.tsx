@@ -23,6 +23,7 @@ const Sankey: FC<SankeyChartProps> = ({
 }: SankeyChartProps) => {
   if (!data) return null;
   const sankey = d3Sankey(data);
+
   if (size) sankey.size(size);
   if (nodeId) sankey.nodeId(nodeId);
   if (nodeAlign) sankey.nodeAlign(nodeAlign);

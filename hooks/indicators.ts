@@ -52,14 +52,15 @@ export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
     (state: RootState) => (state.language),
   );
   const query = useQuery(['fetch-indicators', current],
-    () => fetchIndicators(group_id, subgroup_id, { locale: current }), { ...queryConfig });
+    () => fetchIndicators(group_id, subgroup_id, { locale: current }), {
+      keepPreviousData: true,
+      ...queryConfig,
+    });
 
   const {
-    // data,
+    data,
     status, error, isSuccess, isLoading,
   } = query;
-
-  const data = mocked[1];
 
   const relatedIndicators = useMemo(() => data, [data]);
 

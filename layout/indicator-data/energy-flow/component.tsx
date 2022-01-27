@@ -369,6 +369,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               <SankeyLoops
                 unit={currentUnit}
                 data={data}
+                indicator={indicatorId}
               />
             </div>
             )}

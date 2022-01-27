@@ -29,13 +29,26 @@ export type Node = Readonly<{
   y1?: number,
 }>;
 
-export interface SankeyData {
-  nodes: Node[],
-  links: Node[],
+export type NodeLoops = Readonly<{
+  name: string,
+}>;
+
+export type LinkLoops = Readonly<{
+  source: NodeLoops,
+  target: NodeLoops,
+  value: number,
+  class: string,
+  class_cn: string,
+}>;
+
+export interface SankeyLoopsData {
+  nodes: NodeLoops[],
+  links: LinkLoops[],
 }
 
 export type SankeyChart = Readonly<{
-  data: SankeyData,
+  indicator: string,
+  data: SankeyLoopsData,
   unit: string,
 }>;
 
