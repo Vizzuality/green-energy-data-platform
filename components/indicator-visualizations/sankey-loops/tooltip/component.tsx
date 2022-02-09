@@ -10,6 +10,7 @@ const Tooltip: FC<TooltipProps> = ({
   unit,
 }: TooltipProps) => {
   if (!data) return null;
+
   const { source, target, value } = data;
 
   return (

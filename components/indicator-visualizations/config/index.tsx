@@ -25,6 +25,7 @@ const DefaultTick = {
   fill: '#3A3F59',
   opacity: 0.5,
   fontSize: '14px',
+  
 };
 
 const Tick: FC<TickProps> = (({
@@ -143,6 +144,7 @@ const ChartConfig = (categories, language) => {
       xAxis: {
         dataKey: 'year',
         tick: DefaultTick,
+        interval: 0,
       },
       yAxis: {
         tick: DefaultTick,

@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface ChartProps {
   indicatorName: string,
   indicatorSlug: string,
@@ -7,15 +9,27 @@ export interface ChartProps {
 
 export type Target = Readonly<{
   name: string,
+  colr: string,
 }>;
+
+export interface Payload2 {
+  circular?: boolean,
+  circulanLinkID?: number,
+  circularLinkType?: string,
+  circularPathData?: unknown,
+  class?: string,
+  class_cn?: string,
+  index?: number,
+  path?: string,
+  source: any,
+  target: any,
+  value: number,
+  width?: number,
+  y0?: number,
+  y1?: number,
+};
 
 export type Payload = Readonly<{
-  source: Target,
-  target: Target,
-  value: number,
-}>;
-
-export type Node = Readonly<{
   circular?: boolean
   class?: string,
   class_cn?: string,
@@ -29,8 +43,26 @@ export type Node = Readonly<{
   y1?: number,
 }>;
 
+export type Node = Readonly<{
+  col: number,
+  column: number,
+  depth: number,
+  height: number,
+  index: number,
+  name: string,
+  partOfCycle: boolean
+  sourceLinks: unknown[],
+  targetLinks: unknown[],
+  value: number,
+  x0: number,
+  x1: number,
+  y0: number,
+  y1: number,
+}>;
+
 export type NodeLoops = Readonly<{
   name: string,
+  col: number,
 }>;
 
 export type LinkLoops = Readonly<{
@@ -66,7 +98,8 @@ export interface SankeyChartProps {
   extent?: unknown,
   iterations: number,
   circularLinkGap?: boolean,
-  children: ({ data: any }) => unknown;
+  sortNodes?: string,
+  children: ( data: unknown ) => unknown;
 }
 
 type SankeyElement = Readonly<{
@@ -78,9 +111,8 @@ type SankeyElement = Readonly<{
 }>;
 
 export interface TooltipProps {
-  payload?: Payload[],
+  data: Payload,
   indicatorName?: string,
   unit?: string,
   className?: string,
-  data?: Node,
 }

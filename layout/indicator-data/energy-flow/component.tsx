@@ -218,35 +218,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                 :
               </span>
               {years.length === 1 && (
-              <div className="items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 md:flex hidden">
-                <span className="hidden mr-2 md:flex">
-                  {i18next.t('year')}
-                  :
-                </span>
-                <span>
-                  {displayYear || i18next.t('selectYear')}
-                </span>
-              </div>
-              )}
-              {years.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.year}
-                interactive
-                onClickOutside={() => closeDropdown('year')}
-                content={(
-                  <DropdownContent
-                    list={years}
-                    keyEl="year"
-                    onClick={handleChange}
-                  />
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('year'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
+                <div className="items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 md:flex hidden">
                   <span className="hidden mr-2 md:flex">
                     {i18next.t('year')}
                     :
@@ -254,41 +226,41 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <span>
                     {displayYear || i18next.t('selectYear')}
                   </span>
-                  <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                </button>
-              </Tooltip>
+                </div>
+              )}
+              {years.length > 1 && (
+                <Tooltip
+                  placement="bottom-start"
+                  visible={dropdownVisibility.year}
+                  interactive
+                  onClickOutside={() => closeDropdown('year')}
+                  content={(
+                    <DropdownContent
+                      list={years}
+                      keyEl="year"
+                      onClick={handleChange}
+                    />
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('year'); }}
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  >
+                    <span className="hidden mr-2 md:flex">
+                      {i18next.t('year')}
+                      :
+                    </span>
+                    <span>
+                      {displayYear || i18next.t('selectYear')}
+                    </span>
+                    <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                  </button>
+                </Tooltip>
               )}
               {/* unit filter */}
               {units.length === 1 && (
-              <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                <span className="hidden mr-2 md:flex">
-                  {i18next.t('unit')}
-                  :
-                </span>
-                <span>
-                  {displayUnit || i18next.t('selectUnit')}
-                </span>
-              </div>
-              )}
-              {units.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.unit}
-                interactive
-                onClickOutside={() => closeDropdown('unit')}
-                content={(
-                  <DropdownContent
-                    list={units}
-                    keyEl="unit"
-                    onClick={handleChange}
-                  />
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('unit'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
+                <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
                   <span className="hidden mr-2 md:flex">
                     {i18next.t('unit')}
                     :
@@ -296,40 +268,40 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <span>
                     {displayUnit || i18next.t('selectUnit')}
                   </span>
-                </button>
-              </Tooltip>
+                </div>
+              )}
+              {units.length > 1 && (
+                <Tooltip
+                  placement="bottom-start"
+                  visible={dropdownVisibility.unit}
+                  interactive
+                  onClickOutside={() => closeDropdown('unit')}
+                  content={(
+                    <DropdownContent
+                      list={units}
+                      keyEl="unit"
+                      onClick={handleChange}
+                    />
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('unit'); }}
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  >
+                    <span className="hidden mr-2 md:flex">
+                      {i18next.t('unit')}
+                      :
+                    </span>
+                    <span>
+                      {displayUnit || i18next.t('selectUnit')}
+                    </span>
+                  </button>
+                </Tooltip>
               )}
               {/* region filter  */}
               {regions.length === 1 && (
-              <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
-                <span className="hidden mr-2 md:flex">
-                  {i18next.t('region')}
-                  :
-                </span>
-                <span>
-                  {displayRegion || i18next.t('selectRegion')}
-                </span>
-              </div>
-              )}
-              {regions.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.region}
-                interactive
-                onClickOutside={() => closeDropdown('region')}
-                content={(
-                  <DropdownContent
-                    list={regions}
-                    keyEl="region"
-                    onClick={handleChange}
-                  />
-                      )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('region'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
-                >
+                <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
                   <span className="hidden mr-2 md:flex">
                     {i18next.t('region')}
                     :
@@ -337,41 +309,62 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <span>
                     {displayRegion || i18next.t('selectRegion')}
                   </span>
-                </button>
-              </Tooltip>
+                </div>
+              )}
+              {regions.length > 1 && (
+                <Tooltip
+                  placement="bottom-start"
+                  visible={dropdownVisibility.region}
+                  interactive
+                  onClickOutside={() => closeDropdown('region')}
+                  content={(
+                    <DropdownContent
+                      list={regions}
+                      keyEl="region"
+                      onClick={handleChange}
+                    />
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('region'); }}
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                  >
+                    <span className="hidden mr-2 md:flex">
+                      {i18next.t('region')}
+                      :
+                    </span>
+                    <span>
+                      {displayRegion || i18next.t('selectRegion')}
+                    </span>
+                  </button>
+                </Tooltip>
               )}
             </div>
           </div>
 
           <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
-            <LoadingSpinner />
+              <LoadingSpinner />
             )}
             {isFetchedRecords
-                && !data
-                && !isFetchingRecords
-                && !!visualization && !!year
-                && (
-                  <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
-                    <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-                    <p>Data not found</p>
-                  </div>
-                )}
+              && !data
+              && !isFetchingRecords
+              && !!visualization && !!year
+              && (
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
+                  <p>Data not found</p>
+                </div>
+              )}
             {(!isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col flex-1 w-96 py-8 h-600">
-                {/* <Sankey
-                  indicatorName={indicatorName}
-                  indicatorSlug={indicatorSlug}
+              <div className="flex flex-col flex-1 w-96 py-8 h-700">
+                <SankeyLoops
                   unit={currentUnit}
-                  widgetData={data}
-                  widgetConfig={CONFIG}
-                /> */}
-              <SankeyLoops
-                unit={currentUnit}
-                data={data}
-                indicator={indicatorId}
-              />
-            </div>
+                  data={data}
+                  indicator={indicatorId}
+                />
+              </div>
             )}
           </div>
         </section>

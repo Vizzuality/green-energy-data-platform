@@ -17,12 +17,13 @@ const Sankey: FC<SankeyChartProps> = ({
   nodePadding,
   nodePaddingRatio,
   extent,
+  sortNodes,
   iterations,
   circularLinkGap,
   children,
 }: SankeyChartProps) => {
   if (!data) return null;
-  const sankey = d3Sankey(data);
+  const sankey = d3Sankey();
 
   if (size) sankey.size(size);
   if (nodeId) sankey.nodeId(nodeId);
@@ -30,11 +31,14 @@ const Sankey: FC<SankeyChartProps> = ({
   if (nodeWidth) sankey.nodeWidth(nodeWidth);
   if (nodePadding) sankey.nodePadding(nodePadding);
   if (nodePaddingRatio) sankey.nodePaddingRatio(nodePaddingRatio);
+  if (sortNodes) sankey.sortNodes(sortNodes);
   if (extent) sankey.extent(extent);
   if (iterations) sankey.iterations(iterations);
   if (circularLinkGap) sankey.circularLinkGap(circularLinkGap);
 
+ 
   const sankeyData = sankey(data);
+
   if (!children) return null;
   return (
     <Group top={top} left={left} className={cx('vx-sankey', className)}>
