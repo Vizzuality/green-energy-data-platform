@@ -30,7 +30,7 @@ export const useGroup = (id: string | string[], queryConfig = {}) => {
     () => fetchGroup(id, { locale: current })
       .then((data) => data),
     {
-    // keepPreviousData: true,
+    keepPreviousData: true,
       enabled: !!id,
       ...queryConfig,
     });

@@ -48,6 +48,7 @@ const FiltersMI: FC<FiltersProps> = ({
 
   return (
     <div
+      key={models.length}
       className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full max-h-full',
         { [className]: className })}
       style={{ height }}

@@ -134,7 +134,7 @@ const GroupPage: FC = () => {
         </Tooltip>
       </Hero>
       <div className="container pb-20 m-auto">
-        <section className="max-w-6xl m-auto -mt-40">
+        <section className="z-10 max-w-6xl m-auto -mt-40">
           <IndicatorData />
           {!defaultVisualization?.includes('sankey') && <WidgetsGrid />}
         </section>
