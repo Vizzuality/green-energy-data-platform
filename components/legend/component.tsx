@@ -7,13 +7,14 @@ const Legend: FC<WidgetLegendProps> = ({
   className = '',
   payload = [],
   onClick,
+  interactive,
 }: WidgetLegendProps) => {
   const [active, setActive] = useState(null);
 
   const handleClick = useCallback((label) => {
     onClick(label);
     setActive(label);
-  }, []);
+  }, [onClick]);
 
   return (
     <div className="w-full max-h-72 inline-flex flex-col justify-start text-center bg-white rounded-md border-gray5 border-6 hover:opacity-90 px-1.5 text-gray1">
@@ -22,7 +23,11 @@ const Legend: FC<WidgetLegendProps> = ({
           <li
             key={label}
             className={cx('flex items-center rounded-md focus:bg-blue text-left text-sm whitespace-nowrap w-full text-ellipsis',
-              { 'opacity-50': !!active && active !== label })}
+              {
+                'opacity-50': !!active && active !== label,
+                'font-bold': !!active && active === label,
+                'cursor-pointer': !!interactive,
+              })}
             onClick={() => handleClick(label)}
           >
             <span
@@ -32,21 +37,24 @@ const Legend: FC<WidgetLegendProps> = ({
             <span className="py-1 pl-6 text-left">{label}</span>
           </li>
         ))}
-        {!!active && (
-          <li
-            key="all"
-            onClick={() => handleClick(null)}
-            className="flex items-center rounded-md focus:bg-blue text-left text-sm whitespace-nowrap w-full text-ellipsis"
-          >
-            <span
-              className="flex w-4 h-4 ml-3 rounded-full shrink"
-              style={{
-                backgroundColor: '#A97500',
-              }}
-            />
-            <span className="py-1 pl-6 text-left">All categories</span>
-          </li>
-        )}
+        {!!active
+          && (
+            <li
+              key="all"
+              role="button"
+              aria-pressed={false}
+              onClick={() => handleClick(null)}
+              className="flex items-center rounded-md focus:bg-blue text-left text-sm whitespace-nowrap w-full text-ellipsis"
+            >
+              <span
+                className="flex w-4 h-4 ml-3 rounded-full shrink"
+                style={{
+                  backgroundColor: '#A97500',
+                }}
+              />
+              <span className="py-1 pl-6 text-left">All categories</span>
+            </li>
+          )}
       </ul>
     </div>
   );

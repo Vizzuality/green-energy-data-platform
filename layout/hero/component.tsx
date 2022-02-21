@@ -44,7 +44,7 @@ const Hero: FC<HeroProps> = ({
         <Header theme={theme === 'transparent' ? 'dark' : 'light'}>
           <div className="flex items-center">
             <UserDropdown theme={theme} className="mr-4" />
-            <Link href={{ pathname: "/indicators", query: { fallbackUrl: encodeURIComponent(asPath) } }} passHref>
+            <Link href={{ pathname: '/indicators', query: { fallbackUrl: encodeURIComponent(asPath) } }} passHref>
               <a
                 href="/indicators"
                 className={cx('ml-3 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm',

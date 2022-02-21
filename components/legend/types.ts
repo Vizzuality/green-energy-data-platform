@@ -7,5 +7,6 @@ export interface WidgetLegendProps {
   className?: string,
   payload: Payload[],
   onClick?: (string) => void,
-  ref?: unknown
+  ref?: unknown,
+  interactive?: boolean,
 }
