@@ -43,7 +43,7 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
-import { useColors } from 'hooks/utils';
+import { useColors, useOpacityColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
 
@@ -188,12 +188,16 @@ const IndicatorChart: FC<ComponentTypes> = ({
     [records, filters, categories, groupSlug],
   );
 
-  const colors = useColors(categories.length);
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(records), [records],
   );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
+
+  const mainColors = useColors(widgetDataKeys.length);
+  const colorsOpacity = useOpacityColors(mainColors);
+  const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
+
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys, current)[visualization],
     [visualization, widgetDataKeys, current],
@@ -441,13 +445,14 @@ const IndicatorChart: FC<ComponentTypes> = ({
                       <button
                         type="button"
                         onClick={() => { toggleDropdown('unit'); }}
-                        className={cx('flex items-center cursor-pointer whitespace-nowrap',
+                        className={cx('flex items-center cursor-pointer whitespace-nowrap hover:font-bold',
                           {
                             'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
                             'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
                           })}
                       >
                         <span>{displayUnit}</span>
+                        <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
                       </button>
                     </Tooltip>
                   )}

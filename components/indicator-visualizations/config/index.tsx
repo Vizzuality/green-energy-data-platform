@@ -122,7 +122,10 @@ const ChartConfig = (categories, language) => {
         height: '1px',
         strokeDasharray: '10 5',
       },
+      label: 'hola',
+      type: 'adios',
       lines: getLines(),
+      labelSlug: 'holi',
       gradients: [
         {
           offset: '7.05%',
@@ -170,7 +173,6 @@ const ChartConfig = (categories, language) => {
       tooltip: {
         isAnimationActive: false,
         content: TooltipContent,
-
       },
     },
     bar: {

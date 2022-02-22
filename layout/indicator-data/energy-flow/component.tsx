@@ -221,6 +221,12 @@ const SankeyChart: FC<ComponentTypes> = ({
     }
   }, [data]);
 
+  useEffect(() => {
+    if (data) {
+      setFilteredData(data);
+    }
+  }, [data]);
+
   return (
     <div className={`flex ${className}`}>
       <div className="flex flex-col h-full w-full">
