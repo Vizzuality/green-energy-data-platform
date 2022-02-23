@@ -23,10 +23,16 @@ const Hero: FC<HeroProps> = ({
   items,
   children,
 }: HeroProps) => {
-  const router = useRouter();
+  const { query, push } = useRouter();
+  const { fallbackUrl } = query;
 
   const handleClose = () => {
-    router.back();
+    if (!!fallbackUrl) {
+      push(decodeURIComponent(`${fallbackUrl}`));
+    }
+    else {
+      push('/');
+    }
   };
 
   return (

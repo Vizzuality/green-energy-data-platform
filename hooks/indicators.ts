@@ -307,8 +307,8 @@ export function useSankeyData(
 
   const {
     visualization,
-    region,
-    unit,
+    // region,
+    // unit,
     ...restParams
   } = params;
 

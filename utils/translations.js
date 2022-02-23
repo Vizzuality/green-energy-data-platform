@@ -84,11 +84,11 @@ export const resources = {
       distribution: 'Distribution',
       map: 'Map',
       provinces: 'Provinces',
+      province: 'Province',
       table: 'Table',
       global: 'Global',
       breakDown: 'Break-down (2035 - 2050)',
       adminPanel: 'Admin panel',
-
     },
   },
   cn: {
@@ -167,6 +167,7 @@ export const resources = {
       distribution: '分配',
       map: '地图',
       provinces: '省份',
+      province: '省',
       table: '桌子',
       global: '全球的',
       breakDown: '分解 (2035 - 2050)',

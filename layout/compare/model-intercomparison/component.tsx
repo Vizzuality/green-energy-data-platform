@@ -45,7 +45,7 @@ import { setFilters } from 'store/slices/indicator';
 import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
 
-import { useColors } from 'hooks/utils';
+import { useColors, useOpacityColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
 
@@ -201,7 +201,10 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     [configType, widgetDataKeys, current],
   );
 
-  const colors = useColors(widgetDataKeys.length);
+  const mainColors = useColors(widgetDataKeys.length);
+  const colorsOpacity = useOpacityColors(mainColors);
+  const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
+
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(
     () => getModelIntercomparisonData(
       filters, filteredRecords, activeModels,

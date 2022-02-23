@@ -131,6 +131,8 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
+  const [filteredData, setFilteredData] = useState(data);
+
   const {
     years,
     defaultYear,
@@ -138,9 +140,9 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     defaultUnit,
     regions,
     defaultRegion,
-  } = useIndicatorMetadata(indicatorSlug, 'sankey', data, {}, {
+  } = useIndicatorMetadata(indicatorSlug, 'sankey', filteredData, {}, {
     refetchOnWindowFocus: false,
-    enabled: data && !!indicatorSlug,
+    enabled: filteredData && !!indicatorSlug,
   });
 
   const currentYear = useMemo<number>(
@@ -225,7 +227,23 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     })), [parsedLinks],
   );
 
-  const handleLinks = useCallback((label) => console.log(data, label), []);
+  const handleLinks = useCallback((label) => {
+    if (!label) {
+      setFilteredData(data);
+    } else {
+      const widgetData = ({
+        links: data.links.filter((d) => d.class === label),
+        nodes: data.nodes,
+      });
+      setFilteredData(widgetData);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      setFilteredData(data);
+    }
+  }, [data]);
 
   return (
     <div className={`flex ${className}`}>
@@ -372,7 +390,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
                   indicatorName={indicatorName}
                   indicatorSlug={indicatorSlug}
                   unit={currentUnit}
-                  widgetData={data}
+                  widgetData={filteredData}
                   widgetConfig={CONFIG}
                 />
               </div>
