@@ -54,9 +54,9 @@ const Chart: FC<ChartProps> = ({
             containerWidth={width}
           />
         )}
-        nodePaddingRatio={30}
+        nodePaddingRatio={0.8}
         linkCurvature={0.5}
-        iterations={0}
+        iterations={7}
         link={<DemoSankeyLink />}
         className="overflow-visible"
         nodePadding={nodePadding}

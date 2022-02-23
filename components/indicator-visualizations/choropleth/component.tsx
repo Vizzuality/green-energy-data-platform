@@ -234,54 +234,57 @@ const MapContainer: FC<MapContainerProps> = (
                 <Layer key={l.id} {...l} />
               ))}
             </LayerManager>
-            {((!!hoverInteractions?.properties?.total || !!hoverInteractions?.properties?.Total || spiderTooltipInfoHeaders.length > 0) && hasInteraction && (
-              <Popup
-                latitude={lngLat[1]}
-                longitude={lngLat[0]}
-                closeButton={false}
-                tipSize={10}
-                className="z-20 max-w-sm rounded-2xl"
-              >
-                {hasInteraction
-              && !spiderInfo
-              && hoverInteractions?.properties?.point_count > 1
-              && (
-                <div className="flex flex-col">
-                  <div className="flex">
-                    <span className="mr-2 text-sm">
-                      {i18next.t('numberPlants')}
-                    </span>
-                    <span className="mr-2 text-sm">{hoverInteractions?.properties?.point_count}</span>
-                  </div>
-                </div>
-              )}
+            {((!!hoverInteractions?.properties?.total
+              || !!hoverInteractions?.properties?.Total
+              || spiderTooltipInfoHeaders.length > 0)
+              && hasInteraction && (
+                <Popup
+                  latitude={lngLat[1]}
+                  longitude={lngLat[0]}
+                  closeButton={false}
+                  tipSize={10}
+                  className="z-20 max-w-sm rounded-2xl"
+                >
+                  {hasInteraction
+                    && !spiderInfo
+                    && hoverInteractions?.properties?.point_count > 1
+                    && (
+                      <div className="flex flex-col">
+                        <div className="flex">
+                          <span className="mr-2 text-sm">
+                            {i18next.t('numberPlants')}
+                          </span>
+                          <span className="mr-2 text-sm">{hoverInteractions?.properties?.point_count}</span>
+                        </div>
+                      </div>
+                    )}
 
-                {!!tooltipInfoHeaders.length && (
-                <ul>
-                  {tooltipInfoHeaders.map((t) => (
-                    <li key={`${t}-${tooltipInfo[t]}`}>
-                      <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                      {(t === 'Total' || t === 'total')
-                        ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
-                        : <span className="text-sm">{tooltipInfo[t]}</span>}
-                    </li>
-                  ))}
-                </ul>
-                )}
+                  {!!tooltipInfoHeaders.length && (
+                    <ul>
+                      {tooltipInfoHeaders.map((t) => (
+                        <li key={`${t}-${tooltipInfo[t]}`}>
+                          <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                          {(t === 'Total' || t === 'total')
+                            ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
+                            : <span className="text-sm">{tooltipInfo[t]}</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
-                {spiderTooltipInfoHeaders.length > 0 && (
-                <ul>
-                  {spiderTooltipInfoHeaders.map((t) => (
-                    <li key={`${t}-${spiderTooltipInfo[t]}`}>
-                      <span className="mr-4 text-xs">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                      {(t === 'Total' || t === 'total')
-                        ? <span className="text-xs">{numberFormat(spiderTooltipInfo[t])}</span>
-                        : <span className="text-xs">{spiderTooltipInfo[t]}</span>}
-                    </li>
-                  ))}
-                </ul>
-                )}
-              </Popup>
+                  {spiderTooltipInfoHeaders.length > 0 && (
+                    <ul>
+                      {spiderTooltipInfoHeaders.map((t) => (
+                        <li key={`${t}-${spiderTooltipInfo[t]}`}>
+                          <span className="mr-4 text-xs">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                          {(t === 'Total' || t === 'total')
+                            ? <span className="text-xs">{numberFormat(spiderTooltipInfo[t])}</span>
+                            : <span className="text-xs">{spiderTooltipInfo[t]}</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </Popup>
             ))}
           </>
         )}
@@ -293,34 +296,34 @@ const MapContainer: FC<MapContainerProps> = (
         />
       )}
       {hasInteraction && disclaimerVisibility && (
-      <Disclaimer
-        className="transform -translate-x-1/2 top-4 left-1/2"
-        message={i18next.t('fullscreenDisclaimer')}
-        onDisclaimerClose={setDisclaimerVisibility}
-      />
+        <Disclaimer
+          className="transform -translate-x-1/2 top-4 left-1/2"
+          message={i18next.t('fullscreenDisclaimer')}
+          onDisclaimerClose={setDisclaimerVisibility}
+        />
       )}
       {hasInteraction
-      && (
-      <Legend onChangeOrder={onChangeOrder}>
-        {sortedItems?.map((i) => {
-          const { type, items } = i;
+        && (
+          <Legend onChangeOrder={onChangeOrder}>
+            {sortedItems?.map((i) => {
+              const { type, items } = i;
 
-          return (
-            <LegendItem key={i.id} {...i}>
+              return (
+                <LegendItem key={i.id} {...i}>
 
-              {type === 'choropleth' && (
-              <LegendTypeChoropleth className="text-sm text-gray-300" items={items} />
-              )}
+                  {type === 'choropleth' && (
+                    <LegendTypeChoropleth className="text-sm text-gray-300" items={items} />
+                  )}
 
-              {type === 'gradient' && (
-              <LegendTypeGradient className="text-sm text-gray-300" items={items} />
-              )}
+                  {type === 'gradient' && (
+                    <LegendTypeGradient className="text-sm text-gray-300" items={items} />
+                  )}
 
-            </LegendItem>
-          );
-        })}
-      </Legend>
-      )}
+                </LegendItem>
+              );
+            })}
+          </Legend>
+        )}
       {hasInteraction && disclaimerVisibility && (
         <Disclaimer
           className="transform -translate-x-1/2 top-4 left-1/2"

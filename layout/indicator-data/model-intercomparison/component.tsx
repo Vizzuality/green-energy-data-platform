@@ -44,7 +44,7 @@ import { RootState } from 'store/store';
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
-import { useColors } from 'hooks/utils';
+import { useColors, useOpacityColors } from 'hooks/utils';
 
 import DropdownContent from 'layout/dropdown-content';
 
@@ -191,7 +191,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     () => filterRecords(records, filters, categories, groupSlug),
     [records, filters, categories, groupSlug],
   );
-  const colors = useColors(categories.length);
+
   const subcategories = useMemo(
     () => getSubcategoriesFromRecords(records), [records],
   );
@@ -204,13 +204,16 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     () => ChartConfig(widgetDataKeys, current)[configType],
     [configType, widgetDataKeys, current],
   );
-
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(
     () => getModelIntercomparisonData(
       filters, filteredRecords, activeModels,
     ) as ChartLine[] | ChartBar[],
     [filters, filteredRecords, activeModels],
   );
+
+  const mainColors = useColors(widgetDataKeys.length);
+  const colorsOpacity = useOpacityColors(mainColors);
+  const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
