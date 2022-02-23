@@ -3,6 +3,9 @@ import React, {
 } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
+
 import cx from 'classnames';
 
 import isEmpty from 'lodash/isEmpty';
@@ -16,7 +19,6 @@ import ReactMapGL, {
 } from 'react-map-gl';
 import { fitBounds } from '@math.gl/web-mercator';
 
-import Supercluster from 'supercluster';
 import { easeCubic } from 'd3-ease';
 
 import { DEFAULT_VIEWPORT } from '../constants';
@@ -191,6 +193,14 @@ const Map = ({
     }));
   }, [viewport]);
 
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+
+  const LABELS = current === 'en' ? process.env.NEXT_PUBLIC_MAPBOX_STYLES_ENGLISH_LABELS : process.env.NEXT_PUBLIC_MAPBOX_STYLES_CHINESE_LABELS;
+
   return (
     <div
       ref={mapContainerRef}
@@ -207,7 +217,7 @@ const Map = ({
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
         // CUSTOM PROPS FROM REACT MAPBOX API
         {...mapboxProps}
-        mapStyle="mapbox://styles/arimariza/citmopo1w002u2hmse48yrwf9"
+        mapStyle={`${process.env.NEXT_PUBLIC_MAPBOX_STYLES_ACCOUNT}/${LABELS}`}
         // VIEWPORT
         {...mapViewport}
         width="100%"

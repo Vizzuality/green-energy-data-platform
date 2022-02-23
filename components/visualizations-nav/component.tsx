@@ -81,7 +81,7 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
               />
               {!mobile && (
               <span className={cx('ml-3 hidden sm:block', { 'text-gray2': active === id })}>
-                {label}
+                {i18next.t(label)}
               </span>
               )}
             </div>

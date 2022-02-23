@@ -2,27 +2,27 @@ export const GeneralVisualizationsOptions = [
   {
     id: 'line',
     icon: 'line',
-    label: 'Trend',
+    label: 'trend',
   },
   {
     id: 'pie',
     icon: 'pie',
-    label: 'Distribution',
+    label: 'distribution',
   },
   {
     id: 'choropleth',
     icon: 'map',
-    label: 'Map',
+    label: 'map',
   },
   {
     id: 'bar',
     icon: 'bar',
-    label: 'Provinces',
+    label: 'provinces',
   },
   {
     id: 'table',
     icon: 'columns',
-    label: 'Table',
+    label: 'table',
   },
 ];
 
@@ -30,16 +30,16 @@ export const ModelIntercomparisonVisualizationsOptions = [
   {
     id: 'line',
     icon: 'line',
-    label: 'Global',
+    label: 'global',
   },
   {
     id: 'bar',
     icon: 'bar',
-    label: 'Break-down (2035 - 2050)',
+    label: 'breakDown',
   },
   {
     id: 'table',
     icon: 'columns',
-    label: 'Table',
+    label: 'table',
   },
 ];
