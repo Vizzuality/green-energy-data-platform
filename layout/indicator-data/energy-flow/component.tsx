@@ -42,7 +42,6 @@ import i18next from 'i18next';
 import DropdownContent from 'layout/dropdown-content';
 
 import { ComponentTypes } from 'types/data';
-import { Label } from 'recharts';
 
 const SankeyChart: FC<ComponentTypes> = ({
   className,

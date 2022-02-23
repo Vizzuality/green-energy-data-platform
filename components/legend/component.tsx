@@ -1,8 +1,6 @@
 import React, { FC, useState, useCallback } from 'react';
 import cx from 'classnames';
 
-import Icon from 'components/icon';
-
 import { WidgetLegendProps } from './types';
 
 const Legend: FC<WidgetLegendProps> = ({
@@ -43,14 +41,15 @@ const Legend: FC<WidgetLegendProps> = ({
             <span
               className="flex w-4 h-4 ml-3 rounded-full shrink"
               style={{
-                backgroundColor: '#A97500'
+                backgroundColor: '#A97500',
               }}
             />
             <span className="py-1 pl-6 text-left">All categories</span>
-          </li>)}
+          </li>
+        )}
       </ul>
     </div>
-  )
+  );
 };
 
 export default Legend;

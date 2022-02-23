@@ -47,6 +47,8 @@ const UserDropdown: FC<UserDropdownProps> = ({
     );
   }
 
+  const isAdmin = user?.role === 'admin';
+
   return (
     <Tooltip
       visible={visible}
@@ -54,9 +56,13 @@ const UserDropdown: FC<UserDropdownProps> = ({
       content={(
         <div className="justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 divide-y divide-white divide-opacity-10">
           <Link key="profile-link" href="/profile">
-            <a className="px-12 py-2 rounded-t-xl hover:bg-white hover:text-gray3 hover:rounded-t-xl" href="/profile">Profile</a>
+            <a className="px-12 py-2 rounded-t-xl hover:bg-white hover:text-gray3 hover:rounded-t-xl" href="/profile">{i18next.t('profile')}</a>
           </Link>
-
+          {isAdmin && (
+          <Link key="admin-panel" href={process.env.NEXT_PUBLIC_ADMIN_PANEL}>
+            <a className="px-12 py-2 hover:bg-white hover:text-gray3" href={process.env.NEXT_PUBLIC_ADMIN_PANEL}>{i18next.t('adminPanel')}</a>
+          </Link>
+          )}
           <button className="flex relative px-12 py-2 rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-b-x" type="button" onClick={handleClick}>
             {i18next.t('logout')}
             <Icon ariaLabel="Log out" className="absolute right-4" name="logout" size="lg" />
