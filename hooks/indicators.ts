@@ -41,6 +41,8 @@ import {
 
 import type { SankeyData } from 'components/indicator-visualizations/sankey/types';
 
+import fakeData from 'components/indicator-visualizations/sankey/fakeData.json';
+
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
     current,
@@ -322,13 +324,22 @@ export function useSankeyData(
     });
 
   const {
-    data, isFetching, isFetched, isSuccess,
+    // data,
+    isFetching, isFetched, isSuccess,
   } = query;
+
+  // TO - DO - change indicator
+  const data = fakeData[1];
 
   const widgetData = useMemo<SankeyChartData>(() => {
     const nodes = data?.nodes.map(({ name }) => ({ name }));
-    const links = flatten(data?.data
-      .map((l) => l.links));
+    const links = flatten(data?.data.filter(
+      (y) => y.year === 2019,
+    ) // TO DO - Oscar filters by year
+      .map((l) => l.links.map((i) => ({
+        ...i,
+        class: i.class_en,
+      }))));
     return ({
       nodes,
       links,
