@@ -302,8 +302,8 @@ const IndicatorChart: FC<ComponentTypes> = ({
   }, [visualization]);
 
   return (
-    <div className={`flex justify-between ${className}`}>
-      <div className="flex flex-col h-full w-full">
+    <div className={`grid grid-cols-12 ${className}`}>
+      <div className="col-span-8 h-full w-full">
         <section className="flex flex-col w-full">
           <div className="flex w-full justify-between">
             {/* year filter */}
@@ -481,7 +481,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
           </div>
         </section>
       </div>
-      <div className="flex">
+      <div className="col-span-4">
         <section className="flex flex-col justify-between ml-8">
           {categories.length > 0 && (
           <Filters

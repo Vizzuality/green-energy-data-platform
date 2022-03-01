@@ -39,7 +39,7 @@ const Tooltip: FC<TooltipProps> = ({
   const labelSlug = visualization === 'bar' ? 'province' : 'year';
 
   return (
-    <div className={cx('inline-flex flex-col justify-center text-white text-center bg-gray1 rounded-2xl hover:opacity-90 px-5 py-2',
+    <div className={cx('inline-flex flex-col justify-center text-white text-center text-sm bg-gray1 rounded-2xl hover:opacity-90 px-5 py-2',
       { [className]: className })}
     >
       {(label || unit) && (
@@ -62,20 +62,22 @@ const Tooltip: FC<TooltipProps> = ({
           )}
         </div>
       )}
-      <ul className="flex flex-col items-center text-sm max-h-128 overflow-auto pointer-events-auto">
+      <ul className="flex flex-col items-center text-xs max-h-128 overflow-y-auto pointer-events-auto">
         {payload.map(({
           name, value, color, payload: { fill },
         }) => (
           <li
             key={name}
-            className="flex items-center w-full active:bg-color1 rounded-md focus:bg-blue text-left text-sm"
+            className="flex items-center w-full active:bg-color1 rounded-md focus:bg-blue"
           >
             <span
-              className="w-4 h-4 rounded-full"
+              className="w-3 h-3 rounded-full"
               style={{ backgroundColor: color || fill }}
             />
-            <span className="py-1 pl-6">{name}</span>
-            <span className="py-1 pl-6">{value.toFixed(2)}</span>
+            <span className="flex flex-1 justify-between max-w-[300px]">
+              <p className="text-left py-1 pl-2 text-red-200  truncate text-ellipsis overflow-hidden">{name}</p>
+              <span className="py-1 pl-4 font-bold">{value.toFixed(2)}</span>
+            </span>
           </li>
         ))}
       </ul>
