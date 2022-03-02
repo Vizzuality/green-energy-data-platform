@@ -75,7 +75,7 @@ const Tooltip: FC<TooltipProps> = ({
               style={{ backgroundColor: color || fill }}
             />
             <span className="flex flex-1 justify-between max-w-[300px]">
-              <p className="text-left py-1 pl-2 text-red-200  truncate text-ellipsis overflow-hidden">{name}</p>
+              <p className="text-left py-1 pl-2 truncate text-ellipsis overflow-hidden">{name}</p>
               <span className="py-1 pl-4 font-bold">{value.toFixed(2)}</span>
             </span>
           </li>

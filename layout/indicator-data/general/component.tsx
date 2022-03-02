@@ -487,7 +487,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
           <Filters
             visualization={visualization}
             categories={categories}
-            hasSubcategories={!!subcategories.length}
+            hasSubcategories={!!subcategories.length || categories.length === 1}
             className="overflow-y-auto mb-4"
             onClick={setFilters}
           />
@@ -496,7 +496,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             <div className="mb-4">
               <Legend
                 payload={LegendPayload}
-                className="mb-4 overflow-y-scroll text-ellipsis w-full"
+                className="overflow-y-scroll text-ellipsis w-full"
               />
             </div>
           )}

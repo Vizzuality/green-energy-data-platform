@@ -452,7 +452,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           <Filters
             visualization={visualization}
             categories={categories}
-            hasSubcategories={!!subcategories.length}
+            hasSubcategories={!!subcategories.length || categories.length === 1}
             className="overflow-y-auto"
             onClick={setFilters}
             height={height}
@@ -465,7 +465,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           <Legend
             ref={legendRef}
             payload={LegendPayload}
-            className="mb-4 overflow-y-scroll overflow-x-hidden"
+            className="overflow-y-scroll overflow-x-hidden"
           />
           )}
         </section>
