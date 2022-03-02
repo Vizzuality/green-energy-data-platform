@@ -325,7 +325,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           <Filters
             visualization={visualization}
             categories={categories}
-            hasSubcategories={!!subcategories.length}
+            hasSubcategories={!!subcategories.length || categories.length === 1}
             className="overflow-y-auto mb-4"
             onClick={compareIndex === 1 ? setFilters : setCompareFilters}
           />

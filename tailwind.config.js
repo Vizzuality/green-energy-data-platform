@@ -1,12 +1,6 @@
 module.exports = {
-  purge: ['./**/*.{js,ts,jsx,tsx}'],
-  darkMode: false,
+  content: ['./**/*.{jsx,ts,tsx}'],
   theme: {
-    pseudo: {
-      before: 'before',
-      after: 'after',
-      'not-first': 'not(:first-child)',
-    },
     extend: {
       colors: {
         color1: '#009DCD',
@@ -88,15 +82,6 @@ module.exports = {
         17: '4.75rem',
         18: '5.143rem',
       },
-    },
-  },
-  variants: {
-    borderRadius: ['responsive', 'hover', 'first', 'last'],
-    extend: {
-      fontWeight: ['hover', 'focus'],
-      backgroundColor: ['active'],
-      textColor: ['active'],
-      padding: ['first', 'last'],
     },
   },
 };

@@ -430,7 +430,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           )}
         </div>
       </section>
-      <div className="flex justify-between mb-4 w-full">
+      <div className="flex justify-between w-full">
         <section className="w-1/2 max-h-128">
           {categories.length > 0 && visualization === 'bar' && (
           <FiltersMI
@@ -444,7 +444,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           <Filters
             visualization={visualization}
             categories={categories}
-            hasSubcategories={!!subcategories.length}
+            hasSubcategories={!!subcategories.length  || categories.length === 1}
             className="overflow-y-auto"
             onClick={compareIndex === 1 ? setFilters : setCompareFilters}
             height={height}
@@ -461,7 +461,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           <Legend
             ref={legendRef}
             payload={LegendPayload}
-            className="mb-4 overflow-y-scroll overflow-x-hidden text-ellipsis"
+            className="overflow-y-scroll overflow-x-hidden text-ellipsis"
           />
           )}
         </section>

@@ -5,6 +5,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { Hydrate } from 'react-query/hydration';
 import { Provider } from 'next-auth/client';
 
+
 // language
 import { I18nextProvider, Translation } from 'react-i18next';
 import i18n from 'i18next';
