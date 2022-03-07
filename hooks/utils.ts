@@ -11,14 +11,17 @@ export const useColors = (
     ]);
   }
   return chroma.scale([
-    '#1B5183',
-    '#1E6D86',
-    '#2A8FAF',
-    '#C9E6E8',
-    '#929292',
-    '#766964',
-    '#F8981C',
-    '#760015',
+    '#007CA1',
+    '#35B8E0',
+    '#BBE4F0',
+    '#8E4C00',
+    '#ED8B16',
+    '#FFD09B',
+    '#00957C',
+    '#00CBA9',
+    '#B4EBE2',
+    '#A40505',
+    '#FB9A99',
   ]).colors(colorsNumber || 0);
 };
 
@@ -28,3 +31,13 @@ export default {
   useColors,
   useOpacityColors,
 };
+
+// old palette of colors
+// '#1B5183',
+// '#1E6D86',
+// '#2A8FAF',
+// '#C9E6E8',
+// '#929292',
+// '#766964',
+// '#F8981C',
+// '#760015',

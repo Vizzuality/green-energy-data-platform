@@ -54,6 +54,7 @@ type ChartProps = {
   widgetData: unknown,
   widgetConfig: unknown,
   colors: string[],
+  color?: string,
 };
 
 const IndicatorChart: FC<ComponentTypes> = ({
@@ -67,6 +68,8 @@ const IndicatorChart: FC<ComponentTypes> = ({
     category: { label: 'category_1', value: null },
     scenario: false,
   });
+
+  const [subcategoriesTotals, setSubcategoriesTotals] = useState(null);
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -301,6 +304,15 @@ const IndicatorChart: FC<ComponentTypes> = ({
     return null;
   }, [visualization]);
 
+  useEffect(() => {
+    if (category?.label === 'category_1' && subcategories.length === 1) setSubcategoriesTotals(LegendPayload);
+  }, [category, subcategories.length, setSubcategoriesTotals]);
+
+  const singleValueLegendColor = useMemo(
+    () => subcategoriesTotals?.find(((subcat) => subcat?.label === category?.value))?.color,
+    [category, subcategoriesTotals],
+  );
+
   return (
     <div className={`grid grid-cols-12 ${className}`}>
       <div className="col-span-8 h-full w-full">
@@ -464,10 +476,10 @@ const IndicatorChart: FC<ComponentTypes> = ({
                         widgetData={widgetData}
                         widgetConfig={widgetConfig}
                         colors={colors}
+                        color={singleValueLegendColor}
                       />
                     </div>
                   )}
-
               {visualization === 'choropleth' && (
               <div className="w-full h-96">
                 <MapContainer
@@ -497,6 +509,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
               <Legend
                 payload={LegendPayload}
                 className="overflow-y-scroll text-ellipsis w-full"
+                singleValueLegendColor={singleValueLegendColor}
               />
             </div>
           )}

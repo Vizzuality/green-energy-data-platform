@@ -16,7 +16,7 @@ export interface VisualizationsNavProps {
   visualizationTypes: string[],
   active: string;
   mobile?: boolean,
-  compareIndex?: number,
+  compareIndex?: 1 | 2,
   className?: string;
 }
 export const VisualizationsNav: FC<VisualizationsNavProps> = ({
@@ -24,14 +24,14 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
   visualizationTypes,
   className,
   mobile = false,
-  compareIndex,
+  compareIndex = 1,
   active,
 }: VisualizationsNavProps) => {
   const dispatch = useDispatch();
 
   const handleVisualization = useCallback(
     (id) => {
-      if (!compareIndex || compareIndex === 1) {
+      if (compareIndex === 1) {
         dispatch(setFilters({ visualization: id }));
       } else {
         dispatch(setCompareFilters({ visualization: id }));

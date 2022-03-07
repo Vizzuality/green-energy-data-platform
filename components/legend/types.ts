@@ -9,4 +9,5 @@ export interface WidgetLegendProps {
   onClick?: ((string) => void),
   ref?: unknown,
   interactive?: boolean,
+  singleValueLegendColor?: string,
 }

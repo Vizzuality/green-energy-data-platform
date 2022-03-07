@@ -60,7 +60,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   subgroupSlug,
   indicatorSlug,
   className,
-  compareIndex,
+  compareIndex = 1,
 }: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,

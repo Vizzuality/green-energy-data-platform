@@ -4,10 +4,7 @@ import React, {
 import cx from 'classnames';
 import i18next from 'i18next';
 
-import {
-  useDispatch,
-  // useSelector
-} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 // import { RootState } from 'store/store';
 

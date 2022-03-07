@@ -47,7 +47,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
   groupSlug,
   subgroupSlug,
   indicatorSlug,
-  compareIndex,
+  compareIndex = 1,
   className,
 }: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({

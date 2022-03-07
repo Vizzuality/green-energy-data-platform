@@ -8,7 +8,7 @@ export interface CompareLayoutProps {
     indicatorSlug: string
   ) => void,
   className?: string,
-  compareIndex: number,
+  compareIndex: 1 | 2,
 }
 
 export type ChartProps = {
@@ -30,5 +30,5 @@ export default interface IndicatorCompareDataProps {
   subgroupSlug: string | string[];
   indicatorSlug: string;
   className?: string;
-  compareIndex: number;
+  compareIndex: 1 | 2;
 }

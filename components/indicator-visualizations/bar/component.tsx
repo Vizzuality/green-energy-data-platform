@@ -54,6 +54,7 @@ const Chart: FC<ChartProps> = ({
   widgetData,
   widgetConfig,
   colors,
+  color,
   width,
   height,
 }: ChartProps) => {
@@ -76,7 +77,7 @@ const Chart: FC<ChartProps> = ({
         {yAxis && (<YAxis {...yAxis} />)}
         {bars && (
           Object.keys(bars)
-            .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={colors[index]} />
+            .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={color || colors[index]} />
             )))}
         {!!tooltip && (<Tooltip {...tooltip} />)}
       </BarChart>

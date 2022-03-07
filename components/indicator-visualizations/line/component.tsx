@@ -57,7 +57,9 @@ interface ChartProps {
   colors: string[],
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps) => {
+const Chart: FC<ChartProps> = ({
+  widgetData, widgetConfig, color, colors
+}: ChartProps) => {
   const {
     cartesianGrid,
     cartesianAxis,
@@ -77,7 +79,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps)
         {xAxis && (<XAxis {...xAxis} />)}
         {yAxis && (<YAxis {...yAxis} />)}
         {lines && Object.keys(lines).map((line, index) => (
-          <Line key={line} {...lines[line]} stroke={colors[index]} />
+          <Line key={line} {...lines[line]} stroke={color || colors[index]} />
         ))}
         {tooltip && (<Tooltip {...tooltip} />)}
       </LineChart>
