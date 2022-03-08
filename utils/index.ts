@@ -98,7 +98,7 @@ export const filterRecords = (
       if ((d.region_id === region || (d.region_id === null))
         && d.unit.id === unit && year === d.year
         && (((categories.length > 1) && d.category_1 !== 'Total')
-        || categories.length === 1)) return true;
+          || categories.length === 1)) return true;
     }
 
     if (visualization === 'choropleth') {
@@ -107,17 +107,17 @@ export const filterRecords = (
         && year === d.year
         && (d.unit.id === unit || !unit)) // some idicators has no unit
         || (groupSlug !== 'model-intercomparison'
-        && year === d.year
-        && (d.unit.id === unit || !unit)) // some idicators has no unit
+          && year === d.year
+          && (d.unit.id === unit || !unit)) // some idicators has no unit
 
       ) return true;
     }
 
     if (visualization === 'bar') {
       if ((groupSlug === 'model-intercomparison'
-          && d.scenario.id === scenario
-          && d.unit.id === unit)
-          || (groupSlug !== 'model-intercomparison'
+        && d.scenario.id === scenario
+        && d.unit.id === unit)
+        || (groupSlug !== 'model-intercomparison'
           && year === d.year
           && d.unit.id === unit)
       ) return true;
@@ -154,7 +154,7 @@ export const filterRelatedIndicators = (
 
     if (visualization === 'pie') {
       if ((categories.length > 1 && d.category_1 !== 'Total')
-      || categories.length === 1) return true;
+        || categories.length === 1) return true;
     }
 
     if (visualization === 'bar') {
@@ -196,7 +196,6 @@ interface Bar {
 }
 
 export const getGroupedValues = (
-  categories: string[],
   name: string,
   groupSlug: string | string[],
   filters: IndicatorFilters,
@@ -211,6 +210,7 @@ export const getGroupedValues = (
   const filteredData = label === 'category_2' ? records.filter((record) => record.category_1 === categorySelected) : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
   let data = [];
+
   const getLineData = (): ChartYear[] => {
     data = flatten(chain(filteredData)
       .groupBy('year')
@@ -311,14 +311,16 @@ export const getGroupedValues = (
     mapValues: number[]
   }[] => {
     const dataWithGeometries = filteredData?.map(({ id, ...d }) => {
-      const geometry = filteredRegions?.find((r):boolean => d.region.name === r.name);
+      const geometry = filteredRegions?.find((r): boolean => d.region.name === r.name);
       return ({
         geometry,
         visualizationTypes: d.visualization_types,
         [mapCategorySelected]: d.value,
       });
     });
-    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
+    const geometryTypes = dataWithGeometries?.map(
+      (d) => d.geometry?.geometry?.type.toLowerCase(),
+    ) || [];
 
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries?.filter(
@@ -360,7 +362,7 @@ export const getGroupedValues = (
       return Object.assign({}, ...properties);
     };
 
-    if (layerType === 'Multipolygon' || layerType === 'Polygon') {
+    if (layerType === 'multipolygon' || layerType === 'polygon') {
       data = [{
         visualizationTypes: visualizations,
         data: dataWithGeometries,
@@ -597,7 +599,7 @@ export const getGroupedValues = (
               {
                 type: 'circle',
                 paint: {
-                // 'fill-color': '#00ffff',
+                  // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
                   'circle-stroke-opacity': 0.4,
                   'circle-stroke-color': [
@@ -621,6 +623,7 @@ export const getGroupedValues = (
         }],
       }];
     }
+
     return data;
   };
 
@@ -835,7 +838,7 @@ export const getGroupedValuesRelatedIndicators = (
       });
     });
 
-    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type) || [];
+    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
 
     const mapValues = dataWithGeometries?.filter((d) => d[mapCategorySelected])
@@ -846,7 +849,7 @@ export const getGroupedValuesRelatedIndicators = (
     const media = (maxValue - minValue) / 2;
     const visualizations = dataWithGeometries[0]?.visualizationTypes;
 
-    if (layerType === 'Point') {
+    if (layerType === 'point') {
       data = [{
         visualizationTypes: visualizations,
         data: dataWithGeometries,
@@ -874,7 +877,7 @@ export const getGroupedValuesRelatedIndicators = (
               {
                 type: 'circle',
                 paint: {
-                // 'fill-color': '#00ffff',
+                  // 'fill-color': '#00ffff',
                   'circle-opacity': 0.5,
                   // 'circle-stroke-opacity': 0.7,
                   'circle-stroke-color': [
@@ -938,30 +941,30 @@ export const getGroupedValuesRelatedIndicators = (
                   'circle-stroke-color': '#fff',
                 },
               },
-            // {
-            //   id: 'media',
-            //   metadata: {
-            //     position: 'top',
-            //   },
-            //   type: 'symbol',
-            //   paint: {
-            //     'icon-color': '#F00',
-            //   },
-            //   layout: {
-            //     'icon-ignore-placement': true,
-            //     'icon-allow-overlap': true,
-            //     'icon-image': '',
-            //     'icon-color': 'red',
-            //     'icon-size': 10,
-            //   },
-            // },
+              // {
+              //   id: 'media',
+              //   metadata: {
+              //     position: 'top',
+              //   },
+              //   type: 'symbol',
+              //   paint: {
+              //     'icon-color': '#F00',
+              //   },
+              //   layout: {
+              //     'icon-ignore-placement': true,
+              //     'icon-allow-overlap': true,
+              //     'icon-image': '',
+              //     'icon-color': 'red',
+              //     'icon-size': 10,
+              //   },
+              // },
             ],
           },
         }],
       }];
     }
 
-    if (layerType === 'Multipolygon' || layerType === 'Polygon') {
+    if (layerType === 'multipolygon' || layerType === 'polygon') {
       data = [{
         visualizationTypes: visualizations,
         layers: [{

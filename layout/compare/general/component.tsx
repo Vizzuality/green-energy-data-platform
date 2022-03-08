@@ -207,14 +207,14 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current)[visualization],
-    [visualization, widgetDataKeys, current],
+    () => ChartConfig(widgetDataKeys, current, indicatorData)[visualization],
+    [visualization, widgetDataKeys, indicatorData, current],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ), [categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(

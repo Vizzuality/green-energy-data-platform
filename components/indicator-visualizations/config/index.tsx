@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import Tooltip from 'components/widgets/tooltip';
 
@@ -20,34 +20,6 @@ interface TooltipProps {
   payload: PayloadObject[]
   label?: string,
 }
-
-const DefaultTick = {
-  fill: '#3A3F59',
-  opacity: 0.5,
-  fontSize: '14px',
-};
-
-const Tick: FC<TickProps> = (({
-  x, y, payload,
-}: TickProps) => {
-  const { value } = payload;
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <text
-        x={0}
-        y={-10}
-        dy={14}
-        textAnchor="end"
-        fill="#3A3F59"
-        opacity={0.5}
-        transform="rotate(270)"
-        fontSize="14px"
-      >
-        {value}
-      </text>
-    </g>
-  );
-});
 
 const TickSmall: FC<TickProps> = (({
   x, y, payload,
@@ -71,9 +43,31 @@ const TickSmall: FC<TickProps> = (({
   );
 });
 
+const Tick: FC<TickProps> = (({
+  x, y, payload,
+}: TickProps) => {
+  const { value } = payload;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={-10}
+        dy={14}
+        textAnchor="end"
+        fill="#3A3F59"
+        opacity={0.5}
+        transform="rotate(270)"
+        fontSize="14px"
+      >
+        {value}
+      </text>
+    </g>
+  );
+});
+
 const LabelContent = () => (
   <g>
-    <text x="50%" y={480} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
+    <text x="50%" y={400} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
       Region
     </text>
   </g>
@@ -84,7 +78,10 @@ const TooltipContent: FC<TooltipProps> = ({
   payload,
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
-const ChartConfig = (categories, language) => {
+const ChartConfig = (categories, language, data) => {
+  const values = useMemo(() => data.map((d) => d.value), [data]);
+  const MINVALUE = useMemo(() => Math.max(...values), [values]);
+  const MAXVALUE = useMemo(() => Math.min(...values), [values]);
   const KEY = language === 'cn' ? '全部的' : 'Total';
   const getLines = () => {
     if (categories.length) {
@@ -112,6 +109,12 @@ const ChartConfig = (categories, language) => {
     }]);
   };
 
+  const DefaultTick = {
+    fill: '#3A3F59',
+    opacity: 0.5,
+    fontSize: '14px',
+  };
+
   return ({
     line: {
       margin: {
@@ -122,10 +125,7 @@ const ChartConfig = (categories, language) => {
         height: '1px',
         strokeDasharray: '10 5',
       },
-      label: 'hola',
-      type: 'adios',
       lines: getLines(),
-      labelSlug: 'holi',
       gradients: [
         {
           offset: '7.05%',
@@ -145,7 +145,9 @@ const ChartConfig = (categories, language) => {
       ],
       xAxis: {
         dataKey: 'year',
-        tick: DefaultTick,
+        tick: { fill: '#3A3F59', opacity: 0.5 },
+        // domain: [MINVALUE, MAXVALUE],
+        // interval: 0,
       },
       yAxis: {
         tick: DefaultTick,
@@ -186,6 +188,7 @@ const ChartConfig = (categories, language) => {
       bars: getBars(),
       yAxis: {
         tick: DefaultTick,
+        domain: [MINVALUE, MAXVALUE],
       },
       xAxis: {
         type: 'category',

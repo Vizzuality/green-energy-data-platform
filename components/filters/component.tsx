@@ -118,7 +118,7 @@ const Filters: FC<FiltersProps> = ({
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories || categories.length === 1}
             >
-              <span className="flex-1 flex text-left">{category}</span>
+              <span className="flex-1 flex text-left pr-2">{category}</span>
             </button>
             {active === category && (
               <div className="h-full flex justify-center items-center border-l border-l-white py-3">
