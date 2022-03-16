@@ -146,8 +146,6 @@ const ChartConfig = (categories, language, data) => {
       xAxis: {
         dataKey: 'year',
         tick: { fill: '#3A3F59', opacity: 0.5 },
-        // domain: [MINVALUE, MAXVALUE],
-        // interval: 0,
       },
       yAxis: {
         tick: DefaultTick,

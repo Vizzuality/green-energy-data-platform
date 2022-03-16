@@ -107,20 +107,20 @@ const Filters: FC<FiltersProps> = ({
             className={cx('flex justify-between cursor-pointer items-center w-full mb-1.5 active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
               {
                 'bg-color1 text-white clear:bg-white': active === category,
-                'bg-white': active !== category
+                'bg-white': active !== category,
               })}
           >
             <button
               name={category}
               type="button"
               className={cx('py-3 pl-6 flex-1',
-                { 'cursor': !hasSubcategories || categories.length === 1 })}
+                { cursor: !hasSubcategories || categories.length === 1 })}
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories || categories.length === 1}
             >
               <span className="flex-1 flex text-left pr-2">{category}</span>
             </button>
-            {active === category && (
+            {active === category && !hasSubcategories && categories.length === 1 && (
               <div className="h-full flex justify-center items-center border-l border-l-white py-3">
                 <Icon
                   ariaLabel="close"

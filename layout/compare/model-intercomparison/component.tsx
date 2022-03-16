@@ -197,8 +197,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current)[configType],
-    [configType, widgetDataKeys, current],
+    () => ChartConfig(widgetDataKeys, current, records)[configType],
+    [configType, widgetDataKeys, current, records],
   );
 
   const mainColors = useColors(widgetDataKeys.length);

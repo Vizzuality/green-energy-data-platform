@@ -74,6 +74,7 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-color1': 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',
+        'gradient-color1-reverse': 'linear-gradient(90deg, rgba(42,143,175,1) 0%, rgba(0,157,205,1) 44%, rgba(69,203,244,1) 100%)',
         'gradient-color2': 'linear-gradient(119.21deg, #009DCD 1.52%, #2A8FAF 100%)',
         'gradient-gray1': 'linear-gradient(115.02deg, #F2F5F8 11.67%, #EAEFF3 65.91%)',
         'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',

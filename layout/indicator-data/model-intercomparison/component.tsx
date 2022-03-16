@@ -201,8 +201,8 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current)[configType],
-    [configType, widgetDataKeys, current],
+    () => ChartConfig(widgetDataKeys, current, records)[configType],
+    [configType, widgetDataKeys, current, records],
   );
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(
     () => getModelIntercomparisonData(

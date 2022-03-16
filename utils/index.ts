@@ -446,7 +446,7 @@ export const getGroupedValues = (
         }],
       }];
     }
-    if (layerType === 'Point') {
+    if (layerType === 'point') {
       data = [{
         visualizationTypes: visualizations,
         data: dataWithGeometries,
@@ -838,7 +838,9 @@ export const getGroupedValuesRelatedIndicators = (
       });
     });
 
-    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
+    const geometryTypes = dataWithGeometries?.map(
+      (d) => d.geometry?.geometry?.type.toLowerCase(),
+    ) || [];
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
 
     const mapValues = dataWithGeometries?.filter((d) => d[mapCategorySelected])
