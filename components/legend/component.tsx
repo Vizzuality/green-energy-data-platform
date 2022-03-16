@@ -61,7 +61,7 @@ const Legend: FC<WidgetLegendProps> = ({
                     backgroundColor: '#A97500',
                   }}
                 />
-                <span className="py-1 pl- text-left">All categories</span>
+                <span className="py-1 pl-4 text-left">All categories</span>
               </button>
             </li>
           )}
