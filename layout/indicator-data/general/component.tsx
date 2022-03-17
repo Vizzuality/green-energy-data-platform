@@ -381,6 +381,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayRegion || 'Select a region'}</span>
+                  <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
                 </button>
               </Tooltip>
               )}
@@ -414,6 +415,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayScenario || i18next.t('selectScenario')}</span>
+                  <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
                 </button>
               </Tooltip>
               )}

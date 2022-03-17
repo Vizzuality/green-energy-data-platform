@@ -30,6 +30,7 @@ import DataSource from 'components/data-source';
 import LoadingSpinner from 'components/loading-spinner';
 import Line from 'components/indicator-visualizations/line';
 import Bar from 'components/indicator-visualizations/bar';
+import Icon from 'components/icon';
 
 // utils
 import {
@@ -345,6 +346,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 <span>
                   {displayRegion || i18next.t('selectRegion')}
                 </span>
+                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
               </button>
             </Tooltip>
             )}
@@ -390,6 +392,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               <span>
                 {displayScenario || i18next.t('selectScenario')}
               </span>
+              <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
             </button>
           </Tooltip>
             )}
@@ -431,6 +434,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 <span>
                   {displayUnit || i18next.t('selectUnit')}
                 </span>
+                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
               </button>
             </Tooltip>
           )}

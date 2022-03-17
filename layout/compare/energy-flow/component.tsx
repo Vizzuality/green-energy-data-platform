@@ -278,7 +278,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
                     keyEl="region"
                     onClick={handleChange}
                   />
-                      )}
+                )}
               >
                 <button
                   type="button"
@@ -289,6 +289,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
                     display={displayRegion}
                     elKey="region"
                     translationKey="selectRegion"
+                    icon="arrow"
                   />
                 </button>
               </Tooltip>

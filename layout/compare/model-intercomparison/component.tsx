@@ -343,7 +343,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   keyEl="region"
                   onClick={handleChange}
                 />
-                )}
+              )}
             >
               <button
                 type="button"
@@ -353,6 +353,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   display={displayRegion}
                   elKey="region"
                   translationKey="selectRegion"
+                  icon="triagle_border"
+                  iconLabel="dropdown"
                 />
               </button>
             </Tooltip>
@@ -390,6 +392,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                 display={displayScenario}
                 elKey="scenario"
                 translationKey="selectScenario"
+                icon="triagle_border"
+                iconLabel="dropdown"
               />
             </button>
           </Tooltip>
