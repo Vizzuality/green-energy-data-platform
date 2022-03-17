@@ -6,7 +6,8 @@ export type Payload = Readonly<{
 export interface WidgetLegendProps {
   className?: string,
   payload: Payload[],
-  onClick?: (string) => void,
+  onClick?: ((string) => void),
   ref?: unknown,
   interactive?: boolean,
+  singleValueLegendColor?: string,
 }

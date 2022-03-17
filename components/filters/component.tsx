@@ -4,10 +4,7 @@ import React, {
 import cx from 'classnames';
 import i18next from 'i18next';
 
-import {
-  useDispatch,
-  // useSelector
-} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 // import { RootState } from 'store/store';
 
@@ -60,7 +57,7 @@ const Filters: FC<FiltersProps> = ({
       setActive(value);
       dispatch(onClick({ category: { label: 'category_2', value } }));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, onClick, visualization]);
 
   const handleClick = (direction) => {
@@ -107,20 +104,23 @@ const Filters: FC<FiltersProps> = ({
         {categories.map((category) => (
           <div
             key={category}
-            className={cx('flex justify-between cursor-pointer items-center w-full mb-1.5 bg-white active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
-              { 'bg-color1 text-white': active === category })}
+            className={cx('flex justify-between cursor-pointer items-center w-full mb-1.5 active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
+              {
+                'bg-color1 text-white clear:bg-white': active === category,
+                'bg-white': active !== category,
+              })}
           >
             <button
               name={category}
               type="button"
               className={cx('py-3 pl-6 flex-1',
-                { 'cursor-none': !hasSubcategories })}
+                { cursor: !hasSubcategories || categories.length === 1 })}
               onClick={() => handleCategories(category)}
-              disabled={!hasSubcategories}
+              disabled={!hasSubcategories || categories.length === 1}
             >
-              <span className="flex-1 flex text-left">{category}</span>
+              <span className="flex-1 flex text-left pr-2">{category}</span>
             </button>
-            {active === category && (
+            {active === category && !hasSubcategories && categories.length === 1 && (
               <div className="h-full flex justify-center items-center border-l border-l-white py-3">
                 <Icon
                   ariaLabel="close"

@@ -29,7 +29,7 @@ const Item: FC<ItemProps> = ({
         { [className]: className })}
     >
       <Icon ariaLabel={name} color={color} name={icon} size="lg" className="mr-5" />
-      <div className="flex flex-col">
+      <div className="flex flex-col text-left">
         <p className="inline-flex text-base">{name}</p>
         <ul className="flex">
           {links.map(({ label, href }) => (

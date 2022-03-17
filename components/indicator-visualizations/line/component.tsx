@@ -1,5 +1,6 @@
 import React, {
   FC,
+  useMemo,
 } from 'react';
 import {
   ResponsiveContainer,
@@ -57,7 +58,9 @@ interface ChartProps {
   colors: string[],
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps) => {
+const Chart: FC<ChartProps> = ({
+  widgetData, widgetConfig, color, colors,
+}: ChartProps) => {
   const {
     cartesianGrid,
     cartesianAxis,
@@ -69,15 +72,36 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps)
     ...rest
   } = widgetConfig;
 
+  const screenProps = useMemo<XAxisProps>(
+    () => {
+      if (window.innerWidth > 1300) {
+        return ({
+          interval: 'preserveStartEnd',
+          fontSize: 12,
+          tick: {
+            fill: '#3A3F59', opacity: 0.5,
+          },
+        });
+      }
+      return ({
+        interval: 0,
+        fontSize: 9,
+        tick: {
+          fill: '#3A3F59', opacity: 0.5,
+        },
+      });
+    }, [],
+  );
+
   return (
     <ResponsiveContainer height={height || 400}>
       <LineChart {...rest} data={widgetData}>
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
-        {xAxis && (<XAxis {...xAxis} />)}
+        {xAxis && (<XAxis {...screenProps} />)}
         {yAxis && (<YAxis {...yAxis} />)}
         {lines && Object.keys(lines).map((line, index) => (
-          <Line key={line} {...lines[line]} stroke={colors[index]} />
+          <Line key={line} {...lines[line]} stroke={color || colors[index]} />
         ))}
         {tooltip && (<Tooltip {...tooltip} />)}
       </LineChart>

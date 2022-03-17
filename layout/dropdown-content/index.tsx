@@ -10,7 +10,7 @@ interface DrodownProps {
   list: DropdownItem[],
   keyEl: string,
   onClick: (key, value) => void,
-  compareIndex?: number
+  compareIndex?: 1 | 2;
 }
 
 const DropdownContent: FC<DrodownProps> = ({

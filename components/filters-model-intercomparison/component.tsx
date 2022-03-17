@@ -95,7 +95,7 @@ const FiltersMI: FC<FiltersProps> = ({
               className="py-3 pl-6 flex-1"
               onClick={() => handleCategories(category)}
             >
-              <span className="flex-1 flex text-left">{category}</span>
+              <span className="flex-1 flex text-left pr-2">{category}</span>
             </button>
             {activeModels.includes(category) && (
               <div className="h-full flex justify-center items-center border-l border-l-white py-3">

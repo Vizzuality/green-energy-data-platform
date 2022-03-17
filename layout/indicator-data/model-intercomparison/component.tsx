@@ -30,6 +30,7 @@ import DataSource from 'components/data-source';
 import LoadingSpinner from 'components/loading-spinner';
 import Line from 'components/indicator-visualizations/line';
 import Bar from 'components/indicator-visualizations/bar';
+import Icon from 'components/icon';
 
 // utils
 import {
@@ -201,8 +202,8 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current)[configType],
-    [configType, widgetDataKeys, current],
+    () => ChartConfig(widgetDataKeys, current, records)[configType],
+    [configType, widgetDataKeys, current, records],
   );
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(
     () => getModelIntercomparisonData(
@@ -345,6 +346,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 <span>
                   {displayRegion || i18next.t('selectRegion')}
                 </span>
+                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
               </button>
             </Tooltip>
             )}
@@ -390,6 +392,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               <span>
                 {displayScenario || i18next.t('selectScenario')}
               </span>
+              <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
             </button>
           </Tooltip>
             )}
@@ -431,6 +434,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 <span>
                   {displayUnit || i18next.t('selectUnit')}
                 </span>
+                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
               </button>
             </Tooltip>
           )}
@@ -452,7 +456,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           <Filters
             visualization={visualization}
             categories={categories}
-            hasSubcategories={!!subcategories.length}
+            hasSubcategories={!!subcategories.length || categories.length === 1}
             className="overflow-y-auto"
             onClick={setFilters}
             height={height}
@@ -465,7 +469,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           <Legend
             ref={legendRef}
             payload={LegendPayload}
-            className="mb-4 overflow-y-scroll overflow-x-hidden"
+            className="overflow-y-scroll overflow-x-hidden"
           />
           )}
         </section>

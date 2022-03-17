@@ -56,9 +56,9 @@ const Item: FC<ItemProps> = ({
       <div className="inline-flex w-full">
         <Icon ariaLabel={name} color="text-color1" name={icon} size="lg" className="mr-5" />
         <div className="flex flex-col">
-          <p className="inline-flex text-base hover:text-gray-700">{name}</p>
+          <p className="text-left inline-flex text-base hover:text-gray-700">{name}</p>
           {!source && (
-          <ul className="flex">
+          <ul className="flex flex-wrap">
             {links?.map(({ label, format }) => (
               <li className="text-color1 text-sm pr-3.75" key={label}>
                 <button className="cursor-pointer hover:font-bold underline" type="button" onClick={() => handleDownload(format)}>{label}</button>
