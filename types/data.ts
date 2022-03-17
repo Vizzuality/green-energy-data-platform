@@ -70,7 +70,7 @@ export interface ComponentTypes {
 
 export interface ComponentCompareTypes {
   className?: string;
-  compareIndex: number,
+  compareIndex: 1 | 2;
 }
 
 export interface DataIdProps {

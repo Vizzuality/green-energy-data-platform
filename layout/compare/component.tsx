@@ -39,7 +39,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
   indicatorSlug,
   className,
   onClose,
-  compareIndex,
+  compareIndex = 1,
 }: CompareLayoutProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,

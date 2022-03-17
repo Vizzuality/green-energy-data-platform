@@ -162,17 +162,17 @@ const GridItem: FC<GridItemProps> = ({
   );
 
   return (
-    <section className="h-48 w-hull">
+    <section key={indicatorId} className="h-48 w-full">
       {(isFetchingMeta || isFetchingRecords) && (
         <div className="flex items-center justify-center w-full h-full">
-          <LoadingSpinner />
+          <LoadingSpinner key={indicatorId} />
         </div>
       )}
 
       {!!isFetchedRecords && !records?.length && (
       <div className="flex flex-col items-center justify-center w-full h-full">
-        <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-        <p>Data not found</p>
+        <img key="no-data" alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
+        <p key="no-data">Data not found</p>
       </div>
       )}
 
@@ -182,6 +182,7 @@ const GridItem: FC<GridItemProps> = ({
             widgetData={widgetData}
             widgetConfig={widgetConfig}
             colors={colors}
+            className="mt-2"
           />
         )) || (defaultVisualization === 'line' && (
           <LineChart

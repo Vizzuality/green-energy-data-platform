@@ -1,4 +1,6 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, {
+  FC, useState, useCallback,
+} from 'react';
 import cx from 'classnames';
 
 import { WidgetLegendProps } from './types';
@@ -8,6 +10,7 @@ const Legend: FC<WidgetLegendProps> = ({
   payload = [],
   onClick,
   interactive = false,
+  singleValueLegendColor,
 }: WidgetLegendProps) => {
   const [active, setActive] = useState(null);
 
@@ -24,11 +27,11 @@ const Legend: FC<WidgetLegendProps> = ({
             <button
               key={label}
               type="button"
-              className={cx('flex items-center rounded-md focus:bg-blue text-left text-sm whitespace-nowrap w-full',
+              className={cx('flex items-center rounded-md focus:bg-blue text-left text-sm w-full cursor-pointer',
                 {
                   'opacity-50': !!active && active !== label,
                   'font-bold': !!active && active === label,
-                  'cursor': !interactive,
+                  // 'cursor': !interactive,
                   'cursor-pointer': !!interactive,
                 })}
               disabled={!interactive}
@@ -36,9 +39,9 @@ const Legend: FC<WidgetLegendProps> = ({
             >
               <span
                 className="flex w-4 h-4 rounded-full flex-shrink-0"
-                style={{ backgroundColor: color }}
+                style={{ backgroundColor: singleValueLegendColor || color }}
               />
-              <span className="py-1 pl-4 text-left truncate">{label}</span>
+              <span title={label} className="py-1 pl-4 text-left truncate whitespace-nowrap text-ellipsis">{label}</span>
             </button>
           </li>
         ))}
@@ -58,7 +61,7 @@ const Legend: FC<WidgetLegendProps> = ({
                     backgroundColor: '#A97500',
                   }}
                 />
-                <span className="py-1 pl- text-left">All categories</span>
+                <span className="py-1 pl-4 text-left">All categories</span>
               </button>
             </li>
           )}

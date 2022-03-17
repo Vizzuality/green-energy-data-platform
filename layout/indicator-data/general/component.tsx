@@ -54,6 +54,7 @@ type ChartProps = {
   widgetData: unknown,
   widgetConfig: unknown,
   colors: string[],
+  color?: string,
 };
 
 const IndicatorChart: FC<ComponentTypes> = ({
@@ -67,6 +68,8 @@ const IndicatorChart: FC<ComponentTypes> = ({
     category: { label: 'category_1', value: null },
     scenario: false,
   });
+
+  const [subcategoriesTotals, setSubcategoriesTotals] = useState(null);
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -199,14 +202,14 @@ const IndicatorChart: FC<ComponentTypes> = ({
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current)[visualization],
-    [visualization, widgetDataKeys, current],
+    () => ChartConfig(widgetDataKeys, current, records)[visualization],
+    [visualization, widgetDataKeys, records, current],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ), [categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
@@ -301,6 +304,15 @@ const IndicatorChart: FC<ComponentTypes> = ({
     return null;
   }, [visualization]);
 
+  useEffect(() => {
+    if (category?.label === 'category_1' && subcategories.length === 1) setSubcategoriesTotals(LegendPayload);
+  }, [category, subcategories.length, setSubcategoriesTotals]);
+
+  const singleValueLegendColor = useMemo(
+    () => subcategoriesTotals?.find(((subcat) => subcat?.label === category?.value))?.color,
+    [category, subcategoriesTotals],
+  );
+
   return (
     <div className={`grid grid-cols-12 ${className}`}>
       <div className="col-span-8 h-full w-full">
@@ -369,6 +381,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayRegion || 'Select a region'}</span>
+                  <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
                 </button>
               </Tooltip>
               )}
@@ -402,6 +415,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                 >
                   <span>{displayScenario || i18next.t('selectScenario')}</span>
+                  <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
                 </button>
               </Tooltip>
               )}
@@ -464,10 +478,10 @@ const IndicatorChart: FC<ComponentTypes> = ({
                         widgetData={widgetData}
                         widgetConfig={widgetConfig}
                         colors={colors}
+                        color={singleValueLegendColor}
                       />
                     </div>
                   )}
-
               {visualization === 'choropleth' && (
               <div className="w-full h-96">
                 <MapContainer
@@ -497,6 +511,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
               <Legend
                 payload={LegendPayload}
                 className="overflow-y-scroll text-ellipsis w-full"
+                singleValueLegendColor={singleValueLegendColor}
               />
             </div>
           )}

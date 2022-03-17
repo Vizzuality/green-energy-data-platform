@@ -29,10 +29,13 @@ interface ChartProps {
   widgetData: Object[],
   widgetConfig: ConfigProps,
   color?: string,
-  colors: string[]
+  colors: string[],
+  className?: string,
 }
 
-const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps) => {
+const Chart: FC<ChartProps> = ({
+  widgetData, widgetConfig, colors, color, className,
+}: ChartProps) => {
   const {
     pies,
     tooltip,
@@ -41,7 +44,7 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps)
   } = widgetConfig;
 
   return (
-    <ResponsiveContainer height={height || 400}>
+    <ResponsiveContainer height={height || 400} className={className}>
       <PieChart {...rest}>
         {pies && Object.keys(pies).map((pie, index) => (
           <Pie
@@ -49,10 +52,10 @@ const Chart: FC<ChartProps> = ({ widgetData, widgetConfig, colors }: ChartProps)
             {...pies[pie]}
             data={widgetData}
             labelLine={false}
-            fill={colors[index]}
+            fill={color || colors[index]}
           >
             {widgetData.map((d, i) => (
-              <Cell key={`cell-${d}`} fill={colors[i % colors.length]} />
+              <Cell key={`cell-${d}`} fill={color || colors[i % colors.length]} />
             ))}
           </Pie>
         ))}

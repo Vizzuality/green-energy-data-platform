@@ -55,6 +55,7 @@ import IndicatorCompareDataProps from '../types';
 interface ChartProps {
   widgetData: unknown,
   widgetConfig: unknown,
+  color?: string,
   colors: string[]
 }
 
@@ -63,7 +64,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   subgroupSlug,
   indicatorSlug,
   className,
-  compareIndex,
+  compareIndex = 1,
 }: IndicatorCompareDataProps) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
@@ -73,6 +74,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     category: { label: 'category_1', value: null },
     scenario: false,
   });
+
+  const [subcategoriesTotals, setSubcategoriesTotals] = useState(null);
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -204,14 +207,14 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current)[visualization],
-    [visualization, widgetDataKeys, current],
+    () => ChartConfig(widgetDataKeys, current, indicatorData)[visualization],
+    [visualization, widgetDataKeys, indicatorData, current],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ), [categories, name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
@@ -317,6 +320,15 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     }
     return null;
   }, [visualization]);
+
+  useEffect(() => {
+    if (category?.label === 'category_1' && subcategories.length === 1) setSubcategoriesTotals(LegendPayload);
+  }, [category, subcategories.length, setSubcategoriesTotals]);
+
+  const singleValueLegendColor = useMemo(
+    () => subcategoriesTotals?.find(((subcat) => subcat?.label === category?.value))?.color,
+    [category, subcategoriesTotals],
+  );
 
   return (
     <div className={`flex flex-col ${className}`}>
@@ -491,6 +503,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                       <DynamicChart
                         widgetData={widgetData}
                         widgetConfig={widgetConfig}
+                        color={singleValueLegendColor}
                         colors={colors}
                       />
                     </div>
@@ -514,6 +527,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             <Legend
               payload={LegendPayload}
               className="overflow-y-scroll text-ellipsis"
+              singleValueLegendColor={singleValueLegendColor}
             />
           </div>
         )}

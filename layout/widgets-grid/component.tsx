@@ -47,15 +47,17 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
           <InView key={id} triggerOnce>
             {({ ref, inView }) => (
               <div
+                key={`${groupSlug}-${indicatorSlug}`}
                 ref={ref}
                 className={cx('cursor-pointer w-full h-72 bg-white rounded-2.5xl shadow text-gray-900 px-7 py-4',
                   { [className]: className })}
               >
                 {(inView && (
                   <Link href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`} passHref>
-                    <a href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>
-                      <span>{name}</span>
+                    <a key={`${groupSlug}-${indicatorSlug}`} href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>
+                      <span key={`${groupSlug}-${indicatorSlug}`}>{name}</span>
                       <GridItem
+                        key={`${groupSlug}-${indicatorSlug}`}
                         group={groupSlug}
                         subgroup={subgroupSlug}
                         indicator={indicatorSlug}
@@ -71,11 +73,12 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
         );
       })}
       <div
+        key="other-indicators"
         className={cx('w-full h-72 bg-gradient-color1 rounded-2.5xl',
           { [className]: className })}
       >
-        <Link href="/indicators" passHref>
-          <a href="/indicators" className="w-full h-full items-center flex justify-center m-auto p-6 text-lg">
+        <Link key="other-indicators" href="/indicators" passHref>
+          <a key="other-indicators" href="/indicators" className="w-full h-full items-center flex justify-center m-auto p-6 text-lg">
             {i18next.t('otherIndicators')}
           </a>
         </Link>
