@@ -123,6 +123,8 @@ const SankeyChart: FC<ComponentTypes> = ({
     refetchOnWindowFocus: false,
   }));
 
+  const [filteredData, setFilteredData] = useState(data);
+
   const {
     years,
     defaultYear,
@@ -130,9 +132,9 @@ const SankeyChart: FC<ComponentTypes> = ({
     defaultUnit,
     regions,
     defaultRegion,
-  } = useIndicatorMetadata(indicatorSlug, visualization, data, {}, {
+  } = useIndicatorMetadata(indicatorSlug, visualization, filteredData, {}, {
     refetchOnWindowFocus: false,
-    enabled: data && !!indicatorSlug,
+    enabled: filteredData && !!indicatorSlug,
   });
 
   const currentYear = useMemo<number>(
@@ -197,13 +199,30 @@ const SankeyChart: FC<ComponentTypes> = ({
   ]);
 
   const parsedLinks = useMemo(() => uniqBy(data?.links, 'class'), [data]);
-
   const LegendPayload = useMemo(
     () => parsedLinks.map((item) => ({
       label: item.class.charAt(0).toUpperCase() + item.class.slice(1),
       color: COLORS[item.class.toLowerCase()] || COLORS['other energy'],
     })), [parsedLinks],
   );
+
+  const handleLinks = useCallback((label) => {
+    if (!label) {
+      setFilteredData(data);
+    } else {
+      const widgetData = ({
+        links: data.links.filter((d) => d.class === label),
+        nodes: data.nodes,
+      });
+      setFilteredData(widgetData);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      setFilteredData(data);
+    }
+  }, [data]);
 
   return (
     <div className={`flex ${className}`}>
@@ -361,7 +380,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               <div className="flex flex-col flex-1 w-96 py-8 h-700">
                 <SankeyLoops
                   unit={currentUnit}
-                  data={data}
+                  data={filteredData}
                   indicator={indicatorId}
                 />
               </div>
@@ -371,7 +390,9 @@ const SankeyChart: FC<ComponentTypes> = ({
         <section className="flex flex-col justify-between mb-4">
           <Legend
             payload={LegendPayload}
-            className="grid lg:grid-cols-4 sm:grid-cols-3 "
+            className="grid lg:grid-cols-4 sm:grid-cols-3"
+            onClick={handleLinks}
+            interactive
           />
         </section>
       </div>

@@ -31,7 +31,7 @@ import {
 } from 'hooks/regions';
 import { getCategoriesFromRecords } from 'utils';
 
-import mocked from 'components/indicator-visualizations/sankey-loops/sankey09022022_nobackflow.json';
+import mocked from 'components/indicator-visualizations/sankey/sankey2802.json';
 
 import ID_CHINA from 'utils/constants';
 
@@ -53,9 +53,9 @@ export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   );
   const query = useQuery(['fetch-indicators', current],
     () => fetchIndicators(group_id, subgroup_id, { locale: current }), {
-    keepPreviousData: true,
-    ...queryConfig,
-  });
+      keepPreviousData: true,
+      ...queryConfig,
+    });
 
   const {
     data,
@@ -87,25 +87,25 @@ export function useIndicator(
   );
   return useQuery<IndicatorProps, Error>(['indicator', indicatorId, current],
     () => fetchIndicator(groupId, subgroupId, indicatorId, { locale: current }), {
-    placeholderData: {
-      records: [],
-      categories: [],
-      category_filters: {},
-      data_source: null,
-      default_visualization: null,
-      description: null,
-      end_date: null,
-      id: null,
-      slug: null,
-      name: null,
-      published: false,
-      start_date: null,
-      visualization_types: [],
-      group: null,
-      subgroup: null,
-    },
-    ...queryOptions,
-  });
+      placeholderData: {
+        records: [],
+        categories: [],
+        category_filters: {},
+        data_source: null,
+        default_visualization: null,
+        description: null,
+        end_date: null,
+        id: null,
+        slug: null,
+        name: null,
+        published: false,
+        start_date: null,
+        visualization_types: [],
+        group: null,
+        subgroup: null,
+      },
+      ...queryOptions,
+    });
 }
 
 export function useIndicatorMetadata(
@@ -124,9 +124,9 @@ export function useIndicatorMetadata(
 
   const query = useQuery<IndicatorMetadata, Error>(['indicator-metadata', id, visualization, current],
     () => fetchIndicatorMetadata(id, { locale: current, ...params }), {
-    placeholderData: {},
-    ...queryOptions,
-  });
+      placeholderData: {},
+      ...queryOptions,
+    });
 
   const {
     data, isFetching, isFetched, isSuccess,
@@ -324,12 +324,12 @@ export function useSankeyData(
 
   const query = useQuery<SankeyLoopsData, Error>(['sankey-data', id, current, params],
     () => fetchSankeyData(id, { locale: current, ...restParams }), {
-    placeholderData: {
-      nodes: [],
-      links: [],
-    },
-    ...queryOptions,
-  });
+      placeholderData: {
+        nodes: [],
+        links: [],
+      },
+      ...queryOptions,
+    });
 
   const {
     isFetching, isFetched, isSuccess,
@@ -340,14 +340,14 @@ export function useSankeyData(
   const widgetData = useMemo(() => {
     const nodes = data?.nodes.map((d) => ({
       name: d.name_en,
-      col: d.col
+      col: d.col,
     }));
 
     // remove filter by year when data gets updated to the API
     const links = flatten(data?.data.filter((d) => d.year === params.year).map((l) => l.links))
       .map((_link) => ({
         ..._link,
-        optimal: "yes",
+        optimal: 'yes',
         source: nodes[_link.source],
         target: nodes[_link.target],
       }));
