@@ -13,53 +13,7 @@ import Tooltip from './tooltip';
 
 import { SankeyChart, Payload } from './types';
 
-interface Source2 {
-  circularLinkType: string;
-  col: number;
-  column: number;
-  depth: number;
-  height: number;
-  index: number;
-  name: string;
-  x0: number;
-  x1: number;
-  y0: number;
-  y1: number
-}
-
-interface DataLink {
-  // circular: boolean,
-  // class: string,
-  // class_cn: string,
-  // index: number,
-  // path: string,
-  source: unknown,
-  target: unknown,
-  value: number,
-  // width: number,
-  // y0: number,
-  // y1: number,
-}
-
-type Source = {
-  col: number,
-  column: number,
-  depth: number,
-  height: number,
-  index: number,
-  name: string,
-  partOfCycle: false,
-  sourceLinks: unknown,
-  targetLinks: unknown,
-  value: number,
-  x0: number,
-  x1: number,
-  y0: number,
-  y1: number,
-}
-
 const SankeyLoops: FC<SankeyChart> = ({
-  indicator,
   data,
   unit,
 }: SankeyChart) => {
@@ -112,7 +66,6 @@ const SankeyLoops: FC<SankeyChart> = ({
             iterations={5}
           >
             {({ data: parsedData }) => {
-              console.log(parsedData.nodes)
               interface NodeTypes {
                 circular: boolean,
                 class: string,
