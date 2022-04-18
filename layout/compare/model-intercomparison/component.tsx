@@ -19,6 +19,7 @@ import {
   useIndicatorRecords,
   useIndicatorMetadata,
 } from 'hooks/indicators';
+import { useMe } from 'hooks/auth';
 
 // components
 import Tooltip from 'components/tooltip';
@@ -115,6 +116,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
+      accessible_by: [],
       data_source: null,
       default_visualization: null,
       description: null,
@@ -131,7 +133,10 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const { data_source: dataSource } = indicatorData;
+  const {
+    accessible_by: accessibleBy,
+    data_source: dataSource,
+  } = indicatorData;
 
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
@@ -157,9 +162,9 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-      refetchOnWindowFocus: false,
-      enabled: !!visualization && !!scenario && (!!region || !!year),
-    },
+    refetchOnWindowFocus: false,
+    enabled: !!visualization && !!scenario && (!!region || !!year),
+  },
   );
 
   const {
@@ -313,6 +318,10 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const legendContainerRef = useRef(null);
   const height = legendContainerRef?.current && legendContainerRef?.current?.clientHeight;
 
+  const { data: user } = useMe();
+
+  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || accessibleBy.includes(user.role), [accessibleBy, user.role]);
+
   return (
     <section className={`flex flex-col  ${className}`}>
       <section className="flex items-center flex-wrap">
@@ -323,88 +332,88 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
         <div className="flex py-4 items-center">
           {/* region filter */}
           {(['line'].includes(visualization) && !!regions.length) && (
-          <div className="flex items-center">
-            {regions.length === 1 && (
-              <DropdownButton
-                display={displayRegion}
-                elKey="region"
-                translationKey="selectRegion"
-              />
-            )}
-            {regions.length > 1 && (
+            <div className="flex items-center">
+              {regions.length === 1 && (
+                <DropdownButton
+                  display={displayRegion}
+                  elKey="region"
+                  translationKey="selectRegion"
+                />
+              )}
+              {regions.length > 1 && (
+                <Tooltip
+                  placement="bottom-start"
+                  visible={dropdownVisibility.region}
+                  interactive
+                  onClickOutside={() => closeDropdown('region')}
+                  content={(
+                    <DropdownContent
+                      list={regions}
+                      keyEl="region"
+                      onClick={handleChange}
+                    />
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('region'); }}
+                  >
+                    <DropdownButton
+                      display={displayRegion}
+                      elKey="region"
+                      translationKey="selectRegion"
+                      icon="triagle_border"
+                      iconLabel="dropdown"
+                    />
+                  </button>
+                </Tooltip>
+              )}
+            </div>
+          )}
+          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+          {/* Scenario filter */}
+          {scenarios.length === 1 && (
+            <DropdownButton
+              display={displayScenario}
+              elKey="scenario"
+              translationKey="selectScenario"
+            />
+          )}
+          {scenarios?.length > 1 && (
             <Tooltip
               placement="bottom-start"
-              visible={dropdownVisibility.region}
+              visible={dropdownVisibility.scenario}
               interactive
-              onClickOutside={() => closeDropdown('region')}
+              onClickOutside={() => closeDropdown('scenario')}
               content={(
                 <DropdownContent
-                  list={regions}
-                  keyEl="region"
+                  list={scenarios}
+                  keyEl="scenario"
                   onClick={handleChange}
                 />
               )}
             >
               <button
                 type="button"
-                onClick={() => { toggleDropdown('region'); }}
+                onClick={() => { toggleDropdown('scenario'); }}
               >
                 <DropdownButton
-                  display={displayRegion}
-                  elKey="region"
-                  translationKey="selectRegion"
+                  display={displayScenario}
+                  elKey="scenario"
+                  translationKey="selectScenario"
                   icon="triagle_border"
                   iconLabel="dropdown"
                 />
               </button>
             </Tooltip>
-            )}
-          </div>
           )}
-          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
-          {/* Scenario filter */}
-          {scenarios.length === 1 && (
-          <DropdownButton
-            display={displayScenario}
-            elKey="scenario"
-            translationKey="selectScenario"
-          />
-          )}
-          {scenarios?.length > 1 && (
-          <Tooltip
-            placement="bottom-start"
-            visible={dropdownVisibility.scenario}
-            interactive
-            onClickOutside={() => closeDropdown('scenario')}
-            content={(
-              <DropdownContent
-                list={scenarios}
-                keyEl="scenario"
-                onClick={handleChange}
-              />
-              )}
-          >
-            <button
-              type="button"
-              onClick={() => { toggleDropdown('scenario'); }}
-            >
-              <DropdownButton
-                display={displayScenario}
-                elKey="scenario"
-                translationKey="selectScenario"
-                icon="triagle_border"
-                iconLabel="dropdown"
-              />
-            </button>
-          </Tooltip>
-            )}
           {/* Units filter */}
           {units.length === 1 && (
-          <DropdownButton
-            display={displayUnit}
-            elKey="unit"
-            translationKey="selectUnit"
-          />
+            <DropdownButton
+              display={displayUnit}
+              elKey="unit"
+              translationKey="selectUnit"
+            />
           )}
           {units?.length > 1 && (
             <Tooltip
@@ -418,7 +427,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   keyEl="unit"
                   onClick={handleChange}
                 />
-                  )}
+              )}
             >
               <button
                 type="button"
@@ -437,36 +446,39 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       <div className="flex justify-between w-full">
         <section className="w-1/2 max-h-128">
           {categories.length > 0 && visualization === 'bar' && (
-          <FiltersMI
-            models={categories}
-            activeModels={activeModels}
-            onClick={setActiveModel}
-            height={height}
-          />
+            <FiltersMI
+              models={categories}
+              activeModels={activeModels}
+              onClick={setActiveModel}
+              height={height}
+            />
           )}
           {categories.length > 0 && visualization !== 'bar' && (
-          <Filters
-            visualization={visualization}
-            categories={categories}
-            hasSubcategories={!!subcategories.length  || categories.length === 1}
-            className="overflow-y-auto"
-            onClick={compareIndex === 1 ? setFilters : setCompareFilters}
-            height={height}
-          />
+            <Filters
+              visualization={visualization}
+              categories={categories}
+              hasSubcategories={!!subcategories.length || categories.length === 1}
+              className="overflow-y-auto"
+              onClick={compareIndex === 1 ? setFilters : setCompareFilters}
+              height={height}
+            />
           )}
         </section>
         <section className="flex flex-col justify-between ml-4 w-1/2">
-          <DataSource
-            indicatorSlug={indicatorSlug}
-            dataSource={dataSource}
-            className="mb-4"
-          />
+          {hasDownloadPermissions
+            && (
+              <DataSource
+                indicatorSlug={indicatorSlug}
+                dataSource={dataSource}
+                className="mb-4"
+              />
+            )}
           {LegendPayload.length > 0 && visualization !== 'choropleth' && (
-          <Legend
-            ref={legendRef}
-            payload={LegendPayload}
-            className="overflow-y-scroll overflow-x-hidden text-ellipsis"
-          />
+            <Legend
+              ref={legendRef}
+              payload={LegendPayload}
+              className="overflow-y-scroll overflow-x-hidden text-ellipsis"
+            />
           )}
         </section>
       </div>
@@ -475,48 +487,48 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
         <section className="flex flex-col w-full">
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
-            <LoadingSpinner />
+              <LoadingSpinner />
             )}
 
             {isFetchedRecords
-            && !isFetchingRecords
-            && !filteredRecords.length
-            && !!visualization && (!!region || !!year)
-            && (
-            <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-              <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-              <p>Data not found</p>
-            </div>
-            )}
+              && !isFetchingRecords
+              && !filteredRecords.length
+              && !!visualization && (!!region || !!year)
+              && (
+                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                  <p>Data not found</p>
+                </div>
+              )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col h-full w-full min-h-1/2 py-4">
-              <div className={cx('w-full', {
-                'flex flex-wrap': visualization === 'bar',
-                'h-96': visualization !== 'bar',
-              })}
-              >
-                {visualization === 'line' && (
-                <Line
-                  widgetData={widgetData}
-                  widgetConfig={widgetConfig}
-                  colors={colors}
-                />
-                )}
-                {visualization === 'bar' && widgetData.map(
-                  (widget) => (
-                    <div key={widget.model} className="mr-2">
-                      <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
-                      <Bar
-                        widgetData={widget.data}
-                        widgetConfig={widgetConfig}
-                        colors={colors}
-                      />
-                    </div>
-                  ),
-                )}
+              <div className="flex flex-col h-full w-full min-h-1/2 py-4">
+                <div className={cx('w-full', {
+                  'flex flex-wrap': visualization === 'bar',
+                  'h-96': visualization !== 'bar',
+                })}
+                >
+                  {visualization === 'line' && (
+                    <Line
+                      widgetData={widgetData}
+                      widgetConfig={widgetConfig}
+                      colors={colors}
+                    />
+                  )}
+                  {visualization === 'bar' && widgetData.map(
+                    (widget) => (
+                      <div key={widget.model} className="mr-2">
+                        <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
+                        <Bar
+                          widgetData={widget.data}
+                          widgetConfig={widgetConfig}
+                          colors={colors}
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
               </div>
-            </div>
             )}
           </div>
         </section>

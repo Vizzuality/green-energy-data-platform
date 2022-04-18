@@ -20,6 +20,7 @@ import {
   useIndicatorRecords,
   useIndicatorMetadata,
 } from 'hooks/indicators';
+import { useMe } from 'hooks/auth';
 
 // components
 import Tooltip from 'components/tooltip';
@@ -110,6 +111,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
+      accessible_by: [],
       data_source: null,
       default_visualization: null,
       description: null,
@@ -126,8 +128,10 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     refetchOnWindowFocus: false,
   }));
 
-  const { data_source: dataSource } = indicatorData;
-
+  const {
+    accessible_by: accessibleBy,
+    data_source: dataSource,
+  } = indicatorData;
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
   const filtersIndicator = useMemo(() => {
@@ -298,6 +302,10 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   const legendContainerRef = useRef(null);
   const height = legendContainerRef?.current && legendContainerRef?.current?.clientHeight;
 
+  const { data: user } = useMe();
+
+  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || accessibleBy.includes(user.role), [accessibleBy, user.role]);
+
   return (
     <section className={`flex flex-col  ${className}`}>
       <section className="flex items-center flex-wrap">
@@ -464,7 +472,10 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           )}
         </section>
         <section ref={legendContainerRef} className="flex flex-col justify-between ml-4 w-1/2">
+        {hasDownloadPermissions
+          && (
           <DataSource indicatorSlug={indicatorSlug} dataSource={dataSource} className="mb-4" />
+          )}
           {categories.length > 0 && visualization !== 'choropleth' && (
           <Legend
             ref={legendRef}
