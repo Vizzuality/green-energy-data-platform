@@ -91,7 +91,7 @@ const ChartConfig = (categories, language, data) => {
       }));
     }
     return ([{
-      dataKey: KEY,
+      dataKey: !!categories[0] || KEY,
       strokeWidth: 2,
     }]);
   };
@@ -145,7 +145,8 @@ const ChartConfig = (categories, language, data) => {
       ],
       xAxis: {
         dataKey: 'year',
-        tick: { fill: '#3A3F59', opacity: 0.5 },
+        tick: { fill: '#3A3F59', opacity: 0.5, fontSize: 12 },
+        interval: 'preserveStartEnd',
       },
       yAxis: {
         tick: DefaultTick,
