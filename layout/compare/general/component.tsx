@@ -337,7 +337,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const { data: user } = useMe();
 
-  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || accessibleBy.includes(user.role), [accessibleBy, user.role]);
+  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || (user && user.role && accessibleBy.includes(user.role)),
+    [accessibleBy, user]);
 
   return (
     <div className={`flex flex-col ${className}`}>

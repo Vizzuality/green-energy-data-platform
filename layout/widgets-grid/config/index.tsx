@@ -76,6 +76,7 @@ const CONFIG = (categories, language) => {
       xAxis: {
         dataKey: 'year',
         tick: DefaultTick,
+        interval: 'preserveStartEnd'
       },
       yAxis: {
         tick: DefaultTick,

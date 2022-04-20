@@ -379,6 +379,7 @@ export const getGroupedValues = (
                   type: 'Feature',
                   geometry: geometry?.geometry,
                   properties: cat,
+                  total: Object.values(cat),
                 }),
               ),
             },

@@ -141,7 +141,7 @@ const IndicatorData: FC<Component> = ({
                         <button
                           type="button"
                           className="flex items-center w-full py-2 last:border-b-0"
-                          onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${slug}`)}
+                          onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${encodeURIComponent(slug)}`)}
                         >
                           {groupName}
                         </button>

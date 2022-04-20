@@ -74,17 +74,17 @@ const MapContainer: FC<MapContainerProps> = (
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const [hoverInteractions, setHoverInteractions] = useState({}
     || {
-      regions: layers[0].name,
-      cluster: {
-        point_count: null,
-        name: '',
-      },
-      properties: {
-        point_count: null,
-        total: null,
-        Total: null,
-      },
-    });
+    regions: layers[0].name,
+    cluster: {
+      point_count: null,
+      name: '',
+    },
+    properties: {
+      point_count: null,
+      total: null,
+      Total: null,
+    },
+  });
 
   const [lngLat, setLngLat] = useState([0, 0]);
   const [sortArray, setSortArray] = useState([]);
@@ -183,6 +183,9 @@ const MapContainer: FC<MapContainerProps> = (
     if (hoverInteractions?.cluster?.point_count) {
       setDisclaimerVisibility(false);
     }
+    else {
+
+    }
   }, [hoverInteractions, setDisclaimerVisibility]);
 
   return (
@@ -235,7 +238,6 @@ const MapContainer: FC<MapContainerProps> = (
               ))}
             </LayerManager>
             {((!!hoverInteractions?.properties?.total
-              || !!hoverInteractions?.properties?.Total
               || spiderTooltipInfoHeaders.length > 0)
               && hasInteraction && (
                 <Popup
@@ -284,6 +286,27 @@ const MapContainer: FC<MapContainerProps> = (
                       ))}
                     </ul>
                   )}
+                </Popup>
+              ))}
+            {((!!hoverInteractions?.properties?.Total
+            )
+              && hasInteraction && (
+                <Popup
+                  latitude={lngLat[1]}
+                  longitude={lngLat[0]}
+                  closeButton={false}
+                  tipSize={10}
+                  className="z-20 max-w-sm rounded-2xl"
+                >
+                  <div className="flex flex-col">
+                    <div className="flex">
+                      <span className="mr-2 text-sm">
+                        {i18next.t('total')}
+                        :
+                      </span>
+                      <span className="mr-2 text-sm">{hoverInteractions?.properties?.Total}</span>
+                    </div>
+                  </div>
                 </Popup>
             ))}
           </>

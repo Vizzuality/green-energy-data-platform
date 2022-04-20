@@ -317,8 +317,8 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const { data: user } = useMe();
 
-  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || accessibleBy.includes(user.role), [accessibleBy, user.role]);
-
+  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || (user && user.role && accessibleBy.includes(user.role)),
+  [accessibleBy, user]);
   return (
     <div className={`grid grid-cols-12 ${className}`}>
       <div className="col-span-8 h-full w-full">
