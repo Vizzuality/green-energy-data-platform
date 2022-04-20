@@ -20,6 +20,7 @@ import {
   useIndicatorRecords,
   useIndicatorMetadata,
 } from 'hooks/indicators';
+import { useMe } from 'hooks/auth';
 
 // components
 import Icon from 'components/icon';
@@ -163,9 +164,9 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-      refetchOnWindowFocus: false,
-      enabled: !!visualization && (!!region || !!year),
-    },
+    refetchOnWindowFocus: false,
+    enabled: !!visualization && (!!region || !!year),
+  },
   );
 
   const {
@@ -184,7 +185,11 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     enabled: !!indicatorSlug && !!visualization,
   });
 
-  const { name, data_source: dataSource } = indicatorData;
+  const {
+    name,
+    accessible_by: accessibleBy,
+    data_source: dataSource,
+  } = indicatorData;
 
   const categories = useMemo(
     () => getCategoriesFromRecords(records, visualization),
@@ -329,6 +334,11 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     () => subcategoriesTotals?.find(((subcat) => subcat?.label === category?.value))?.color,
     [category, subcategoriesTotals],
   );
+
+  const { data: user } = useMe();
+
+  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || (user && user.role && accessibleBy.includes(user.role)),
+    [accessibleBy, user]);
 
   return (
     <div className={`flex flex-col ${className}`}>
@@ -531,12 +541,16 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             />
           </div>
         )}
-        <DataSource
-          indicatorSlug={indicatorSlug}
-          type="horizontal"
-          dataSource={dataSource}
-          className="flex-1"
-        />
+        {hasDownloadPermissions
+          && (
+            <DataSource
+              indicatorSlug={indicatorSlug}
+              type="horizontal"
+              dataSource={dataSource}
+              className="flex-1"
+            />
+          )}
+
       </section>
     </div>
   );

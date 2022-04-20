@@ -80,8 +80,9 @@ export interface DataIdProps {
 }
 
 export interface IndicatorProps {
-  categories: [],
+  categories: string[],
   category_filters: CategoryFilters | string[],
+  accessible_by: string[],
   data_source: string,
   default_visualization: string,
   description: string;
