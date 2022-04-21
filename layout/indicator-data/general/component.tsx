@@ -317,8 +317,9 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const { data: user } = useMe();
 
-  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || (user && user.role && accessibleBy.includes(user.role)),
-  [accessibleBy, user]);
+  const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
+    [accessibleBy, user]);
+
   return (
     <div className={`grid grid-cols-12 ${className}`}>
       <div className="col-span-8 h-full w-full">
@@ -521,13 +522,11 @@ const IndicatorChart: FC<ComponentTypes> = ({
               />
             </div>
           )}
-          {hasDownloadPermissions
-            && (
-              <DataSource
-                indicatorSlug={indicatorSlug}
-                dataSource={dataSource}
-              />
-            )}
+          <DataSource
+            indicatorSlug={indicatorSlug}
+            dataSource={dataSource}
+            isAccesible={!!hasDownloadPermissions}
+          />
         </section>
       </div>
     </div>

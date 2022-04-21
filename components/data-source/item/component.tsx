@@ -24,6 +24,7 @@ interface ItemProps {
   source?: string,
   indSlug: string,
   className?: string,
+  disabled?: boolean,
 }
 
 const Item: FC<ItemProps> = ({
@@ -33,6 +34,7 @@ const Item: FC<ItemProps> = ({
   source,
   indSlug,
   className = '',
+  disabled = false,
 }: ItemProps) => {
   const [session] = useSession();
 
@@ -58,18 +60,28 @@ const Item: FC<ItemProps> = ({
         <div className="flex flex-col">
           <p className="text-left inline-flex text-base hover:text-gray-700">{name}</p>
           {!source && (
-          <ul className="flex flex-wrap">
-            {links?.map(({ label, format }) => (
-              <li className="text-color1 text-sm pr-3.75" key={label}>
-                <button className="cursor-pointer hover:font-bold underline" type="button" onClick={() => handleDownload(format)}>{label}</button>
-              </li>
-            ))}
-          </ul>
+            <ul className="flex flex-wrap">
+              {links?.map(({ label, format }) => (
+                <li className="text-color1 text-sm pr-3.75" key={label}>
+                  <button
+                    type="button"
+                    className={cx(
+                      'underline',
+                      { 'cursor-pointer hover:font-bold': !disabled },
+                    )}
+                    onClick={() => handleDownload(format)}
+                    disabled={disabled}
+                  >
+                    {label}
+                  </button>
+                </li>
+              ))}
+            </ul>
           )}
           {source && (
-          <span className="text-left text-color1 text-sm pr-3.75 hover:font-bold underline">
-            {source}
-          </span>
+            <span className="text-left text-color1 text-sm pr-3.75 font-bold">
+              {source}
+            </span>
           )}
         </div>
       </div>

@@ -161,10 +161,11 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     isFetched: isFetchedRecords,
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
-    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-    refetchOnWindowFocus: false,
-    enabled: !!visualization && !!scenario && (!!region || !!year),
-  },
+    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator,
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && !!scenario && (!!region || !!year),
+    },
   );
 
   const {
@@ -321,7 +322,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const { data: user } = useMe();
 
   const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || (user && user.role && accessibleBy.includes(user.role)),
-  [accessibleBy, user]);
+    [accessibleBy, user]);
   return (
     <section className={`flex flex-col  ${className}`}>
       <section className="flex items-center flex-wrap">
@@ -465,14 +466,12 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           )}
         </section>
         <section className="flex flex-col justify-between ml-4 w-1/2">
-          {hasDownloadPermissions
-            && (
-              <DataSource
-                indicatorSlug={indicatorSlug}
-                dataSource={dataSource}
-                className="mb-4"
-              />
-            )}
+          <DataSource
+            indicatorSlug={indicatorSlug}
+            dataSource={dataSource}
+            className="mb-4"
+            isAccesible={!!hasDownloadPermissions}
+          />
           {LegendPayload.length > 0 && visualization !== 'choropleth' && (
             <Legend
               ref={legendRef}

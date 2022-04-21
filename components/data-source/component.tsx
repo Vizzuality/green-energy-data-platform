@@ -11,6 +11,7 @@ interface DataProps {
   type?: 'vertical' | 'horizontal',
   indicatorSlug: string,
   dataSource: string,
+  isAccesible: boolean,
 }
 
 const downloadLinks = [
@@ -24,6 +25,7 @@ const Card: FC<DataProps> = ({
   type = 'vertical',
   indicatorSlug,
   dataSource,
+  isAccesible = false,
 }: DataProps) => {
   const router = useRouter();
   const { subgroup } = router.query;
@@ -31,9 +33,12 @@ const Card: FC<DataProps> = ({
 
   return (
     <div className={cx('flex divide-gray4 divide-opacity-90 text-center bg-gray5 text-gray1 rounded-2xl',
-      { [className]: className },
-      { 'divide-y flex-col': type === 'vertical' },
-      { 'divide-x flex-row': type === 'horizontal' })}
+      {
+        [className]: className,
+        'opacity-50': !isAccesible,
+        'divide-y flex-col': type === 'vertical',
+        'divide-x flex-row': type === 'horizontal',
+      })}
     >
       <Item
         icon="download"
@@ -43,6 +48,7 @@ const Card: FC<DataProps> = ({
           { 'justify-center rounded-l-2xl': type === 'horizontal' },
           { 'justify-start rounded-t-2xl': type === 'vertical' })}
         indSlug={indSlug}
+        disabled={!isAccesible}
       />
       <Item
         icon="data"
@@ -52,6 +58,7 @@ const Card: FC<DataProps> = ({
           { 'justify-center rounded-r-2xl': type === 'horizontal' },
           { 'justify-start rounded-b-2xl': type === 'vertical' })}
         indSlug={indSlug}
+        disabled={!isAccesible}
       />
     </div>
   );
