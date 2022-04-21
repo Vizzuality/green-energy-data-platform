@@ -166,9 +166,9 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-      refetchOnWindowFocus: false,
-      enabled: !!visualization && !!scenario && (!!region || !!year),
-    },
+    refetchOnWindowFocus: false,
+    enabled: !!visualization && !!scenario && (!!region || !!year),
+  },
   );
 
   const {
@@ -304,8 +304,9 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   const { data: user } = useMe();
 
-  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || (user && user.role && accessibleBy.includes(user.role)),
-  [accessibleBy, user]);
+  const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
+    [accessibleBy, user]);
+
   return (
     <section className={`flex flex-col  ${className}`}>
       <section className="flex items-center flex-wrap">
@@ -316,83 +317,53 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
         <div className="flex py-4 items-center">
           {/* region filter */}
           {(['line'].includes(visualization) && !!regions.length) && (
-          <div className="flex items-center">
-            {regions.length === 1 && (
-            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
-              <span className="mr-2 hidden md:flex">
-                {i18next.t('region')}
-                :
-              </span>
-              <span>
-                {displayRegion || i18next.t('selectRegion')}
-              </span>
+            <div className="flex items-center">
+              {regions.length === 1 && (
+                <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
+                  <span className="mr-2 hidden md:flex">
+                    {i18next.t('region')}
+                    :
+                  </span>
+                  <span>
+                    {displayRegion || i18next.t('selectRegion')}
+                  </span>
+                </div>
+              )}
+              {regions.length > 1 && (
+                <Tooltip
+                  placement="bottom-start"
+                  visible={dropdownVisibility.region}
+                  interactive
+                  onClickOutside={() => closeDropdown('region')}
+                  content={(
+                    <DropdownContent
+                      list={regions}
+                      keyEl="region"
+                      onClick={handleChange}
+                    />
+                  )}
+                >
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('region'); }}
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                  >
+                    <span className="mr-2 hidden md:flex">
+                      {i18next.t('region')}
+                      :
+                    </span>
+                    <span>
+                      {displayRegion || i18next.t('selectRegion')}
+                    </span>
+                    <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
+                  </button>
+                </Tooltip>
+              )}
             </div>
-            )}
-            {regions.length > 1 && (
-            <Tooltip
-              placement="bottom-start"
-              visible={dropdownVisibility.region}
-              interactive
-              onClickOutside={() => closeDropdown('region')}
-              content={(
-                <DropdownContent
-                  list={regions}
-                  keyEl="region"
-                  onClick={handleChange}
-                />
-                )}
-            >
-              <button
-                type="button"
-                onClick={() => { toggleDropdown('region'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
-              >
-                <span className="mr-2 hidden md:flex">
-                  {i18next.t('region')}
-                  :
-                </span>
-                <span>
-                  {displayRegion || i18next.t('selectRegion')}
-                </span>
-                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
-              </button>
-            </Tooltip>
-            )}
-          </div>
           )}
           {/* Scenario filter */}
           {scenarios.length === 1 && (
-          <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
-            <span className="mr-2 hidden md:flex">
-              {i18next.t('scenario')}
-              :
-            </span>
-            <span>
-              {displayScenario || i18next.t('selectScenario')}
-            </span>
-          </div>
-          )}
-          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
-
-          {scenarios?.length > 1 && (
-          <Tooltip
-            placement="bottom-start"
-            visible={dropdownVisibility.scenario}
-            interactive
-            onClickOutside={() => closeDropdown('scenario')}
-            content={(
-              <DropdownContent
-                list={scenarios}
-                keyEl="scenario"
-                onClick={handleChange}
-              />
-              )}
-          >
-            <button
-              type="button"
-              onClick={() => { toggleDropdown('scenario'); }}
-              className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
-            >
+            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
               <span className="mr-2 hidden md:flex">
                 {i18next.t('scenario')}
                 :
@@ -400,21 +371,51 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               <span>
                 {displayScenario || i18next.t('selectScenario')}
               </span>
-              <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
-            </button>
-          </Tooltip>
-            )}
+            </div>
+          )}
+          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+
+          {scenarios?.length > 1 && (
+            <Tooltip
+              placement="bottom-start"
+              visible={dropdownVisibility.scenario}
+              interactive
+              onClickOutside={() => closeDropdown('scenario')}
+              content={(
+                <DropdownContent
+                  list={scenarios}
+                  keyEl="scenario"
+                  onClick={handleChange}
+                />
+              )}
+            >
+              <button
+                type="button"
+                onClick={() => { toggleDropdown('scenario'); }}
+                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+              >
+                <span className="mr-2 hidden md:flex">
+                  {i18next.t('scenario')}
+                  :
+                </span>
+                <span>
+                  {displayScenario || i18next.t('selectScenario')}
+                </span>
+                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
+              </button>
+            </Tooltip>
+          )}
           {/* Units filter */}
           {units.length === 1 && (
-          <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
-            <span className="mr-2 hidden md:flex">
-              {i18next.t('unit')}
-              :
-            </span>
-            <span>
-              {displayUnit || i18next.t('selectUnit')}
-            </span>
-          </div>
+            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
+              <span className="mr-2 hidden md:flex">
+                {i18next.t('unit')}
+                :
+              </span>
+              <span>
+                {displayUnit || i18next.t('selectUnit')}
+              </span>
+            </div>
           )}
           {units?.length > 1 && (
             <Tooltip
@@ -428,7 +429,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                   keyEl="unit"
                   onClick={handleChange}
                 />
-                  )}
+              )}
             >
               <button
                 type="button"
@@ -461,27 +462,29 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
             </div>
           )}
           {categories.length > 0 && visualization !== 'bar' && (
-          <Filters
-            visualization={visualization}
-            categories={categories}
-            hasSubcategories={!!subcategories.length || categories.length === 1}
-            className="overflow-y-auto"
-            onClick={setFilters}
-            height={height}
-          />
+            <Filters
+              visualization={visualization}
+              categories={categories}
+              hasSubcategories={!!subcategories.length || categories.length === 1}
+              className="overflow-y-auto"
+              onClick={setFilters}
+              height={height}
+            />
           )}
         </section>
         <section ref={legendContainerRef} className="flex flex-col justify-between ml-4 w-1/2">
-        {hasDownloadPermissions
-          && (
-          <DataSource indicatorSlug={indicatorSlug} dataSource={dataSource} className="mb-4" />
-          )}
-          {categories.length > 0 && visualization !== 'choropleth' && (
-          <Legend
-            ref={legendRef}
-            payload={LegendPayload}
-            className="overflow-y-scroll overflow-x-hidden"
+          <DataSource
+            indicatorSlug={indicatorSlug}
+            dataSource={dataSource}
+            className="mb-4"
+            isAccesible={!!hasDownloadPermissions}
           />
+          {categories.length > 0 && visualization !== 'choropleth' && (
+            <Legend
+              ref={legendRef}
+              payload={LegendPayload}
+              className="overflow-y-scroll overflow-x-hidden"
+            />
           )}
         </section>
       </div>
@@ -490,48 +493,48 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
         <section className="flex flex-col w-full">
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (
-            <LoadingSpinner />
+              <LoadingSpinner />
             )}
 
             {isFetchedRecords
-            && !isFetchingRecords
-            && !filteredRecords.length
-            && !!visualization && (!!region || !!year)
-            && (
-            <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-              <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-              <p>Data not found</p>
-            </div>
-            )}
+              && !isFetchingRecords
+              && !filteredRecords.length
+              && !!visualization && (!!region || !!year)
+              && (
+                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                  <p>Data not found</p>
+                </div>
+              )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-              <div className={cx('w-full', {
-                'flex flex-wrap': visualization === 'bar',
-                'h-96': visualization !== 'bar',
-              })}
-              >
-                {visualization === 'line' && (
-                <Line
-                  widgetData={widgetData}
-                  widgetConfig={widgetConfig}
-                  colors={colors}
-                />
-                )}
-                {visualization === 'bar' && widgetData.map(
-                  (widget) => (
-                    <div key={widget.model} className="mr-2">
-                      <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
-                      <Bar
-                        widgetData={widget.data}
-                        widgetConfig={widgetConfig}
-                        colors={colors}
-                      />
-                    </div>
-                  ),
-                )}
+              <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+                <div className={cx('w-full', {
+                  'flex flex-wrap': visualization === 'bar',
+                  'h-96': visualization !== 'bar',
+                })}
+                >
+                  {visualization === 'line' && (
+                    <Line
+                      widgetData={widgetData}
+                      widgetConfig={widgetConfig}
+                      colors={colors}
+                    />
+                  )}
+                  {visualization === 'bar' && widgetData.map(
+                    (widget) => (
+                      <div key={widget.model} className="mr-2">
+                        <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
+                        <Bar
+                          widgetData={widget.data}
+                          widgetConfig={widgetConfig}
+                          colors={colors}
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
               </div>
-            </div>
             )}
           </div>
         </section>

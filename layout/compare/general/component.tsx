@@ -337,7 +337,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const { data: user } = useMe();
 
-  const hasDownloadPermissions = useMemo(() => accessibleBy.includes('guest') || (user && user.role && accessibleBy.includes(user.role)),
+  const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
     [accessibleBy, user]);
 
   return (
@@ -541,16 +541,13 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             />
           </div>
         )}
-        {hasDownloadPermissions
-          && (
-            <DataSource
-              indicatorSlug={indicatorSlug}
-              type="horizontal"
-              dataSource={dataSource}
-              className="flex-1"
-            />
-          )}
-
+        <DataSource
+          indicatorSlug={indicatorSlug}
+          type="horizontal"
+          dataSource={dataSource}
+          className="flex-1"
+          isAccesible={!!hasDownloadPermissions}
+        />
       </section>
     </div>
   );
