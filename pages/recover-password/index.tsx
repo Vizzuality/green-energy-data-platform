@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 
 // services
 import { updateUser } from 'services/user';
+import i18next from 'i18next';
 
 const NewPasswordPage: FC = () => {
   const queryClient = useQueryClient();
@@ -153,7 +154,7 @@ const NewPasswordPage: FC = () => {
               size="xlg"
               className="w-full bg-gray1 border-gray1 text-white text-sm"
             >
-              Change password
+              {i18next.t('changePassword')}
             </Button>
           </form>
         </div>

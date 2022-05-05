@@ -2,9 +2,6 @@ import { getSession } from 'next-auth/client';
 import { QueryClient } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
 
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
-
 // services
 import { fetchUserMe } from 'services/user';
 
@@ -64,14 +61,8 @@ export function withUser(getServerSidePropsFunc?: Function) {
 
     const queryClient = new QueryClient();
 
-    const {
-      current,
-    } = useSelector(
-      (state: RootState) => (state.language),
-    );
-
     await queryClient.prefetchQuery('me',
-      () => fetchUserMe(`Bearer ${session.accessToken}`, { locale: current })
+      () => fetchUserMe(`Bearer ${session.accessToken}`)
         .then((data) => data));
 
     if (getServerSidePropsFunc) {

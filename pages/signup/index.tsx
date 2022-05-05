@@ -93,16 +93,16 @@ const SignupPage: FC = () => {
               <a href="/signin" className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black flex items-center justify-center text-center rounded-full focus:outline-none">Sign in</a>
             </Link>
           </section>
-          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-16 min-w-70shadow max-w-2xl">
+          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-16 shadow min-w-[640px]">
             <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
-                <label htmlFor="title" className="text-2.5xl font-bold">
+                <label htmlFor="title" className="text-xl font-bold">
                   {i18next.t('yourTitle')}
                   :
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon
-                      ariaLabel="profile"
-                      name="profile"
+                      ariaLabel="Title"
+                      name="Title"
                       size="lg"
                       className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold"
                     />
@@ -124,7 +124,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="name" className="text-2.5xl font-bold">
+                <label htmlFor="name" className="text-xl font-bold">
                   {i18next.t('yourName')}
                   :
                   <div className="relative mb-10 sm:mb-4 font-normal">
@@ -152,7 +152,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="email" className="text-2.5xl font-bold">
+                <label htmlFor="email" className="text-xl font-bold">
                   {i18next.t('yourEmail')}
                   :
                   <div className="relative mb-10 sm:mb-4 font-normal">
@@ -173,13 +173,13 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="organization" className="text-2.5xl font-bold">
+                <label htmlFor="organization" className="text-xl font-bold">
                   {i18next.t('yourOrganization')}
                   :
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon
-                      ariaLabel="profile"
-                      name="profile"
+                      ariaLabel="Organization"
+                      name="Organization"
                       size="lg"
                       className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold"
                     />
@@ -201,7 +201,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="password" className="text-2.5xl pb-10 font-bold">
+                <label htmlFor="password" className="text-xl pb-10 font-bold">
                   {i18next.t('enterPassword')}
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
@@ -222,7 +222,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="password_confirmation" className="text-2.5xl pb-10 font-bold">
+                <label htmlFor="password_confirmation" className="text-xl pb-10 font-bold">
                   {i18next.t('repeatPassword')}
                   :
                   <div className={cx('relative font-normal',
