@@ -63,7 +63,7 @@ const SigninPage: FC<SigninProps> = ({
       email,
       password,
     }).then((res) => {
-      const { error }:any = res;
+      const { error }: any = res;
       if (error) setPasswordFailed(true);
       else router.push('/');
     });
@@ -152,10 +152,13 @@ const SigninPage: FC<SigninProps> = ({
                         required
                       />
                       <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-4',
-                        { 'bg-gradient-color1': credentials.password.length } && { 'bg-red-800': isPasswordFailed })}
+                        {
+                          'bg-gradient-color1': credentials.password.length && !isPasswordFailed,
+                          'bg-red-100': !!isPasswordFailed,
+                        })}
                       />
                     </div>
-                    {isPasswordFailed && <div className="font-sans text-xs font-light text-red-800">THE PASSWORD DOESN&apos;T MATCH THE EMAIL</div>}
+                    {isPasswordFailed && <div className="font-sans text-xs font-light text-red-100">THE PASSWORD DOESN&apos;T MATCH THE EMAIL</div>}
                   </label>
                   <button
                     type="button"

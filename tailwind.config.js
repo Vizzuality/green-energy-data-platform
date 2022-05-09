@@ -22,6 +22,7 @@ module.exports = {
         color11: '#CC1771',
         color12: '#8E9195',
         'gradient-white': 'linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 49.55%, rgba(255, 255, 255, 0) 101.2%)',
+        'red-100': '#FD1A2F',
       },
       spacing: {
         3.75: '0.938rem',
