@@ -24,8 +24,10 @@ import router from 'next/router';
 
 const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
+    title: '',
     username: '',
     email: '',
+    organization: '',
     password: '',
     password_confirmation: '',
   });
@@ -91,10 +93,38 @@ const SignupPage: FC = () => {
               <a href="/signin" className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black flex items-center justify-center text-center rounded-full focus:outline-none">Sign in</a>
             </Link>
           </section>
-          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-16 min-w-70shadow max-w-2xl">
+          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-16 shadow min-w-[640px]">
             <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
-                <label htmlFor="name" className="text-2.5xl font-bold">
+                <label htmlFor="title" className="text-xl font-bold">
+                  {i18next.t('yourTitle')}
+                  :
+                  <div className="relative mb-10 sm:mb-4 font-normal">
+                    <Icon
+                      ariaLabel="Title"
+                      name="Title"
+                      size="lg"
+                      className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold"
+                    />
+                    <input
+                      id="title"
+                      name="title"
+                      type="text"
+                      placeholder="Write your title"
+                      className={cx(
+                        'w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
+                        { 'placeholder-opacity-100': credentials.title.length },
+                      )}
+                      value={credentials.title}
+                      onChange={(e) => handleChange('title', e)}
+                      required
+                    />
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',
+                      { 'bg-gradient-color1': credentials.password.length })}
+                    />
+                  </div>
+                </label>
+                <label htmlFor="name" className="text-xl font-bold">
                   {i18next.t('yourName')}
                   :
                   <div className="relative mb-10 sm:mb-4 font-normal">
@@ -122,7 +152,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="email" className="text-2.5xl font-bold">
+                <label htmlFor="email" className="text-xl font-bold">
                   {i18next.t('yourEmail')}
                   :
                   <div className="relative mb-10 sm:mb-4 font-normal">
@@ -143,7 +173,35 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="password" className="text-2.5xl pb-10 font-bold">
+                <label htmlFor="organization" className="text-xl font-bold">
+                  {i18next.t('yourOrganization')}
+                  :
+                  <div className="relative mb-10 sm:mb-4 font-normal">
+                    <Icon
+                      ariaLabel="Organization"
+                      name="Organization"
+                      size="lg"
+                      className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold"
+                    />
+                    <input
+                      id="organization"
+                      name="organization"
+                      type="name"
+                      placeholder="Write your organization account"
+                      className={cx(
+                        'w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
+                        { 'placeholder-opacity-100': credentials.organization.length },
+                      )}
+                      value={credentials.organization}
+                      onChange={(e) => handleChange('organization', e)}
+                      required
+                    />
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',
+                      { 'bg-gradient-color1': credentials.password.length })}
+                    />
+                  </div>
+                </label>
+                <label htmlFor="password" className="text-xl pb-10 font-bold">
                   {i18next.t('enterPassword')}
                   <div className="relative mb-10 sm:mb-4 font-normal">
                     <Icon ariaLabel="password-input" name="password" size="lg" className="absolute -left-10 transform -translate-y-1/2 top-1/2 font-bold" />
@@ -164,7 +222,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="password_confirmation" className="text-2.5xl pb-10 font-bold">
+                <label htmlFor="password_confirmation" className="text-xl pb-10 font-bold">
                   {i18next.t('repeatPassword')}
                   :
                   <div className={cx('relative font-normal',
