@@ -156,9 +156,9 @@ const IndicatorChart: FC<ComponentTypes> = ({
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-    refetchOnWindowFocus: false,
-    enabled: !!visualization && (!!region || !!year),
-  },
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && (!!region || !!year),
+    },
   );
 
   const {

@@ -164,9 +164,9 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-    refetchOnWindowFocus: false,
-    enabled: !!visualization && (!!region || !!year),
-  },
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && (!!region || !!year),
+    },
   );
 
   const {
@@ -212,8 +212,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current, indicatorData)[visualization],
-    [visualization, widgetDataKeys, indicatorData, current],
+    () => ChartConfig(widgetDataKeys, current, records)[visualization],
+    [visualization, widgetDataKeys, records, current],
   );
 
   const widgetData = useMemo(
