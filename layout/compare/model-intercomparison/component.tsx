@@ -333,7 +333,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
         </span>
         <div className="flex py-4 items-center">
           {/* region filter */}
-          {(['line'].includes(visualization) && !!regions.length) && (
+          {(['line'].includes(visualization) && !!regions.length && displayRegion) && (
             <div className="flex items-center">
               {regions.length === 1 && (
                 <DropdownButton
@@ -342,7 +342,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   translationKey="selectRegion"
                 />
               )}
-              {regions.length > 1 && (
+              {regions.length > 1 && displayRegion && (
                 <Tooltip
                   placement="bottom-start"
                   visible={dropdownVisibility.region}
@@ -372,7 +372,6 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
               )}
             </div>
           )}
-          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
           {/* Scenario filter */}
           {scenarios.length === 1 && (
             <DropdownButton

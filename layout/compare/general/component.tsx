@@ -424,7 +424,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualization) && !!regions.length) && (
+            {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
               <div className="flex items-center">
                 <span className="pr-2">
                   {i18next.t('region')}
@@ -456,7 +456,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 )}
               </div>
             )}
-            {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+            {!regions.length && displayRegion && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
           </div>
           <div className="flex h-full w-full min-h-1/2">
             {isFetchingRecords && (

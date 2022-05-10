@@ -316,7 +316,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
         </span>
         <div className="flex py-4 items-center">
           {/* region filter */}
-          {(['line'].includes(visualization) && !!regions.length) && (
+          {(['line'].includes(visualization) && !!regions.length && displayRegion) && (
             <div className="flex items-center">
               {regions.length === 1 && (
                 <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">

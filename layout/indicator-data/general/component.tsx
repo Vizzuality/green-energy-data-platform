@@ -361,7 +361,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualization) && !!regions.length) && (
+            {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
               <div className="flex items-center">
                 <span className="pr-2">
                   {i18next.t('region')}
