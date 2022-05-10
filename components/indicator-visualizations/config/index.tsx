@@ -80,8 +80,8 @@ const TooltipContent: FC<TooltipProps> = ({
 
 const ChartConfig = (categories, language, data) => {
   const values = useMemo(() => data.map((d) => d.value), [data]);
-  const MINVALUE = useMemo(() => Math.ceil(Math.max(...values)), [values]);
-  const MAXVALUE = useMemo(() => Math.floor(Math.min(...values)), [values]);
+  const MINVALUE = useMemo(() => Math.floor(Math.min(...values)), [values]);
+  const MAXVALUE = useMemo(() => Math.ceil(Math.max(...values)), [values]);
 
   const KEY = language === 'cn' ? '全部的' : 'Total';
   const getLines = () => {
@@ -152,6 +152,7 @@ const ChartConfig = (categories, language, data) => {
       yAxis: {
         tick: DefaultTick,
         domain: [MINVALUE, MAXVALUE],
+        allowDecimals: false,
         interval: 0,
       },
       tooltip: {
