@@ -40,6 +40,7 @@ const Demo: FC<DemoProps> = ({
   const gradientID = `linkGradient${index}`;
 
   // target link with losses to make gradient fade away
+
   const targetLoss = payload?.target?.name.includes('losses');
 
   return (

@@ -329,10 +329,10 @@ export function useSankeyData(
   } = query;
 
   // TO - DO - change indicator
-  const data = fakeData[1];
+  const data = fakeData[0];
 
   const widgetData = useMemo<SankeyChartData>(() => {
-    const nodes = data?.nodes.map(({ name }) => ({ name }));
+    const nodes = data?.nodes.map(({ name_en }) => ({ name: name_en }));
     const links = flatten(data?.data.filter(
       (y) => y.year === 2019,
     ) // TO DO - Oscar filters by year
