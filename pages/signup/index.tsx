@@ -216,7 +216,7 @@ const SignupPage: FC = () => {
                 )}
                 <label htmlFor="terms-conditions" className="flex flex-row-reverse items-center justify-end text-sm text-gray1">
                   <span>
-                    {i18next.t('agreement')}
+                    {`${i18next.t('agreement')} `}
 
                     <Link href={{ pathname: '/terms-conditions' }} passHref>
                       <a href="/terms-conditions" className="underline">
@@ -234,7 +234,7 @@ const SignupPage: FC = () => {
                 </label>
                 <label htmlFor="privacy-policy" className="flex flex-row-reverse items-center justify-end mb-8 text-sm text-gray1">
                   <span>
-                    {i18next.t('agreement')}
+                    {`${i18next.t('agreement')} `}
                     <Link href={{ pathname: '/privacy-policy' }} passHref>
                       <a href="/privacy-policy" className="underline">
                         {i18next.t('privacy')}
