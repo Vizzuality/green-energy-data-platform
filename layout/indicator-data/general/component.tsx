@@ -156,9 +156,9 @@ const IndicatorChart: FC<ComponentTypes> = ({
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-    refetchOnWindowFocus: false,
-    enabled: !!visualization && (!!region || !!year),
-  },
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && (!!region || !!year),
+    },
   );
 
   const {
@@ -361,7 +361,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualization) && !!regions.length) && (
+            {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
               <div className="flex items-center">
                 <span className="pr-2">
                   {i18next.t('region')}

@@ -19,11 +19,11 @@ export const GeneralVisualizationsOptions = [
     icon: 'bar',
     label: 'provinces',
   },
-  {
-    id: 'table',
-    icon: 'columns',
-    label: 'table',
-  },
+  // {
+  //   id: 'table',
+  //   icon: 'columns',
+  //   label: 'table',
+  // },
 ];
 
 export const ModelIntercomparisonVisualizationsOptions = [
@@ -37,9 +37,9 @@ export const ModelIntercomparisonVisualizationsOptions = [
     icon: 'bar',
     label: 'breakDown',
   },
-  {
-    id: 'table',
-    icon: 'columns',
-    label: 'table',
-  },
+  // {
+  //   id: 'table',
+  //   icon: 'columns',
+  //   label: 'table',
+  // },
 ];

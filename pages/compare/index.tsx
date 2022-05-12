@@ -24,6 +24,7 @@ const ComparePage: FC<ComparePageProps> = ({
     const url = `${groupSlug}/${subgroupSlug}/${indicatorSlug}`;
     router.push(url, url, { shallow: true });
   };
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1 flex flex-col flex-1">
       <Head title="Green Energy Data Platform" />

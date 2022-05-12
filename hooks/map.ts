@@ -6,6 +6,7 @@ const tooltipRestricted = [
   'cluster_id',
   'point_count',
   'point_count_abbreviated',
+  'geometry',
 ];
 
 export function useCoalPowerPlantTooltip(info) {
@@ -15,7 +16,6 @@ export function useCoalPowerPlantTooltip(info) {
       (tooltip) => !tooltipRestricted.includes(tooltip),
     ), [tooltipInfo],
   );
-
   return {
     tooltipInfo,
     tooltipInfoHeaders,
