@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import i18next from 'i18next';
 
 const CookieBanner: React.FC<{}> = () => {
   const [loadBanner, setLoadBanner] = useState(true);
@@ -11,11 +12,10 @@ const CookieBanner: React.FC<{}> = () => {
         && (
           <div className="sticky bottom-0 z-10 flex justify-center w-full h-16 p-6 text-center bg-gray1">
             <p className="absolute text-sm text-white left-14">
-              This site uses cookies to provide you with a great user experience.
-              By using this platform, you accept our
+              {i18next.t('siteCookies')}
               {' '}
               <Link href={{ pathname: '/' }} passHref>
-                <a href="/" className="underline">use of cookies.</a>
+                <a href="/" className="underline">{i18next.t('useOfCookies')}</a>
               </Link>
             </p>
 
