@@ -65,7 +65,7 @@ const HomePage: FC = () => {
       <CookieBanner />
 
       <PreFooter />
-
+      <CookieBanner />
     </LayoutPage>
   );
 };
