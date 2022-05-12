@@ -168,6 +168,7 @@ export const resources = {
       energyTransformation: '能量转换',
       finalConsumption: '最终消费',
       download: '下载',
+      dataSource: '数据源',
       downloadLoginMode: '数据只能在登录模式下下载。',
       fullscreenDisclaimer: '更改为全屏以更好地查看地图',
       otherIndicators: '查看其他指标的数据集',
