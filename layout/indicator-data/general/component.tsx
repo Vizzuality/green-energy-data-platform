@@ -308,7 +308,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   useEffect(() => {
     if (category?.label === 'category_1' && subcategories.length === 1) setSubcategoriesTotals(LegendPayload);
-  }, [category, subcategories.length, setSubcategoriesTotals]);
+  }, [category, subcategories.length, setSubcategoriesTotals, LegendPayload]);
 
   const singleValueLegendColor = useMemo(
     () => subcategoriesTotals?.find(((subcat) => subcat?.label === category?.value))?.color,
@@ -322,12 +322,12 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   return (
     <div className={`grid grid-cols-12 ${className}`}>
-      <div className="col-span-8 h-full w-full">
+      <div className="w-full h-full col-span-8">
         <section className="flex flex-col w-full">
-          <div className="flex w-full justify-between">
+          <div className="flex justify-between w-full">
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
-              <div className="flex items-center flex-wrap">
+              <div className="flex flex-wrap items-center">
                 <span className="pr-2 whitespace-nowrap">
                   {i18next.t('showing')}
                   :
@@ -430,7 +430,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             )}
           </div>
 
-          <div className="flex h-full w-full min-h-1/2">
+          <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
               <LoadingSpinner />
             )}
@@ -439,14 +439,14 @@ const IndicatorChart: FC<ComponentTypes> = ({
               && !filteredRecords.length
               && !!visualization && (!!region || !!year)
               && (
-                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                   <p>Data not found</p>
                 </div>
               )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+              <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                 <div className="flex items-center">
                   {visualization !== 'choropleth'
                     && (
@@ -509,7 +509,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
               visualization={visualization}
               categories={categories}
               hasSubcategories={!!subcategories.length || categories.length === 1}
-              className="overflow-y-auto mb-4"
+              className="mb-4 overflow-y-auto"
               onClick={setFilters}
             />
           )}
@@ -517,7 +517,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             <div className="mb-4">
               <Legend
                 payload={LegendPayload}
-                className="overflow-y-scroll text-ellipsis w-full"
+                className="w-full overflow-y-scroll text-ellipsis"
                 singleValueLegendColor={singleValueLegendColor}
               />
             </div>
@@ -525,7 +525,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
           <DataSource
             indicatorSlug={indicatorSlug}
             dataSource={dataSource}
-            isAccesible={!!hasDownloadPermissions}
+            isAccessible={!!hasDownloadPermissions}
           />
         </section>
       </div>

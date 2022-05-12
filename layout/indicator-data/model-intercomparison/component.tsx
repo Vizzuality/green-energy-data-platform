@@ -166,9 +166,9 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
     groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
-    refetchOnWindowFocus: false,
-    enabled: !!visualization && !!scenario && (!!region || !!year),
-  },
+      refetchOnWindowFocus: false,
+      enabled: !!visualization && !!scenario && (!!region || !!year),
+    },
   );
 
   const {
@@ -309,18 +309,18 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   return (
     <section className={`flex flex-col  ${className}`}>
-      <section className="flex items-center flex-wrap">
+      <section className="flex flex-wrap items-center">
         <span className="pr-2 whitespace-nowrap">
           {i18next.t('showing')}
           :
         </span>
-        <div className="flex py-4 items-center">
+        <div className="flex items-center py-4">
           {/* region filter */}
           {(['line'].includes(visualization) && !!regions.length && displayRegion) && (
             <div className="flex items-center">
               {regions.length === 1 && (
                 <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
-                  <span className="mr-2 hidden md:flex">
+                  <span className="hidden mr-2 md:flex">
                     {i18next.t('region')}
                     :
                   </span>
@@ -348,7 +348,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                     onClick={() => { toggleDropdown('region'); }}
                     className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
                   >
-                    <span className="mr-2 hidden md:flex">
+                    <span className="hidden mr-2 md:flex">
                       {i18next.t('region')}
                       :
                     </span>
@@ -364,7 +364,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           {/* Scenario filter */}
           {scenarios.length === 1 && (
             <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
-              <span className="mr-2 hidden md:flex">
+              <span className="hidden mr-2 md:flex">
                 {i18next.t('scenario')}
                 :
               </span>
@@ -394,7 +394,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 onClick={() => { toggleDropdown('scenario'); }}
                 className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
-                <span className="mr-2 hidden md:flex">
+                <span className="hidden mr-2 md:flex">
                   {i18next.t('scenario')}
                   :
                 </span>
@@ -408,7 +408,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           {/* Units filter */}
           {units.length === 1 && (
             <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
-              <span className="mr-2 hidden md:flex">
+              <span className="hidden mr-2 md:flex">
                 {i18next.t('unit')}
                 :
               </span>
@@ -436,7 +436,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 onClick={() => { toggleDropdown('unit'); }}
                 className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
-                <span className="mr-2 hidden md:flex">
+                <span className="hidden mr-2 md:flex">
                   {i18next.t('unit')}
                   :
                 </span>
@@ -449,7 +449,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           )}
         </div>
       </section>
-      <div className="flex justify-between mb-4 w-full">
+      <div className="flex justify-between w-full mb-4">
         <section className="w-1/2">
           {categories.length > 0 && visualization === 'bar' && (
             <div className="max-h-128">
@@ -472,18 +472,18 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
             />
           )}
         </section>
-        <section ref={legendContainerRef} className="flex flex-col justify-between ml-4 w-1/2">
+        <section ref={legendContainerRef} className="flex flex-col justify-between w-1/2 ml-4">
           <DataSource
             indicatorSlug={indicatorSlug}
             dataSource={dataSource}
             className="mb-4"
-            isAccesible={!!hasDownloadPermissions}
+            isAccessible={!!hasDownloadPermissions}
           />
           {categories.length > 0 && visualization !== 'choropleth' && (
             <Legend
               ref={legendRef}
               payload={LegendPayload}
-              className="overflow-y-scroll overflow-x-hidden"
+              className="overflow-x-hidden overflow-y-scroll"
             />
           )}
         </section>
@@ -491,7 +491,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
       <div>
 
         <section className="flex flex-col w-full">
-          <div className="flex h-full w-full min-h-1/2">
+          <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
               <LoadingSpinner />
             )}
@@ -501,14 +501,14 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               && !filteredRecords.length
               && !!visualization && (!!region || !!year)
               && (
-                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                   <p>Data not found</p>
                 </div>
               )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+              <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                 <div className={cx('w-full', {
                   'flex flex-wrap': visualization === 'bar',
                   'h-96': visualization !== 'bar',
@@ -524,7 +524,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                   {visualization === 'bar' && widgetData.map(
                     (widget) => (
                       <div key={widget.model} className="mr-2">
-                        <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
+                        <span className="flex justify-center w-full text-sm tracking-tight opacity-50">{widget.model}</span>
                         <Bar
                           widgetData={widget.data}
                           widgetConfig={widgetConfig}
