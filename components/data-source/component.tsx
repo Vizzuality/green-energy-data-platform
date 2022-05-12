@@ -13,7 +13,7 @@ interface DataProps {
   type?: 'vertical' | 'horizontal',
   indicatorSlug: string,
   dataSource: string,
-  isAccesible: boolean,
+  isAccessible: boolean,
 }
 
 const downloadLinks = [
@@ -27,7 +27,7 @@ const Card: FC<DataProps> = ({
   type = 'vertical',
   indicatorSlug,
   dataSource,
-  isAccesible: isAccessible = false,
+  isAccessible = false,
 }: DataProps) => {
   const router = useRouter();
   const [session] = useSession();
