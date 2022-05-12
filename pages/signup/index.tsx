@@ -29,13 +29,11 @@ const SignupPage: FC = () => {
     title: '',
     organization: '',
     password: '',
-    /*     password_confirmation: '', */
   });
 
   const [errorMessage, setErrorMessage] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const passwordInputRef = useRef(null);
-  /* const passwordConfirmationInputRef = useRef(null); */
   const handleChange = (type: string, e: FormEvent<HTMLInputElement>): void => {
     setCredentials({
       ...credentials,
@@ -44,11 +42,6 @@ const SignupPage: FC = () => {
   };
   const handleSubmit = useCallback(async (evt) => {
     evt.preventDefault();
-
-    /* if (passwordInputRef?.current?.value !== passwordConfirmationInputRef?.current?.value) {
-      setErrorMessage("Passwords Don't Match");
-      setTimeout(() => setErrorMessage(''), 3000);
-    }  */
     if (passwordInputRef?.current?.value.length < 6) {
       setErrorMessage('Your password must be at least 6 characters long');
       setTimeout(() => setErrorMessage(''), 3000);
@@ -92,10 +85,10 @@ const SignupPage: FC = () => {
               <a href="/signin" className="flex items-center justify-center text-center text-white bg-transparent border-2 border-white rounded-full hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black focus:outline-none">Sign in</a>
             </Link>
           </section>
-          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-16 min-w-70shadow max-w-2xl">
-            <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-96">
+          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-0 min-w-70shadow max-w-2xl">
+            <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
-                <label htmlFor="title" className="text-2.5xl font-bold">
+                <label htmlFor="title" className="text-base font-bold">
                   {i18next.t('yourTitle')}
                   :
                   <div className="relative mb-10 font-normal sm:mb-4">
@@ -116,7 +109,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="name" className="text-2.5xl font-bold">
+                <label htmlFor="name" className="text-base font-bold">
                   {i18next.t('yourName')}
                   :
                   <div className="relative mb-10 font-normal sm:mb-4">
@@ -144,7 +137,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="email" className="text-2.5xl font-bold">
+                <label htmlFor="email" className="text-base font-bold">
                   {i18next.t('yourEmail')}
                   :
                   <div className="relative mb-10 font-normal sm:mb-4">
@@ -165,7 +158,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="organization" className="text-2.5xl pb-10 font-bold">
+                <label htmlFor="organization" className="pb-10 text-base font-bold">
                   {i18next.t('yourOrganization')}
                   :
                   <div className={cx('relative font-normal',
@@ -188,7 +181,7 @@ const SignupPage: FC = () => {
                     />
                   </div>
                 </label>
-                <label htmlFor="password" className="text-2.5xl pb-10 font-bold">
+                <label htmlFor="password" className="pb-10 text-base font-bold">
                   {i18next.t('enterPassword')}
 
                   <div className="relative mb-10 font-normal sm:mb-4">
