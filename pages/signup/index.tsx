@@ -97,7 +97,7 @@ const SignupPage: FC = () => {
                       id="title"
                       name="title"
                       type="title"
-                      placeholder="Write your title Mr,Mrs..."
+                      placeholder="Write your title Mr, Mrs..."
                       className={cx('w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
                         { 'placeholder-opacity-100': credentials.title.length })}
                       value={credentials.title}
