@@ -326,12 +326,12 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   return (
     <section className={`flex flex-col  ${className}`}>
-      <section className="flex items-center flex-wrap">
+      <section className="flex flex-wrap items-center">
         <span className="pr-2 whitespace-nowrap">
           {i18next.t('showing')}
           :
         </span>
-        <div className="flex py-4 items-center">
+        <div className="flex items-center py-4">
           {/* region filter */}
           {(['line'].includes(visualization) && !!regions.length && displayRegion) && (
             <div className="flex items-center">
@@ -465,18 +465,18 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
             />
           )}
         </section>
-        <section className="flex flex-col justify-between ml-4 w-1/2">
+        <section className="flex flex-col justify-between w-1/2 ml-4">
           <DataSource
             indicatorSlug={indicatorSlug}
             dataSource={dataSource}
             className="mb-4"
-            isAccesible={!!hasDownloadPermissions}
+            isAccessible={!!hasDownloadPermissions}
           />
           {LegendPayload.length > 0 && visualization !== 'choropleth' && (
             <Legend
               ref={legendRef}
               payload={LegendPayload}
-              className="overflow-y-scroll overflow-x-hidden text-ellipsis"
+              className="overflow-x-hidden overflow-y-scroll text-ellipsis"
             />
           )}
         </section>
@@ -484,7 +484,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       <div>
 
         <section className="flex flex-col w-full">
-          <div className="flex h-full w-full min-h-1/2">
+          <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
               <LoadingSpinner />
             )}
@@ -494,14 +494,14 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
               && !filteredRecords.length
               && !!visualization && (!!region || !!year)
               && (
-                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                   <p>Data not found</p>
                 </div>
               )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col h-full w-full min-h-1/2 py-4">
+              <div className="flex flex-col w-full h-full py-4 min-h-1/2">
                 <div className={cx('w-full', {
                   'flex flex-wrap': visualization === 'bar',
                   'h-96': visualization !== 'bar',
@@ -517,7 +517,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   {visualization === 'bar' && widgetData.map(
                     (widget) => (
                       <div key={widget.model} className="mr-2">
-                        <span className="flex justify-center text-sm tracking-tight opacity-50 w-full">{widget.model}</span>
+                        <span className="flex justify-center w-full text-sm tracking-tight opacity-50">{widget.model}</span>
                         <Bar
                           widgetData={widget.data}
                           widgetConfig={widgetConfig}
