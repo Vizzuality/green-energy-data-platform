@@ -26,10 +26,10 @@ const ComparePage: FC<ComparePageProps> = ({
   };
 
   return (
-    <LayoutPage className="text-white bg-gradient-gray1 flex flex-col flex-1">
+    <LayoutPage className="flex flex-col flex-1 text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
-      <Hero theme="transparent" rounded className="lg:px-32 md:px-24 sm:px-16 px-8" />
-      <section className="w-full flex space-x-3 container m-auto max-w-7xl">
+      <Hero theme="transparent" rounded className="px-8 lg:px-32 md:px-24 sm:px-16" />
+      <section className="container flex w-full m-auto space-x-3 max-w-7xl">
         <div className="w-1/2">
           <Compare
             groupSlug={g1}
@@ -49,9 +49,9 @@ const ComparePage: FC<ComparePageProps> = ({
           />
         </div>
       </section>
-      <section className="flex pb-21">
-        <PreFooter />
-      </section>
+
+      <PreFooter />
+
     </LayoutPage>
   );
 };
