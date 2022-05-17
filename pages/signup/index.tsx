@@ -91,7 +91,7 @@ const SignupPage: FC = () => {
                 <label htmlFor="title" className="text-base font-bold">
                   {i18next.t('yourTitle')}
                   :
-                  <div className="relative mb-10 font-normal sm:mb-4">
+                  <div className="relative mt-3 mb-8 font-normal">
                     <Icon ariaLabel="title-input" name="briefcase" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
                     <input
                       id="title"
@@ -104,7 +104,7 @@ const SignupPage: FC = () => {
                       onChange={(e) => handleChange('title', e)}
                       required
                     />
-                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
                       { 'bg-gradient-color1': credentials.password.length })}
                     />
                   </div>
@@ -112,7 +112,7 @@ const SignupPage: FC = () => {
                 <label htmlFor="name" className="text-base font-bold">
                   {i18next.t('yourName')}
                   :
-                  <div className="relative mb-10 font-normal sm:mb-4">
+                  <div className="relative mt-3 mb-8 font-normal">
                     <Icon
                       ariaLabel="profile"
                       name="profile"
@@ -132,7 +132,7 @@ const SignupPage: FC = () => {
                       onChange={(e) => handleChange('username', e)}
                       required
                     />
-                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
                       { 'bg-gradient-color1': credentials.password.length })}
                     />
                   </div>
@@ -140,7 +140,7 @@ const SignupPage: FC = () => {
                 <label htmlFor="email" className="text-base font-bold">
                   {i18next.t('yourEmail')}
                   :
-                  <div className="relative mb-10 font-normal sm:mb-4">
+                  <div className="relative mt-3 mb-8 font-normal">
                     <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
                     <input
                       id="email"
@@ -153,7 +153,7 @@ const SignupPage: FC = () => {
                       onChange={(e) => handleChange('email', e)}
                       required
                     />
-                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-10',
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
                       { 'bg-gradient-color1': credentials.password.length })}
                     />
                   </div>
@@ -161,9 +161,7 @@ const SignupPage: FC = () => {
                 <label htmlFor="organization" className="pb-10 text-base font-bold">
                   {i18next.t('yourOrganization')}
                   :
-                  <div className={cx('relative font-normal',
-                    { 'mb-10 sm:mb-4': errorMessage.length })}
-                  >
+                  <div className="relative mt-3 mb-8 font-normal">
                     <Icon ariaLabel="organization-input" name="office" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
                     <input
                       id="organization"
@@ -176,7 +174,7 @@ const SignupPage: FC = () => {
                       onChange={(e) => handleChange('organization', e)}
                       required
                     />
-                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20 mb-7',
+                    <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
                       { 'bg-gradient-color1': credentials.password.length })}
                     />
                   </div>
@@ -184,7 +182,7 @@ const SignupPage: FC = () => {
                 <label htmlFor="password" className="pb-10 text-base font-bold">
                   {i18next.t('enterPassword')}
 
-                  <div className="relative mb-10 font-normal sm:mb-4">
+                  <div className="relative mt-3 mb-5 font-normal">
                     <Icon ariaLabel="password-input" name="password" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
                     <input
                       ref={passwordInputRef}
@@ -225,7 +223,7 @@ const SignupPage: FC = () => {
                     required
                   />
                 </label>
-                <label htmlFor="privacy-policy" className="flex flex-row-reverse items-center justify-end mb-8 text-sm text-gray1">
+                <label htmlFor="privacy-policy" className="flex flex-row-reverse items-center justify-end text-sm mb-9 text-gray1">
                   <span>
                     {`${i18next.t('agreement')} `}
                     <Link href={{ pathname: '/privacy-policy' }} passHref>
