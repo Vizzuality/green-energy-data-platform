@@ -18,17 +18,19 @@ const PreFooter: FC<PreFooterProps> = ({
   const defaultGroupSlugs = useGroupsDefaults(groups);
 
   return (
-    <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10 w-full relative',
-      { [className]: className })}
-    >
-      <div className="text-xl flex w-full justify-center">
-        {defaultGroupSlugs?.map(({
-          name, groupSlug, subgroupSlug, indicatorSlug,
-        }) => (
-          <Link key={groupSlug} href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`} passHref>
-            <a className="p-12" href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>{name}</a>
-          </Link>
-        ))}
+    <div className="flex">
+      <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10 w-full relative mb-[4.65rem]',
+        { [className]: className })}
+      >
+        <div className="flex justify-center w-full text-xl">
+          {defaultGroupSlugs?.map(({
+            name, groupSlug, subgroupSlug, indicatorSlug,
+          }) => (
+            <Link key={groupSlug} href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`} passHref>
+              <a className="p-12" href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>{name}</a>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

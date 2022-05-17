@@ -308,7 +308,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   useEffect(() => {
     if (category?.label === 'category_1' && subcategories.length === 1) setSubcategoriesTotals(LegendPayload);
-  }, [category, subcategories.length, setSubcategoriesTotals, LegendPayload]);
+  }, [category, subcategories.length, setSubcategoriesTotals]);
 
   const singleValueLegendColor = useMemo(
     () => subcategoriesTotals?.find(((subcat) => subcat?.label === category?.value))?.color,

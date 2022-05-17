@@ -140,9 +140,8 @@ const GroupPage: FC = () => {
         </section>
       </div>
 
-      <section className="flex pb-23">
-        <PreFooter />
-      </section>
+      <PreFooter />
+
     </LayoutPage>
   );
 };
