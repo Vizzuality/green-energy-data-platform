@@ -20,6 +20,7 @@ import Search from 'components/search';
 import i18next from 'i18next';
 
 import { InView } from 'react-intersection-observer';
+import CookieBanner from 'components/cookie-banner';
 
 const HomePage: FC = () => {
   const { data: groups, isLoading } = useGroups();
@@ -60,6 +61,8 @@ const HomePage: FC = () => {
             </InView>
           );
         })}
+
+      <CookieBanner />
 
       <PreFooter />
 
