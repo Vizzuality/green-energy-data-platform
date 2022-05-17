@@ -10,7 +10,7 @@ const CookieBanner: React.FC<{}> = () => {
       {
         loadBanner
         && (
-          <div className="sticky bottom-0 z-10 flex justify-center w-full h-16 p-6 text-center bg-gray1">
+          <div className="sticky bottom-0 z-10 flex justify-center w-full h-16 p-6 text-center border-b border-white bg-gray1 border-opacity-10">
             <p className="absolute text-sm text-white left-14">
               {i18next.t('siteCookies')}
               {' '}
