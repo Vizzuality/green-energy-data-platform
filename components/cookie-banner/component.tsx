@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import i18next from 'i18next';
+import Icon from 'components/icon';
 
 const CookieBanner: React.FC<{}> = () => {
   const [loadBanner, setLoadBanner] = useState(true);
@@ -19,7 +20,17 @@ const CookieBanner: React.FC<{}> = () => {
               </Link>
             </p>
 
-            <button type="button" onClick={() => setLoadBanner(false)} className="absolute text-lg text-white transform right-14">X</button>
+            <button
+              type="button"
+              className="absolute text-white right-14"
+              onClick={() => setLoadBanner(false)}
+            >
+              <Icon
+                ariaLabel="close"
+                name="close"
+                size="md"
+              />
+            </button>
           </div>
         )
       }
