@@ -20,6 +20,7 @@ import {
   useIndicatorRecords,
   useIndicatorMetadata,
 } from 'hooks/indicators';
+import { useMe } from 'hooks/auth';
 
 // components
 import Icon from 'components/icon';
@@ -184,7 +185,11 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     enabled: !!indicatorSlug && !!visualization,
   });
 
-  const { name, data_source: dataSource } = indicatorData;
+  const {
+    name,
+    accessible_by: accessibleBy,
+    data_source: dataSource,
+  } = indicatorData;
 
   const categories = useMemo(
     () => getCategoriesFromRecords(records, visualization),
@@ -207,8 +212,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current, indicatorData)[visualization],
-    [visualization, widgetDataKeys, indicatorData, current],
+    () => ChartConfig(widgetDataKeys, current, records)[visualization],
+    [visualization, widgetDataKeys, records, current],
   );
 
   const widgetData = useMemo(
@@ -330,15 +335,20 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     [category, subcategoriesTotals],
   );
 
+  const { data: user } = useMe();
+
+  const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
+    [accessibleBy, user]);
+
   return (
     <div className={`flex flex-col ${className}`}>
-      <div className="flex flex-col h-full w-full">
+      <div className="flex flex-col w-full h-full">
         {categories.length > 0 && (
           <Filters
             visualization={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length || categories.length === 1}
-            className="overflow-y-auto mb-4"
+            className="mb-4 overflow-y-auto"
             onClick={compareIndex === 1 ? setFilters : setCompareFilters}
           />
         )}
@@ -346,7 +356,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           <div className="flex">
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && (
-              <div className="flex items-center flex-wrap">
+              <div className="flex flex-wrap items-center">
                 <span className="pr-2 whitespace-nowrap">
                   {i18next.t('showing')}
                   :
@@ -414,7 +424,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualization) && !!regions.length) && (
+            {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
               <div className="flex items-center">
                 <span className="pr-2">
                   {i18next.t('region')}
@@ -446,9 +456,9 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 )}
               </div>
             )}
-            {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+            {!regions.length && displayRegion && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
           </div>
-          <div className="flex h-full w-full min-h-1/2">
+          <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
               <LoadingSpinner />
             )}
@@ -458,14 +468,14 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
               && !filteredRecords.length
               && !!visualization && (!!region || !!year)
               && (
-                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                   <p>Data not found</p>
                 </div>
               )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+              <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                 <div className="flex items-center">
                   {visualization !== 'choropleth'
                     && (
@@ -521,7 +531,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           </div>
         </section>
       </div>
-      <section className="flex flex-col flex-1 justify-between">
+      <section className="flex flex-col justify-between flex-1">
         {LegendPayload.length > 0 && visualization !== 'choropleth' && (
           <div className="mb-4">
             <Legend
@@ -536,6 +546,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           type="horizontal"
           dataSource={dataSource}
           className="flex-1"
+          isAccessible={!!hasDownloadPermissions}
         />
       </section>
     </div>

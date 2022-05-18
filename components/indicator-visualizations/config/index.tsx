@@ -80,8 +80,9 @@ const TooltipContent: FC<TooltipProps> = ({
 
 const ChartConfig = (categories, language, data) => {
   const values = useMemo(() => data.map((d) => d.value), [data]);
-  const MINVALUE = useMemo(() => Math.max(...values), [values]);
-  const MAXVALUE = useMemo(() => Math.min(...values), [values]);
+  const MINVALUE = useMemo(() => Math.floor(Math.min(...values)), [values]);
+  const MAXVALUE = useMemo(() => Math.ceil(Math.max(...values)), [values]);
+
   const KEY = language === 'cn' ? '全部的' : 'Total';
   const getLines = () => {
     if (categories.length) {
@@ -91,7 +92,7 @@ const ChartConfig = (categories, language, data) => {
       }));
     }
     return ([{
-      dataKey: KEY,
+      dataKey: !!categories[0] || KEY,
       strokeWidth: 2,
     }]);
   };
@@ -145,10 +146,14 @@ const ChartConfig = (categories, language, data) => {
       ],
       xAxis: {
         dataKey: 'year',
-        tick: { fill: '#3A3F59', opacity: 0.5 },
+        tick: { fill: '#3A3F59', opacity: 0.5, fontSize: 12 },
+        interval: 'preserveStartEnd',
       },
       yAxis: {
         tick: DefaultTick,
+        domain: [MINVALUE, MAXVALUE],
+        allowDecimals: false,
+        interval: 0,
       },
       tooltip: {
         isAnimationActive: false,

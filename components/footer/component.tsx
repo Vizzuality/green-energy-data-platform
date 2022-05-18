@@ -17,7 +17,7 @@ const Footer: FC<FooterProps> = ({
     { [className]: className })}
 
   >
-    <div className="flex w-full justify-around p-3 items-center">
+    <div className="flex w-full justify-around p-1 items-center">
       <Link href="/" passHref>
         <a href="/">
           <img alt="Green Energy Data Platform" src="/images/logo_GEDP.svg" className="w-28 h-auto" />

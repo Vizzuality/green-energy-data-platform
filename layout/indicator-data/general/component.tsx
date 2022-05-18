@@ -20,6 +20,7 @@ import {
   useIndicatorMetadata,
   useIndicatorRecords,
 } from 'hooks/indicators';
+import { useMe } from 'hooks/auth';
 
 // components
 import Icon from 'components/icon';
@@ -85,7 +86,6 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
-
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
       ...dropdownVisibility,
@@ -115,6 +115,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
+      accessible_by: [],
       data_source: null,
       default_visualization: null,
       description: null,
@@ -178,6 +179,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const {
     name,
+    accessible_by: accessibleBy,
     data_source: dataSource,
   } = indicatorData;
 
@@ -313,165 +315,170 @@ const IndicatorChart: FC<ComponentTypes> = ({
     [category, subcategoriesTotals],
   );
 
+  const { data: user } = useMe();
+
+  const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
+    [accessibleBy, user]);
+
   return (
     <div className={`grid grid-cols-12 ${className}`}>
-      <div className="col-span-8 h-full w-full">
+      <div className="w-full h-full col-span-8">
         <section className="flex flex-col w-full">
-          <div className="flex w-full justify-between">
+          <div className="flex justify-between w-full">
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
-            <div className="flex items-center flex-wrap">
-              <span className="pr-2 whitespace-nowrap">
-                {i18next.t('showing')}
-                :
-              </span>
-              {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
-              {years.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.year}
-                interactive
-                onClickOutside={() => closeDropdown('year')}
-                content={(
-                  <DropdownContent
-                    list={years}
-                    keyEl="year"
-                    onClick={handleChange}
-                  />
-                      )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('year'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
-                >
-                  <span>{displayYear || i18next.t('selectYear')}</span>
-                  <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                </button>
-              </Tooltip>
-              )}
-            </div>
+              <div className="flex flex-wrap items-center">
+                <span className="pr-2 whitespace-nowrap">
+                  {i18next.t('showing')}
+                  :
+                </span>
+                {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
+                {years.length > 1 && (
+                  <Tooltip
+                    placement="bottom-start"
+                    visible={dropdownVisibility.year}
+                    interactive
+                    onClickOutside={() => closeDropdown('year')}
+                    content={(
+                      <DropdownContent
+                        list={years}
+                        keyEl="year"
+                        onClick={handleChange}
+                      />
+                    )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => { toggleDropdown('year'); }}
+                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                    >
+                      <span>{displayYear || i18next.t('selectYear')}</span>
+                      <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                    </button>
+                  </Tooltip>
+                )}
+              </div>
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualization) && !!regions.length) && (
-            <div className="flex items-center">
-              <span className="pr-2">
-                {i18next.t('region')}
-                :
-              </span>
-              {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayRegion}</span>)}
-              {regions.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.region}
-                interactive
-                onClickOutside={() => closeDropdown('region')}
-                content={(
-                  <DropdownContent
-                    list={regions}
-                    keyEl="region"
-                    onClick={handleChange}
-                  />
-                      )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('region'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
-                >
-                  <span>{displayRegion || 'Select a region'}</span>
-                  <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
-                </button>
-              </Tooltip>
-              )}
-            </div>
+            {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
+              <div className="flex items-center">
+                <span className="pr-2">
+                  {i18next.t('region')}
+                  :
+                </span>
+                {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayRegion}</span>)}
+                {regions.length > 1 && (
+                  <Tooltip
+                    placement="bottom-start"
+                    visible={dropdownVisibility.region}
+                    interactive
+                    onClickOutside={() => closeDropdown('region')}
+                    content={(
+                      <DropdownContent
+                        list={regions}
+                        keyEl="region"
+                        onClick={handleChange}
+                      />
+                    )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => { toggleDropdown('region'); }}
+                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                    >
+                      <span>{displayRegion || 'Select a region'}</span>
+                      <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
+                    </button>
+                  </Tooltip>
+                )}
+              </div>
             )}
 
             {/* scenario filter */}
             {['choropleth'].includes(visualization) && !!scenarios.length && (
-            <div className="flex items-center">
-              <span className="pr-2">
-                {i18next.t('scenario')}
-                :
-              </span>
-              {scenarios?.length > 1 && (
-              <Tooltip
-                placement="bottom-start"
-                visible={dropdownVisibility.scenario}
-                interactive
-                onClickOutside={() => closeDropdown('scenario')}
-                content={(
-                  <DropdownContent
-                    list={scenarios}
-                    keyEl="scenario"
-                    onClick={handleChange}
-                  />
-                      )}
-              >
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('scenario'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
-                >
-                  <span>{displayScenario || i18next.t('selectScenario')}</span>
-                  <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
-                </button>
-              </Tooltip>
-              )}
-            </div>
+              <div className="flex items-center">
+                <span className="pr-2">
+                  {i18next.t('scenario')}
+                  :
+                </span>
+                {scenarios?.length > 1 && (
+                  <Tooltip
+                    placement="bottom-start"
+                    visible={dropdownVisibility.scenario}
+                    interactive
+                    onClickOutside={() => closeDropdown('scenario')}
+                    content={(
+                      <DropdownContent
+                        list={scenarios}
+                        keyEl="scenario"
+                        onClick={handleChange}
+                      />
+                    )}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => { toggleDropdown('scenario'); }}
+                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                    >
+                      <span>{displayScenario || i18next.t('selectScenario')}</span>
+                      <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
+                    </button>
+                  </Tooltip>
+                )}
+              </div>
             )}
           </div>
 
-          <div className="flex h-full w-full min-h-1/2">
+          <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
-            <LoadingSpinner />
+              <LoadingSpinner />
             )}
             {isFetchedRecords
-                && !isFetchingRecords
-                && !filteredRecords.length
-                && !!visualization && (!!region || !!year)
-                && (
-                  <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                    <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-                    <p>Data not found</p>
-                  </div>
-                )}
+              && !isFetchingRecords
+              && !filteredRecords.length
+              && !!visualization && (!!region || !!year)
+              && (
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
+                  <p>Data not found</p>
+                </div>
+              )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-              <div className="flex items-center">
-                {visualization !== 'choropleth'
-                  && (
-                    <Tooltip
-                      placement="bottom-start"
-                      visible={dropdownVisibility.unit}
-                      interactive
-                      onClickOutside={() => closeDropdown('unit')}
-                      content={(
-                        <DropdownContent
-                          list={units}
-                          keyEl="unit"
-                          onClick={handleChange}
-                        />
-                      )}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => { toggleDropdown('unit'); }}
-                        className={cx('flex items-center cursor-pointer whitespace-nowrap hover:font-bold',
-                          {
-                            'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
-                            'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
-                          })}
+              <div className="flex flex-col w-full h-full py-8 min-h-1/2">
+                <div className="flex items-center">
+                  {visualization !== 'choropleth'
+                    && (
+                      <Tooltip
+                        placement="bottom-start"
+                        visible={dropdownVisibility.unit}
+                        interactive
+                        onClickOutside={() => closeDropdown('unit')}
+                        content={(
+                          <DropdownContent
+                            list={units}
+                            keyEl="unit"
+                            onClick={handleChange}
+                          />
+                        )}
                       >
-                        <span>{displayUnit}</span>
-                        <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
-                      </button>
-                    </Tooltip>
-                  )}
-              </div>
-              {visualization !== 'choropleth'
+                        <button
+                          type="button"
+                          onClick={() => { toggleDropdown('unit'); }}
+                          className={cx('flex items-center cursor-pointer whitespace-nowrap hover:font-bold',
+                            {
+                              'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
+                              'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
+                            })}
+                        >
+                          <span>{displayUnit}</span>
+                          <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
+                        </button>
+                      </Tooltip>
+                    )}
+                </div>
+                {visualization !== 'choropleth'
                   && (
                     <div className="w-full h-96">
                       <DynamicChart
@@ -482,15 +489,15 @@ const IndicatorChart: FC<ComponentTypes> = ({
                       />
                     </div>
                   )}
-              {visualization === 'choropleth' && (
-              <div className="w-full h-96">
-                <MapContainer
-                  layers={widgetData[0]?.layers || []}
-                />
-              </div>
-              )}
+                {visualization === 'choropleth' && (
+                  <div className="w-full h-96">
+                    <MapContainer
+                      layers={widgetData[0]?.layers || []}
+                    />
+                  </div>
+                )}
 
-            </div>
+              </div>
             )}
           </div>
         </section>
@@ -498,19 +505,19 @@ const IndicatorChart: FC<ComponentTypes> = ({
       <div className="col-span-4">
         <section className="flex flex-col justify-between ml-8">
           {categories.length > 0 && (
-          <Filters
-            visualization={visualization}
-            categories={categories}
-            hasSubcategories={!!subcategories.length || categories.length === 1}
-            className="overflow-y-auto mb-4"
-            onClick={setFilters}
-          />
+            <Filters
+              visualization={visualization}
+              categories={categories}
+              hasSubcategories={!!subcategories.length || categories.length === 1}
+              className="mb-4 overflow-y-auto"
+              onClick={setFilters}
+            />
           )}
           {categories.length > 0 && visualization !== 'choropleth' && (
             <div className="mb-4">
               <Legend
                 payload={LegendPayload}
-                className="overflow-y-scroll text-ellipsis w-full"
+                className="w-full overflow-y-scroll text-ellipsis"
                 singleValueLegendColor={singleValueLegendColor}
               />
             </div>
@@ -518,6 +525,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
           <DataSource
             indicatorSlug={indicatorSlug}
             dataSource={dataSource}
+            isAccessible={!!hasDownloadPermissions}
           />
         </section>
       </div>

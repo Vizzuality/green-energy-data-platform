@@ -19,11 +19,13 @@ import { useRouter } from 'next/router';
 
 // services
 import { updateUser } from 'services/user';
+import i18next from 'i18next';
 
 const NewPasswordPage: FC = () => {
   const queryClient = useQueryClient();
 
-  const { query: { token } } = useRouter();
+  const router = useRouter();
+  const { query: { token } } = router;
 
   const [passwordView, setPasswordVisibility] = useState({
     password: false,
@@ -66,11 +68,12 @@ const NewPasswordPage: FC = () => {
 
     try {
       await updateUser({ password, password_confirmation: confirmation }, token);
+      router.push('signin');
       queryClient.invalidateQueries('me');
     } catch (e) {
       throw new Error(`something went wrong updating user: ${e.message}`);
     }
-  }, [credentials, queryClient, token]);
+  }, [router, credentials, queryClient, token]);
 
   return (
     <LayoutPage className="m-auto bg-gradient-color1">
@@ -153,7 +156,7 @@ const NewPasswordPage: FC = () => {
               size="xlg"
               className="w-full bg-gray1 border-gray1 text-white text-sm"
             >
-              Change password
+              {i18next.t('changePassword')}
             </Button>
           </form>
         </div>

@@ -259,14 +259,14 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
               </span>
 
               {/* region filter  */}
-              {regions.length === 1 && (
+              {displayRegion && regions.length === 1 && (
               <DropdownButton
                 display={displayRegion}
                 elKey="region"
                 translationKey="selectRegion"
               />
               )}
-              {regions.length > 1 && (
+              {displayRegion && regions.length > 1 && (
               <Tooltip
                 placement="bottom-start"
                 visible={dropdownVisibility.region}

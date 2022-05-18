@@ -322,7 +322,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                 </Tooltip>
               )}
               {/* region filter  */}
-              {regions.length === 1 && (
+              {regions.length === 1 && displayRegion && (
                 <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
                   <span className="mr-2 hidden md:flex">
                     {i18next.t('region')}
@@ -333,7 +333,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   </span>
                 </div>
               )}
-              {regions.length > 1 && (
+              {regions.length > 1 && displayRegion && (
                 <Tooltip
                   placement="bottom-start"
                   visible={dropdownVisibility.region}

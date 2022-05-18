@@ -74,17 +74,17 @@ const MapContainer: FC<MapContainerProps> = (
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const [hoverInteractions, setHoverInteractions] = useState({}
     || {
-      regions: layers[0].name,
-      cluster: {
-        point_count: null,
-        name: '',
-      },
-      properties: {
-        point_count: null,
-        total: null,
-        Total: null,
-      },
-    });
+    regions: layers[0].name,
+    cluster: {
+      point_count: null,
+      name: '',
+    },
+    properties: {
+      point_count: null,
+      total: null,
+      Total: null,
+    },
+  });
 
   const [lngLat, setLngLat] = useState([0, 0]);
   const [sortArray, setSortArray] = useState([]);
@@ -200,6 +200,7 @@ const MapContainer: FC<MapContainerProps> = (
           e.stopPropagation();
           const clusterProperties = e?.features[0]?.properties;
           const count = clusterProperties?.point_count;
+
           if (!count || count < 1) {
             spiderifier.unspiderfy();
           }
@@ -219,6 +220,7 @@ const MapContainer: FC<MapContainerProps> = (
             }));
             setLngLat(e.lngLat);
           }
+          setSpiderInfo(null);
         }}
         onMouseLeave={() => {
           setDisclaimerVisibility(true);
@@ -234,10 +236,10 @@ const MapContainer: FC<MapContainerProps> = (
                 <Layer key={l.id} {...l} />
               ))}
             </LayerManager>
-            {((!!hoverInteractions?.properties?.total
-              || !!hoverInteractions?.properties?.Total
-              || spiderTooltipInfoHeaders.length > 0)
-              && hasInteraction && (
+            {hasInteraction
+              && !spiderInfo
+              && hoverInteractions?.properties?.point_count > 1
+              && (
                 <Popup
                   latitude={lngLat[1]}
                   longitude={lngLat[0]}
@@ -245,64 +247,119 @@ const MapContainer: FC<MapContainerProps> = (
                   tipSize={10}
                   className="z-20 max-w-sm rounded-2xl"
                 >
-                  {hasInteraction
-                    && !spiderInfo
-                    && hoverInteractions?.properties?.point_count > 1
-                    && (
-                      <div className="flex flex-col">
-                        <div className="flex">
-                          <span className="mr-2 text-sm">
-                            {i18next.t('numberPlants')}
-                          </span>
-                          <span className="mr-2 text-sm">{hoverInteractions?.properties?.point_count}</span>
-                        </div>
-                      </div>
-                    )}
-
-                  {!!tooltipInfoHeaders.length && (
-                    <ul>
-                      {tooltipInfoHeaders.map((t) => (
-                        <li key={`${t}-${tooltipInfo[t]}`}>
-                          <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                          {(t === 'Total' || t === 'total')
-                            ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
-                            : <span className="text-sm">{tooltipInfo[t]}</span>}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {spiderTooltipInfoHeaders.length > 0 && (
-                    <ul>
-                      {spiderTooltipInfoHeaders.map((t) => (
-                        <li key={`${t}-${spiderTooltipInfo[t]}`}>
-                          <span className="mr-4 text-xs">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
-                          {(t === 'Total' || t === 'total')
-                            ? <span className="text-xs">{numberFormat(spiderTooltipInfo[t])}</span>
-                            : <span className="text-xs">{spiderTooltipInfo[t]}</span>}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  <div className="flex flex-col">
+                    <div className="flex">
+                      <span className="mr-2 text-sm">
+                        {i18next.t('numberPlants')}
+                      </span>
+                      <span className="mr-2 text-sm">{hoverInteractions?.properties?.point_count}</span>
+                    </div>
+                  </div>
                 </Popup>
-            ))}
+              )}
+            {tooltipInfoHeaders.length > 1 && (
+              <Popup
+                latitude={lngLat[1]}
+                longitude={lngLat[0]}
+                closeButton={false}
+                tipSize={10}
+                className="z-20 max-w-sm rounded-2xl"
+              >
+                <ul>
+                  {tooltipInfoHeaders.map((t) => (
+                    <li key={`${t}-${tooltipInfo[t]}`}>
+                      <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      {(t === 'Total' || t === 'total')
+                        ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
+                        : <span className="text-sm">{tooltipInfo[t]}</span>}
+                    </li>
+                  ))}
+                </ul>
+              </Popup>
+            )}
+
+            {!spiderInfo
+            && !tooltipInfoHeaders.length
+            && !tooltipInfo.length
+            && hoverInteractions.cluster
+            && (
+              <Popup
+                latitude={lngLat[1]}
+                longitude={lngLat[0]}
+                closeButton={false}
+                tipSize={10}
+                className="z-20 max-w-sm rounded-2xl"
+              >
+
+                <span className="mr-4 text-xs">Click to see specific info for this plant</span>
+              </Popup>
+            )}
+
+            {spiderTooltipInfoHeaders.length > 0 && (
+              <Popup
+                latitude={lngLat[1]}
+                longitude={lngLat[0]}
+                closeButton={false}
+                tipSize={10}
+                className="z-20 max-w-sm rounded-2xl"
+              >
+
+                <ul>
+                  {spiderTooltipInfoHeaders.map((t) => (
+                    <li key={`${t}-${spiderTooltipInfo[t]}`}>
+                      <span className="mr-4 text-xs">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      {(t === 'Total' || t === 'total')
+                        ? <span className="text-xs">{numberFormat(spiderTooltipInfo[t])}</span>
+                        : <span className="text-xs">{spiderTooltipInfo[t]}</span>}
+                    </li>
+                  ))}
+                </ul>
+              </Popup>
+            )}
+
+            {/* Pop up for choropleth */}
+            {!!hoverInteractions?.properties && Object.keys(hoverInteractions?.properties).length === 1 &&
+              hasInteraction && (
+                <Popup
+                  latitude={lngLat[1]}
+                  longitude={lngLat[0]}
+                  closeButton={false}
+                  tipSize={10}
+                  className="z-20 max-w-sm rounded-2xl"
+                >
+                  <div className="flex flex-col">
+                    <div className="flex">
+                      <span className="mr-2 text-sm">
+                        {i18next.t('total')}
+                        :
+                      </span>
+                      <span className="mr-2 text-sm">{Object.values(hoverInteractions?.properties)}</span>
+                    </div>
+                  </div>
+                </Popup>
+              )}
           </>
         )}
       </Map>
-      {hasInteraction && (
-        <ZoomControl
-          viewport={viewport}
-          onZoomChange={handleZoomChange}
-        />
-      )}
-      {hasInteraction && disclaimerVisibility && (
-        <Disclaimer
-          className="transform -translate-x-1/2 top-4 left-1/2"
-          message={i18next.t('fullscreenDisclaimer')}
-          onDisclaimerClose={setDisclaimerVisibility}
-        />
-      )}
-      {hasInteraction
+      {
+        hasInteraction && (
+          <ZoomControl
+            viewport={viewport}
+            onZoomChange={handleZoomChange}
+          />
+        )
+      }
+      {
+        hasInteraction && disclaimerVisibility && (
+          <Disclaimer
+            className="transform -translate-x-1/2 top-4 left-1/2"
+            message={i18next.t('fullscreenDisclaimer')}
+            onDisclaimerClose={setDisclaimerVisibility}
+          />
+        )
+      }
+      {
+        hasInteraction
         && (
           <Legend onChangeOrder={onChangeOrder}>
             {sortedItems?.map((i) => {
@@ -323,15 +380,18 @@ const MapContainer: FC<MapContainerProps> = (
               );
             })}
           </Legend>
-        )}
-      {hasInteraction && disclaimerVisibility && (
-        <Disclaimer
-          className="transform -translate-x-1/2 top-4 left-1/2"
-          message={i18next.t('fullscreenDisclaimer')}
-          onDisclaimerClose={setDisclaimerVisibility}
-        />
-      )}
-    </div>
+        )
+      }
+      {
+        hasInteraction && disclaimerVisibility && (
+          <Disclaimer
+            className="transform -translate-x-1/2 top-4 left-1/2"
+            message={i18next.t('fullscreenDisclaimer')}
+            onDisclaimerClose={setDisclaimerVisibility}
+          />
+        )
+      }
+    </div >
   );
 };
 
