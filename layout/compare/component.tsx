@@ -287,14 +287,16 @@ const CompareLayout: FC<CompareLayoutProps> = ({
         </div>
       </Hero>
       <div className={cx('container m-auto bg-white rounded-b-2xl flex flex-col', { [className]: !!className })}>
-        <VisualizationsNav
-          active={visualization}
-          groupSlug={groupSlug}
-          className="w-full px-11 py-7"
-          visualizationTypes={visualizationTypes}
-          mobile
-          compareIndex={compareIndex}
-        />
+        {visualization !== 'sankey' && (
+          <VisualizationsNav
+            active={visualization}
+            groupSlug={groupSlug}
+            className="w-full px-11 py-7"
+            visualizationTypes={visualizationTypes}
+            mobile
+            compareIndex={compareIndex}
+          />
+        )}
         <div className="flex flex-col w-full p-11">
           <div className="flex items-baseline justify-between w-full">
             <h2 className="flex max-w-xs font-bold">
@@ -362,12 +364,12 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             />
           )}
           {groupSlug === 'energy-flows' && (
-          <EnergyFlow
-            groupSlug={groupSlug}
-            subgroupSlug={subgroupSlug}
-            indicatorSlug={indicatorSlug}
-            compareIndex={compareIndex}
-          />
+            <EnergyFlow
+              groupSlug={groupSlug}
+              subgroupSlug={subgroupSlug}
+              indicatorSlug={indicatorSlug}
+              compareIndex={compareIndex}
+            />
           )}
         </div>
       </div>
