@@ -116,12 +116,14 @@ const IndicatorData: FC<Component> = ({
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
     >
+      {visualization !== 'sankey' && (
       <VisualizationsNav
         active={visualization}
         groupSlug={groupSlug}
         className="w-full lg:px-32 md:px-24 sm:px-16 px-8"
         visualizationTypes={visualizationTypesIndicator}
       />
+      )}
       <div className="flex flex-col w-full px-16 lg:px-32 md:px-24 py-11">
         <div className="flex items-center justify-between w-full">
           <h2 className="flex flex-wrap text-3.5xl max-w-6xl mr-4">
