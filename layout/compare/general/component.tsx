@@ -51,7 +51,9 @@ import DropdownContent from 'layout/dropdown-content';
 
 import ChartConfig from 'components/indicator-visualizations/config';
 
-import IndicatorCompareDataProps from '../types';
+import { DROPDOWN_BUTTON_STYLES, TEXT_BUTTON_STYLES } from 'layout/indicator-data/constants';
+
+import type IndicatorCompareDataProps from '../types';
 
 interface ChartProps {
   widgetData: unknown,
@@ -348,7 +350,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             visualization={visualization}
             categories={categories}
             hasSubcategories={!!subcategories.length || categories.length === 1}
-            className="mb-4 overflow-y-auto"
+            className="mb-8 overflow-y-auto"
             onClick={compareIndex === 1 ? setFilters : setCompareFilters}
           />
         )}
@@ -357,12 +359,12 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && (
               <div className="flex flex-wrap items-center">
-                <span className="pr-2 whitespace-nowrap">
+                <span className="pr-2 whitespace-nowrap mb-2">
                   {i18next.t('showing')}
                   :
                 </span>
                 {years.length === 1 && (
-                  <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
+                  <span className={DROPDOWN_BUTTON_STYLES}>{displayYear}</span>)}
                 {years.length > 1 && (
                   <Tooltip
                     placement="bottom-start"
@@ -380,10 +382,10 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                     <button
                       type="button"
                       onClick={() => { toggleDropdown('year'); }}
-                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                      className={DROPDOWN_BUTTON_STYLES}
                     >
-                      <span>{displayYear || i18next.t('selectYear')}</span>
-                      <Icon ariaLabel="change date" name="calendar" className="ml-4" />
+                      <span className={TEXT_BUTTON_STYLES}>{displayYear || i18next.t('selectYear')}</span>
+                      <Icon ariaLabel="change date" name="calendar" className="text-color-1 ml-4" />
                     </button>
                   </Tooltip>
                 )}
@@ -391,7 +393,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 {/* scenario filter */}
                 {['choropleth'].includes(visualization) && !!scenarios.length && (
                   <div className="flex items-center">
-                    <span className="pr-2">
+                    <span className="pr-2 mb-2">
                       {i18next.t('scenario')}
                       :
                     </span>
@@ -412,9 +414,9 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                         <button
                           type="button"
                           onClick={() => { toggleDropdown('scenario'); }}
-                          className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                          className={DROPDOWN_BUTTON_STYLES}
                         >
-                          <span>{displayScenario || i18next.t('selectScenario')}</span>
+                          <span className={TEXT_BUTTON_STYLES}>{displayScenario || i18next.t('selectScenario')}</span>
                         </button>
                       </Tooltip>
                     )}
@@ -426,11 +428,13 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             {/* region filter */}
             {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
               <div className="flex items-center">
-                <span className="pr-2">
+                <span className="pr-2 mb-2">
                   {i18next.t('region')}
                   :
                 </span>
-                {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayRegion}</span>)}
+                {regions.length === 1 && (
+                <span className={DROPDOWN_BUTTON_STYLES}>{displayRegion}</span>
+                )}
                 {regions.length > 1 && (
                   <Tooltip
                     placement="bottom-start"
@@ -448,15 +452,16 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                     <button
                       type="button"
                       onClick={() => { toggleDropdown('region'); }}
-                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                      className={DROPDOWN_BUTTON_STYLES}
                     >
-                      <span>{displayRegion || 'Select a region'}</span>
+                      <span className={TEXT_BUTTON_STYLES}>{displayRegion || 'Select a region'}</span>
                     </button>
                   </Tooltip>
                 )}
               </div>
             )}
-            {!regions.length && displayRegion && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+            {!regions.length
+            && displayRegion && <span className={DROPDOWN_BUTTON_STYLES}>China</span>}
           </div>
           <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
@@ -475,7 +480,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
               )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col w-full h-full py-8 min-h-1/2">
+              <div className="flex flex-col w-full h-full pb-8 py-4 min-h-1/2">
                 <div className="flex items-center">
                   {visualization !== 'choropleth'
                     && (
@@ -498,7 +503,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                           className={cx('flex items-center cursor-pointer hover:font-bold',
                             {
                               'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
-                              'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
+                              DROPDOWN_BUTTON_STYLES: visualization === 'choropleth',
                             })}
                         >
                           <span>{displayUnit}</span>

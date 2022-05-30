@@ -43,6 +43,8 @@ import DropdownContent from 'layout/dropdown-content';
 
 import { ComponentTypes } from 'types/data';
 
+const DROPDOWN_BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
+
 const SankeyChart: FC<ComponentTypes> = ({
   className,
 }: ComponentTypes) => {
@@ -235,12 +237,12 @@ const SankeyChart: FC<ComponentTypes> = ({
             {/* filters */}
             {/* year filter */}
             <div className="flex items-center flex-wrap">
-              <span className="pr-2">
+              <span className="pr-2 mb-2">
                 {i18next.t('showing')}
                 :
               </span>
               {years.length === 1 && (
-                <div className="items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 md:flex hidden">
+                <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="mr-2 hidden md:flex">
                     {i18next.t('year')}
                     :
@@ -267,7 +269,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('year'); }}
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                    className={DROPDOWN_BUTTON_STYLES}
                   >
                     <span className="mr-2 hidden md:flex">
                       {i18next.t('year')}
@@ -282,7 +284,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               )}
               {/* unit filter */}
               {units.length === 1 && (
-                <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+                <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="mr-2 hidden md:flex">
                     {i18next.t('unit')}
                     :
@@ -309,7 +311,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('unit'); }}
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                    className={DROPDOWN_BUTTON_STYLES}
                   >
                     <span className="mr-2 md:flex hidden">
                       {i18next.t('unit')}
@@ -323,7 +325,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               )}
               {/* region filter  */}
               {regions.length === 1 && displayRegion && (
-                <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">
+                <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="mr-2 hidden md:flex">
                     {i18next.t('region')}
                     :
@@ -350,7 +352,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('region'); }}
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
+                    className={DROPDOWN_BUTTON_STYLES}
                   >
                     <span className="mr-2 hidden md:flex">
                       {i18next.t('region')}

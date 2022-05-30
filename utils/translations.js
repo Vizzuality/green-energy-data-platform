@@ -95,6 +95,7 @@ export const resources = {
       breakDown: 'Break-down (2035 - 2050)',
       adminPanel: 'Admin panel',
       personalData: 'Personal data',
+      infoPlant: 'Click to see specific info for this plant',
     },
   },
   cn: {
@@ -183,6 +184,7 @@ export const resources = {
       breakDown: '分解 (2035 - 2050)',
       adminPanel: '管理面板',
       personalData: '个人资料',
+      infoPlant: '点击查看该工厂的具体信息',
     },
   },
 };

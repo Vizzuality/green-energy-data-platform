@@ -74,17 +74,17 @@ const MapContainer: FC<MapContainerProps> = (
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const [hoverInteractions, setHoverInteractions] = useState({}
     || {
-    regions: layers[0].name,
-    cluster: {
-      point_count: null,
-      name: '',
-    },
-    properties: {
-      point_count: null,
-      total: null,
-      Total: null,
-    },
-  });
+      regions: layers[0].name,
+      cluster: {
+        point_count: null,
+        name: '',
+      },
+      properties: {
+        point_count: null,
+        total: null,
+        Total: null,
+      },
+    });
 
   const [lngLat, setLngLat] = useState([0, 0]);
   const [sortArray, setSortArray] = useState([]);
@@ -268,7 +268,7 @@ const MapContainer: FC<MapContainerProps> = (
                 <ul>
                   {tooltipInfoHeaders.map((t) => (
                     <li key={`${t}-${tooltipInfo[t]}`}>
-                      <span className="mr-4 text-sm">{t.charAt(0).toUpperCase() + t.slice(1)}</span>
+                      <span className="mr-4 text-sm first-letter:uppercase">{t}</span>
                       {(t === 'Total' || t === 'total')
                         ? <span className="text-sm">{numberFormat(tooltipInfo[t])}</span>
                         : <span className="text-sm">{tooltipInfo[t]}</span>}
@@ -291,7 +291,7 @@ const MapContainer: FC<MapContainerProps> = (
                 className="z-20 max-w-sm rounded-2xl"
               >
 
-                <span className="mr-4 text-xs">Click to see specific info for this plant</span>
+                <span className="mr-4 text-xs">{i18next.t('infoPlant')}</span>
               </Popup>
             )}
 
@@ -318,8 +318,9 @@ const MapContainer: FC<MapContainerProps> = (
             )}
 
             {/* Pop up for choropleth */}
-            {!!hoverInteractions?.properties && Object.keys(hoverInteractions?.properties).length === 1 &&
-              hasInteraction && (
+            {!!hoverInteractions?.properties
+            && Object.keys(hoverInteractions?.properties).length === 1
+              && hasInteraction && (
                 <Popup
                   latitude={lngLat[1]}
                   longitude={lngLat[0]}
@@ -337,7 +338,7 @@ const MapContainer: FC<MapContainerProps> = (
                     </div>
                   </div>
                 </Popup>
-              )}
+            )}
           </>
         )}
       </Map>
@@ -391,7 +392,7 @@ const MapContainer: FC<MapContainerProps> = (
           />
         )
       }
-    </div >
+    </div>
   );
 };
 

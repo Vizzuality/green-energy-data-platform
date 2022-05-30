@@ -1,6 +1,5 @@
 import React, {
   FC,
-  useMemo,
 } from 'react';
 import {
   ResponsiveContainer,
@@ -17,6 +16,8 @@ import {
 } from 'recharts';
 
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+
+import { format } from 'd3-format';
 
 type Object = {
   [key: string]: string | number | (() => void),
@@ -43,13 +44,6 @@ interface ConfigProps {
   tooltip?: Object,
   height: number,
 }
-
-// interface ModelIntercomparisonData {
-//   [key: string]: string | number | (() => void) | string[],
-//   year?: number,
-//   model: string,
-//   visualizationTypes: string[]
-// }
 
 interface ChartProps {
   widgetData: LineData[],
@@ -78,7 +72,7 @@ const Chart: FC<ChartProps> = ({
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
-        {yAxis && (<YAxis {...yAxis} />)}
+        {yAxis && (<YAxis {...yAxis} tickFormatter={format('.3s')} />)}
         {lines && Object.keys(lines).map((line, index) => (
           <Line key={line} {...lines[line]} stroke={color || colors[index]} />
         ))}

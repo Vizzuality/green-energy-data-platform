@@ -332,7 +332,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                   onClick={() => { toggleDropdown('indicator'); }}
                   className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full text-sm"
                 >
-                  <span>{i18next.t('change')}</span>
+                  <span className="text-sm">{i18next.t('change')}</span>
                   <Icon
                     ariaLabel="change indicator"
                     size="sm"

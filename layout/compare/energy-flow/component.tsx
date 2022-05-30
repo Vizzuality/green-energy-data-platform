@@ -32,8 +32,6 @@ import Sankey from 'components/indicator-visualizations/sankey';
 import { COLORS } from 'components/indicator-visualizations/sankey/constants';
 import CONFIG from 'components/indicator-visualizations/sankey/config';
 
-// import { RootState } from 'store/store';
-
 import { setFilters } from 'store/slices/indicator';
 import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
@@ -41,7 +39,7 @@ import i18next from 'i18next';
 import DropdownContent from 'layout/dropdown-content';
 import DropdownButton from 'layout/dropdown-button';
 
-import IndicatorCompareDataProps from '../types';
+import type IndicatorCompareDataProps from '../types';
 
 const SankeyChart: FC<IndicatorCompareDataProps> = ({
   groupSlug,
@@ -253,7 +251,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
             {/* filters */}
 
             <div className="flex items-center flex-wrap">
-              <span className="pr-2">
+              <span className="pr-2 mb-2">
                 {i18next.t('showing')}
                 :
               </span>
@@ -283,7 +281,6 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
                 <button
                   type="button"
                   onClick={() => { toggleDropdown('region'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4"
                 >
                   <DropdownButton
                     display={displayRegion}
