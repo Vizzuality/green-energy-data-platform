@@ -19,9 +19,7 @@ export const useSearch = (
         distance: 300,
         minMatchCharLength: 1,
       });
-
   const data = (fuse && fuse.search(search).map((d) => d.item));
-
   const filtered = data && data.length && data.map(
     ({ name, subgroups, ...d }) => ({
       ...d,
@@ -29,7 +27,7 @@ export const useSearch = (
       subgroups: name.toLowerCase().includes(search)
         ? subgroups
         : subgroups.map((subgroup) => {
-          if (!(subgroup.slug).toLowerCase().includes(search)) return null;
+          if (!(subgroup.name).toLowerCase().includes(search)) return null;
           return subgroup;
         }).filter((r) => r !== null),
     }),

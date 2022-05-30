@@ -269,6 +269,7 @@ export const getGroupedValues = (
             }))
           .value()))
         .value());
+
       const dataByProvince = groupBy(data, 'province');
       return Object.keys(dataByProvince).map((province) => dataByProvince[province]
         .reduce((acc, next) => {
@@ -280,7 +281,7 @@ export const getGroupedValues = (
           });
         }, {
           province,
-        }));
+        })).filter((d) => d.province !== 'China' && d.province !== '智利');
     }
 
     if (groupSlug === 'model-intercomparison') {

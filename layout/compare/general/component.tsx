@@ -506,7 +506,10 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                               DROPDOWN_BUTTON_STYLES: visualization === 'choropleth',
                             })}
                         >
-                          <span>{displayUnit}</span>
+                          <span>
+                            {displayUnit}
+                            hola
+                          </span>
                           <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
                         </button>
                       </Tooltip>

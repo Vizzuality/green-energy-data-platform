@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import i18next from 'i18next';
+
 import Tooltip from 'components/widgets/tooltip';
 
 type PayloadObject = {
@@ -68,7 +70,7 @@ const Tick: FC<TickProps> = (({
 const LabelContent = () => (
   <g>
     <text x="50%" y={400} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
-      Region
+      {i18next.t('region')}
     </text>
   </g>
 );
