@@ -58,6 +58,8 @@ type ChartProps = {
   color?: string,
 };
 
+const DROPDOWN_BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
+
 const IndicatorChart: FC<ComponentTypes> = ({
   className,
 }: ComponentTypes) => {
@@ -328,11 +330,13 @@ const IndicatorChart: FC<ComponentTypes> = ({
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
               <div className="flex flex-wrap items-center">
-                <span className="pr-2 whitespace-nowrap">
+                <span className="pr-2 mb-2 whitespace-nowrap">
                   {i18next.t('showing')}
                   :
                 </span>
-                {years.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayYear}</span>)}
+                {years.length === 1 && (
+                <span className={DROPDOWN_BUTTON_STYLES}>{displayYear}</span>
+                )}
                 {years.length > 1 && (
                   <Tooltip
                     placement="bottom-start"
@@ -350,7 +354,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                     <button
                       type="button"
                       onClick={() => { toggleDropdown('year'); }}
-                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                      className={DROPDOWN_BUTTON_STYLES}
                     >
                       <span>{displayYear || i18next.t('selectYear')}</span>
                       <Icon ariaLabel="change date" name="calendar" className="ml-4" />
@@ -363,11 +367,12 @@ const IndicatorChart: FC<ComponentTypes> = ({
             {/* region filter */}
             {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
               <div className="flex items-center">
-                <span className="pr-2">
+                <span className="pr-2 mb-2">
                   {i18next.t('region')}
                   :
                 </span>
-                {regions.length === 1 && (<span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayRegion}</span>)}
+                {regions.length === 1 && (
+                <span className={DROPDOWN_BUTTON_STYLES}>{displayRegion}</span>)}
                 {regions.length > 1 && (
                   <Tooltip
                     placement="bottom-start"
@@ -385,7 +390,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                     <button
                       type="button"
                       onClick={() => { toggleDropdown('region'); }}
-                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                      className={DROPDOWN_BUTTON_STYLES}
                     >
                       <span>{displayRegion || 'Select a region'}</span>
                       <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
@@ -398,7 +403,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             {/* scenario filter */}
             {['choropleth'].includes(visualization) && !!scenarios.length && (
               <div className="flex items-center">
-                <span className="pr-2">
+                <span className="pr-2 mb-2">
                   {i18next.t('scenario')}
                   :
                 </span>
@@ -419,7 +424,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                     <button
                       type="button"
                       onClick={() => { toggleDropdown('scenario'); }}
-                      className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                      className={DROPDOWN_BUTTON_STYLES}
                     >
                       <span>{displayScenario || i18next.t('selectScenario')}</span>
                       <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
@@ -444,11 +449,10 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   <p>Data not found</p>
                 </div>
               )}
-
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
               <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                 <div className="flex items-center">
-                  {visualization !== 'choropleth'
+                  {visualization !== 'choropleth' && !!units.length
                     && (
                       <Tooltip
                         placement="bottom-start"

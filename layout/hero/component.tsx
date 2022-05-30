@@ -47,7 +47,7 @@ const Hero: FC<HeroProps> = ({
             <Link href={{ pathname: '/indicators', query: { fallbackUrl: encodeURIComponent(asPath) } }} passHref>
               <a
                 href="/indicators"
-                className={cx('ml-3 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm',
+                className={cx('ml-3 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm active:font-bold',
                   {
                     'bg-gray1 text-white': theme === 'transparent',
                     'bg-white text-gray1': theme !== 'transparent',

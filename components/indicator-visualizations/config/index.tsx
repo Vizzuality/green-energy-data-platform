@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 
 import Tooltip from 'components/widgets/tooltip';
 
@@ -79,9 +79,7 @@ const TooltipContent: FC<TooltipProps> = ({
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
 const ChartConfig = (categories, language, data) => {
-  const values = useMemo(() => data.map((d) => d.value), [data]);
-  const MINVALUE = useMemo(() => Math.floor(Math.min(...values)), [values]);
-  const MAXVALUE = useMemo(() => Math.ceil(Math.max(...values)), [values]);
+  // const values = useMemo(() => data.map((d) => d.value), [data]);
 
   const KEY = language === 'cn' ? '全部的' : 'Total';
   const getLines = () => {
@@ -151,8 +149,7 @@ const ChartConfig = (categories, language, data) => {
       },
       yAxis: {
         tick: DefaultTick,
-        domain: [MINVALUE, MAXVALUE],
-        allowDecimals: false,
+        // domain: [MINVALUE, MAXVALUE],
         interval: 0,
       },
       tooltip: {
@@ -191,7 +188,8 @@ const ChartConfig = (categories, language, data) => {
       bars: getBars(),
       yAxis: {
         tick: DefaultTick,
-        domain: [MINVALUE, MAXVALUE],
+        // domain: [MINVALUE, MAXVALUE],
+        interval: 0,
       },
       xAxis: {
         type: 'category',

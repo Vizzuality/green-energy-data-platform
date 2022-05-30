@@ -46,7 +46,7 @@ const Card: FC<DataProps> = ({
     >
       {!session
         ? (
-          <div className="flex-col items-center p-6">
+          <div className="flex-col items-center p-4">
             <p>{i18next.t('downloadLoginMode')}</p>
             <Button
               className="mx-auto mt-6"

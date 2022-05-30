@@ -4,6 +4,8 @@ import i18next from 'i18next';
 // components
 import Icon from 'components/icon';
 
+import { DROPDOWN_BUTTON_STYLES, TEXT_BUTTON_STYLES } from 'layout/indicator-data/constants';
+
 // types
 export interface DrodownButtonTypes {
   elKey: string,
@@ -20,15 +22,15 @@ const DropdownButton: FC<DrodownButtonTypes> = ({
   icon,
   iconLabel,
 }: DrodownButtonTypes) => (
-  <div className="mb-2 whitespace-nowrap items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 md:flex hidden">
+  <div className={DROPDOWN_BUTTON_STYLES}>
     <span className="mr-2 hidden md:flex">
       {i18next.t(elKey)}
       :
     </span>
-    <span>
+    <span title={display.toString() || i18next.t(translationKey)} className={TEXT_BUTTON_STYLES}>
       {display || i18next.t(translationKey)}
     </span>
-    {!!icon && <Icon ariaLabel={iconLabel} name={icon} className="ml-4" />}
+    {!!icon && <Icon ariaLabel={iconLabel} name={icon} size="sm" className="ml-4" />}
   </div>
 );
 

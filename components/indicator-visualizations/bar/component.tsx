@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
+import { format } from 'd3-format';
 
 type Object = {
   [key: string]: string | number | (() => void),
@@ -74,7 +75,7 @@ const Chart: FC<ChartProps> = ({
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
-        {yAxis && (<YAxis {...yAxis} />)}
+        {yAxis && (<YAxis {...yAxis} interval={0} tickFormatter={format('.3s')} />)}
         {bars && (
           Object.keys(bars)
             .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={color || colors[index]} />
