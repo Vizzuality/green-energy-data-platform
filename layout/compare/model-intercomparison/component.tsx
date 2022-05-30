@@ -53,8 +53,8 @@ import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from 'components/indicator-visualizations/config';
 
 // types
-import { ChartLine, ChartBar } from 'types/model-intercomparison';
-import IndicatorCompareDataProps from '../types';
+import type { ChartLine, ChartBar } from 'types/model-intercomparison';
+import type IndicatorCompareDataProps from '../types';
 
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   groupSlug,
@@ -331,7 +331,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           {i18next.t('showing')}
           :
         </span>
-        <div className="flex items-center py-4">
+        <div className="flex-wrap items-center py-4">
           {/* region filter */}
           {(['line'].includes(visualization) && !!regions.length && displayRegion) && (
             <div className="flex items-center">
@@ -364,7 +364,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                       display={displayRegion}
                       elKey="region"
                       translationKey="selectRegion"
-                      icon="triagle_border"
+                      icon="triangle_border"
                       iconLabel="dropdown"
                     />
                   </button>
@@ -402,7 +402,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   display={displayScenario}
                   elKey="scenario"
                   translationKey="selectScenario"
-                  icon="triagle_border"
+                  icon="triangle_border"
                   iconLabel="dropdown"
                 />
               </button>

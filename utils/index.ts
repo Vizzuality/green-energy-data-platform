@@ -244,9 +244,9 @@ export const getGroupedValues = (
     .map((value, key) => (
       {
         name: key,
-        value: value.reduce(
+        value: (value.reduce(
           (previous, current) => (current.value || 0) + previous, 0,
-        ),
+        )),
         region: value[0].region.name,
         year: value[0].year,
         visualizationTypes: value[0].visualization_types,

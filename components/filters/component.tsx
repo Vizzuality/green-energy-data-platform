@@ -52,13 +52,13 @@ const Filters: FC<FiltersProps> = ({
   // }, [dispatch, onClick, categories, visualization, current]);
 
   useEffect(() => {
-    if (visualization === 'choropleth') {
+    if (visualization === 'choropleth' || categories.length === 1) {
       const value = categories[0];
       setActive(value);
       dispatch(onClick({ category: { label: 'category_2', value } }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, onClick, visualization]);
+  }, [dispatch, onClick, visualization, categories.length]);
 
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
@@ -120,7 +120,7 @@ const Filters: FC<FiltersProps> = ({
             >
               <span className="flex-1 flex text-left pr-2">{category}</span>
             </button>
-            {active === category && hasSubcategories && (
+            {active === category && hasSubcategories && categories.length > 1 && (
               <div className="h-full flex justify-center items-center border-l border-l-white py-3">
                 <Icon
                   ariaLabel="close"

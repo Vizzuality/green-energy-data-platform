@@ -32,6 +32,7 @@ import LoadingSpinner from 'components/loading-spinner';
 import Line from 'components/indicator-visualizations/line';
 import Bar from 'components/indicator-visualizations/bar';
 import Icon from 'components/icon';
+import Button from 'components/button';
 
 // utils
 import {
@@ -56,6 +57,7 @@ import ChartConfig from 'components/indicator-visualizations/config';
 import { ChartLine, ChartBar } from 'types/model-intercomparison';
 import { ComponentTypes } from 'types/data';
 
+const DROPDOWN_BUTTON_STYLES = 'max-w-[250px] ellipsis mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 const ModelIntercomparison: FC<ComponentTypes> = ({
   className,
 }: ComponentTypes) => {
@@ -291,6 +293,25 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     indicatorSlug,
   ]);
 
+  const resetFilters = useCallback(() => {
+    dispatch(setFilters({
+      visualization: currentVisualization,
+      ...(defaultUnit && { unit: defaultUnit?.value }) || { unit: null },
+      ...defaultCategory && { category: defaultCategory },
+      ...((['line'].includes(currentVisualization)) && { region: defaultRegion?.value }) || { region: null },
+      ...(['bar'].includes(currentVisualization) && { year: defaultYear?.value }) || { year: null },
+      scenario: currentScenario || null,
+    }));
+  }, [
+    dispatch,
+    defaultYear,
+    defaultRegion,
+    defaultUnit,
+    defaultCategory,
+    currentScenario,
+    currentVisualization,
+  ]);
+
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
     () => widgetDataKeys.map((item, index) => ({
       label: item,
@@ -309,17 +330,18 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   return (
     <section className={`flex flex-col  ${className}`}>
+
       <section className="flex flex-wrap items-center">
-        <span className="pr-2 whitespace-nowrap">
+        <span className="pr-2 mb-2 whitespace-nowrap">
           {i18next.t('showing')}
           :
         </span>
-        <div className="flex items-center py-4">
+        <div className="inline-flex flex-wrap items-center text-sm">
           {/* region filter */}
           {(['line'].includes(visualization) && !!regions.length && displayRegion) && (
             <div className="flex items-center">
               {regions.length === 1 && (
-                <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
+                <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
                     {i18next.t('region')}
                     :
@@ -346,7 +368,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('region'); }}
-                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                    className={DROPDOWN_BUTTON_STYLES}
                   >
                     <span className="hidden mr-2 md:flex">
                       {i18next.t('region')}
@@ -355,7 +377,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                     <span>
                       {displayRegion || i18next.t('selectRegion')}
                     </span>
-                    <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
+                    <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
                   </button>
                 </Tooltip>
               )}
@@ -363,7 +385,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           )}
           {/* Scenario filter */}
           {scenarios.length === 1 && (
-            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
+            <div className={DROPDOWN_BUTTON_STYLES}>
               <span className="hidden mr-2 md:flex">
                 {i18next.t('scenario')}
                 :
@@ -392,7 +414,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               <button
                 type="button"
                 onClick={() => { toggleDropdown('scenario'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                className={DROPDOWN_BUTTON_STYLES}
               >
                 <span className="hidden mr-2 md:flex">
                   {i18next.t('scenario')}
@@ -401,13 +423,13 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 <span>
                   {displayScenario || i18next.t('selectScenario')}
                 </span>
-                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
+                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
               </button>
             </Tooltip>
           )}
           {/* Units filter */}
           {units.length === 1 && (
-            <div className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap">
+            <div className={DROPDOWN_BUTTON_STYLES}>
               <span className="hidden mr-2 md:flex">
                 {i18next.t('unit')}
                 :
@@ -434,7 +456,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               <button
                 type="button"
                 onClick={() => { toggleDropdown('unit'); }}
-                className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
+                className={DROPDOWN_BUTTON_STYLES}
               >
                 <span className="hidden mr-2 md:flex">
                   {i18next.t('unit')}
@@ -443,13 +465,20 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 <span>
                   {displayUnit || i18next.t('selectUnit')}
                 </span>
-                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
+                <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
               </button>
             </Tooltip>
           )}
         </div>
+
       </section>
-      <div className="flex justify-between w-full mb-4">
+      <div className="flex justify-end">
+
+        <Button theme="secondary-background-dark" onClick={resetFilters}>
+          <span className="mr-2 text-sm">Reset to default values</span>
+        </Button>
+      </div>
+      <div className="flex justify-between w-full my-4">
         <section className="w-1/2">
           {categories.length > 0 && visualization === 'bar' && (
             <div className="max-h-128">
@@ -488,6 +517,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           )}
         </section>
       </div>
+
       <div>
 
         <section className="flex flex-col w-full">
