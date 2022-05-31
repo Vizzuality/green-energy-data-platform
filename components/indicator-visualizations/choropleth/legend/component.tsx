@@ -13,7 +13,7 @@ interface LegendProps {
   className?: string;
   children: React.ReactNode;
   maxHeight?: string | number;
-  onChangeOrder: (id: string[]) => void;
+  onChangeOrder?: (id: string[]) => void;
 }
 
 export const Legend: FC<LegendProps> = ({

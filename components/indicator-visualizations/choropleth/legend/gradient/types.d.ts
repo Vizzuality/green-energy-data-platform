@@ -1,5 +1,5 @@
 type LegendTypeItem = {
-  value: string;
+  value: string | number;
   color: string;
 };
 

@@ -163,7 +163,7 @@ const SigninPage: FC<SigninProps> = ({
                         })}
                       />
                     </div>
-                    {isPasswordFailed && <div className="font-sans text-xs font-light text-red-100">THE PASSWORD DOESN&apos;T MATCH THE EMAIL</div>}
+                    {isPasswordFailed && <div className="font-sans text-xs font-light text-red-100 uppercase">{i18next.t('passwordError')}</div>}
                   </label>
                   <button
                     type="button"

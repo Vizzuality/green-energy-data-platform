@@ -38,7 +38,7 @@ import { DEFAULT_VIEWPORT } from './constants';
 import Map from './map';
 
 type ItemProps = {
-  value: string,
+  value: number,
   color: string
 };
 
@@ -124,9 +124,9 @@ const MapContainer: FC<MapContainerProps> = (
   } = useCoalPowerPlantTooltip(spiderInfo);
 
   // Callbacks
-  const onChangeOrder = useCallback((ids) => {
-    setSortArray(ids);
-  }, []);
+  // const onChangeOrder = useCallback((ids) => {
+  //   setSortArray(ids);
+  // }, []);
 
   const mapRefCurrent = mapRef.current;
   const spiderifier = useMemo(() => {
@@ -257,7 +257,8 @@ const MapContainer: FC<MapContainerProps> = (
                   </div>
                 </Popup>
               )}
-            {tooltipInfoHeaders.length > 1 && (
+            {tooltipInfoHeaders.length > 1 && hasInteraction
+              && (
               <Popup
                 latitude={lngLat[1]}
                 longitude={lngLat[0]}
@@ -276,9 +277,10 @@ const MapContainer: FC<MapContainerProps> = (
                   ))}
                 </ul>
               </Popup>
-            )}
+              )}
 
             {!spiderInfo
+            && hasInteraction
             && !tooltipInfoHeaders.length
             && !tooltipInfo.length
             && hoverInteractions.cluster
@@ -295,7 +297,8 @@ const MapContainer: FC<MapContainerProps> = (
               </Popup>
             )}
 
-            {spiderTooltipInfoHeaders.length > 0 && (
+            {spiderTooltipInfoHeaders.length > 0 && hasInteraction
+              && (
               <Popup
                 latitude={lngLat[1]}
                 longitude={lngLat[0]}
@@ -315,7 +318,7 @@ const MapContainer: FC<MapContainerProps> = (
                   ))}
                 </ul>
               </Popup>
-            )}
+              )}
 
             {/* Pop up for choropleth */}
             {!!hoverInteractions?.properties
@@ -334,7 +337,7 @@ const MapContainer: FC<MapContainerProps> = (
                         {i18next.t('total')}
                         :
                       </span>
-                      <span className="mr-2 text-sm">{Object.values(hoverInteractions?.properties)}</span>
+                      <span className="mr-2 text-sm">{numberFormat(Object.values(hoverInteractions?.properties))}</span>
                     </div>
                   </div>
                 </Popup>
@@ -362,7 +365,7 @@ const MapContainer: FC<MapContainerProps> = (
       {
         hasInteraction
         && (
-          <Legend onChangeOrder={onChangeOrder}>
+          <Legend>
             {sortedItems?.map((i) => {
               const { type, items } = i;
 

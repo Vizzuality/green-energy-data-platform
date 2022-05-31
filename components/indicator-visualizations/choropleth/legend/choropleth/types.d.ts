@@ -1,7 +1,7 @@
 export interface LegendTypeChoroplethProps {
   className?: string;
   items: Array<{
-    value: string;
+    value: value;
     color: string;
   }>;
 }

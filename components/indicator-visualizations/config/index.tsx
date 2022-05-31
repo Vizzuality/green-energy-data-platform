@@ -1,8 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import i18next from 'i18next';
 
 import Tooltip from 'components/widgets/tooltip';
+
+import { useSelector } from 'react-redux';
+
+import { RootState } from 'store/store';
 
 type PayloadObject = {
   name: string,
@@ -81,13 +85,22 @@ const TooltipContent: FC<TooltipProps> = ({
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
 const ChartConfig = (categories, language, data) => {
-  // const values = useMemo(() => data.map((d) => d.value), [data]);
+  const filters = useSelector(
+    (state: RootState) => (state.indicator),
+  );
+  const {
+    category,
+  } = filters;
+  const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China' && category?.value === v.category_1).map((d) => d.value), [data, category?.value]);
+
+  const MINVALUE = useMemo(() => Math.floor(Math.min(...values)), [values]);
+  const MAXVALUE = useMemo(() => Math.ceil(Math.max(...values)), [values]);
 
   const KEY = language === 'cn' ? '全部的' : 'Total';
   const getLines = () => {
     if (categories.length) {
-      return categories.map((category) => ({
-        dataKey: category,
+      return categories.map((c) => ({
+        dataKey: c,
         strokeWidth: 2,
       }));
     }
@@ -189,8 +202,9 @@ const ChartConfig = (categories, language, data) => {
       isAnimationActive: false,
       bars: getBars(),
       yAxis: {
+        type: 'number',
         tick: DefaultTick,
-        // domain: [MINVALUE, MAXVALUE],
+        domain: [MINVALUE, MAXVALUE],
         interval: 0,
       },
       xAxis: {

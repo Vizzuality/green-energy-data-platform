@@ -44,12 +44,8 @@ const Item: FC<ItemProps> = ({
     (state: RootState) => (state.language),
   );
 
-  const handleDownload = (format) => {
-    if (!session) return console.log('sign in to get data');
-
-    return fetchDataToDownload(`Bearer ${session.token}`, indSlug, format, { locale: current })
-      .then((data) => parseDataToDownload(format, data, indSlug));
-  };
+  const handleDownload = (format) => fetchDataToDownload(`Bearer ${session.token}`, indSlug, format, { locale: current })
+    .then((data) => parseDataToDownload(format, data, indSlug));
 
   return (
     <div className={cx('w-full m-auto inline-flex flex-grow text-center divide-y divide-gray4 divide-opacity-90',

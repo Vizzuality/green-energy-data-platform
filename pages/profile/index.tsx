@@ -35,7 +35,7 @@ import { useRouter } from 'next/router';
 interface NewDetailProps {
   title?: string,
   username?: string,
-  organisation?: string;
+  organization?: string;
   email?: string,
   token: string,
   password?: string,
@@ -48,7 +48,7 @@ const ProfilePage: FC = () => {
     placeholderData: {
       title: '',
       username: '',
-      organisation: '',
+      organization: '',
       email: '',
     },
   });
@@ -56,7 +56,7 @@ const ProfilePage: FC = () => {
   const {
     title: userTitle,
     email: userEmail,
-    organisation: userOrganisation,
+    organization: userOrganization,
     username: userName,
     token: userToken,
   } = user;
@@ -67,7 +67,7 @@ const ProfilePage: FC = () => {
     title: userTitle,
     username: userName,
     email: userEmail,
-    organisation: userOrganisation,
+    organization: userOrganization,
     token: userToken,
     password: '',
     newPassword: '',
@@ -79,7 +79,7 @@ const ProfilePage: FC = () => {
       setCredentials({
         title: userTitle,
         username: userName,
-        organisation: userOrganisation,
+        organization: userOrganization,
         email: userEmail,
         token: userToken,
         password: '',
@@ -87,7 +87,7 @@ const ProfilePage: FC = () => {
         password_confirmation: '',
       });
     }
-  }, [isLoading, userTitle, userName, userOrganisation, userEmail, userToken]);
+  }, [isLoading, userTitle, userName, userOrganization, userEmail, userToken]);
 
   const [isValid, setEmailVerification] = useState(false);
 
@@ -105,10 +105,10 @@ const ProfilePage: FC = () => {
 
   const submitNewDetails = async (
     {
-      title, username, organisation, email, token, password, passwordConfirmation,
+      title, username, organization, email, token, password, passwordConfirmation,
     }: NewDetailProps,
   ) => updateUser({
-    title, username, organisation, email, password, password_confirmation: passwordConfirmation,
+    title, username, organization, email, password, password_confirmation: passwordConfirmation,
   }, token);
 
   const deletUserAccount = async ({ token }) => deleteUser(token);
@@ -116,7 +116,7 @@ const ProfilePage: FC = () => {
   const {
     title,
     username,
-    organisation,
+    organization,
     email,
     token,
   } = credentials;
@@ -147,14 +147,14 @@ const ProfilePage: FC = () => {
       token: userToken,
       title,
       username,
-      organisation,
+      organization,
       email,
       ...credentials,
     });
 
     if (token) {
       mutateUserDetails({
-        title, username, organisation, token, email,
+        title, username, organization, token, email,
       });
     }
   };
@@ -226,19 +226,19 @@ const ProfilePage: FC = () => {
                 </div>
               </label>
               <label
-                htmlFor="organisation"
+                htmlFor="organization"
                 className="uppercase w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
               >
-                {i18next.t('organisation')}
+                {i18next.t('organization')}
                 <div className="relative mt-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                   <input
-                    id="organisation"
-                    name="organisation"
+                    id="organization"
+                    name="organization"
                     type="text"
-                    defaultValue={user?.organisation}
+                    defaultValue={user?.organization}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
-                      { 'text-grayProfile text-opacity-100': organisation?.length })}
-                    onChange={(e) => handleChange('organisation', e)}
+                      { 'text-grayProfile text-opacity-100': organization?.length })}
+                    onChange={(e) => handleChange('organization', e)}
                   />
                   <Icon
                     ariaLabel="Organization"
