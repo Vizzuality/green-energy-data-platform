@@ -50,9 +50,9 @@ const Filters: FC<FiltersProps> = ({
   //     }
   //   }
   // }, [dispatch, onClick, categories, visualization, current]);
-
+  const indicator = 'model-intercomparison';
   useEffect(() => {
-    if (visualization === 'choropleth' || categories.length === 1) {
+    if (visualization === 'choropleth' || (categories.length === 1 && indicator === 'model-intercomparison')) {
       const value = categories[0];
       setActive(value);
       dispatch(onClick({ category: { label: 'category_2', value } }));
@@ -83,11 +83,14 @@ const Filters: FC<FiltersProps> = ({
     setActive('');
   };
 
+  const categoriesHeight = categories.length * 50;
+  const maxHeight = categoriesHeight + 110;
+
   return (
     <div
       className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full',
         { [className]: className })}
-      style={{ height }}
+      style={{ height, maxHeight }}
     >
       <div className="flex justify-start py-3.75 px-6 ">
         <div className="flex">

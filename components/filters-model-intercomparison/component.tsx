@@ -45,13 +45,15 @@ const FiltersMI: FC<FiltersProps> = ({
 
   const historic = models.filter((model) => model.toLowerCase().includes('history'));
   const areAllSelected = models.length === activeModels.length;
+  const modelsHeight = models.length * 50;
+  const maxHeight = modelsHeight + 110;
 
   return (
     <div
       key={models.length}
-      className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full max-h-full',
+      className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full',
         { [className]: className })}
-      style={{ height }}
+      style={{ height, maxHeight }}
     >
       <div className="flex py-3.75 px-6 items-center justify-between w-full">
         <div className="flex">
