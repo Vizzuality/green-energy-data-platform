@@ -472,12 +472,12 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
         </div>
 
       </section>
-      <div className="flex justify-end">
+      {/* <div className="flex justify-end">
 
         <Button theme="secondary-background-dark" onClick={resetFilters}>
           <span className="mr-2 text-sm">Reset to default values</span>
         </Button>
-      </div>
+      </div> */}
       <div className="flex justify-between w-full my-4">
         <section className="w-1/2">
           {categories.length > 0 && visualization === 'bar' && (
