@@ -137,6 +137,7 @@ const Filters: FC<FiltersProps> = ({
           </div>
         ))}
       </div>
+      {categories.length > 1 && (
       <div className="flex items-center justify-center p-3">
         <Icon
           ariaLabel="category-up"
@@ -153,6 +154,7 @@ const Filters: FC<FiltersProps> = ({
           className="cursor-pointer p-2 border-gray1 border-2 border-opacity-30 rounded-full transform rotate-180 hover:bg-gray1 hover:bg-opacity-90 hover:text-white"
         />
       </div>
+      )}
     </div>
   );
 };

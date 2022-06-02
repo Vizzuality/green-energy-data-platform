@@ -85,7 +85,7 @@ const SignupPage: FC = () => {
               <a href="/signin" className="flex items-center justify-center text-center text-white bg-transparent border-2 border-white rounded-full hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black focus:outline-none">Sign in</a>
             </Link>
           </section>
-          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-0 min-w-70shadow max-w-2xl">
+          <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-0 min-w-70 shadow max-w-3xl">
             <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
                 <label htmlFor="title" className="text-base font-bold">

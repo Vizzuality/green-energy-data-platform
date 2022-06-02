@@ -48,12 +48,12 @@ const Menu: FC<MenuProps> = ({
           key={slug}
         >
           <span className="uppercase text-sm tracking-tight box-border">{name}</span>
-          <ul className="space-y-1 pb-4">
+          <ul className="space-y-1 pb-4 pt-3.5">
             {subgroups.map(({
               name: sgName, id: sgId, slug: sgSlug, default_indicator,
             }, subIndex) => (
               <li
-                className={cx('box-border px-5 py-2 bg-gray6 bg-opacity-10 hover:bg-opacity-5 shadow-lg rounded-lg',
+                className={cx('box-border px-5 py-2 bg-gray6 bg-opacity-5 hover:bg-opacity-10 shadow-xs rounded-lg',
                   { 'bg-gray1 bg-opacity-5': index === selectedIndex.index && subIndex === selectedIndex.subIndex })}
                 key={sgSlug}
               >

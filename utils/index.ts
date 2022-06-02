@@ -56,6 +56,7 @@ export const getCategoriesFromRecords = (
   visualization: string,
 ) => {
   const categories = visualization !== 'sankey' ? compact(sortedUniq(records?.map((d) => (d.category_1 === null ? 'Total' : d.category_1)).sort())) : [];
+
   if (visualization === 'choropleth') {
     return categories;
   }
@@ -280,7 +281,7 @@ export const getGroupedValues = (
           });
         }, {
           province,
-        }));
+        })).filter((p) => p.province !== 'China');
     }
 
     if (groupSlug === 'model-intercomparison') {
@@ -814,8 +815,8 @@ export const getGroupedValuesRelatedIndicators = (
           }))
         .value()))
       .value());
-
     const dataByProvince = groupBy(data, 'province');
+
     return Object.keys(dataByProvince).map((province) => dataByProvince[province]
       .reduce((acc, next) => {
         const { province: currentProvince, ...rest } = next;

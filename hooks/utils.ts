@@ -25,7 +25,7 @@ export const useColors = (
   ]).colors(colorsNumber || 0);
 };
 
-export const useOpacityColors = (colors) => colors.map((color) => chroma(color).luminance(0.7));
+export const useOpacityColors = (colors) => colors.map((color) => chroma(color).luminance(0.5));
 
 export default {
   useColors,
