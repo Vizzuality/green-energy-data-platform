@@ -114,10 +114,6 @@ button .mapboxgl-ctrl-icon.mapboxgl-ctrl-fullscreen {
   background-size: 50% !important;
 }
 
-.mapboxgl-ctrl-icon > span {
-  display: none ! important;
-}
-
 .mapboxgl-popup-content {
   z-index: 500;
 }
@@ -172,4 +168,8 @@ button .mapboxgl-ctrl-icon.mapboxgl-ctrl-fullscreen {
 .spider-leg-pin.default-spider-pin {
   margin-left: -11.5px !important;
   margin-top: -11.5px !important;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance:none;
 }

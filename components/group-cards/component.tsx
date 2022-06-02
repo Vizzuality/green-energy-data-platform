@@ -21,6 +21,12 @@ interface GroupCardProps {
   textPosition: string,
 }
 
+const subtitles = {
+  energy: 'Global Energy Investment.',
+  socioeconomic: 'Agriculture.',
+  'coal-power-plants': 'Capacity power plants  in China.',
+};
+
 const GroupCard: FC<GroupCardProps> = ({
   group,
   className,
@@ -37,7 +43,6 @@ const GroupCard: FC<GroupCardProps> = ({
   const defaultData = useDefaultIndicator(group);
   const { default_indicator: defaultIndicator, slug: subgroupSlug } = defaultData;
   const { slug: indicatorSlug } = defaultIndicator || '';
-
   return (
     <div className={cx('w-full items-center', { [className]: className })}>
       <div className={cx('max-w-md sm:my-8',
@@ -47,7 +52,7 @@ const GroupCard: FC<GroupCardProps> = ({
         })}
       >
         <h3 className="text-3.5xl text-gray3">{name}</h3>
-        <h4 className="text-2.5xl text-color1 pb-2 text-bold leading-loose">{subtitle}</h4>
+        <h4 className="text-2.5xl text-color1 pb-2 font-bold leading-loose">{subtitles[slug]}</h4>
         <p className="text-sm leading-7 my-9 cursor-pointer">
           {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.'}
         </p>
