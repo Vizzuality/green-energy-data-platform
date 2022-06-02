@@ -334,7 +334,7 @@ const MapContainer: FC<MapContainerProps> = (
                         {i18next.t('total')}
                         :
                       </span>
-                      <span className="mr-2 text-sm">{Object.values(hoverInteractions?.properties)}</span>
+                      <span className="mr-2 text-sm">{numberFormat(Object.values(hoverInteractions?.properties))}</span>
                     </div>
                   </div>
                 </Popup>

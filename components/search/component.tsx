@@ -57,7 +57,7 @@ const Search: FC<SearchProps> = ({
     <div className={cx('flex h-full relative', className,
       {
         'rounded-lg': !isHeader && !isOpen,
-        'rounded-t-lg': !isHeader && isOpen,
+        'rounded-t-2.5xl': !isHeader && isOpen,
       })}
     >
       <button

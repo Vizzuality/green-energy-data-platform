@@ -46,7 +46,9 @@ const Card: FC<DataProps> = ({
     >
       {!session
         ? (
-          <div className="flex-col items-center p-4">
+          <div className={cx('flex-col items-center p-4',
+            { 'w-full justify-center': type === 'horizontal' })}
+          >
             <p>{i18next.t('downloadLoginMode')}</p>
             <Button
               className="mx-auto mt-6"

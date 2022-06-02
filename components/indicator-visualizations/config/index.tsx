@@ -113,7 +113,6 @@ const ChartConfig = (categories, language, data) => {
     opacity: 0.5,
     fontSize: '14px',
   };
-
   return ({
     line: {
       margin: {
