@@ -23,13 +23,6 @@ const FiltersMI: FC<FiltersProps> = ({
   height,
 }: FiltersProps) => {
   const filtersRef = useRef(null);
-  // const handleClick = (direction) => {
-  //   if (direction === 'up') {
-
-  //   }
-  //   if (direction === 'down') {
-  //   }
-  // };
 
   const handleCategories = useCallback((value) => {
     const position = activeModels.indexOf(value);
@@ -46,7 +39,7 @@ const FiltersMI: FC<FiltersProps> = ({
   const historic = models.filter((model) => model.toLowerCase().includes('history'));
   const areAllSelected = models.length === activeModels.length;
   const modelsHeight = models.length * 50;
-  const maxHeight = modelsHeight + 110;
+  const maxHeight = modelsHeight + 100;
 
   return (
     <div
@@ -64,6 +57,7 @@ const FiltersMI: FC<FiltersProps> = ({
           </p>
 
         </div>
+        {models.length > 1 && (
         <label
           htmlFor="select-all"
           className="flex items-center text-left text-sm opacity-20 cursor-pointer"
@@ -80,6 +74,7 @@ const FiltersMI: FC<FiltersProps> = ({
               : () => onClick(models)}
           />
         </label>
+        )}
       </div>
       <div
         ref={filtersRef}
@@ -88,8 +83,8 @@ const FiltersMI: FC<FiltersProps> = ({
         {models.map((category) => (
           <div
             key={category}
-            className={cx('flex justify-between cursor-pointer items-center w-full mb-1.5 bg-white active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
-              { 'bg-color1 text-white': activeModels.includes(category) })}
+            className={cx('flex justify-between cursor-pointer items-center w-full mb-1.5  active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
+              (activeModels.includes(category) || models.length === 1) ? 'bg-color1 text-white' : 'bg-white')}
           >
             <button
               name={category}
@@ -99,7 +94,7 @@ const FiltersMI: FC<FiltersProps> = ({
             >
               <span className="flex-1 flex text-left pr-2">{category}</span>
             </button>
-            {activeModels.includes(category) && (
+            {(activeModels.includes(category) && models.length > 1) && (
               <div className="h-full flex justify-center items-center border-l border-l-white py-3">
                 <Icon
                   ariaLabel="close"

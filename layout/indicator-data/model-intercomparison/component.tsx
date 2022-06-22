@@ -32,7 +32,6 @@ import LoadingSpinner from 'components/loading-spinner';
 import Line from 'components/indicator-visualizations/line';
 import Bar from 'components/indicator-visualizations/bar';
 import Icon from 'components/icon';
-import Button from 'components/button';
 
 // utils
 import {
@@ -53,11 +52,12 @@ import DropdownContent from 'layout/dropdown-content';
 
 import ChartConfig from 'components/indicator-visualizations/config';
 
+import { DROPDOWN_BUTTON_STYLES, TEXT_BUTTON_STYLES } from 'layout/indicator-data/constants';
 // types
-import { ChartLine, ChartBar } from 'types/model-intercomparison';
-import { ComponentTypes } from 'types/data';
+import type { ChartLine, ChartBar } from 'types/model-intercomparison';
+import type { ComponentTypes } from 'types/data';
 
-const DROPDOWN_BUTTON_STYLES = 'max-w-[250px] ellipsis mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
+// const DROPDOWN_BUTTON_STYLES = 'max-w-[250px] ellipsis mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 const ModelIntercomparison: FC<ComponentTypes> = ({
   className,
 }: ComponentTypes) => {
@@ -211,6 +211,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     () => ChartConfig(widgetDataKeys, current, records)[configType],
     [configType, widgetDataKeys, current, records],
   );
+
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(
     () => getModelIntercomparisonData(
       filters, filteredRecords, activeModels,
@@ -327,7 +328,6 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
     [accessibleBy, user]);
-
   return (
     <section className={`flex flex-col  ${className}`}>
 
@@ -346,7 +346,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                     {i18next.t('region')}
                     :
                   </span>
-                  <span>
+                  <span className={TEXT_BUTTON_STYLES}>
                     {displayRegion || i18next.t('selectRegion')}
                   </span>
                 </div>
@@ -374,7 +374,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                       {i18next.t('region')}
                       :
                     </span>
-                    <span>
+                    <span className={TEXT_BUTTON_STYLES}>
                       {displayRegion || i18next.t('selectRegion')}
                     </span>
                     <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
@@ -390,7 +390,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 {i18next.t('scenario')}
                 :
               </span>
-              <span>
+              <span className={TEXT_BUTTON_STYLES}>
                 {displayScenario || i18next.t('selectScenario')}
               </span>
             </div>
@@ -420,7 +420,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                   {i18next.t('scenario')}
                   :
                 </span>
-                <span>
+                <span className={TEXT_BUTTON_STYLES}>
                   {displayScenario || i18next.t('selectScenario')}
                 </span>
                 <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
@@ -434,7 +434,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 {i18next.t('unit')}
                 :
               </span>
-              <span>
+              <span className={TEXT_BUTTON_STYLES}>
                 {displayUnit || i18next.t('selectUnit')}
               </span>
             </div>
@@ -462,7 +462,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                   {i18next.t('unit')}
                   :
                 </span>
-                <span>
+                <span className={TEXT_BUTTON_STYLES}>
                   {displayUnit || i18next.t('selectUnit')}
                 </span>
                 <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
@@ -492,6 +492,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           )}
           {categories.length > 0 && visualization !== 'bar' && (
             <Filters
+              indicator="model-intercomparison"
               visualization={visualization}
               categories={categories}
               hasSubcategories={!!subcategories.length || categories.length === 1}

@@ -15,6 +15,7 @@ import {
 
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import { format } from 'd3-format';
+import { orderBy } from 'lodash';
 
 type Object = {
   [key: string]: string | number | (() => void),

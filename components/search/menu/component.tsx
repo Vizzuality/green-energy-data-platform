@@ -9,6 +9,7 @@ import { RootState } from 'store/store';
 import { GroupProps } from 'types/data';
 
 import { useSearch } from 'hooks/search';
+import subgroup from 'store/slices/subgroup';
 
 interface MenuProps {
   items: GroupProps[],
@@ -51,23 +52,26 @@ const Menu: FC<MenuProps> = ({
           <ul className="space-y-1 pb-4 pt-3.5">
             {subgroups.map(({
               name: sgName, id: sgId, slug: sgSlug, default_indicator,
-            }, subIndex) => (
-              <li
-                className={cx('box-border px-5 py-2 bg-gray6 bg-opacity-5 hover:bg-opacity-10 shadow-xs rounded-lg',
-                  { 'bg-gray1 bg-opacity-5': index === selectedIndex.index && subIndex === selectedIndex.subIndex })}
-                key={sgSlug}
-              >
-                <Link key={sgId} href={`/${slug}/${sgSlug}/${default_indicator?.slug}`}>
-                  <a
-                    href={`/${slug}/${sgSlug}/${default_indicator?.slug}`}
-                    className="text-gray1"
-                    onMouseEnter={() => { setSelectedIndex({ index, subIndex }); }}
-                  >
-                    {sgName}
-                  </a>
-                </Link>
-              </li>
-            ))}
+            }, subIndex) => {
+              const defIndicatorSlug = !default_indicator ? subgroups[0].slug : default_indicator.slug;
+              return (
+                <li
+                  className={cx('box-border px-5 py-2 bg-gray6 bg-opacity-5 hover:bg-opacity-10 shadow-xs rounded-lg',
+                    { 'bg-gray1 bg-opacity-5': index === selectedIndex.index && subIndex === selectedIndex.subIndex })}
+                  key={sgSlug}
+                >
+                  <Link key={sgId} href={`/${slug}/${sgSlug}/${defIndicatorSlug}`}>
+                    <a
+                      href={`/${slug}/${sgSlug}/${defIndicatorSlug}`}
+                      className="text-gray1"
+                      onMouseEnter={() => { setSelectedIndex({ index, subIndex }); }}
+                    >
+                      {sgName}
+                    </a>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </li>
       ))}

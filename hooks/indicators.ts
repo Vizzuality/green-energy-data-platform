@@ -268,7 +268,6 @@ export function useIndicatorRecords(
   const filters = (visualization === 'choropleth' || visualization === 'bars') ? restParamsYear : restParamsRegion;
 
   const filterValueKeys = Object.values(filters).filter((filter) => Boolean(filter));
-
   const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current, ...filterValueKeys],
     () => fetchIndicatorRecords(
       groupId, subgroupId, indicatorId, { locale: current, ...filters },

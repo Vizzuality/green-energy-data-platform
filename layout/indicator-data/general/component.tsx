@@ -83,6 +83,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
   const {
     year, unit, region, category, scenario, visualization = 'choropleth',
   } = filters;
+
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
 
@@ -133,7 +134,6 @@ const IndicatorChart: FC<ComponentTypes> = ({
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   }));
-
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
   const filtersIndicator = useMemo(() => {
@@ -162,7 +162,6 @@ const IndicatorChart: FC<ComponentTypes> = ({
       enabled: !!visualization && (!!region || !!year),
     },
   );
-
   const {
     defaultCategory,
     years,

@@ -271,6 +271,7 @@ export const getGroupedValues = (
           .value()))
         .value());
       const dataByProvince = groupBy(data, 'province');
+
       return Object.keys(dataByProvince).map((province) => dataByProvince[province]
         .reduce((acc, next) => {
           const { province: currentProvince, ...rest } = next;
@@ -302,9 +303,9 @@ export const getGroupedValues = (
         .value();
       return data;
     }
+
     return data;
   };
-
   const getChoroplethData = (): {
     layers: MapLayersProps,
     visualizationTypes: string[],
