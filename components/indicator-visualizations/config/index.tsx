@@ -1,6 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import Tooltip from 'components/widgets/tooltip';
+import i18next from 'i18next';
 
 type PayloadObject = {
   name: string,
@@ -68,7 +69,7 @@ const Tick: FC<TickProps> = (({
 const LabelContent = () => (
   <g>
     <text x="50%" y={400} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
-      Region
+      {i18next.t('region')}
     </text>
   </g>
 );
@@ -79,8 +80,9 @@ const TooltipContent: FC<TooltipProps> = ({
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
 const ChartConfig = (categories, language, data) => {
-  // const values = useMemo(() => data.map((d) => d.value), [data]);
-
+  const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China').map((d) => d.value), [data]);
+  const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
+  const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
   const KEY = language === 'cn' ? '全部的' : 'Total';
   const getLines = () => {
     if (categories.length) {
@@ -188,7 +190,8 @@ const ChartConfig = (categories, language, data) => {
       yAxis: {
         tick: DefaultTick,
         // domain: [MINVALUE, MAXVALUE],
-        interval: 0,
+        tickCount: 7,
+        interval: 'preserveEnd',
       },
       xAxis: {
         type: 'category',

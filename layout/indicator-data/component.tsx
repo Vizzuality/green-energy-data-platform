@@ -112,6 +112,7 @@ const IndicatorData: FC<Component> = ({
     description,
   } = indicatorData;
 
+  const tempoDescription = description.toLocaleLowerCase().includes('lorem') ? null : description;
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
@@ -185,9 +186,11 @@ const IndicatorData: FC<Component> = ({
             </Tooltip>
           </div>
         </div>
+        {!!description && (
         <p className="text-sm py-7.5">
-          {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
+          {tempoDescription}
         </p>
+        )}
         {groupSlug !== 'model-intercomparison' && groupSlug !== 'energy-flows' && <General />}
         {groupSlug === 'energy-flows' && <EnergyFlow />}
         {groupSlug === 'model-intercomparison' && <ModelIntercomparison />}
