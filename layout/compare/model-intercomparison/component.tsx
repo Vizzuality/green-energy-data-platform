@@ -456,6 +456,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           )}
           {categories.length > 0 && visualization !== 'bar' && (
             <Filters
+              indicator="model-intercomparison"
               visualization={visualization}
               categories={categories}
               hasSubcategories={!!subcategories.length || categories.length === 1}

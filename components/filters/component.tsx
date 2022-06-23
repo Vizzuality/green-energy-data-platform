@@ -18,6 +18,7 @@ interface FiltersProps {
   className?: string,
   onClick: (category: Record<string, any>) => void,
   height?: number,
+  indicator?: string,
 }
 
 const Filters: FC<FiltersProps> = ({
@@ -27,6 +28,7 @@ const Filters: FC<FiltersProps> = ({
   className = '',
   onClick,
   height,
+  indicator = null,
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
@@ -50,7 +52,6 @@ const Filters: FC<FiltersProps> = ({
   //     }
   //   }
   // }, [dispatch, onClick, categories, visualization, current]);
-  const indicator = 'model-intercomparison';
   useEffect(() => {
     if (visualization === 'choropleth' || (categories.length === 1 && indicator === 'model-intercomparison')) {
       const value = categories[0];

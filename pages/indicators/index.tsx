@@ -101,7 +101,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
                 slug: subgroupSlug,
                 default_indicator,
               }) => {
-                const indicatorSlug = default_indicator ? default_indicator.slug : subgroups[0];
+                const indicatorSlug = !default_indicator ? subgroups[0].slug : default_indicator.slug;
                 return (
                   <Link key={subgroupId} href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>{subgroupName}</Link>
                 );

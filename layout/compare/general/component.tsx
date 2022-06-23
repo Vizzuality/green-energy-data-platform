@@ -231,6 +231,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
       ? visualization : indicatorData?.default_visualization),
     [visualization, indicatorData],
   );
+
   const currentYear = useMemo<number>(
     () => {
       if (years.find(({ value }) => value === year)) {

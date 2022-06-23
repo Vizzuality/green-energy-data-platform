@@ -96,7 +96,7 @@ const GroupPage: FC = () => {
               {group.subgroups.map(({
                 slug: sgSlug, id, name, default_indicator,
               }) => {
-                const indSlug = default_indicator.slug || group.subgroups[0].slug;
+                const indSlug = default_indicator?.slug || group.subgroups[0].slug;
                 return (
                   <li
                     key={id}
