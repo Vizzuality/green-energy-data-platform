@@ -112,7 +112,7 @@ const IndicatorData: FC<Component> = ({
     description,
   } = indicatorData;
 
-  const tempoDescription = description.toLocaleLowerCase().includes('lorem') ? null : description;
+  const tempoDescription = description?.toLocaleLowerCase().includes('lorem') ? null : description;
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
