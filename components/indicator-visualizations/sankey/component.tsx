@@ -14,7 +14,7 @@ import DemoSankeyNode from './demoSankeyNode';
 import DemoSankeyLink from './demoSankeyLink';
 
 // types
-import { TooltipProps, ChartProps } from './types';
+import type { TooltipProps, ChartProps } from './types';
 
 const Chart: FC<ChartProps> = ({
   indicatorName,

@@ -24,7 +24,7 @@ export const Nav: React.FC<NavProps> = ({
 
   return (
     <nav>
-      <ul className={cx('flex flex-wrap text-white divide-x',
+      <ul className={cx('flex text-white overflow-x-auto',
         { [className]: !!className })}
       >
         {defaultGroupSlugs?.map(({
@@ -35,7 +35,7 @@ export const Nav: React.FC<NavProps> = ({
         }, index) => (
           <li
             key={groupSlug}
-            className={cx('mt-2 max-h relative px-4 mb-4 focus:outline-none text-opacity-50 text-sm box-content whitespace-nowrap',
+            className={cx('mt-2 max-h relative px-4 mb-4 focus:outline-none text-opacity-50 box-content whitespace-nowrap',
               { 'pl-0': index === 0 },
               { 'font-bold': groupSlug === group })}
           >
