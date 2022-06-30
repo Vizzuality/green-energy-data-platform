@@ -57,7 +57,6 @@ import { DROPDOWN_BUTTON_STYLES, TEXT_BUTTON_STYLES } from 'layout/indicator-dat
 import type { ChartLine, ChartBar } from 'types/model-intercomparison';
 import type { ComponentTypes } from 'types/data';
 
-// const DROPDOWN_BUTTON_STYLES = 'max-w-[250px] ellipsis mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 const ModelIntercomparison: FC<ComponentTypes> = ({
   className,
 }: ComponentTypes) => {
@@ -294,24 +293,26 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     indicatorSlug,
   ]);
 
-  const resetFilters = useCallback(() => {
-    dispatch(setFilters({
-      visualization: currentVisualization,
-      ...(defaultUnit && { unit: defaultUnit?.value }) || { unit: null },
-      ...defaultCategory && { category: defaultCategory },
-      ...((['line'].includes(currentVisualization)) && { region: defaultRegion?.value }) || { region: null },
-      ...(['bar'].includes(currentVisualization) && { year: defaultYear?.value }) || { year: null },
-      scenario: currentScenario || null,
-    }));
-  }, [
-    dispatch,
-    defaultYear,
-    defaultRegion,
-    defaultUnit,
-    defaultCategory,
-    currentScenario,
-    currentVisualization,
-  ]);
+  // const resetFilters = useCallback(() => {
+  //   dispatch(setFilters({
+  //     visualization: currentVisualization,
+  //     ...(defaultUnit && { unit: defaultUnit?.value }) || { unit: null },
+  //     ...defaultCategory && { category: defaultCategory },
+  //     ...((['line'].includes(currentVisualization))
+  // && { region: defaultRegion?.value }) || { region: null },
+  //     ...(['bar'].includes(currentVisualization)
+  // && { year: defaultYear?.value }) || { year: null },
+  //     scenario: currentScenario || null,
+  //   }));
+  // }, [
+  //   dispatch,
+  //   defaultYear,
+  //   defaultRegion,
+  //   defaultUnit,
+  //   defaultCategory,
+  //   currentScenario,
+  //   currentVisualization,
+  // ]);
 
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
     () => widgetDataKeys.map((item, index) => ({
@@ -513,7 +514,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
             <Legend
               ref={legendRef}
               payload={LegendPayload}
-              className="overflow-x-hidden overflow-y-scroll"
+              className="overflow-x-hidden overflow-y-auto"
             />
           )}
         </section>
