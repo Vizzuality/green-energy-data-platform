@@ -82,11 +82,10 @@ const GroupPage: FC = () => {
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${data?.name} analysis`} />
       <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
-        <Nav className="pt-10" />
+        <Nav className="mt-10" />
         {group.subgroups.length > 1 ? (
           <Tooltip
             placement="bottom-start"
-            className=""
             visible={dropdownVisibility}
             interactive
             onClickOutside={() => { setDropdownVisibility(false); }}
