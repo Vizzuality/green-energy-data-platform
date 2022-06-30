@@ -92,7 +92,7 @@ const SignupPage: FC = () => {
                   {i18next.t('yourTitle')}
                   :
                   <div className="relative mt-3 mb-8 font-normal">
-                    <Icon ariaLabel="title-input" name="briefcase" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
+                    <Icon ariaLabel="title-input" name="title" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
                     <input
                       id="title"
                       name="title"
@@ -162,7 +162,7 @@ const SignupPage: FC = () => {
                   {i18next.t('yourOrganization')}
                   :
                   <div className="relative mt-3 mb-8 font-normal">
-                    <Icon ariaLabel="organization-input" name="office" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
+                    <Icon ariaLabel="organization-input" name="organization" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
                     <input
                       id="organization"
                       name="organization"
@@ -196,7 +196,7 @@ const SignupPage: FC = () => {
                       onChange={(e) => handleChange('password', e)}
                       required
                     />
-                    <Icon ariaLabel="password-input" name={passwordVisibility ? 'hide' : 'view'} size="lg" className="absolute font-bold transform -translate-y-1/2 -right-0 top-1/2" onClick={() => { setPasswordVisibility(!passwordVisibility); }} />
+                    <Icon ariaLabel="password-input" name={passwordVisibility ? 'hide' : 'view'} size="lg" className="absolute font-bold transform -translate-y-1/2 opacity-25 -right-0 top-1/2" onClick={() => { setPasswordVisibility(!passwordVisibility); }} />
                     <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',
                       { 'bg-gradient-color1': credentials.password.length })}
                     />
