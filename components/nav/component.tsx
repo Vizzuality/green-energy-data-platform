@@ -24,7 +24,7 @@ export const Nav: React.FC<NavProps> = ({
 
   return (
     <nav className="relative before:z-10 before:absolute before:top-0 before:left-0 before:h-full before:content before:w-4 before:from-color1 before:bg-gradient-to-r after:absolute after:top-0 after:right-0 after:h-full after:content after:w-4 after:from-color1 after:bg-gradient-to-l">
-      <ul className={cx('flex space-x-4 px-4 overflow-x-auto overflow-y-hidden no-scrollbar py-2',
+      <ul className={cx('flex space-x-8 px-4 overflow-x-auto overflow-y-hidden no-scrollbar py-6',
         { [className]: !!className })}
       >
         {defaultGroupSlugs?.map(({
@@ -44,7 +44,7 @@ export const Nav: React.FC<NavProps> = ({
             >
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className={cx('text-white',
-                { 'before:-bottom-2 before:absolute before:left-0 before:w-full before:block before:h-1 before:rounded-2xl before:bg-white': groupSlug === group })}
+                { 'before:-bottom-4 before:absolute before:left-0 before:w-full before:block before:h-1 before:rounded-2xl before:bg-white': groupSlug === group })}
               >
                 {name}
               </a>
