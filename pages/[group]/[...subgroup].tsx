@@ -82,56 +82,61 @@ const GroupPage: FC = () => {
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${data?.name} analysis`} />
       <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
-        <Nav className="pt-10" />
-        <Tooltip
-          placement="bottom-start"
-          className=""
-          visible={dropdownVisibility}
-          interactive
-          onClickOutside={() => { setDropdownVisibility(false); }}
-          content={(
-            <ul
-              className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
-            >
-              {group.subgroups.map(({
-                slug: sgSlug, id, name, default_indicator,
-              }) => {
-                const indSlug = default_indicator?.slug || group.subgroups[0].slug;
-                return (
-                  <li
-                    key={id}
-                    className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-opacity-10"
-                  >
-                    <button
-                      type="button"
-                      className="flex w-full px-5 py-2 cursor-pointer"
-                      onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${indSlug}`)}
+        <Nav className="mt-6" />
+        {group.subgroups.length > 1 ? (
+          <Tooltip
+            placement="bottom-start"
+            visible={dropdownVisibility}
+            interactive
+            onClickOutside={() => { setDropdownVisibility(false); }}
+            content={(
+              <ul
+                className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
+              >
+                {group.subgroups.map(({
+                  slug: sgSlug, id, name, default_indicator,
+                }) => {
+                  const indSlug = default_indicator?.slug || group.subgroups[0].slug;
+                  return (
+                    <li
+                      key={id}
+                      className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-opacity-10"
                     >
-                      {name}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+                      <button
+                        type="button"
+                        className="flex w-full px-5 py-2 cursor-pointer"
+                        onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${indSlug}`)}
+                      >
+                        {name}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
           )}
-        >
-          <button
-            type="button"
-            className="flex items-center pt-3"
-            onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
           >
-            <h1 className="text-5.5xl text-left">
-              {data?.subgroup?.name}
-            </h1>
-            <Icon
-              ariaLabel="collapse dropdown"
-              name="triangle_border"
-              size="3xlg"
-              className={cx('ml-3 border-2 text-white border-white border-opacity-30 hover:bg-color1 rounded-full p-4',
-                { 'transform -rotate-180': false })}
-            />
-          </button>
-        </Tooltip>
+            <button
+              type="button"
+              className="flex items-center pt-3"
+              onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
+            >
+              <h1 className="text-5.5xl text-left">
+                {data?.subgroup?.name}
+              </h1>
+              <Icon
+                ariaLabel="collapse dropdown"
+                name="triangle_border"
+                size="3xlg"
+                className={cx('ml-3 border-2 text-white border-white border-opacity-30 hover:bg-color1 rounded-full p-4',
+                  { 'transform -rotate-180': false })}
+              />
+            </button>
+          </Tooltip>
+        ) : (
+          <h1 className="text-5.5xl text-left">
+            {data?.subgroup?.name}
+          </h1>
+        )}
       </Hero>
       <div className="container pb-20 m-auto">
         <section className="z-10 max-w-6xl m-auto -mt-40">

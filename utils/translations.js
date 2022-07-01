@@ -96,6 +96,8 @@ export const resources = {
       adminPanel: 'Admin panel',
       personalData: 'Personal data',
       infoPlant: 'Click to see specific info for this plant',
+      siteCookies: 'lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.',
+      useOfCookies: 'use of cookies.',
     },
   },
   cn: {
@@ -185,6 +187,8 @@ export const resources = {
       adminPanel: '管理面板',
       personalData: '个人资料',
       infoPlant: '点击查看该工厂的具体信息',
+      siteCookies: 'lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.',
+      useOfCookies: '饼干的使用',
     },
   },
 };

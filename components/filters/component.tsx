@@ -32,26 +32,7 @@ const Filters: FC<FiltersProps> = ({
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const [active, setActive] = useState('');
-  // const {
-  //   current,
-  // } = useSelector(
-  //   (state: RootState) => (state.language),
-  // );
 
-  // useEffect(() => {
-  //   if (visualization === 'choropleth') {
-  //     const hasTotal = categories.includes('Total' || '全部的');
-  //     if (hasTotal) {
-  //       const value = current === 'cn' ? '全部的' : 'Total';
-  //       // () => setActive(value);
-  //       dispatch(onClick({ category: { label: 'category_2', value } }));
-  //     } else if (!hasTotal) {
-  //       const value = categories[0];
-  //       // setActive(value);
-  //       dispatch(onClick({ category: { label: 'category_2', value } }));
-  //     }
-  //   }
-  // }, [dispatch, onClick, categories, visualization, current]);
   useEffect(() => {
     if (visualization === 'choropleth' || (categories.length === 1 && indicator === 'model-intercomparison')) {
       const value = categories[0];

@@ -39,7 +39,7 @@ import {
   SankeyChartData,
 } from 'types/data';
 
-import { SankeyData } from 'components/indicator-visualizations/sankey/types';
+import type { SankeyData } from 'components/indicator-visualizations/sankey/types';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {

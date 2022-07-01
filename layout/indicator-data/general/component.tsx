@@ -49,7 +49,9 @@ import { useColors, useOpacityColors } from 'hooks/utils';
 import DropdownContent from 'layout/dropdown-content';
 
 import ChartConfig from 'components/indicator-visualizations/config';
-import { ComponentTypes } from 'types/data';
+
+import { DROPDOWN_BUTTON_STYLES } from 'layout/indicator-data/constants';
+import type { ComponentTypes } from 'types/data';
 
 type ChartProps = {
   widgetData: unknown,
@@ -58,7 +60,7 @@ type ChartProps = {
   color?: string,
 };
 
-const DROPDOWN_BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
+const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 
 const IndicatorChart: FC<ComponentTypes> = ({
   className,
@@ -162,6 +164,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
       enabled: !!visualization && (!!region || !!year),
     },
   );
+
   const {
     defaultCategory,
     years,
@@ -334,7 +337,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   :
                 </span>
                 {years.length === 1 && (
-                <span className={DROPDOWN_BUTTON_STYLES}>{displayYear}</span>
+                <span className={BUTTON_STYLES}>{displayYear}</span>
                 )}
                 {years.length > 1 && (
                   <Tooltip
@@ -353,7 +356,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                     <button
                       type="button"
                       onClick={() => { toggleDropdown('year'); }}
-                      className={DROPDOWN_BUTTON_STYLES}
+                      className={cx(BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                     >
                       <span>{displayYear || i18next.t('selectYear')}</span>
                       <Icon ariaLabel="change date" name="calendar" className="ml-4" />
@@ -371,7 +374,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   :
                 </span>
                 {regions.length === 1 && (
-                <span className={DROPDOWN_BUTTON_STYLES}>{displayRegion}</span>)}
+                <span className={BUTTON_STYLES}>{displayRegion}</span>)}
                 {regions.length > 1 && (
                   <Tooltip
                     placement="bottom-start"
@@ -389,7 +392,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
                     <button
                       type="button"
                       onClick={() => { toggleDropdown('region'); }}
-                      className={DROPDOWN_BUTTON_STYLES}
+                      className={cx(BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                     >
                       <span>{displayRegion || 'Select a region'}</span>
                       <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
@@ -450,37 +453,48 @@ const IndicatorChart: FC<ComponentTypes> = ({
               )}
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
               <div className="flex flex-col w-full h-full py-8 min-h-1/2">
-                <div className="flex items-center">
-                  {visualization !== 'choropleth' && !!units.length
-                    && (
-                      <Tooltip
-                        placement="bottom-start"
-                        visible={dropdownVisibility.unit}
-                        interactive
-                        onClickOutside={() => closeDropdown('unit')}
-                        content={(
-                          <DropdownContent
-                            list={units}
-                            keyEl="unit"
-                            onClick={handleChange}
-                          />
-                        )}
-                      >
-                        <button
-                          type="button"
-                          onClick={() => { toggleDropdown('unit'); }}
-                          className={cx('flex items-center cursor-pointer whitespace-nowrap hover:font-bold',
-                            {
-                              'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
-                              'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
-                            })}
-                        >
-                          <span>{displayUnit}</span>
-                          <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
-                        </button>
-                      </Tooltip>
+                  {visualization !== 'choropleth' && units.length === 1 && (
+                    <span className={cx(
+                      {
+                        'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
+                        'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
+                      },
                     )}
-                </div>
+                    >
+                      {displayUnit}
+
+                    </span>
+                  )}
+                  {visualization !== 'choropleth' && units.length > 1 && (
+                  <div className="flex items-center">
+                    <Tooltip
+                      placement="bottom-start"
+                      visible={dropdownVisibility.unit}
+                      interactive
+                      onClickOutside={() => closeDropdown('unit')}
+                      content={(
+                        <DropdownContent
+                          list={units}
+                          keyEl="unit"
+                          onClick={handleChange}
+                        />
+                        )}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => { toggleDropdown('unit'); }}
+                        className={cx('flex items-center cursor-pointer whitespace-nowrap hover:font-bold',
+                          {
+                            'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
+                            'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
+                          })}
+                      >
+                        <span>{displayUnit}</span>
+                        <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                  )}
                 {visualization !== 'choropleth'
                   && (
                     <div className="w-full h-96">
@@ -520,7 +534,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             <div className="mb-4">
               <Legend
                 payload={LegendPayload}
-                className="w-full overflow-y-scroll text-ellipsis"
+                className="w-full overflow-y-auto text-ellipsis"
                 singleValueLegendColor={singleValueLegendColor}
               />
             </div>

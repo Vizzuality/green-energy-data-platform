@@ -27,7 +27,7 @@ const Legend: FC<WidgetLegendProps> = ({
             <button
               key={label}
               type="button"
-              className={cx('flex items-center rounded-md focus:bg-blue text-left text-sm w-full cursor-pointer',
+              className={cx('flex items-center rounded-md focus:bg-blue text-left text-sm w-full',
                 {
                   'opacity-50': !!active && active !== label,
                   'font-bold': !!active && active === label,

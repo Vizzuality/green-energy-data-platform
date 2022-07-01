@@ -383,7 +383,10 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                     <button
                       type="button"
                       onClick={() => { toggleDropdown('year'); }}
-                      className={DROPDOWN_BUTTON_STYLES}
+                      className={cx(DROPDOWN_BUTTON_STYLES,
+                        {
+                          'hover:bg-color1 hover:text-white': years.length > 1,
+                        })}
                     >
                       <span className={TEXT_BUTTON_STYLES}>{displayYear || i18next.t('selectYear')}</span>
                       <Icon ariaLabel="change date" name="calendar" className="text-color-1 ml-4" />
@@ -482,37 +485,49 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
               <div className="flex flex-col w-full h-full pb-8 py-4 min-h-1/2">
-                <div className="flex items-center">
-                  {visualization !== 'choropleth'
-                    && (
-                      <Tooltip
-                        placement="bottom-start"
-                        visible={dropdownVisibility.unit}
-                        interactive
-                        onClickOutside={() => closeDropdown('unit')}
-                        content={(
-                          <DropdownContent
-                            list={units}
-                            keyEl="unit"
-                            onClick={handleChange}
-                          />
+                {visualization !== 'choropleth' && units.length === 1 && (
+                <span className={cx(
+                  {
+                    'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
+                    'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
+                  },
+                )}
+                >
+                  {displayUnit}
+
+                </span>
+                )}
+                  {visualization !== 'choropleth' && units.length > 1 && (
+                  <div className="flex items-center">
+
+                    <Tooltip
+                      placement="bottom-start"
+                      visible={dropdownVisibility.unit}
+                      interactive
+                      onClickOutside={() => closeDropdown('unit')}
+                      content={(
+                        <DropdownContent
+                          list={units}
+                          keyEl="unit"
+                          onClick={handleChange}
+                        />
                         )}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => { toggleDropdown('unit'); }}
+                        className={cx('flex items-center cursor-pointer hover:font-bold',
+                          {
+                            'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
+                            DROPDOWN_BUTTON_STYLES: visualization === 'choropleth',
+                          })}
                       >
-                        <button
-                          type="button"
-                          onClick={() => { toggleDropdown('unit'); }}
-                          className={cx('flex items-center cursor-pointer hover:font-bold',
-                            {
-                              'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
-                              DROPDOWN_BUTTON_STYLES: visualization === 'choropleth',
-                            })}
-                        >
-                          <span>{displayUnit}</span>
-                          <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
-                        </button>
-                      </Tooltip>
-                    )}
-                </div>
+                        <span>{displayUnit}</span>
+                        <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                  )}
                 {visualization !== 'choropleth'
                   && (
                     <div className="w-full h-96">
@@ -542,7 +557,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           <div className="mb-4">
             <Legend
               payload={LegendPayload}
-              className="overflow-y-scroll text-ellipsis"
+              className="overflow-y-auto text-ellipsis"
               singleValueLegendColor={singleValueLegendColor}
             />
           </div>
