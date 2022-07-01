@@ -22,7 +22,7 @@ interface HeroProps {
 }
 
 const THEME = {
-  light: 'bg-gradient-color2 text-white',
+  light: 'bg-color1 text-white',
   dark: 'bg-gray1',
   transparent: 'bg-transparent border-gray1 text-gray1 border-opacity-20',
 };

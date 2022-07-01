@@ -23,8 +23,8 @@ export const Nav: React.FC<NavProps> = ({
   const defaultGroupSlugs = useGroupsDefaults(groups);
 
   return (
-    <nav>
-      <ul className={cx('flex text-white overflow-x-auto',
+    <nav className="relative before:z-10 before:absolute before:top-0 before:left-0 before:h-full before:content before:w-4 before:from-color1 before:bg-gradient-to-r after:absolute after:top-0 after:right-0 after:h-full after:content after:w-4 after:from-color1 after:bg-gradient-to-l">
+      <ul className={cx('flex space-x-8 px-4 overflow-x-auto overflow-y-hidden no-scrollbar py-6',
         { [className]: !!className })}
       >
         {defaultGroupSlugs?.map(({
@@ -32,25 +32,23 @@ export const Nav: React.FC<NavProps> = ({
           groupSlug,
           subgroupSlug,
           indicatorSlug,
-        }, index) => (
+        }) => (
           <li
             key={groupSlug}
-            className={cx('mt-2 max-h relative px-4 mb-4 focus:outline-none text-opacity-50 box-content whitespace-nowrap',
-              { 'pl-0': index === 0 },
+            className={cx('max-h relative focus:outline-none box-content whitespace-nowrap ',
               { 'font-bold': groupSlug === group })}
           >
             <Link
               href="/[group]/[...subgroup]"
               as={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}
             >
-              {name}
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+              <a className={cx('text-white',
+                { 'before:-bottom-4 before:absolute before:left-0 before:w-full before:block before:h-1 before:rounded-2xl before:bg-white': groupSlug === group })}
+              >
+                {name}
+              </a>
             </Link>
-            <div className={cx(
-              { 'absolute right-4 -bottom-4 rounded-2xl h-1 bg-current': groupSlug === group },
-              { 'left-0': groupSlug === group && index === 0 },
-              { 'left-4 ': groupSlug === group && index !== 0 },
-            )}
-            />
           </li>
         ))}
       </ul>
