@@ -37,7 +37,7 @@ const Chart: FC<ChartProps> = ({
   );
 
   const sankeyRef = useRef(null);
-  const linkWidth = sankeyRef?.current?.props?.width / 3;
+  const linkWidth = 50;
   const nodePadding = width > 500 ? 7 : 20;
 
   return (

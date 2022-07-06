@@ -220,8 +220,8 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
   const parsedLinks = useMemo(() => uniqBy(data?.links, 'class'), [data]);
   const LegendPayload = useMemo(
     () => parsedLinks.map((item) => ({
-      label: item.class.charAt(0).toUpperCase() + item.class.slice(1),
-      color: COLORS[item.class.toLowerCase()] || COLORS['other energy'],
+      label: item?.class?.charAt(0).toUpperCase() + item?.class?.slice(1),
+      color: COLORS[item?.class?.toLowerCase()] || COLORS['other energy'],
     })), [parsedLinks],
   );
 

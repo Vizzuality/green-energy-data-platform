@@ -329,7 +329,7 @@ export function useSankeyData(
   } = query;
 
   // TO - DO - change indicator
-  const data = fakeData[0];
+  const data = fakeData[1];
 
   const widgetData = useMemo<SankeyChartData>(() => {
     const nodes = data?.nodes.map(({ name_en }) => ({ name: name_en }));
