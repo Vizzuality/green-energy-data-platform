@@ -302,46 +302,48 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             <h2 className="flex max-w-xs font-bold">
               {name}
             </h2>
-            <div className="flex">
-              <Tooltip
-                placement="bottom-end"
-                visible={dropdownVisibility.indicator}
-                interactive
-                onClickOutside={() => closeDropdown('indicator')}
-                content={(
-                  <ul className="z-10 w-full min-w-full overflow-y-auto divide-y divide-white rounded-xl divide-opacity-10 max-h-96">
-                    {subgroup?.indicators?.map(
-                      ({ name: group_name, id, slug }) => (
-                        <li key={id} className="px-5 text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-opacity-10 bg-gray3">
-                          <button
-                            type="button"
-                            className="flex items-center w-full py-2 last:border-b-0"
-                            onClick={() => handleIndicatorChange(slug)}
-                          >
-                            {group_name}
-                          </button>
-                        </li>
-                      ),
-                    )}
-                  </ul>
-                )}
-              >
-
-                <button
-                  type="button"
-                  onClick={() => { toggleDropdown('indicator'); }}
-                  className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full text-sm"
+            {subgroup?.indicators?.length > 1 && (
+              <div className="flex">
+                <Tooltip
+                  placement="bottom-end"
+                  visible={dropdownVisibility.indicator}
+                  interactive
+                  onClickOutside={() => closeDropdown('indicator')}
+                  content={(
+                    <ul className="z-10 w-full min-w-full overflow-y-auto divide-y divide-white rounded-xl divide-opacity-10 max-h-96">
+                      {subgroup?.indicators?.map(
+                        ({ name: group_name, id, slug }) => (
+                          <li key={id} className="px-5 text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-opacity-10 bg-gray3">
+                            <button
+                              type="button"
+                              className="flex items-center w-full py-2 last:border-b-0"
+                              onClick={() => handleIndicatorChange(slug)}
+                            >
+                              {group_name}
+                            </button>
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                  )}
                 >
-                  <span className="text-sm">{i18next.t('change')}</span>
-                  <Icon
-                    ariaLabel="change indicator"
-                    size="sm"
-                    name="triangle_border"
-                    className="ml-4 text-sm"
-                  />
-                </button>
-              </Tooltip>
-            </div>
+
+                  <button
+                    type="button"
+                    onClick={() => { toggleDropdown('indicator'); }}
+                    className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full text-sm"
+                  >
+                    <span className="text-sm">{i18next.t('change')}</span>
+                    <Icon
+                      ariaLabel="change indicator"
+                      size="sm"
+                      name="triangle_border"
+                      className="ml-4 text-sm"
+                    />
+                  </button>
+                </Tooltip>
+              </div>
+            )}
           </div>
           <p className="text-sm text-justify py-7.5">
             {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
