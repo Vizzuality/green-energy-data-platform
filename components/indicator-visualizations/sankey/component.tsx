@@ -37,7 +37,6 @@ const Chart: FC<ChartProps> = ({
   );
 
   const sankeyRef = useRef(null);
-  const linkWidth = 50;
   const nodePadding = width > 500 ? 7 : 20;
 
   return (
@@ -48,11 +47,7 @@ const Chart: FC<ChartProps> = ({
         height="100%"
         width="100%"
         node={(
-          <DemoSankeyNode
-            indicatorSlug={indicatorSlug}
-            linkWidth={linkWidth}
-            containerWidth={width}
-          />
+          <DemoSankeyNode />
         )}
         nodePaddingRatio={0.8}
         linkCurvature={0.5}
