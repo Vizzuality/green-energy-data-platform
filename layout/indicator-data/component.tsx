@@ -131,6 +131,7 @@ const IndicatorData: FC<Component> = ({
             {name}
           </h2>
           <div className="flex">
+            {subgroup?.indicators?.length > 1 && (
             <Tooltip
               placement="bottom-end"
               visible={dropdownVisibility.indicator}
@@ -163,6 +164,7 @@ const IndicatorData: FC<Component> = ({
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" size="sm" />
               </button>
             </Tooltip>
+)}
 
             <Tooltip
               trigger="click"

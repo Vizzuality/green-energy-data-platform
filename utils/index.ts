@@ -282,7 +282,7 @@ export const getGroupedValues = (
           });
         }, {
           province,
-        })).filter((p) => p.province !== 'China');
+        })).filter((p) => (Object.keys(dataByProvince).length > 1 ? p.province !== i18n.t('China') : true));
     }
 
     if (groupSlug === 'model-intercomparison') {
@@ -303,7 +303,6 @@ export const getGroupedValues = (
         .value();
       return data;
     }
-
     return data;
   };
   const getChoroplethData = (): {

@@ -4,6 +4,8 @@ import {
 } from 'react-query';
 import { useMemo } from 'react';
 
+import { useRouter } from 'next/router';
+
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
@@ -40,6 +42,8 @@ import {
 } from 'types/data';
 
 import type { SankeyData } from 'components/indicator-visualizations/sankey/types';
+
+import fakeData from 'components/indicator-visualizations/sankey/fakeData.json';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
@@ -322,18 +326,32 @@ export function useSankeyData(
     });
 
   const {
-    data, isFetching, isFetched, isSuccess,
+    // data,
+    isFetching, isFetched, isSuccess,
   } = query;
 
+  // TO - DO - change indicator
+  const { year, unit } = useSelector(
+    (state: RootState) => (state.indicator),
+  );
+  const { query: { subgroup } } = useRouter();
+  const isEmissions = subgroup[1].includes('emission');
+  const data = isEmissions ? fakeData[0] : fakeData[1];
   const widgetData = useMemo<SankeyChartData>(() => {
-    const nodes = data?.nodes.map(({ name }) => ({ name }));
-    const links = flatten(data?.data
-      .map((l) => l.links));
+    const nodes = data?.nodes.map(({ name_en }) => ({ name: name_en }));
+    const links = flatten(data?.data.filter(
+      (y) => (isEmissions && y.year === year && y.units_en === unit)
+      || (y.units_en === unit && !isEmissions),
+    ) // TO DO - Oscar filters by year
+      .map((l) => l.links.map((i) => ({
+        ...i,
+        class: i.class_en,
+      }))));
     return ({
       nodes,
       links,
     });
-  }, [data]);
+  }, [data, unit, year]);
 
   return useMemo(() => ({
     isFetching,

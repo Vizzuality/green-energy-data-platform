@@ -23,6 +23,4 @@ export const COLORS = {
   'oil products': '#BCD9DE',
 };
 
-export const TITLE = ['ENERGY SOURCES', 'ENERGY TRANSFORMATION', 'FINAL CONSUMPTION'];
-
-export default { COLORS, TITLE };
+export default { COLORS };
