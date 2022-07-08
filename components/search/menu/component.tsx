@@ -53,7 +53,7 @@ const Menu: FC<MenuProps> = ({
             {subgroups.map(({
               name: sgName, id: sgId, slug: sgSlug, default_indicator,
             }, subIndex) => {
-              const defIndicatorSlug = !default_indicator ? subgroups[0].slug : default_indicator.slug;
+              const defIndicatorSlug = !default_indicator ? subgroups[0].slug : default_indicator?.slug;
               return (
                 <li
                   className={cx('box-border px-5 py-2 bg-gray6 bg-opacity-5 hover:bg-opacity-10 shadow-xs rounded-lg',

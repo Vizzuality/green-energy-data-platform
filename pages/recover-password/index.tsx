@@ -31,6 +31,7 @@ const NewPasswordPage: FC = () => {
     password: false,
     confirmation: false,
   });
+
   const [credentials, setCredentials] = useState({
     password: '',
     confirmation: '',

@@ -14,12 +14,12 @@ interface DataProps {
   indicatorSlug: string,
   dataSource: string,
   isAccessible: boolean,
+  compareIndex?: 1 | 2
 }
 
 const downloadLinks = [
   { label: 'CSV', format: 'csv' },
-  { label: 'XML', format: 'xml' },
-  { label: 'JSON', format: 'json' },
+  { label: 'PNG', format: 'png' },
 ];
 
 const Card: FC<DataProps> = ({
@@ -28,6 +28,7 @@ const Card: FC<DataProps> = ({
   indicatorSlug,
   dataSource,
   isAccessible = false,
+  compareIndex,
 }: DataProps) => {
   const router = useRouter();
   const [session] = useSession();
@@ -74,6 +75,7 @@ const Card: FC<DataProps> = ({
                 { 'justify-start rounded-t-2xl': type === 'vertical' })}
               indSlug={indSlug}
               disabled={!isAccessible}
+              compareIndex={compareIndex}
             />
             <Item
               icon="data"
@@ -85,9 +87,7 @@ const Card: FC<DataProps> = ({
               indSlug={indSlug}
               disabled={!isAccessible}
             />
-
           </>
-
         )}
     </div>
   );
