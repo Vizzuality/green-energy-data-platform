@@ -53,6 +53,8 @@ import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from 'components/indicator-visualizations/config';
 
 import { DROPDOWN_BUTTON_STYLES, TEXT_BUTTON_STYLES } from 'layout/indicator-data/constants';
+import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
+
 // types
 import type { ChartLine, ChartBar } from 'types/model-intercomparison';
 import type { ComponentTypes } from 'types/data';
@@ -540,7 +542,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col w-full h-full py-8 min-h-1/2">
+              <div className={`flex flex-col w-full h-full py-8 min-h-1/2 ${CLASS_DOM_DOWNLOAD_IMAGE}`}>
                 <div className={cx('w-full', {
                   'flex flex-wrap': visualization === 'bar',
                   'h-96': visualization !== 'bar',
