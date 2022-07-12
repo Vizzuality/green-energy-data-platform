@@ -71,7 +71,6 @@ const ProfilePage: FC = () => {
     token: userToken,
     password: '',
     newPassword: '',
-    password_confirmation: '',
   });
 
   useEffect(() => {
@@ -84,7 +83,6 @@ const ProfilePage: FC = () => {
         token: userToken,
         password: '',
         newPassword: '',
-        password_confirmation: '',
       });
     }
   }, [isLoading, userTitle, userName, userOrganisation, userEmail, userToken]);
