@@ -133,8 +133,6 @@ const MapContainer: FC<MapContainerProps> = (
     if (mapRefCurrent !== null) {
       return new MapboxglSpiderifier(mapRefCurrent, {
         onClick(e, spiderLeg) {
-          // e.stopPropagation();
-
           const {
             elements: {
               container,
@@ -179,6 +177,10 @@ const MapContainer: FC<MapContainerProps> = (
     return true;
   }, [mapRefCurrent, spiderifier]);
 
+  const hanldeMapLoad = useCallback(({ map }) => {
+    mapRef.current = map;
+  }, []);
+
   useEffect(() => {
     if (hoverInteractions?.cluster?.point_count) {
       setDisclaimerVisibility(false);
@@ -194,6 +196,7 @@ const MapContainer: FC<MapContainerProps> = (
         viewport={viewport}
         className="z-10"
         onMapViewportChange={handleViewportChange}
+        preserveDrawingBuffer
         onClick={(e) => {
           setDisclaimerVisibility(false);
           const { zoom, maxZoom } = viewport;
@@ -227,7 +230,7 @@ const MapContainer: FC<MapContainerProps> = (
           setHoverInteractions({});
           setLngLat(null);
         }}
-        onMapLoad={({ map }) => { mapRef.current = map; }}
+        onMapLoad={hanldeMapLoad}
       >
         {(map) => (
           <>

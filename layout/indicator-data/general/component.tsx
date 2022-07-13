@@ -53,6 +53,8 @@ import ChartConfig from 'components/indicator-visualizations/config';
 import { DROPDOWN_BUTTON_STYLES } from 'layout/indicator-data/constants';
 import type { ComponentTypes } from 'types/data';
 
+import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
+
 type ChartProps = {
   widgetData: unknown,
   widgetConfig: unknown,
@@ -437,7 +439,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
             )}
           </div>
 
-          <div className="flex w-full h-full min-h-1/2">
+          <div className={`flex w-full h-full min-h-1/2 ${CLASS_DOM_DOWNLOAD_IMAGE}`}>
             {isFetchingRecords && (
               <LoadingSpinner />
             )}

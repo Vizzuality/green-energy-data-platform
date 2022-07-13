@@ -52,6 +52,7 @@ import DropdownContent from 'layout/dropdown-content';
 import ChartConfig from 'components/indicator-visualizations/config';
 
 import { DROPDOWN_BUTTON_STYLES, TEXT_BUTTON_STYLES } from 'layout/indicator-data/constants';
+import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
 
 import type IndicatorCompareDataProps from '../types';
 
@@ -360,7 +361,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization) && (
               <div className="flex flex-wrap items-center">
-                <span className="pr-2 whitespace-nowrap mb-2">
+                <span className="pr-2 mb-2 whitespace-nowrap">
                   {i18next.t('showing')}
                   :
                 </span>
@@ -389,7 +390,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                         })}
                     >
                       <span className={TEXT_BUTTON_STYLES}>{displayYear || i18next.t('selectYear')}</span>
-                      <Icon ariaLabel="change date" name="calendar" className="text-color-1 ml-4" />
+                      <Icon ariaLabel="change date" name="calendar" className="ml-4 text-color-1" />
                     </button>
                   </Tooltip>
                 )}
@@ -484,7 +485,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
               )}
 
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col w-full h-full pb-8 py-4 min-h-1/2">
+              <div className={`flex flex-col w-full h-full py-4 pb-8 min-h-1/2 ${CLASS_DOM_DOWNLOAD_IMAGE}`}>
                 {visualization !== 'choropleth' && units.length === 1 && (
                 <span className={cx(
                   {
@@ -568,6 +569,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
           dataSource={dataSource}
           className="flex-1"
           isAccessible={!!hasDownloadPermissions}
+          compareIndex={compareIndex}
         />
       </section>
     </div>
