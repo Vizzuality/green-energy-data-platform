@@ -19,8 +19,6 @@ interface DataProps {
 
 const downloadLinks = [
   { label: 'CSV', format: 'csv' },
-  { label: 'XML', format: 'xml' },
-  { label: 'JSON', format: 'json' },
   { label: 'PNG', format: 'png' },
 ];
 
