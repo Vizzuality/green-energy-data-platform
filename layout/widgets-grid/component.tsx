@@ -32,7 +32,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
 
   return (
     <section className="grid grid-cols-3 grid-flow gap-x-3 gap-y-6.5 py-11">
-      {subgroups.map(({
+      {subgroups?.map(({
         slug: subgroupSlug,
         default_indicator,
       }) => {

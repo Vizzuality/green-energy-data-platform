@@ -50,7 +50,7 @@ const Menu: FC<MenuProps> = ({
         >
           <span className="uppercase text-sm tracking-tight box-border">{name}</span>
           <ul className="space-y-1 pb-4 pt-3.5">
-            {subgroups.map(({
+            {subgroups?.map(({
               name: sgName, id: sgId, slug: sgSlug, default_indicator,
             }, subIndex) => {
               const defIndicatorSlug = !default_indicator ? subgroups[0].slug : default_indicator?.slug;

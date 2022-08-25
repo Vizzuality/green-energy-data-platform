@@ -74,14 +74,13 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const { current } = useSelector((state: RootState) => (state.language));
   const filters = useSelector((state: RootState) => state.indicator);
   const {
     year, unit, region, scenario, visualization, category,
   } = filters;
   const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
-
+  const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
+  const lang = locale || 'en';
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
 
@@ -110,7 +109,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   const {
     data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
@@ -129,7 +128,9 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
-  }));
+  }, {
+    locale: lang,
+  });
 
   const {
     accessible_by: accessibleBy,
@@ -209,8 +210,8 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current, records)[configType],
-    [configType, widgetDataKeys, current, records],
+    () => ChartConfig(widgetDataKeys, lang, records)[configType],
+    [configType, widgetDataKeys, lang, records],
   );
 
   const widgetData = useMemo<ChartLine[] | ChartBar[]>(
@@ -398,7 +399,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               </span>
             </div>
           )}
-          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">China</span>}
+          {!regions.length && <span className="flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4">{displayRegion}</span>}
 
           {scenarios?.length > 1 && (
             <Tooltip

@@ -53,7 +53,7 @@ const IndicatorData: FC<Component> = ({
   const { visualization } = useSelector((state: RootState) => state.indicator);
 
   const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
+  const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
 
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
@@ -87,7 +87,7 @@ const IndicatorData: FC<Component> = ({
 
   const {
     data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
@@ -104,7 +104,7 @@ const IndicatorData: FC<Component> = ({
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
-  }));
+  }, { locale: locale || 'en' });
 
   const {
     name,
@@ -188,11 +188,9 @@ const IndicatorData: FC<Component> = ({
             </Tooltip>
           </div>
         </div>
-        {!!description && (
         <p className="text-sm py-7.5">
           {tempoDescription}
         </p>
-        )}
         {groupSlug !== 'model-intercomparison' && groupSlug !== 'energy-flows' && <General />}
         {groupSlug === 'energy-flows' && <EnergyFlow />}
         {groupSlug === 'model-intercomparison' && <ModelIntercomparison />}

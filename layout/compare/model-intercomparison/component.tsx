@@ -42,6 +42,8 @@ import {
 
 import { RootState } from 'store/store';
 
+import { useRouter } from 'next/router';
+
 import { setFilters } from 'store/slices/indicator';
 import { setCompareFilters } from 'store/slices/indicator_compare';
 import i18next from 'i18next';
@@ -74,8 +76,10 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const { query: { locale } } = useRouter();
 
-  const { current } = useSelector((state: RootState) => (state.language));
+  const lang = locale || 'en';
+
   const filters = useSelector(
     (state: RootState) => (compareIndex === 1 ? state.indicator : state.indicator_compare),
   );
@@ -112,7 +116,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   const {
     data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
@@ -131,7 +135,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
-  }));
+  }, { locale: lang });
 
   const {
     accessible_by: accessibleBy,
@@ -203,8 +207,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   const widgetDataKeys = visualization === 'bar' ? widgetDataKeysBar : widgetDataKeysLine;
   const configType = visualization === 'line' ? 'line' : `model_intercomparison_${visualization}`;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current, records)[configType],
-    [configType, widgetDataKeys, current, records],
+    () => ChartConfig(widgetDataKeys, lang, records)[configType],
+    [configType, widgetDataKeys, lang, records],
   );
 
   const mainColors = useColors(widgetDataKeys.length);

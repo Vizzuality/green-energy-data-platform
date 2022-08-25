@@ -29,8 +29,6 @@ interface IndicatorsPageProps {
   groups: GroupProps[]
 }
 
-// type ResultsProps
-
 const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps) => {
   const [disabledGroups, setActive] = useState([]);
   const [groupsFiltered, setFilteredGroups] = useState(groups);
@@ -116,8 +114,10 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
   );
 };
 
-export const getServerSideProps = async () => fetchGroups().then(
-  ({ data }) => ({ props: { groups: data } }),
-);
-
+export const getServerSideProps = async ({ query }) => {
+  const { locale } = query;
+  return fetchGroups('', { locale }).then(
+    ({ data }) => ({ props: { groups: data } }),
+  );
+};
 export default IndicatorsPage;
