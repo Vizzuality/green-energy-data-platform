@@ -75,13 +75,13 @@ export const fetchSankeyData = (
   id: string,
   params = {},
   headers = {},
-) => API.get(`indicators/${id}/sandkey`, {
+) => API.get(`indicators/${id}/sankey`, {
   headers: {
     ...headers,
   },
   params,
 })
-  .then(({ data: { sandkey } }) => sandkey);
+  .then(({ data: { sankey } }) => sankey);
 
 export default {
   fetchIndicators,
