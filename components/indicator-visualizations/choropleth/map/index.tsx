@@ -3,9 +3,6 @@ import React, {
 } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
-
 import cx from 'classnames';
 
 import isEmpty from 'lodash/isEmpty';
@@ -22,6 +19,8 @@ import { fitBounds } from '@math.gl/web-mercator';
 import { easeCubic } from 'd3-ease';
 
 import { DEFAULT_VIEWPORT } from '../constants';
+
+import MAP_STYLE from './style';
 
 export interface MapProps extends InteractiveMapProps {
   hasInteraction: boolean,
@@ -193,14 +192,6 @@ const Map = ({
     }));
   }, [viewport]);
 
-  const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
-
-  const LABELS = current === 'en' ? process.env.NEXT_PUBLIC_MAPBOX_STYLES_ENGLISH_LABELS : process.env.NEXT_PUBLIC_MAPBOX_STYLES_CHINESE_LABELS;
-
   return (
     <div
       ref={mapContainerRef}
@@ -217,7 +208,7 @@ const Map = ({
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
         // CUSTOM PROPS FROM REACT MAPBOX API
         {...mapboxProps}
-        mapStyle={`${process.env.NEXT_PUBLIC_MAPBOX_STYLES_ACCOUNT}/${LABELS}`}
+        mapStyle={MAP_STYLE}
         // VIEWPORT
         {...mapViewport}
         width="100%"

@@ -1,6 +1,4 @@
 import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
 
 // services
 import { fetchGroups, fetchGroup } from 'services/groups';
@@ -21,10 +19,10 @@ export const useGroup = (id: string | string[], queryConfig = {}, params = {}) =
     ...queryConfig,
   });
 
-export const useGroupsDefaults = (groups: GroupProps[]) => groups?.map((group) => {
+export const useGroupsDefaults = (groups: GroupProps[]) => groups.map((group) => {
   const { default_subgroup: subgroupSlug, subgroups } = group;
   const indicatorSlug = group?.subgroups?.find(
-    ({ slug }) => slug === subgroupSlug || slug === group?.subgroups[0].slug,
+    ({ slug }) => slug === subgroupSlug,
   )?.default_indicator?.slug || subgroups[0].slug;
   return ({
     name: group.name,
