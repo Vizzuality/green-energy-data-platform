@@ -14,10 +14,13 @@ export const Nav: React.FC<NavProps> = ({
   className,
 }: NavProps) => {
   const router = useRouter();
-  const { group } = router.query;
+  const { group, locale } = router.query;
   const { data: groups } = useGroups({
     placeholderData: [],
     refetchOnWindowFocus: false,
+  },
+  {
+    locale: locale || 'en',
   });
 
   const defaultGroupSlugs = useGroupsDefaults(groups);
@@ -35,7 +38,7 @@ export const Nav: React.FC<NavProps> = ({
         }) => (
           <li
             key={groupSlug}
-            className={cx('max-h relative focus:outline-none box-content whitespace-nowrap ',
+            className={cx('max-h relative focus:outline-none box-content whitespace-nowrap',
               { 'font-bold': groupSlug === group })}
           >
             <Link

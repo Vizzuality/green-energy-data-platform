@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import Link from 'next/link';
 import cx from 'classnames';
+
+import { useRouter } from 'next/router';
 import { useGroups, useGroupsDefaults } from 'hooks/groups';
 
 interface PreFooterProps {
@@ -10,9 +12,12 @@ interface PreFooterProps {
 const PreFooter: FC<PreFooterProps> = ({
   className = '',
 }: PreFooterProps) => {
+  const { query: { locale } } = useRouter();
   const { data: groups } = useGroups({
     refetchOnWindowFocus: false,
     placeholderData: [],
+  }, {
+    locale: locale || 'en',
   });
 
   const defaultGroupSlugs = useGroupsDefaults(groups);

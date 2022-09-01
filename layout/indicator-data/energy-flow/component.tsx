@@ -34,8 +34,6 @@ import Sankey from 'components/indicator-visualizations/sankey';
 import { COLORS } from 'components/indicator-visualizations/sankey/constants';
 import CONFIG from 'components/indicator-visualizations/sankey/config';
 
-// import { RootState } from 'store/store';
-
 import { setFilters } from 'store/slices/indicator';
 import i18next from 'i18next';
 
@@ -64,7 +62,7 @@ const SankeyChart: FC<ComponentTypes> = ({
     year, region, visualization, unit,
   } = filters;
   const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
+  const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
 
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
@@ -94,7 +92,7 @@ const SankeyChart: FC<ComponentTypes> = ({
 
   const {
     data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
@@ -112,7 +110,9 @@ const SankeyChart: FC<ComponentTypes> = ({
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
-  }));
+  }, {
+    locale: locale || 'en',
+  });
 
   const { id: indicatorId, name: indicatorName } = indicatorData;
   const {
@@ -378,7 +378,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               && (
                 <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
                   <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
-                  <p>Data not found</p>
+                  <p>{i18next.t('dataNotFound')}</p>
                 </div>
               )}
             {(!isFetchingRecords && isSuccessRecords) && (

@@ -11,12 +11,21 @@ import { setLanguage } from 'store/slices/language';
 
 // components
 import Icon from 'components/icon';
+import { useRouter } from 'next/router';
 
 const LanguageSelect = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const { query } = router;
 
   const onSelectedItemChange = (item) => {
     const { selectedItem: { code } } = item;
+    router.replace({
+      query: {
+        ...query,
+        locale: code,
+      },
+    });
     dispatch(setLanguage(code));
     i18n.changeLanguage(code);
   };

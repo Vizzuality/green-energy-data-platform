@@ -81,16 +81,14 @@ const IndicatorChart: FC<ComponentTypes> = ({
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const { current } = useSelector((state: RootState) => (state.language));
-
   const filters = useSelector((state: RootState) => state.indicator);
   const {
     year, unit, region, category, scenario, visualization = 'choropleth',
   } = filters;
 
   const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
-
+  const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
+  const lang = locale || 'en';
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
   const toggleDropdown = useCallback((key) => {
@@ -118,7 +116,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
 
   const {
     data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
@@ -137,7 +135,9 @@ const IndicatorChart: FC<ComponentTypes> = ({
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
-  }));
+  }, {
+    locale: lang,
+  });
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
   const filtersIndicator = useMemo(() => {
@@ -178,7 +178,7 @@ const IndicatorChart: FC<ComponentTypes> = ({
     defaultUnit,
     scenarios,
     defaultScenario,
-  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, { locale: lang }, {
     refetchOnWindowFocus: false,
     enabled: !!indicatorSlug && !!visualization,
   });
@@ -210,8 +210,8 @@ const IndicatorChart: FC<ComponentTypes> = ({
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current, records)[visualization],
-    [visualization, widgetDataKeys, records, current],
+    () => ChartConfig(widgetDataKeys, lang, records)[visualization],
+    [visualization, widgetDataKeys, records, lang],
   );
 
   const widgetData = useMemo(

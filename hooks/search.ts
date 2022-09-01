@@ -28,7 +28,7 @@ export const useSearch = (
       name,
       subgroups: name.toLowerCase().includes(search)
         ? subgroups
-        : subgroups.map((subgroup) => {
+        : subgroups?.map((subgroup) => {
           if (!(subgroup.slug).toLowerCase().includes(search)) return null;
           return subgroup;
         }).filter((r) => r !== null),

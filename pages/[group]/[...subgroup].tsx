@@ -39,7 +39,7 @@ const GroupPage: FC = () => {
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
+  const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
 
@@ -53,11 +53,14 @@ const GroupPage: FC = () => {
     placeholderData: {
       subgroups: [],
     },
+  },
+  {
+    locale: locale || 'en',
   });
 
   const {
     data,
-  }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
       records: [],
       categories: [],
@@ -74,7 +77,9 @@ const GroupPage: FC = () => {
       subgroup: null,
     },
     refetchOnWindowFocus: false,
-  }));
+  }, {
+    locale: locale || 'en',
+  });
 
   const { default_visualization: defaultVisualization } = data;
 
@@ -93,7 +98,7 @@ const GroupPage: FC = () => {
               <ul
                 className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
               >
-                {group.subgroups.map(({
+                {group.subgroups?.map(({
                   slug: sgSlug, id, name, default_indicator,
                 }) => {
                   const indSlug = default_indicator?.slug || group.subgroups[0].slug;

@@ -117,7 +117,6 @@ const MapContainer: FC<MapContainerProps> = (
     tooltipInfo,
     tooltipInfoHeaders,
   } = useCoalPowerPlantTooltip(hoverInteractions?.['coal-power-plants']);
-
   const {
     tooltipInfo: spiderTooltipInfo,
     tooltipInfoHeaders: spiderTooltipInfoHeaders,
@@ -216,11 +215,18 @@ const MapContainer: FC<MapContainerProps> = (
         onHover={(e) => {
           setDisclaimerVisibility(false);
           if (e && e.features) {
-            e.features.forEach((f) => setHoverInteractions({
-              [f.source]: f.properties,
-              ...f,
-              ...e,
-            }));
+            if (e.features.filter((f) => f.layer.id === 'regions-fill-0').length > 1) {
+              setHoverInteractions({
+                ...e.features[0],
+                [e.features[0].source]: e.features[0].properties,
+              });
+            } else {
+              e.features.forEach((f) => setHoverInteractions({
+                [f.source]: f.properties,
+                ...f,
+                ...e,
+              }));
+            }
             setLngLat(e.lngLat);
           }
           setSpiderInfo(null);
