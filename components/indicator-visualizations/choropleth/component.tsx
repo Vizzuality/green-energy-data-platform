@@ -263,7 +263,11 @@ const MapContainer: FC<MapContainerProps> = ({
                 source={{
                   type: 'raster',
                   tiles: [
+<<<<<<< HEAD
                     `https://t0.tianditu.gov.cn/${LABEL_CODE}_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=${LABEL_CODE}&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=1a2089c5fe8e0ee594c74db656d8b923`,
+=======
+                    `http://t0.tianditu.gov.cn/${LABEL_CODE}_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=${LABEL_CODE}&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=1a2089c5fe8e0ee594c74db656d8b923`,
+>>>>>>> d22fc2c (new basemap)
                   ],
                 }}
               />
