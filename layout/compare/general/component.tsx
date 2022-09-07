@@ -15,6 +15,7 @@ import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
 
 // hooks
+import { useRouter } from 'next/router';
 import {
   useIndicator,
   useIndicatorRecords,
@@ -79,6 +80,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     scenario: false,
   });
 
+  const { query: { locale } } = useRouter();
+  const lang = locale || 'en';
   const [subcategoriesTotals, setSubcategoriesTotals] = useState(null);
 
   const queryClient = useQueryClient();
@@ -89,12 +92,6 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const {
     year, unit, region, category, scenario, visualization,
   } = filters;
-
-  const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
 
   const toggleDropdown = useCallback((key) => {
     setDropdownVisibility({
@@ -123,7 +120,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const {
     data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
@@ -141,7 +138,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
-  }));
+  }, { locale: locale || 'en' });
 
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 
@@ -215,8 +212,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current, records)[visualization],
-    [visualization, widgetDataKeys, records, current],
+    () => ChartConfig(widgetDataKeys, lang, records)[visualization],
+    [visualization, widgetDataKeys, records, lang],
   );
 
   const widgetData = useMemo(
@@ -466,7 +463,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
               </div>
             )}
             {!regions.length
-            && displayRegion && <span className={DROPDOWN_BUTTON_STYLES}>China</span>}
+            && displayRegion && <span className={DROPDOWN_BUTTON_STYLES}>{displayRegion}</span>}
           </div>
           <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (

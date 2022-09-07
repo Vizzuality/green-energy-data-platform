@@ -98,6 +98,11 @@ export const resources = {
       infoPlant: 'Click to see specific info for this plant',
       siteCookies: 'lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.',
       useOfCookies: 'use of cookies.',
+      createPassword: 'Create a new password',
+      differentPasswordMessage: 'Your new password must be different from previously used passwords',
+      writeNewPassword: 'Write a new password',
+      passwordMismatchMessage: 'Your password confirmation did not match your password',
+      dataNotFound: 'Data not found',
     },
   },
   cn: {
@@ -189,6 +194,11 @@ export const resources = {
       infoPlant: '点击查看该工厂的具体信息',
       siteCookies: 'lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.',
       useOfCookies: '饼干的使用',
+      createPassword: '创建新密码',
+      differentPasswordMessage: '您的新密码必须与以前使用的密码不同',
+      writeNewPassword: '写一个新密码',
+      passwordMismatchMessage: '您的密码确认与您的密码不符',
+      dataNotFound: '未找到数据',
     },
   },
 };

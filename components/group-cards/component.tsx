@@ -3,6 +3,9 @@ import cx from 'classnames';
 
 import Link from 'next/link';
 
+import { useSelector } from 'react-redux';
+import { RootState } from 'store/store';
+
 import { useDefaultIndicator } from 'hooks/indicators';
 import i18next from 'i18next';
 
@@ -22,9 +25,18 @@ interface GroupCardProps {
 }
 
 const subtitles = {
-  energy: 'Global Energy Investment.',
-  socioeconomic: 'Agriculture.',
-  'coal-power-plants': 'Capacity power plants  in China.',
+  energy: {
+    en: 'Global Energy Investment',
+    cn: '全球能源投资',
+  },
+  socioeconomic: {
+    en: 'Agriculture',
+    cn: '农业',
+  },
+  'coal-power-plants': {
+    en: 'Capacity power plants in China',
+    cn: '中国容量电厂',
+  },
 };
 
 const GroupCard: FC<GroupCardProps> = ({
@@ -35,9 +47,16 @@ const GroupCard: FC<GroupCardProps> = ({
   const {
     slug,
     name,
+    subtitle,
     description,
     header_image: headerImage,
   } = group;
+
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
 
   const defaultData = useDefaultIndicator(group);
   const { default_indicator: defaultIndicator, slug: subgroupSlug } = defaultData;
@@ -51,7 +70,7 @@ const GroupCard: FC<GroupCardProps> = ({
         })}
       >
         <h3 className="text-3.5xl text-gray3">{name}</h3>
-        <h4 className="text-2.5xl text-color1 pb-2 font-bold leading-loose">{subtitles[slug]}</h4>
+        <h4 className="text-2.5xl text-color1 pb-2 font-bold leading-loose">{subtitle || subtitles[slug]?.[current]}</h4>
         <p className="text-sm leading-7 my-9 cursor-pointer">
           {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.'}
         </p>

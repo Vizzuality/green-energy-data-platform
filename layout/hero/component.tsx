@@ -6,6 +6,9 @@ import cx from 'classnames';
 import Link from 'next/link';
 import i18next from 'i18next';
 
+import { RootState } from 'store/store';
+import { useSelector } from 'react-redux';
+
 import { useRouter } from 'next/router';
 
 // components
@@ -35,6 +38,13 @@ const Hero: FC<HeroProps> = ({
   theme = 'light',
 }: HeroProps) => {
   const { asPath } = useRouter();
+
+  const {
+    current,
+  } = useSelector(
+    (state: RootState) => (state.language),
+  );
+
   return (
     <div className={cx(`w-full ${THEME[theme]}`,
       { 'pb-44': !rounded },
@@ -44,7 +54,7 @@ const Hero: FC<HeroProps> = ({
         <Header theme={theme === 'transparent' ? 'dark' : 'light'}>
           <div className="flex items-center">
             <UserDropdown theme={theme} className="mr-4" />
-            <Link href={{ pathname: '/indicators', query: { fallbackUrl: encodeURIComponent(asPath) } }} passHref>
+            <Link href={{ pathname: '/indicators', query: { fallbackUrl: encodeURIComponent(asPath), locale: current } }} passHref>
               <a
                 href="/indicators"
                 className={cx('ml-3 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm active:font-bold',
