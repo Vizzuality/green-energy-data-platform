@@ -6,9 +6,9 @@
 2. Install [NVM](https://github.com/nvm-sh/nvm) to manage different Node.js versions
 3. Run `nvm use` to use the correct node version
 4. Remove node_modules running: `rm -rf node_modules` (optional)
-6. Install the dependencies: `yarn`
-5. Create a `.env` file at the root of the project by copying `.env.sample` and giving a value for each of the variables
-6. Run the server: `yarn dev`
+5. Install the dependencies: `yarn`
+6. Create a `.env` file at the root of the project by copying `.env.sample` and giving a value for each of the variables
+7. Run the server: `yarn dev`
 
 You can access a hot-reloaded version of the app on [http://localhost:3000](http://localhost:3000).
 
