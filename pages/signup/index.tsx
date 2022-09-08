@@ -51,9 +51,6 @@ const SignupPage: FC = () => {
           .request({
             method: 'POST',
             url: '/users/signup',
-            headers: {
-              'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
-            },
             data: credentials,
           });
         if (signUpResponse.status === 201) {
