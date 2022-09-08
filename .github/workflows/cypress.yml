@@ -15,29 +15,34 @@ jobs:
         with:
           node-version: '16.14.0'
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Yarn cache
-        uses: actions/cache@v2
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: NextJS cache build
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
+#      - name: Get yarn cache directory path
+#        id: yarn-cache-dir-path
+#        run: echo "::set-output name=dir::$(yarn cache dir)"
+#
+#      - name: Yarn cache
+#        uses: actions/cache@v2
+#        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+#        with:
+#          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+#          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-yarn-
+#      - name: NextJS cache build
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ github.workspace }}/.next/cache
+#          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
 
       - name: Cypress tests
-        uses: cypress-io/github-action@v2.2.7
+        uses: cypress-io/github-action@v4
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         with:
+          install-command: yarn install --immutable
+          browser: chrome
+          config-file: cypress.json
+          command-prefix: yarn dlx
+          command: yarn cy:run
           build: yarn build
           start: yarn start
           wait-on: 'http://localhost:3000'
