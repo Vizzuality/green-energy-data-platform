@@ -3,7 +3,7 @@ on: [push]
 jobs:
   cypress:
     name: Running client tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -37,6 +37,8 @@ jobs:
         uses: cypress-io/github-action@v4
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+          NEXTAUTH_URL: http://localhost:3000
+          NEXTAUTH_SECRET: nyanpony
         with:
           install-command: yarn install --immutable
           browser: chrome
