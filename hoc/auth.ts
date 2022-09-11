@@ -62,7 +62,7 @@ export function withUser(getServerSidePropsFunc?: Function) {
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery('me',
-      () => fetchUserMe(`Bearer ${session.accessToken}`)
+      () => fetchUserMe(session.accessToken as string)
         .then((data) => data));
 
     if (getServerSidePropsFunc) {

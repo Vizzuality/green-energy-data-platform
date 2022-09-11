@@ -15,7 +15,7 @@ export function useMe(queryConfig = {}) {
   );
 
   return useQuery(['me', session, current],
-    () => fetchUserMe(`Bearer ${session.accessToken}`, { locale: current })
+    () => fetchUserMe(session.accessToken as string, { locale: current })
       .then((data) => ({
         ...data,
         token: session.accessToken,
