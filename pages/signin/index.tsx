@@ -32,7 +32,7 @@ const SigninPage: FC<SigninProps> = ({
   csrfToken,
 }: SigninProps) => {
   const [credentials, setCredentials] = useState({
-    username: '',
+    name: '',
     email: '',
     password: '',
   });
