@@ -8,7 +8,7 @@ export const fetchUserMe = (
   headers = {},
 ) => API.get('/users/me', {
   headers: {
-    Authentication: userToken,
+    Authentication: `Bearer ${userToken}`,
     ...headers,
   },
 })

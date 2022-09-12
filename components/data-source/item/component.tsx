@@ -67,7 +67,7 @@ const Item: FC<ItemProps> = ({
   const handleDownload = useCallback((format) => {
     if (format === 'png') return downloadAsImage(indSlug);
 
-    return fetchDataToDownload(`Bearer ${session.token}`, indSlug, format, { locale: current })
+    return fetchDataToDownload(session.token as string, indSlug, format, { locale: current })
       .then((data) => parseDataToDownload(format, data, indSlug));
   }, [current, indSlug, session, downloadAsImage]);
 

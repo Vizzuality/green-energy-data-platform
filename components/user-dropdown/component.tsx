@@ -82,7 +82,7 @@ const UserDropdown: FC<UserDropdownProps> = ({
             ,
             {' '}
           </span>
-          <span className="font-bold">{user.username}</span>
+          <span className="font-bold">{user.name}</span>
         </div>
         <Icon
           ariaLabel={visible ? 'collapse dropdown' : 'expand dropdown'}
