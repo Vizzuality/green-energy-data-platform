@@ -97,7 +97,7 @@ export const filterRecords = (
 
     if (visualization === 'pie') {
       if ((d.region_id === region || (d.region_id === null))
-        && d.unit.id === unit && year === d.year
+        && d.unit?.id === unit && year === d.year
         && (((categories.length > 1) && d.category_1 !== 'Total')
           || categories.length === 1)) return true;
     }
@@ -106,10 +106,10 @@ export const filterRecords = (
       if ((groupSlug === 'model-intercomparison'
         && d.scenario.id === scenario
         && year === d.year
-        && (d.unit.id === unit || !unit)) // some idicators has no unit
+        && (d.unit?.id === unit || !unit)) // some indicators have no unit
         || (groupSlug !== 'model-intercomparison'
           && year === d.year
-          && (d.unit.id === unit || !unit)) // some idicators has no unit
+          && (d.unit?.id === unit || !unit)) // some indicators have no unit
 
       ) return true;
     }
@@ -117,10 +117,10 @@ export const filterRecords = (
     if (visualization === 'bar') {
       if ((groupSlug === 'model-intercomparison'
         && d.scenario.id === scenario
-        && d.unit.id === unit)
+        && d.unit?.id === unit)
         || (groupSlug !== 'model-intercomparison'
           && year === d.year
-          && d.unit.id === unit)
+          && d.unit?.id === unit)
       ) return true;
     }
 
@@ -160,14 +160,14 @@ export const filterRelatedIndicators = (
 
     if (visualization === 'bar') {
       if (year === d.year
-        && d.unit.id === unit
+        && d.unit?.id === unit
         && d.region_id !== ID_CHINA
       ) return true;
     }
 
     if (visualization === 'choropleth') {
       if (year === d.year
-        && (d.unit.id === unit || !unit) // some idicators has no unit
+        && (d.unit?.id === unit || !unit) // some idicators has no unit
         && d.scenario?.name === scenario) return true;
     }
 

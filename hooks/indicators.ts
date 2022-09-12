@@ -217,7 +217,9 @@ export function useIndicatorMetadata(
 export function useDefaultIndicator(group) {
   if (!group) return null;
   const { default_subgroup: defaultSubgroup, subgroups } = group;
-  const defaultSub = subgroups.find((subgroup) => subgroup.slug === defaultSubgroup || subgroup.slug === group?.subgroups[0].slug);
+  const defaultSub = subgroups.find(
+    (subgroup) => subgroup.slug === defaultSubgroup || subgroup.slug === group?.subgroups[0].slug
+  );
   return defaultSub || subgroups[0];
 }
 
@@ -247,8 +249,8 @@ export function useIndicatorRecords(
     ...restParams
   } = params as IndicatorFilters;
 
-  // adapt filters to different visulizations
-  // all should filter by unit and visulization
+  // adapt filters to different visualizations
+  // all should filter by unit and visualization
   // choropleth and bar should filter also by year
   // pie, line and table should filter also by region
   const {
@@ -333,7 +335,7 @@ export function useSankeyData(
     const nodes = data?.nodes.map(({ name_en }) => ({ name: name_en }));
     const links = flatten(data?.data.filter(
       (y) => (isEmissions && y.year === year && y.units_en === unit)
-      || (y.units_en === unit && !isEmissions),
+        || (y.units_en === unit && !isEmissions),
     ) // TO DO - Oscar filters by year
       .map((l) => l.links.map((i) => ({
         ...i,
