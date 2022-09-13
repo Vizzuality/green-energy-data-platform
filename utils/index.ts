@@ -90,6 +90,7 @@ export const filterRecords = (
   } = filters;
 
   const recordsByFilters = records.filter((d) => {
+    const unitId = d.unit?.id;
     if (visualization === 'line') {
       // API return region name to null for China
       if ((categories.length > 1 && d.category_1 !== 'Total') || categories.length === 1) return true;
@@ -97,7 +98,7 @@ export const filterRecords = (
 
     if (visualization === 'pie') {
       if ((d.region_id === region || (d.region_id === null))
-        && d.unit.id === unit && year === d.year
+        && unitId === unit && year === d.year
         && (((categories.length > 1) && d.category_1 !== 'Total')
           || categories.length === 1)) return true;
     }
@@ -106,10 +107,10 @@ export const filterRecords = (
       if ((groupSlug === 'model-intercomparison'
         && d.scenario.id === scenario
         && year === d.year
-        && (d.unit.id === unit || !unit)) // some idicators has no unit
+        && (unitId === unit || !unitId)) // some idicators has no unit
         || (groupSlug !== 'model-intercomparison'
           && year === d.year
-          && (d.unit.id === unit || !unit)) // some idicators has no unit
+          && (unitId === unit || !unitId)) // some idicators has no unit
 
       ) return true;
     }
@@ -117,10 +118,10 @@ export const filterRecords = (
     if (visualization === 'bar') {
       if ((groupSlug === 'model-intercomparison'
         && d.scenario.id === scenario
-        && d.unit.id === unit)
+        && unitId === unit)
         || (groupSlug !== 'model-intercomparison'
           && year === d.year
-          && d.unit.id === unit)
+          && unitId === unit)
       ) return true;
     }
 
@@ -160,14 +161,14 @@ export const filterRelatedIndicators = (
 
     if (visualization === 'bar') {
       if (year === d.year
-        && d.unit.id === unit
+        && d.unit?.id === unit
         && d.region_id !== ID_CHINA
       ) return true;
     }
 
     if (visualization === 'choropleth') {
       if (year === d.year
-        && (d.unit.id === unit || !unit) // some idicators has no unit
+        && (d.unit?.id === unit || !d?.unit?.id) // some idicators has no unit
         && d.scenario?.name === scenario) return true;
     }
 

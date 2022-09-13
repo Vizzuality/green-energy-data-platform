@@ -55,7 +55,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
                 {(inView && (
                   <Link href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`} passHref>
                     <a key={`${groupSlug}-${indicatorSlug}`} href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>
-                      <span key={`${groupSlug}-${indicatorSlug}`}>{name}</span>
+                      <p title={name} className="max-w-[100%] max-h-[50px] inline-block text-ellipsis overflow-hidden whitespace-nowrap" key={`${groupSlug}-${indicatorSlug}`}>{name}</p>
                       <GridItem
                         key={`${groupSlug}-${indicatorSlug}`}
                         group={groupSlug}
