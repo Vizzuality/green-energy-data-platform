@@ -12,6 +12,7 @@ import { initializeLanguage } from 'utils';
 
 import makeStore from 'store/store';
 
+import { Toaster } from 'react-hot-toast';
 import Icons from 'components/icons';
 
 // styles
@@ -27,15 +28,14 @@ const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => (
         <Hydrate state={pageProps.dehydratedState}>
           <Provider session={pageProps.session}>
             <I18nextProvider i18n={i18n}>
-              <Translation>
-                {() => <Component {...pageProps} />}
-              </Translation>
+              <Translation>{() => <Component {...pageProps} />}</Translation>
             </I18nextProvider>
           </Provider>
         </Hydrate>
       </QueryClientProvider>
     </ReduxProvider>
     <Icons />
+    <Toaster position="top-right" />
   </>
 );
 

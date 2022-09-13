@@ -58,7 +58,6 @@ const SignupPage: FC = () => {
         }
       } catch (responseError) {
         const errorMge = responseError?.response?.data?.error;
-
         setErrorMessage(errorMge);
         setTimeout(() => setErrorMessage(''), 3000);
       }
