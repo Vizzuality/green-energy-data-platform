@@ -98,7 +98,7 @@ export const filterRecords = (
 
     if (visualization === 'pie') {
       if ((d.region_id === region || (d.region_id === null))
-        && unitId === unit && year === d.year
+        && (unitId === unit || !unitId) && year === d.year
         && (((categories.length > 1) && d.category_1 !== 'Total')
           || categories.length === 1)) return true;
     }
@@ -118,10 +118,10 @@ export const filterRecords = (
     if (visualization === 'bar') {
       if ((groupSlug === 'model-intercomparison'
         && d.scenario.id === scenario
-        && unitId === unit)
+        && (unitId === unit || !unitId))
         || (groupSlug !== 'model-intercomparison'
           && year === d.year
-          && unitId === unit)
+          && (unitId === unit || !unitId))
       ) return true;
     }
 
@@ -177,7 +177,6 @@ export const filterRelatedIndicators = (
     }
     return false;
   });
-
   return recordsByFilters;
 };
 
