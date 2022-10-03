@@ -218,8 +218,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units, categories,
+    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units, categories],
   );
 
   const currentVisualization = useMemo<string>(
@@ -270,13 +270,18 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
   const displayScenario = useMemo(() => scenarios.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
+  const selectedCategory = useMemo(() => {
+    if (category.label === 'category_2' && category.value) {
+      return category;
+    } return defaultCategory;
+  }, [category, defaultCategory]);
 
   useEffect(() => {
     if (compareIndex === 1) {
       dispatch(setFilters({
         visualization: currentVisualization,
         ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-        ...defaultCategory && { category: defaultCategory },
+        ...selectedCategory && { category: selectedCategory },
         ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
         ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
         ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
@@ -285,7 +290,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
       dispatch(setCompareFilters({
         visualization: currentVisualization,
         ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-        ...defaultCategory && { category: defaultCategory },
+        ...selectedCategory && { category: selectedCategory },
         ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
         ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
         ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
@@ -299,7 +304,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     currentRegion,
     defaultUnit,
     currentUnit,
-    defaultCategory,
+    selectedCategory,
     defaultScenario,
     currentScenario,
     currentVisualization,
