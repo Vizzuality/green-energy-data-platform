@@ -68,7 +68,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
             :
           </p>
           <div className="flex flex-wrap flex-1">
-            {groups.map(({ id, slug, name }) => (
+            {groups?.map(({ id, slug, name }) => (
               <Button
                 type="button"
                 key={id}
@@ -93,7 +93,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
           <div key={groupId} className="flex flex-col">
             <h2 className="text-3.5xl pt-2">{groupName}</h2>
             <div className="flex flex-col text-lg py-10">
-              {subgroups.map(({
+              {subgroups?.map(({
                 id: subgroupId,
                 name: subgroupName,
                 slug: subgroupSlug,

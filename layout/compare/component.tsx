@@ -244,7 +244,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               <ul
                 className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
               >
-                {group.subgroups.map(({
+                {group.subgroups?.map(({
                   slug: sgSlug, id, name: sgName, default_indicator,
                 }) => {
                   const indSlug = default_indicator?.slug || group.subgroups[0].slug;
