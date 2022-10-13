@@ -1,5 +1,6 @@
 import React, {
   FC,
+  useMemo,
   useState,
   useCallback,
 } from 'react';
@@ -29,6 +30,7 @@ import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import General from './general';
 import EnergyFlow from './energy-flow';
+import EnergyBalance from './energy-balance';
 import ModelIntercomparison from './model-intercomparison';
 import CompareDropdownContent from './compare-dropdown/component';
 
@@ -113,6 +115,18 @@ const IndicatorData: FC<Component> = ({
   } = indicatorData;
 
   const tempoDescription = description?.toLocaleLowerCase().includes('lorem') ? null : description;
+  const groupVisualization = useMemo(() => {
+    switch (groupSlug) {
+      case 'energy-flows':
+        return <EnergyFlow />;
+      case 'energy-balance':
+        return <EnergyBalance />;
+      case 'model-intercomparison':
+        return <ModelIntercomparison />;
+      default:
+        return <General />;
+    }
+  }, [groupSlug]);
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}
@@ -125,7 +139,8 @@ const IndicatorData: FC<Component> = ({
         visualizationTypes={visualizationTypesIndicator}
       />
       )}
-      <div className="flex flex-col w-full px-16 lg:px-32 md:px-24 py-11">
+      <div className="flex flex-col w-full px-16 lg:px-32 md:px-24 py-11 space-y-7.5">
+        {groupSlug !== 'energy-balance' && (
         <div className="flex items-center justify-between w-full">
           <h2 className="flex flex-wrap text-3.5xl max-w-6xl mr-4">
             {name}
@@ -188,12 +203,13 @@ const IndicatorData: FC<Component> = ({
             </Tooltip>
           </div>
         </div>
-        <p className="text-sm py-7.5">
+        )}
+        {tempoDescription && (
+        <p className="text-sm">
           {tempoDescription}
         </p>
-        {groupSlug !== 'model-intercomparison' && groupSlug !== 'energy-flows' && <General />}
-        {groupSlug === 'energy-flows' && <EnergyFlow />}
-        {groupSlug === 'model-intercomparison' && <ModelIntercomparison />}
+        )}
+        {groupVisualization}
       </div>
     </div>
   );

@@ -103,6 +103,9 @@ export const resources = {
       writeNewPassword: 'Write a new password',
       passwordMismatchMessage: 'Your password confirmation did not match your password',
       dataNotFound: 'Data not found',
+      dataFormat: 'Data format',
+      CSVfiles: 'CSV files',
+      downloadDataFiles: 'Download data files',
     },
   },
   cn: {
@@ -199,6 +202,9 @@ export const resources = {
       writeNewPassword: '写一个新密码',
       passwordMismatchMessage: '您的密码确认与您的密码不符',
       dataNotFound: '未找到数据',
+      dataFormat: '数据格式',
+      CSVfiles: 'CSV 文件',
+      downloadDataFiles: '下载数据文件',
     },
   },
 };

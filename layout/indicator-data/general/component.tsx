@@ -310,7 +310,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     [scenarios, scenario],
   ) || '';
   const selectedCategory = useMemo(() => {
-    if (category.label === 'category_2' && category.value) {
+    if (category?.label === 'category_2' && category.value) {
       return category;
     } return defaultCategory;
   }, [category, defaultCategory]);

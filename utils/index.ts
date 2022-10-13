@@ -62,9 +62,9 @@ export const getCategoriesFromRecords = (
 
   if (visualization === 'line') {
     const cat = categories.filter((category) => {
-      if (categories.length) {
+      if (categories.length === 1) {
         return (
-          category !== null
+          category === 'Total'
         );
       }
       if (categories.length > 1 && visualization === 'line') {
@@ -293,6 +293,7 @@ export const getGroupedValues = (
       },
       {},
     );
+
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, visualizationTypes, ...rest } = next;

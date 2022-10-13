@@ -9,7 +9,7 @@ import { setCompareFilters } from 'store/slices/indicator_compare';
 // components
 import Icon from 'components/icon';
 
-import { GeneralVisualizationsOptions, ModelIntercomparisonVisualizationsOptions } from './constants';
+import { GeneralVisualizationsOptions, ModelIntercomparisonVisualizationsOptions, EnergyBalanceVisualizationsOptions } from './constants';
 
 export interface VisualizationsNavProps {
   groupSlug: string | string[];
@@ -43,22 +43,33 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
     if (groupSlug === 'model-intercomparison') {
       return ModelIntercomparisonVisualizationsOptions;
     }
+    if (groupSlug === 'energy-balance') {
+      return EnergyBalanceVisualizationsOptions;
+    }
     return GeneralVisualizationsOptions;
   }, [groupSlug]);
 
+  // Check datasets that are showing all visualizations
+  // (line, pie, bar chart and map) or data format
+  // At the moment, just energy balance is showing data format
+  const dataFormat = groupSlug === 'energy-balance';
   return (
     <nav>
       <ul
         role="menu"
-        className={cx('flex justify-between flex-grow border-b border-b-gray',
-          { [className]: !!className })}
+        className={cx('flex border-b border-b-gray',
+          {
+            [className]: !!className,
+            'justify-between flex-grow': !dataFormat,
+          })}
       >
         {!mobile && (
         <p className="pt-4 whitespace-nowrap">
-          {i18next.t('visualization')}
+          {dataFormat ? i18next.t('dataFormat') : i18next.t('visualization')}
           :
         </p>
         )}
+
         {VisualizationsOptions?.map(({
           icon, label, id, slug,
         }) => (
@@ -68,8 +79,9 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
             onClick={() => handleVisualization(id)}
             onKeyPress={() => handleVisualization(id)}
             className={cx('relative flex flex-col p-4 text-color1 cursor-pointer',
-              { 'font-bold text-opacity-100': active === slug },
-              { 'pointer-events-none text-opacity-20': !visualizationTypes?.includes(id) },
+              { 'font-bold text-opacity-100': active === slug || dataFormat },
+              { 'text-opacity-20': !visualizationTypes?.includes(id) && !dataFormat },
+              { 'pointer-events-none': VisualizationsOptions.length === 1 },
               { 'border rounded border-color1': (active === id) && mobile })}
           >
             <div className="flex items-center">
