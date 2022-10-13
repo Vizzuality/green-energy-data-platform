@@ -39,6 +39,7 @@ import i18next from 'i18next';
 import DropdownContent from 'layout/dropdown-content';
 import DropdownButton from 'layout/dropdown-button';
 
+import { useRouter } from 'next/router';
 import type IndicatorCompareDataProps from '../types';
 
 const SankeyChart: FC<IndicatorCompareDataProps> = ({
@@ -56,6 +57,8 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     category: { label: 'category_1', value: null },
     scenario: false,
   });
+
+  const { query: { locale } } = useRouter();
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
@@ -95,7 +98,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
 
   const {
     data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
@@ -113,7 +116,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
-  }));
+  }, { locale: locale || 'en' });
 
   const { id: indicatorId, name: indicatorName } = indicatorData;
   const {

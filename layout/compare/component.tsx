@@ -61,6 +61,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const router = useRouter();
   const { query } = router;
+  const { locale } = query;
 
   const { data: groups } = useGroups({
     placeholderData: [],
@@ -132,7 +133,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const {
     data: indicatorData,
-  }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
+  }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
@@ -148,7 +149,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       subgroup: null,
     },
     refetchOnWindowFocus: false,
-  }));
+  },
+  { locale: locale || 'en' });
 
   const {
     name,
@@ -242,7 +244,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               <ul
                 className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
               >
-                {group.subgroups.map(({
+                {group.subgroups?.map(({
                   slug: sgSlug, id, name: sgName, default_indicator,
                 }) => {
                   const indSlug = default_indicator?.slug || group.subgroups[0].slug;

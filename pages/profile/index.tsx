@@ -10,6 +10,7 @@ import cx from 'classnames';
 import { getSession, signOut } from 'next-auth/client';
 
 import i18next from 'i18next';
+import toast from 'react-hot-toast';
 
 // authentication
 import { withAuthentication, withUser } from 'hoc/auth';
@@ -34,12 +35,11 @@ import { useRouter } from 'next/router';
 
 interface NewDetailProps {
   title?: string,
-  username?: string,
+  name?: string;
   organisation?: string;
   email?: string,
   token: string,
   password?: string,
-  passwordConfirmation?: string
 }
 const ProfilePage: FC = () => {
   const queryClient = useQueryClient();
@@ -47,7 +47,7 @@ const ProfilePage: FC = () => {
     refetchOnWindowFocus: false,
     placeholderData: {
       title: '',
-      username: '',
+      name: '',
       organisation: '',
       email: '',
     },
@@ -57,7 +57,7 @@ const ProfilePage: FC = () => {
     title: userTitle,
     email: userEmail,
     organisation: userOrganisation,
-    username: userName,
+    name: userName,
     token: userToken,
   } = user;
 
@@ -65,7 +65,7 @@ const ProfilePage: FC = () => {
 
   const [credentials, setCredentials] = useState({
     title: userTitle,
-    username: userName,
+    name: userName,
     email: userEmail,
     organisation: userOrganisation,
     token: userToken,
@@ -77,7 +77,7 @@ const ProfilePage: FC = () => {
     if (!isLoading) {
       setCredentials({
         title: userTitle,
-        username: userName,
+        name: userName,
         organisation: userOrganisation,
         email: userEmail,
         token: userToken,
@@ -103,17 +103,17 @@ const ProfilePage: FC = () => {
 
   const submitNewDetails = async (
     {
-      title, username, organisation, email, token, password, passwordConfirmation,
+      title, name, organisation, email, token, password,
     }: NewDetailProps,
   ) => updateUser({
-    title, username, organisation, email, password, password_confirmation: passwordConfirmation,
+    title, name, organisation, email, password,
   }, token);
 
-  const deletUserAccount = async ({ token }) => deleteUser(token);
+  const deleteUserAccount = async ({ token }) => deleteUser(token);
 
   const {
     title,
-    username,
+    name,
     organisation,
     email,
     token,
@@ -124,11 +124,12 @@ const ProfilePage: FC = () => {
       queryClient.invalidateQueries('me');
     },
     onError: () => {
+      toast.success('hello');
       throw new Error('something went wrong updating user');
     },
   });
 
-  const { mutate: mutateUserAccount } = useMutation(deletUserAccount,
+  const { mutate: mutateUserAccount } = useMutation(deleteUserAccount,
     {
       onSuccess: () => {
         queryClient.invalidateQueries('me');
@@ -144,7 +145,7 @@ const ProfilePage: FC = () => {
     setCredentials({
       token: userToken,
       title,
-      username,
+      name,
       organisation,
       email,
       ...credentials,
@@ -152,7 +153,7 @@ const ProfilePage: FC = () => {
 
     if (token) {
       mutateUserDetails({
-        title, username, organisation, token, email,
+        title, name, organisation, token, email,
       });
     }
   };
@@ -207,13 +208,13 @@ const ProfilePage: FC = () => {
                 {i18next.t('name')}
                 <div className="relative mt-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
                   <input
-                    id="username"
-                    name="username"
+                    id="name"
+                    name="name"
                     type="text"
-                    defaultValue={user?.username}
+                    defaultValue={user?.name}
                     className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
-                      { 'text-grayProfile text-opacity-100': username.length })}
-                    onChange={(e) => handleChange('username', e)}
+                      { 'text-grayProfile text-opacity-100': name?.length })}
+                    onChange={(e) => handleChange('name', e)}
                   />
                   <Icon
                     ariaLabel="mail-input"

@@ -11,6 +11,7 @@ import {
 } from 'next-auth/client';
 import cx from 'classnames';
 
+import { toast } from 'react-hot-toast';
 import API from 'lib/api';
 
 // components
@@ -24,7 +25,7 @@ import router from 'next/router';
 
 const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
-    username: '',
+    name: '',
     email: '',
     title: '',
     organization: '',
@@ -51,17 +52,15 @@ const SignupPage: FC = () => {
           .request({
             method: 'POST',
             url: '/users/signup',
-            headers: {
-              'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
-            },
             data: credentials,
           });
         if (signUpResponse.status === 201) {
+          toast.success('hello');
+
           router.push('signin');
         }
       } catch (responseError) {
         const errorMge = responseError?.response?.data?.error;
-
         setErrorMessage(errorMge);
         setTimeout(() => setErrorMessage(''), 3000);
       }
@@ -120,16 +119,16 @@ const SignupPage: FC = () => {
                       className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2"
                     />
                     <input
-                      id="username"
-                      name="username"
+                      id="name"
+                      name="name"
                       type="name"
                       placeholder="Write your name account"
                       className={cx(
                         'w-full placeholder-gray1 placeholder-opacity-20 focus:placeholder-white',
-                        { 'placeholder-opacity-100': credentials.username.length },
+                        { 'placeholder-opacity-100': credentials.name?.length },
                       )}
-                      value={credentials.username}
-                      onChange={(e) => handleChange('username', e)}
+                      value={credentials.name}
+                      onChange={(e) => handleChange('name', e)}
                       required
                     />
                     <div className={cx('w-full h-0.7 rounded-sm bg-gray1 bg-opacity-20',

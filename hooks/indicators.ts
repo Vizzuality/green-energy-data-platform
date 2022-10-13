@@ -2,6 +2,7 @@ import {
   useQuery,
   useQueryClient,
 } from 'react-query';
+
 import { useMemo } from 'react';
 
 import { useRouter } from 'next/router';
@@ -75,14 +76,10 @@ export function useIndicator(
   subgroupId,
   indicatorId,
   queryOptions = {},
+  params = {},
 ) {
-  const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
-  return useQuery<IndicatorProps, Error>(['indicator', indicatorId, current],
-    () => fetchIndicator(groupId, subgroupId, indicatorId, { locale: current }), {
+  return useQuery<IndicatorProps, Error>(['indicator', indicatorId, params],
+    () => fetchIndicator(groupId, subgroupId, indicatorId, params), {
       placeholderData: {
         records: [],
         categories: [],
@@ -102,6 +99,7 @@ export function useIndicator(
         subgroup: null,
       },
       ...queryOptions,
+      ...params,
     });
 }
 
@@ -112,15 +110,9 @@ export function useIndicatorMetadata(
   params = {},
   queryOptions = {},
 ) {
-  const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
   const queryClient = useQueryClient();
-
-  const query = useQuery<IndicatorMetadata, Error>(['indicator-metadata', id, visualization, current],
-    () => fetchIndicatorMetadata(id, { locale: current, ...params }), {
+  const query = useQuery<IndicatorMetadata, Error>(['indicator-metadata', id, visualization, params],
+    () => fetchIndicatorMetadata(id, {}, { ...params }), {
       placeholderData: {},
       ...queryOptions,
     });
@@ -161,9 +153,9 @@ export function useIndicatorMetadata(
     () => units?.[0], [units],
   );
 
-  const { data: regionsGeometries } = useRegions({}, {
+  const { data: regionsGeometries } = useRegions({ ...params }, {
     refetchOnWindowFocus: false,
-    placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
+    placeholderData: queryClient.getQueryData(['fetch-regions', params]) || [],
   });
 
   const scenarios = useMemo<{ label: string, value: string }[]>(
@@ -225,7 +217,7 @@ export function useIndicatorMetadata(
 export function useDefaultIndicator(group) {
   if (!group) return null;
   const { default_subgroup: defaultSubgroup, subgroups } = group;
-  const defaultSub = subgroups.find((subgroup) => subgroup.slug === defaultSubgroup);
+  const defaultSub = subgroups.find((subgroup) => subgroup.slug === defaultSubgroup || subgroup.slug === group?.subgroups[0].slug);
   return defaultSub || subgroups[0];
 }
 

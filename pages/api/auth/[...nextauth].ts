@@ -26,7 +26,7 @@ export default NextAuth({
         try {
           user = await logIn(credentials);
         } catch (e) {
-          throw new Error(`error signin: ${e.message}`);
+          throw new Error(`Error signing in: ${e.message}`);
         }
 
         // Any object returned will be saved in `user` property of the JWT

@@ -1,9 +1,5 @@
 import React, {
-  FC,
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
+  FC, useEffect, useState, useMemo, useCallback,
 } from 'react';
 
 import { useQueryClient } from 'react-query';
@@ -56,17 +52,15 @@ import type { ComponentTypes } from 'types/data';
 import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
 
 type ChartProps = {
-  widgetData: unknown,
-  widgetConfig: unknown,
-  colors: string[],
-  color?: string,
+  widgetData: unknown;
+  widgetConfig: unknown;
+  colors: string[];
+  color?: string;
 };
 
 const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 
-const IndicatorChart: FC<ComponentTypes> = ({
-  className,
-}: ComponentTypes) => {
+const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -81,78 +75,105 @@ const IndicatorChart: FC<ComponentTypes> = ({
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const { current } = useSelector((state: RootState) => (state.language));
-
   const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, unit, region, category, scenario, visualization = 'choropleth',
+    year,
+    unit,
+    region,
+    category,
+    scenario,
+    visualization = 'choropleth',
   } = filters;
 
   const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery } } = router;
-
+  const {
+    query: { group: groupSlug, subgroup: subgroupQuery, locale },
+  } = router;
+  const lang = locale || 'en';
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
-  const toggleDropdown = useCallback((key) => {
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      [key]: !dropdownVisibility[key],
-    });
-  }, [dropdownVisibility]);
 
-  const closeDropdown = useCallback((key) => {
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      [key]: false,
-    });
-  }, [dropdownVisibility]);
-
-  const handleChange = useCallback((key, value) => {
-    dispatch(setFilters({ [key]: value }));
-
-    setDropdownVisibility({
-      ...dropdownVisibility,
-      [key]: false,
-    });
-  }, [dispatch, dropdownVisibility]);
-
-  const {
-    data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, ({
-    placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
-      categories: [],
-      category_filters: {},
-      accessible_by: [],
-      data_source: null,
-      default_visualization: null,
-      description: null,
-      end_date: null,
-      id: null,
-      name: null,
-      published: false,
-      start_date: null,
-      visualization_types: [],
-      group: null,
-      subgroup: null,
+  const toggleDropdown = useCallback(
+    (key) => {
+      setDropdownVisibility({
+        ...dropdownVisibility,
+        [key]: !dropdownVisibility[key],
+      });
     },
-    keepPreviousData: true,
-    refetchOnWindowFocus: false,
-  }));
-  const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
+    [dropdownVisibility],
+  );
+
+  const closeDropdown = useCallback(
+    (key) => {
+      setDropdownVisibility({
+        ...dropdownVisibility,
+        [key]: false,
+      });
+    },
+    [dropdownVisibility],
+  );
+
+  const handleChange = useCallback(
+    (key, value) => {
+      dispatch(setFilters({ [key]: value }));
+
+      setDropdownVisibility({
+        ...dropdownVisibility,
+        [key]: false,
+      });
+    },
+    [dispatch, dropdownVisibility],
+  );
+
+  const { data: indicatorData } = useIndicator(
+    groupSlug,
+    subgroupSlug,
+    indicatorSlug,
+    {
+      placeholderData: queryClient.getQueryData([
+        'indicator',
+        indicatorSlug,
+      ]) || {
+        categories: [],
+        category_filters: {},
+        accessible_by: [],
+        data_source: null,
+        default_visualization: null,
+        description: null,
+        end_date: null,
+        id: null,
+        name: null,
+        published: false,
+        start_date: null,
+        visualization_types: [],
+        group: null,
+        subgroup: null,
+      },
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+    },
+    {
+      locale: lang,
+    },
+  );
+  const filterByRegion = useMemo(
+    () => visualization !== 'choropleth' && visualization !== 'bars',
+    [visualization],
+  );
 
   const filtersIndicator = useMemo(() => {
     if (filterByRegion) {
-      return ({
+      return {
         visualization,
         region,
         unit,
-      });
+      };
     }
-    return ({
+    return {
       visualization,
       unit,
       year,
-    });
+    };
   }, [visualization, region, unit, year, filterByRegion]);
 
   const {
@@ -161,7 +182,11 @@ const IndicatorChart: FC<ComponentTypes> = ({
     isFetched: isFetchedRecords,
     isSuccess: isSuccessRecords,
   } = useIndicatorRecords(
-    groupSlug, subgroupSlug, indicatorSlug, filtersIndicator, {
+    groupSlug,
+    subgroupSlug,
+    indicatorSlug,
+    filtersIndicator,
+    {
       refetchOnWindowFocus: false,
       enabled: !!visualization && (!!region || !!year),
     },
@@ -178,10 +203,16 @@ const IndicatorChart: FC<ComponentTypes> = ({
     defaultUnit,
     scenarios,
     defaultScenario,
-  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
-    refetchOnWindowFocus: false,
-    enabled: !!indicatorSlug && !!visualization,
-  });
+  } = useIndicatorMetadata(
+    indicatorSlug,
+    visualization,
+    records,
+    { locale: lang },
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!indicatorSlug && !!visualization,
+    },
+  );
 
   const {
     name,
@@ -200,7 +231,8 @@ const IndicatorChart: FC<ComponentTypes> = ({
   );
 
   const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(records), [records],
+    () => getSubcategoriesFromRecords(records),
+    [records],
   );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
@@ -210,73 +242,96 @@ const IndicatorChart: FC<ComponentTypes> = ({
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
 
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, current, records)[visualization],
-    [visualization, widgetDataKeys, records, current],
+    () => ChartConfig(widgetDataKeys, lang, records)[visualization],
+    [visualization, widgetDataKeys, records, lang],
   );
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
-    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+      name,
+      groupSlug,
+      filters,
+      filteredRecords,
+      regionsGeometries,
+      units,
+      categories,
+    ),
+    [name, groupSlug, filters, filteredRecords, regionsGeometries, units, categories],
   );
 
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.
     () => (indicatorData?.visualization_types?.includes(visualization)
-      ? visualization : indicatorData?.default_visualization),
+      ? visualization
+      : indicatorData?.default_visualization),
     [visualization, indicatorData],
   );
 
-  const currentYear = useMemo<number>(
-    () => {
-      if (years.find(({ value }) => value === year)) {
-        return year;
-      }
-      return defaultYear?.value;
-    },
-    [year, years, defaultYear],
-  );
+  const currentYear = useMemo<number>(() => {
+    if (years.find(({ value }) => value === year)) {
+      return year;
+    }
+    return defaultYear?.value;
+  }, [year, years, defaultYear]);
 
-  const currentUnit = useMemo<string>(
-    () => {
-      if (units.find(({ value }) => value === unit)) {
-        return unit;
-      }
-      return defaultUnit?.value;
-    },
-    [unit, units, defaultUnit],
-  );
+  const currentUnit = useMemo<string>(() => {
+    if (units.find(({ value }) => value === unit)) {
+      return unit;
+    }
+    return defaultUnit?.value;
+  }, [unit, units, defaultUnit]);
 
-  const currentRegion = useMemo<string>(
-    () => {
-      if (regions.find(({ value }) => value === region)) {
-        return region;
-      }
-      return defaultRegion?.value;
-    },
-    [region, regions, defaultRegion],
-  );
+  const currentRegion = useMemo<string>(() => {
+    if (regions.find(({ value }) => value === region)) {
+      return region;
+    }
+    return defaultRegion?.value;
+  }, [region, regions, defaultRegion]);
 
   const currentScenario = useMemo<string>(
-    () => (scenario || defaultScenario?.value),
+    () => scenario || defaultScenario?.value,
     [scenario, defaultScenario],
   );
 
-  const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
-  const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
-  const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
-  const displayScenario = useMemo(() => scenarios.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
+  const displayYear = useMemo(
+    () => years.find(({ value }) => value === year)?.label,
+    [years, year],
+  ) || '';
+  const displayRegion = useMemo(
+    () => regions.find(({ value }) => value === region)?.label,
+    [regions, region],
+  ) || '';
+  const displayUnit = useMemo(
+    () => units.find(({ value }) => value === unit)?.label,
+    [units, unit],
+  ) || '';
+  const displayScenario = useMemo(
+    () => scenarios.find(({ value }) => value === scenario)?.label,
+    [scenarios, scenario],
+  ) || '';
+  const selectedCategory = useMemo(() => {
+    if (category.label === 'category_2' && category.value) {
+      return category;
+    } return defaultCategory;
+  }, [category, defaultCategory]);
 
   useEffect(() => {
-    dispatch(setFilters({
-      visualization: currentVisualization,
-      ...(currentUnit && { unit: currentUnit }) || { unit: null },
-      ...defaultCategory && { category: defaultCategory },
-      ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-      ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-      ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
-    }));
+    dispatch(
+      setFilters({
+        visualization: currentVisualization,
+        ...((currentUnit && { unit: currentUnit }) || { unit: null }),
+        ...(selectedCategory && { category: selectedCategory }),
+        ...((['line', 'pie'].includes(currentVisualization) && {
+          region: currentRegion,
+        }) || { region: null }),
+        ...((['pie', 'choropleth', 'bar'].includes(currentVisualization) && {
+          year: currentYear,
+        }) || { year: null }),
+        ...(['choropleth'].includes(currentVisualization)
+          && defaultScenario && { scenario: currentScenario }),
+      }),
+    );
   }, [
     dispatch,
     defaultYear,
@@ -284,47 +339,54 @@ const IndicatorChart: FC<ComponentTypes> = ({
     currentRegion,
     defaultUnit,
     currentUnit,
-    defaultCategory,
+    selectedCategory,
     defaultScenario,
     currentScenario,
     currentVisualization,
     indicatorSlug,
   ]);
 
-  const LegendPayload = useMemo<{ label: string, color: string }[]>(
-    () => {
-      let legendData;
-      if (visualization === 'pie') {
-        legendData = widgetData;
-      } else legendData = category?.label === 'category_1' ? categories : subcategories;
+  const LegendPayload = useMemo(() => {
+    let legendData;
+    if (visualization === 'pie') {
+      legendData = widgetData;
+    } else {
+      legendData = category?.label === 'category_1' ? categories : subcategories;
+    }
 
-      return legendData.map((item, index) => ({
-        label: item.name || item,
-        color: colors[index],
-      }));
-    }, [colors, widgetData, categories, category, subcategories, visualization],
-  );
+    return legendData.map((item, index) => ({
+      label: item.name || item,
+      color: colors[index],
+    }));
+  }, [colors, widgetData, categories, category, subcategories, visualization]);
 
   const DynamicChart = useMemo(() => {
     if (visualization && visualization !== 'choropleth') {
-      return dynamic<ChartProps>(import(`components/indicator-visualizations/${visualization}`));
+      return dynamic<ChartProps>(
+        import(`components/indicator-visualizations/${visualization}`),
+      );
     }
     return null;
   }, [visualization]);
 
   useEffect(() => {
-    if (category?.label === 'category_1' && subcategories.length === 1) setSubcategoriesTotals(LegendPayload);
+    if (category?.label === 'category_1' && subcategories.length === 1) { setSubcategoriesTotals(LegendPayload); }
   }, [category, subcategories.length, setSubcategoriesTotals]);
 
   const singleValueLegendColor = useMemo(
-    () => subcategoriesTotals?.find(((subcat) => subcat?.label === category?.value))?.color,
+    () => subcategoriesTotals?.find((subcat) => subcat?.label === category?.value)
+      ?.color,
     [category, subcategoriesTotals],
   );
 
   const { data: user } = useMe();
 
-  const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
-    [accessibleBy, user]);
+  const hasDownloadPermissions = useMemo(
+    () => user
+      && user.role
+      && (accessibleBy.includes(user.role) || user.role === 'admin'),
+    [accessibleBy, user],
+  );
 
   return (
     <div className={`grid grid-cols-12 ${className}`}>
@@ -332,76 +394,98 @@ const IndicatorChart: FC<ComponentTypes> = ({
         <section className="flex flex-col w-full">
           <div className="flex justify-between w-full">
             {/* year filter */}
-            {['bar', 'pie', 'choropleth'].includes(visualization) && !!years.length && (
-              <div className="flex flex-wrap items-center">
-                <span className="pr-2 mb-2 whitespace-nowrap">
-                  {i18next.t('showing')}
-                  :
-                </span>
-                {years.length === 1 && (
-                <span className={BUTTON_STYLES}>{displayYear}</span>
-                )}
-                {years.length > 1 && (
-                  <Tooltip
-                    placement="bottom-start"
-                    visible={dropdownVisibility.year}
-                    interactive
-                    onClickOutside={() => closeDropdown('year')}
-                    content={(
-                      <DropdownContent
-                        list={years}
-                        keyEl="year"
-                        onClick={handleChange}
-                      />
-                    )}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => { toggleDropdown('year'); }}
-                      className={cx(BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
+            {['bar', 'pie', 'choropleth'].includes(visualization)
+              && !!years.length && (
+                <div className="flex flex-wrap items-center">
+                  <span className="pr-2 mb-2 whitespace-nowrap">
+                    {i18next.t('showing')}
+                    :
+                  </span>
+                  {years.length === 1 && (
+                    <span className={BUTTON_STYLES}>{displayYear}</span>
+                  )}
+                  {years.length > 1 && (
+                    <Tooltip
+                      placement="bottom-start"
+                      visible={dropdownVisibility.year}
+                      interactive
+                      onClickOutside={() => closeDropdown('year')}
+                      content={(
+                        <DropdownContent
+                          list={years}
+                          keyEl="year"
+                          onClick={handleChange}
+                        />
+                      )}
                     >
-                      <span>{displayYear || i18next.t('selectYear')}</span>
-                      <Icon ariaLabel="change date" name="calendar" className="ml-4" />
-                    </button>
-                  </Tooltip>
-                )}
-              </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          toggleDropdown('year');
+                        }}
+                        className={cx(
+                          BUTTON_STYLES,
+                          'hover:bg-color1 hover:text-white',
+                        )}
+                      >
+                        <span>{displayYear || i18next.t('selectYear')}</span>
+                        <Icon
+                          ariaLabel="change date"
+                          name="calendar"
+                          className="ml-4"
+                        />
+                      </button>
+                    </Tooltip>
+                  )}
+                </div>
             )}
 
             {/* region filter */}
-            {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
-              <div className="flex items-center">
-                <span className="pr-2 mb-2">
-                  {i18next.t('region')}
-                  :
-                </span>
-                {regions.length === 1 && (
-                <span className={BUTTON_STYLES}>{displayRegion}</span>)}
-                {regions.length > 1 && (
-                  <Tooltip
-                    placement="bottom-start"
-                    visible={dropdownVisibility.region}
-                    interactive
-                    onClickOutside={() => closeDropdown('region')}
-                    content={(
-                      <DropdownContent
-                        list={regions}
-                        keyEl="region"
-                        onClick={handleChange}
-                      />
-                    )}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => { toggleDropdown('region'); }}
-                      className={cx(BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
+            {['line', 'pie'].includes(visualization)
+              && !!regions.length
+              && displayRegion && (
+                <div className="flex items-center">
+                  <span className="pr-2 mb-2">
+                    {i18next.t('region')}
+                    :
+                  </span>
+                  {regions.length === 1 && (
+                    <span className={BUTTON_STYLES}>{displayRegion}</span>
+                  )}
+                  {regions.length > 1 && (
+                    <Tooltip
+                      placement="bottom-start"
+                      visible={dropdownVisibility.region}
+                      interactive
+                      onClickOutside={() => closeDropdown('region')}
+                      content={(
+                        <DropdownContent
+                          list={regions}
+                          keyEl="region"
+                          onClick={handleChange}
+                        />
+                      )}
                     >
-                      <span>{displayRegion || 'Select a region'}</span>
-                      <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
-                    </button>
-                  </Tooltip>
-                )}
-              </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          toggleDropdown('region');
+                        }}
+                        className={cx(
+                          BUTTON_STYLES,
+                          'hover:bg-color1 hover:text-white',
+                        )}
+                      >
+                        <span>{displayRegion || 'Select a region'}</span>
+                        <Icon
+                          ariaLabel="dropdown"
+                          name="triangle_border"
+                          className="ml-4"
+                        />
+                      </button>
+                    </Tooltip>
+                  )}
+                </div>
             )}
 
             {/* scenario filter */}
@@ -427,11 +511,19 @@ const IndicatorChart: FC<ComponentTypes> = ({
                   >
                     <button
                       type="button"
-                      onClick={() => { toggleDropdown('scenario'); }}
+                      onClick={() => {
+                        toggleDropdown('scenario');
+                      }}
                       className={DROPDOWN_BUTTON_STYLES}
                     >
-                      <span>{displayScenario || i18next.t('selectScenario')}</span>
-                      <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" />
+                      <span>
+                        {displayScenario || i18next.t('selectScenario')}
+                      </span>
+                      <Icon
+                        ariaLabel="dropdown"
+                        name="triangle_border"
+                        className="ml-4"
+                      />
                     </button>
                   </Tooltip>
                 )}
@@ -439,66 +531,82 @@ const IndicatorChart: FC<ComponentTypes> = ({
             )}
           </div>
 
-          <div className={`flex w-full h-full min-h-1/2 ${CLASS_DOM_DOWNLOAD_IMAGE}`}>
-            {isFetchingRecords && (
-              <LoadingSpinner />
-            )}
+          <div
+            className={`flex w-full h-full min-h-1/2 ${CLASS_DOM_DOWNLOAD_IMAGE}`}
+          >
+            {isFetchingRecords && <LoadingSpinner />}
             {isFetchedRecords
               && !isFetchingRecords
               && !filteredRecords.length
-              && !!visualization && (!!region || !!year)
-              && (
+              && !!visualization
+              && (!!region || !!year) && (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
-                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
+                  <img
+                    alt="No data"
+                    src="/images/illus_nodata.svg"
+                    className="h-auto w-28"
+                  />
                   <p>Data not found</p>
                 </div>
-              )}
-            {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col w-full h-full py-8 min-h-1/2">
+            )}
+            {!!filteredRecords.length
+              && !isFetchingRecords
+              && isSuccessRecords && (
+                <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                   {visualization !== 'choropleth' && units.length === 1 && (
-                    <span className={cx(
-                      {
-                        'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
-                        'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
-                      },
-                    )}
+                    <span
+                      className={cx({
+                        'text-sm  text-gray1 text-opacity-50':
+                          visualization !== 'choropleth',
+                        'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4':
+                          visualization === 'choropleth',
+                      })}
                     >
                       {displayUnit}
-
                     </span>
                   )}
                   {visualization !== 'choropleth' && units.length > 1 && (
-                  <div className="flex items-center">
-                    <Tooltip
-                      placement="bottom-start"
-                      visible={dropdownVisibility.unit}
-                      interactive
-                      onClickOutside={() => closeDropdown('unit')}
-                      content={(
-                        <DropdownContent
-                          list={units}
-                          keyEl="unit"
-                          onClick={handleChange}
-                        />
+                    <div className="flex items-center">
+                      <Tooltip
+                        placement="bottom-start"
+                        visible={dropdownVisibility.unit}
+                        interactive
+                        onClickOutside={() => closeDropdown('unit')}
+                        content={(
+                          <DropdownContent
+                            list={units}
+                            keyEl="unit"
+                            onClick={handleChange}
+                          />
                         )}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => { toggleDropdown('unit'); }}
-                        className={cx('flex items-center cursor-pointer whitespace-nowrap hover:font-bold',
-                          {
-                            'text-sm  text-gray1 text-opacity-50': visualization !== 'choropleth',
-                            'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4': visualization === 'choropleth',
-                          })}
                       >
-                        <span>{displayUnit}</span>
-                        <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="ml-2" />
-                      </button>
-                    </Tooltip>
-                  </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            toggleDropdown('unit');
+                          }}
+                          className={cx(
+                            'flex items-center cursor-pointer whitespace-nowrap hover:font-bold',
+                            {
+                              'text-sm  text-gray1 text-opacity-50':
+                                visualization !== 'choropleth',
+                              'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4':
+                                visualization === 'choropleth',
+                            },
+                          )}
+                        >
+                          <span>{displayUnit}</span>
+                          <Icon
+                            ariaLabel="units dropdown"
+                            name="triangle_border"
+                            size="sm"
+                            className="ml-2"
+                          />
+                        </button>
+                      </Tooltip>
+                    </div>
                   )}
-                {visualization !== 'choropleth'
-                  && (
+                  {visualization !== 'choropleth' && (
                     <div className="w-full h-96">
                       <DynamicChart
                         widgetData={widgetData}
@@ -508,15 +616,12 @@ const IndicatorChart: FC<ComponentTypes> = ({
                       />
                     </div>
                   )}
-                {visualization === 'choropleth' && (
-                  <div className="w-full h-96">
-                    <MapContainer
-                      layers={widgetData[0]?.layers || []}
-                    />
-                  </div>
-                )}
-
-              </div>
+                  {visualization === 'choropleth' && (
+                    <div className="w-full h-96">
+                      <MapContainer layers={widgetData[0]?.layers || []} />
+                    </div>
+                  )}
+                </div>
             )}
           </div>
         </section>
@@ -527,7 +632,9 @@ const IndicatorChart: FC<ComponentTypes> = ({
             <Filters
               visualization={visualization}
               categories={categories}
-              hasSubcategories={!!subcategories.length || categories.length === 1}
+              hasSubcategories={
+                !!subcategories.length || categories.length === 1
+              }
               className="mb-4 overflow-y-auto"
               onClick={setFilters}
             />

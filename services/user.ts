@@ -8,7 +8,7 @@ export const fetchUserMe = (
   headers = {},
 ) => API.get('/users/me', {
   headers: {
-    Authentication: userToken,
+    Authentication: `Bearer ${userToken}`,
     ...headers,
   },
 })
@@ -19,14 +19,9 @@ export const logIn = (
 ) => API.post('/users/login',
   {
     ...params,
-  },
-  {
-    headers: {
-      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
-    },
   }).then(({ data }) => data);
 
-// Upades user details
+// Updates user details
 export const updateUser = (
   params = {},
   userToken: string | string[],
@@ -36,7 +31,6 @@ export const updateUser = (
   },
   {
     headers: {
-      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
       Authentication: `Bearer ${userToken}`,
     },
   }).then(({ data }) => data);
@@ -63,7 +57,6 @@ export const deleteUser = (
 ) => API.delete('/users/me',
   {
     headers: {
-      'Api-Auth': process.env.NEXT_PUBLIC_API_TOKEN,
       Authentication: `Bearer ${userToken}`,
     },
   });

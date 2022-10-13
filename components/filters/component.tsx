@@ -1,24 +1,24 @@
 import React, {
-  FC, useState, useEffect, useCallback,
+  FC, useState, useEffect, useCallback, useMemo,
 } from 'react';
 import cx from 'classnames';
 import i18next from 'i18next';
 
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-// import { RootState } from 'store/store';
+import { RootState } from 'store/store';
 
 // components
 import Icon from 'components/icon';
 
 interface FiltersProps {
-  visualization: string,
-  categories: string[]
-  hasSubcategories: boolean,
-  className?: string,
-  onClick: (category: Record<string, any>) => void,
-  height?: number,
-  indicator?: string,
+  visualization: string;
+  categories: string[];
+  hasSubcategories: boolean;
+  className?: string;
+  onClick: (category: Record<string, any>) => void;
+  height?: number;
+  indicator?: string;
 }
 
 const Filters: FC<FiltersProps> = ({
@@ -31,10 +31,18 @@ const Filters: FC<FiltersProps> = ({
   indicator = null,
 }: FiltersProps) => {
   const dispatch = useDispatch();
-  const [active, setActive] = useState('');
+  const filters = useSelector((state: RootState) => state.indicator);
+  const { category: cat } = filters;
+  const categorySelected = useMemo(
+    () => categories.find((c) => c === cat?.value), [cat, categories],
+  );
+  const [active, setActive] = useState(categorySelected);
 
   useEffect(() => {
-    if (visualization === 'choropleth' || (categories.length === 1 && indicator === 'model-intercomparison')) {
+    if (
+      visualization === 'choropleth'
+      || (categories.length === 1 && indicator === 'model-intercomparison')
+    ) {
       const value = categories[0];
       setActive(value);
       dispatch(onClick({ category: { label: 'category_2', value } }));
@@ -45,20 +53,31 @@ const Filters: FC<FiltersProps> = ({
   const handleClick = (direction) => {
     const index = categories.indexOf(active);
     if (direction === 'up' && index > 0) {
-      dispatch(onClick({ category: { label: 'category_2', value: categories[index - 1] } }));
+      dispatch(
+        onClick({
+          category: { label: 'category_2', value: categories[index - 1] },
+        }),
+      );
       return setActive(categories[index - 1]);
     }
     if (direction === 'down' && index < categories.length - 1) {
-      dispatch(onClick({ category: { label: 'category_2', value: categories[index + 1] } }));
+      dispatch(
+        onClick({
+          category: { label: 'category_2', value: categories[index + 1] },
+        }),
+      );
       return setActive(categories[index + 1]);
     }
     return setActive(categories[index]);
   };
 
-  const handleCategories = useCallback((value) => {
-    dispatch(onClick({ category: { label: 'category_2', value } }));
-    setActive(value);
-  }, [dispatch, onClick]);
+  const handleCategories = useCallback(
+    (value) => {
+      dispatch(onClick({ category: { label: 'category_2', value } }));
+      setActive(value);
+    },
+    [dispatch, onClick],
+  );
 
   const handleRemoveCategory = () => {
     dispatch(onClick({ category: { label: 'category_1' } }));
@@ -70,8 +89,10 @@ const Filters: FC<FiltersProps> = ({
 
   return (
     <div
-      className={cx('inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full',
-        { [className]: className })}
+      className={cx(
+        'inline-flex flex-col justify-start text-center rounded-md bg-gray5 hover:opacity-90 px-1.5 text-gray1 w-full',
+        { [className]: className },
+      )}
       style={{ height, maxHeight }}
     >
       <div className="flex justify-start py-3.75 px-6 ">
@@ -83,23 +104,28 @@ const Filters: FC<FiltersProps> = ({
           </p>
         </div>
       </div>
-      <div className={cx('flex flex-col overflow-y-auto items-start',
-        { 'max-h-36': !height })}
+      <div
+        className={cx('flex flex-col overflow-y-auto items-start', {
+          'max-h-36': !height,
+        })}
       >
         {categories.map((category) => (
           <div
             key={category}
-            className={cx('flex justify-between cursor-pointer items-center w-full mb-1.5 active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
+            className={cx(
+              'flex justify-between cursor-pointer items-center w-full mb-1.5 active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
               {
                 'bg-color1 text-white clear:bg-white': active === category,
                 'bg-white': active !== category,
-              })}
+              },
+            )}
           >
             <button
               name={category}
               type="button"
-              className={cx('py-3 pl-6 flex-1',
-                { cursor: hasSubcategories || categories.length !== 1 })}
+              className={cx('py-3 pl-6 flex-1', {
+                cursor: hasSubcategories || categories.length !== 1,
+              })}
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories || categories.length === 1}
             >
@@ -120,22 +146,22 @@ const Filters: FC<FiltersProps> = ({
         ))}
       </div>
       {categories.length > 1 && (
-      <div className="flex items-center justify-center p-3">
-        <Icon
-          ariaLabel="category-up"
-          name="triangle_border"
-          size="xlg"
-          onClick={() => handleClick('down')}
-          className="cursor-pointer p-2 mr-3 border-gray1 border-2 border-opacity-30 rounded-full hover:bg-gray1 hover:bg-opacity-90 hover:text-white text-gray1"
-        />
-        <Icon
-          ariaLabel="category-down"
-          name="triangle_border"
-          size="xlg"
-          onClick={() => handleClick('up')}
-          className="cursor-pointer p-2 border-gray1 border-2 border-opacity-30 rounded-full transform rotate-180 hover:bg-gray1 hover:bg-opacity-90 hover:text-white"
-        />
-      </div>
+        <div className="flex items-center justify-center p-3">
+          <Icon
+            ariaLabel="category-up"
+            name="triangle_border"
+            size="xlg"
+            onClick={() => handleClick('down')}
+            className="cursor-pointer p-2 mr-3 border-gray1 border-2 border-opacity-30 rounded-full hover:bg-gray1 hover:bg-opacity-90 hover:text-white text-gray1"
+          />
+          <Icon
+            ariaLabel="category-down"
+            name="triangle_border"
+            size="xlg"
+            onClick={() => handleClick('up')}
+            className="cursor-pointer p-2 border-gray1 border-2 border-opacity-30 rounded-full transform rotate-180 hover:bg-gray1 hover:bg-opacity-90 hover:text-white"
+          />
+        </div>
       )}
     </div>
   );

@@ -29,8 +29,6 @@ interface IndicatorsPageProps {
   groups: GroupProps[]
 }
 
-// type ResultsProps
-
 const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps) => {
   const [disabledGroups, setActive] = useState([]);
   const [groupsFiltered, setFilteredGroups] = useState(groups);
@@ -70,7 +68,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
             :
           </p>
           <div className="flex flex-wrap flex-1">
-            {groups.map(({ id, slug, name }) => (
+            {groups?.map(({ id, slug, name }) => (
               <Button
                 type="button"
                 key={id}
@@ -95,7 +93,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
           <div key={groupId} className="flex flex-col">
             <h2 className="text-3.5xl pt-2">{groupName}</h2>
             <div className="flex flex-col text-lg py-10">
-              {subgroups.map(({
+              {subgroups?.map(({
                 id: subgroupId,
                 name: subgroupName,
                 slug: subgroupSlug,
@@ -116,8 +114,10 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
   );
 };
 
-export const getServerSideProps = async () => fetchGroups().then(
-  ({ data }) => ({ props: { groups: data } }),
-);
-
+export const getServerSideProps = async ({ query }) => {
+  const { locale } = query;
+  return fetchGroups('', { locale }).then(
+    ({ data }) => ({ props: { groups: data } }),
+  );
+};
 export default IndicatorsPage;
