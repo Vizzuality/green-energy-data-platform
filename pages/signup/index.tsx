@@ -11,6 +11,7 @@ import {
 } from 'next-auth/client';
 import cx from 'classnames';
 
+import { toast } from 'react-hot-toast';
 import API from 'lib/api';
 
 // components
@@ -54,6 +55,8 @@ const SignupPage: FC = () => {
             data: credentials,
           });
         if (signUpResponse.status === 201) {
+          toast.success('hello');
+
           router.push('signin');
         }
       } catch (responseError) {

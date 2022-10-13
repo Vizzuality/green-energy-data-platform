@@ -10,6 +10,7 @@ import cx from 'classnames';
 import { getSession, signOut } from 'next-auth/client';
 
 import i18next from 'i18next';
+import toast from 'react-hot-toast';
 
 // authentication
 import { withAuthentication, withUser } from 'hoc/auth';
@@ -123,6 +124,7 @@ const ProfilePage: FC = () => {
       queryClient.invalidateQueries('me');
     },
     onError: () => {
+      toast.success('hello');
       throw new Error('something went wrong updating user');
     },
   });
