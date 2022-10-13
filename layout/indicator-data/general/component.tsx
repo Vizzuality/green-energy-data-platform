@@ -254,9 +254,8 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       filteredRecords,
       regionsGeometries,
       units,
-      categories,
     ),
-    [name, groupSlug, filters, filteredRecords, regionsGeometries, units, categories],
+    [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
