@@ -17,10 +17,7 @@ import { withAuthentication, withUser } from 'hoc/auth';
 import { useMe } from 'hooks/auth';
 
 // services
-import {
-  updateUser,
-  deleteUser,
-} from 'services/user';
+import { updateUser, deleteUser } from 'services/user';
 
 // components
 import LayoutPage from 'layout';
@@ -34,12 +31,12 @@ import { validateEmail } from 'utils';
 import { useRouter } from 'next/router';
 
 interface NewDetailProps {
-  title?: string,
+  title?: string;
   name?: string;
   organisation?: string;
-  email?: string,
-  token: string,
-  password?: string,
+  email?: string;
+  token: string;
+  password?: string;
 }
 const ProfilePage: FC = () => {
   const queryClient = useQueryClient();
@@ -62,6 +59,7 @@ const ProfilePage: FC = () => {
   } = user;
 
   const router = useRouter();
+  const { locale } = router.query;
 
   const [credentials, setCredentials] = useState({
     title: userTitle,
@@ -89,7 +87,10 @@ const ProfilePage: FC = () => {
 
   const [isValid, setEmailVerification] = useState(false);
 
-  const handleChange = (type: string, e: ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (
+    type: string,
+    e: ChangeEvent<HTMLInputElement>,
+  ): void => {
     if (type === 'email') {
       const verificationEmail = validateEmail(e.currentTarget.value);
       setEmailVerification(verificationEmail);
@@ -101,44 +102,56 @@ const ProfilePage: FC = () => {
     });
   };
 
-  const submitNewDetails = async (
-    {
-      title, name, organisation, email, token, password,
-    }: NewDetailProps,
-  ) => updateUser({
-    title, name, organisation, email, password,
-  }, token);
-
-  const deleteUserAccount = async ({ token }) => deleteUser(token);
-
-  const {
+  const submitNewDetails = async ({
     title,
     name,
     organisation,
     email,
     token,
+    password,
+  }: NewDetailProps) => updateUser(
+    {
+      title,
+      name,
+      organisation,
+      email,
+      password,
+    },
+    token,
+  );
+
+  const deleteUserAccount = async ({ token }) => deleteUser(token);
+
+  const {
+    title, name, organisation, email, token,
   } = credentials;
 
   const { mutate: mutateUserDetails } = useMutation(submitNewDetails, {
     onSuccess: () => {
+      toast.success('Profile successfully updated!');
       queryClient.invalidateQueries('me');
     },
     onError: () => {
-      toast.success('hello');
-      throw new Error('something went wrong updating user');
+      const toastMessage = locale === 'cn'
+        ? '出了点问题，请重试'
+        : 'Something went wrong, please try again';
+      toast.success(toastMessage);
+      const message = locale === 'cn'
+        ? '更新用户时出了点问题'
+        : 'something went wrong updating user';
+      throw new Error(message);
     },
   });
 
-  const { mutate: mutateUserAccount } = useMutation(deleteUserAccount,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('me');
-        signOut({ callbackUrl: '/signup' });
-      },
-      onError: (error) => {
-        throw new Error(`something went wrong deleting account: ${error}`);
-      },
-    });
+  const { mutate: mutateUserAccount } = useMutation(deleteUserAccount, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('me');
+      signOut({ callbackUrl: '/signup' });
+    },
+    onError: (error) => {
+      throw new Error(`something went wrong deleting account: ${error}`);
+    },
+  });
 
   const handleSave = (evt) => {
     evt.preventDefault();
@@ -153,15 +166,22 @@ const ProfilePage: FC = () => {
 
     if (token) {
       mutateUserDetails({
-        title, name, organisation, token, email,
+        title,
+        name,
+        organisation,
+        token,
+        email,
       });
     }
   };
 
-  const handleDelete = useCallback(async (evt) => {
-    evt.preventDefault();
-    mutateUserAccount({ token });
-  }, [token, mutateUserAccount]);
+  const handleDelete = useCallback(
+    async (evt) => {
+      evt.preventDefault();
+      mutateUserAccount({ token });
+    },
+    [token, mutateUserAccount],
+  );
 
   const handlePasswordChange = () => {
     router.push('recover-password');
@@ -176,8 +196,13 @@ const ProfilePage: FC = () => {
       <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow -mt-40 divide-x flex px-10 max-w-[1200px]">
         <section className="flex flex-col w-1/2">
           <div className="p-16 flex-1 flex flex-col">
-            <h2 className="text-2.5xl font-bold">{i18next.t('personalData')}</h2>
-            <form onSubmit={handleSave} className="flex flex-col items-start pt-4">
+            <h2 className="text-2.5xl font-bold">
+              {i18next.t('personalData')}
+            </h2>
+            <form
+              onSubmit={handleSave}
+              className="flex flex-col items-start pt-4"
+            >
               <label
                 htmlFor="title"
                 className="uppercase w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
@@ -189,8 +214,10 @@ const ProfilePage: FC = () => {
                     name="title"
                     type="text"
                     defaultValue={user?.title}
-                    className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
-                      { 'text-grayProfile text-opacity-100': title?.length })}
+                    className={cx(
+                      'pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
+                      { 'text-grayProfile text-opacity-100': title?.length },
+                    )}
                     onChange={(e) => handleChange('title', e)}
                   />
                   <Icon
@@ -212,8 +239,10 @@ const ProfilePage: FC = () => {
                     name="name"
                     type="text"
                     defaultValue={user?.name}
-                    className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
-                      { 'text-grayProfile text-opacity-100': name?.length })}
+                    className={cx(
+                      'pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
+                      { 'text-grayProfile text-opacity-100': name?.length },
+                    )}
                     onChange={(e) => handleChange('name', e)}
                   />
                   <Icon
@@ -235,8 +264,13 @@ const ProfilePage: FC = () => {
                     name="organisation"
                     type="text"
                     defaultValue={user?.organisation}
-                    className={cx('pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
-                      { 'text-grayProfile text-opacity-100': organisation?.length })}
+                    className={cx(
+                      'pl-10 w-full overflow-ellipsis text-sm text-grayProfile text-opacity-50',
+                      {
+                        'text-grayProfile text-opacity-100':
+                          organisation?.length,
+                      },
+                    )}
                     onChange={(e) => handleChange('organisation', e)}
                   />
                   <Icon
@@ -247,10 +281,18 @@ const ProfilePage: FC = () => {
                   />
                 </div>
               </label>
-              <label htmlFor="email" className="uppercase w-full text-xs pb-2 tracking-tight text-grayProfile text-opacity-50">
+              <label
+                htmlFor="email"
+                className="uppercase w-full text-xs pb-2 tracking-tight text-grayProfile text-opacity-50"
+              >
                 {i18next.t('email')}
                 <div className="bg-gray-100  relative mt-3 p-2 rounded-sm">
-                  <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold " />
+                  <Icon
+                    ariaLabel="mail-input"
+                    name="mail"
+                    size="lg"
+                    className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold "
+                  />
                   <input
                     id="email"
                     name="email"
@@ -260,7 +302,6 @@ const ProfilePage: FC = () => {
                     className="bg-gray-100 pl-10 w-full overflow-ellipsis text-sm text-grayProfile"
                     onChange={(e) => handleChange('email', e)}
                   />
-
                 </div>
               </label>
               <Button
@@ -277,7 +318,9 @@ const ProfilePage: FC = () => {
         </section>
         <section className="flex flex-col w-1/2">
           <div className="p-16 flex-1 flex flex-col">
-            <h2 className="text-2.5xl font-bold">{i18next.t('changePassword')}</h2>
+            <h2 className="text-2.5xl font-bold">
+              {i18next.t('changePassword')}
+            </h2>
             <div className="flex flex-col items-start max-w-[380px]">
               <p className="text-grayProfile text-opacity-50 pb-10 text-sm pt-4">
                 {i18next.t('deleteWarning')}
@@ -291,7 +334,6 @@ const ProfilePage: FC = () => {
                   onClick={handleDelete}
                 >
                   {i18next.t('delete')}
-
                 </Button>
                 <Button
                   type="button"
@@ -306,7 +348,6 @@ const ProfilePage: FC = () => {
             </div>
           </div>
         </section>
-
       </div>
     </LayoutPage>
   );
@@ -316,19 +357,21 @@ const customServerSideProps = async (context) => {
   const session = await getSession(context);
 
   if (!session) {
-    return ({
+    return {
       redirect: {
         destination: '/signin?callbackUrl=/profile',
         permanent: false,
       },
-    });
+    };
   }
 
-  return ({
+  return {
     props: {},
-  });
+  };
 };
 
-export const getServerSideProps = withAuthentication(withUser(customServerSideProps));
+export const getServerSideProps = withAuthentication(
+  withUser(customServerSideProps),
+);
 
 export default ProfilePage;
