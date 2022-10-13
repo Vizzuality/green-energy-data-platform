@@ -16,4 +16,6 @@ group :development do
   gem "capistrano-nvm"
   gem 'capistrano-yarn'
   gem 'capistrano-passenger'
+  gem "bcrypt_pbkdf"
+  gem "ed25519"
 end

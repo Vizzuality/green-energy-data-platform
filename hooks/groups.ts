@@ -19,7 +19,7 @@ export const useGroup = (id: string | string[], queryConfig = {}, params = {}) =
     ...queryConfig,
   });
 
-export const useGroupsDefaults = (groups: GroupProps[]) => groups.map((group) => {
+export const useGroupsDefaults = (groups: GroupProps[]) => groups?.map((group) => {
   const { default_subgroup: subgroupSlug, subgroups } = group;
   const indicatorSlug = group?.subgroups?.find(
     ({ slug }) => slug === subgroupSlug,
