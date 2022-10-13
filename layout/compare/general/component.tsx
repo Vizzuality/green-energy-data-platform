@@ -218,8 +218,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const widgetData = useMemo(
     () => getGroupedValues(
-      name, groupSlug, filters, filteredRecords, regionsGeometries, units, categories,
-    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units, categories],
+      name, groupSlug, filters, filteredRecords, regionsGeometries, units,
+    ), [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const currentVisualization = useMemo<string>(
