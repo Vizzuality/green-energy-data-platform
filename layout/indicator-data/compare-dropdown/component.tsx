@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useMemo } from 'react';
 import Link from 'next/link';
 
 // hooks
@@ -62,11 +62,13 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
   const { data: subgroupData } = useSubgroup(groupSlug, subgroupSlug);
   const subgroupName = subgroupData?.name;
 
+  const groupsToCompare = useMemo(() => groups.filter(({ slug }) => slug !== 'energy-balance'), [groups]);
+
   return (
     <div className="text-white justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 shadow-sm first:pt-2 last:pb-2">
       {step === 1 && (
         <ul>
-          {groups?.map(({
+          {groupsToCompare?.map(({
             name, id, slug,
           }) => (
             <li key={id} className="px-7 first:rounded-t-xl last:rounded-b-xl">

@@ -43,3 +43,11 @@ export const ModelIntercomparisonVisualizationsOptions = [
   //   label: 'table',
   // },
 ];
+
+export const EnergyBalanceVisualizationsOptions = [
+  {
+    id: 'csv',
+    icon: 'File',
+    label: 'CSVfiles',
+  },
+];
