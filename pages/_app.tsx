@@ -35,7 +35,7 @@ const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => (
       </QueryClientProvider>
     </ReduxProvider>
     <Icons />
-    <Toaster position="top-right" />
+    <Toaster position="top-center" />
   </>
 );
 

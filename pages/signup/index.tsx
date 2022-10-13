@@ -11,6 +11,7 @@ import {
 } from 'next-auth/client';
 import cx from 'classnames';
 
+import { toast } from 'react-hot-toast';
 import API from 'lib/api';
 
 // components
@@ -20,7 +21,7 @@ import Header from 'layout/header';
 import Button from 'components/button';
 import Icon from 'components/icon';
 import i18next from 'i18next';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 
 const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
@@ -30,7 +31,8 @@ const SignupPage: FC = () => {
     organization: '',
     password: '',
   });
-
+  const router = useRouter();
+  const { locale } = router.query;
   const [errorMessage, setErrorMessage] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const passwordInputRef = useRef(null);
@@ -54,6 +56,8 @@ const SignupPage: FC = () => {
             data: credentials,
           });
         if (signUpResponse.status === 201) {
+          const messageLanguage = locale === 'cn' ? '成功建立帐户' : 'Account successfully created!';
+          toast.success(messageLanguage);
           router.push('signin');
         }
       } catch (responseError) {
@@ -62,7 +66,7 @@ const SignupPage: FC = () => {
         setTimeout(() => setErrorMessage(''), 3000);
       }
     }
-  }, [credentials]);
+  }, [credentials, locale, router]);
 
   return (
     <LayoutPage className="bg-gradient-color1">
