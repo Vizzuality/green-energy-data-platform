@@ -119,8 +119,6 @@ const IndicatorData: FC<Component> = ({
     switch (groupSlug) {
       case 'energy-flows':
         return <EnergyFlow />;
-      case 'energy-balance':
-        return <EnergyBalance />;
       case 'model-intercomparison':
         return <ModelIntercomparison />;
       default:
