@@ -10,6 +10,7 @@ import { useGroup, useEnergyBalanceGroupData } from 'hooks/groups';
 
 import { useRouter } from 'next/router';
 
+
 import Icon from 'components/icon';
 
 const dataFiles = [
@@ -34,6 +35,7 @@ const FUELTYPE = [
 ];
 
 const Indicator: FC = () => {
+
   const router = useRouter();
   const { query: { group: groupSlug } } = router;
 
@@ -46,6 +48,7 @@ const Indicator: FC = () => {
   });
 
   const { subgroups, categories, indicators } = useEnergyBalanceGroupData(data);
+
   const toggleDropdown = () => setDropdown(!dropdownOpen);
   return (
     <div>
@@ -57,6 +60,7 @@ const Indicator: FC = () => {
         <ul className="space-y-4">{dataFiles.map((d) => <li key={d} className="text-color1 underline">{d}</li>)}</ul>
       </div>
       <div>
+
         {subgroups?.map((subgroup) => (
           <button key={subgroup.slug} type="button" onClick={toggleDropdown} className="flex items-center py-5 font-bold">
             <Icon
@@ -72,6 +76,7 @@ const Indicator: FC = () => {
             </span>
           </button>
         ))}
+
         {dropdownOpen && <ul className="space-y-4">{FUELTYPE.map((d) => <li key={d} className="text-color1 underline"><a href="">{d}</a></li>)}</ul>}
       </div>
     </div>
