@@ -1,22 +1,23 @@
 import React, {
   FC,
-  useCallback,
-  useState,
 } from 'react';
-import cx from 'classnames';
 import {
   QueryClient,
   useQueryClient,
 } from 'react-query';
-import { dehydrate } from 'react-query/hydration';
 import { useRouter } from 'next/router';
+import { dehydrate } from 'react-query/hydration';
 import store from 'store/store';
+
+// hooks
+import { useIndicator } from 'hooks/indicators';
+import { useGroup } from 'hooks/groups';
 
 // components
 import Head from 'components/head';
 import Nav from 'components/nav';
-import Tooltip from 'components/tooltip';
-import Icon from 'components/icon';
+import SubgroupsDropdown from 'components/subgroups-dropdown';
+import EnergyBalanceSubgroupsDropdown from 'components/energy-balance-subgroups-dropdown';
 import PreFooter from 'components/pre-footer/component';
 
 // services
@@ -26,38 +27,30 @@ import { fetchIndicator } from 'services/indicators';
 import LayoutPage from 'layout';
 import Hero from 'layout/hero';
 import IndicatorData from 'layout/indicator-data';
+import EnergyBalanceIndicatorData from 'layout/energy-balance-indicator-data';
 import WidgetsGrid from 'layout/widgets-grid';
 
-// hooks
-import { useGroup } from 'hooks/groups';
-import { useIndicator } from 'hooks/indicators';
-
 // types
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 
-const GroupPage: FC = () => {
-  const [dropdownVisibility, setDropdownVisibility] = useState(false);
-  const queryClient = useQueryClient();
+interface GroupPageTypes {
+  groupSlug: string,
+}
+
+const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
   const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
+  const queryClient = useQueryClient();
+  const { query: { subgroup: subgroupQuery, locale } } = router;
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
 
-  const handleSubgroupChange = useCallback((url) => {
-    setDropdownVisibility(false);
-    router.push(url);
-  }, [router]);
-
   const { data: group } = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
-    placeholderData: {
-      subgroups: [],
-    },
+    placeholderData: [],
   },
   {
     locale: locale || 'en',
   });
-
   const {
     data,
   }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
@@ -80,78 +73,23 @@ const GroupPage: FC = () => {
   }, {
     locale: locale || 'en',
   });
-
-  const { default_visualization: defaultVisualization } = data;
-
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
-      <Head title={`${data?.name} analysis`} />
+      <Head title={`${groupSlug} analysis`} />
       <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
         <Nav className="mt-6" />
-        {group.subgroups.length > 1 ? (
-          <Tooltip
-            placement="bottom-start"
-            visible={dropdownVisibility}
-            interactive
-            onClickOutside={() => { setDropdownVisibility(false); }}
-            content={(
-              <ul
-                className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
-              >
-                {group.subgroups?.map(({
-                  slug: sgSlug, id, name, default_indicator,
-                }) => {
-                  const indSlug = default_indicator?.slug || group.subgroups[0].slug;
-                  return (
-                    <li
-                      key={id}
-                      className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-opacity-10"
-                    >
-                      <button
-                        type="button"
-                        className="flex w-full px-5 py-2 cursor-pointer"
-                        onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${indSlug}`)}
-                      >
-                        {name}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-          )}
-          >
-            <button
-              type="button"
-              className="flex items-center pt-3"
-              onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
-            >
-              <h1 className="text-5.5xl text-left">
-                {data?.subgroup?.name}
-              </h1>
-              <Icon
-                ariaLabel="collapse dropdown"
-                name="triangle_border"
-                size="3xlg"
-                className={cx('ml-3 border-2 text-white border-white border-opacity-30 hover:bg-color1 rounded-full p-4',
-                  { 'transform -rotate-180': false })}
-              />
-            </button>
-          </Tooltip>
-        ) : (
-          <h1 className="text-5.5xl text-left">
-            {data?.subgroup?.name}
-          </h1>
-        )}
+        {groupSlug !== 'energy-balance' && <SubgroupsDropdown group={group} data={data} />}
+        {groupSlug === 'energy-balance' && <EnergyBalanceSubgroupsDropdown group={group} data={data} />}
       </Hero>
       <div className="container pb-20 m-auto">
         <section className="z-10 max-w-6xl m-auto -mt-40">
-          <IndicatorData />
-          {!defaultVisualization?.includes('sankey') && <WidgetsGrid />}
+          {groupSlug !== 'energy-balance' && <IndicatorData />}
+          {groupSlug === 'energy-balance' && <EnergyBalanceIndicatorData />}
+          {groupSlug !== 'energy-flows' && <WidgetsGrid />}
         </section>
       </div>
 
       <PreFooter />
-
     </LayoutPage>
   );
 };
@@ -161,27 +99,25 @@ export const getServerSideProps = async ({ query }) => {
     group: groupSlug,
     subgroup,
   } = query;
-
   const subgroupSlug = subgroup?.[0];
   const indicatorSlug = subgroup?.[1];
-
-  if (!indicatorSlug) {
-    return ({
-      notFound: true,
-    });
-  }
 
   const { language: { current } } = store.getState();
   const queryClient = new QueryClient();
   // prefetch indicator
   await queryClient.prefetchQuery(
     ['indicator', indicatorSlug, current],
-    () => fetchIndicator(groupSlug, subgroupSlug, indicatorSlug, { locale: current }),
+    () => fetchIndicator(
+      groupSlug, subgroupSlug, indicatorSlug,
+      { locale: current },
+      { keepPreviousData: true, enabled: indicatorSlug },
+    ),
   );
 
   return ({
     props: ({
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+      groupSlug,
     }),
   });
 };
