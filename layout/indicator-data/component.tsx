@@ -30,7 +30,6 @@ import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import General from './general';
 import EnergyFlow from './energy-flow';
-import EnergyBalance from './energy-balance';
 import ModelIntercomparison from './model-intercomparison';
 import CompareDropdownContent from './compare-dropdown/component';
 
@@ -119,8 +118,6 @@ const IndicatorData: FC<Component> = ({
     switch (groupSlug) {
       case 'energy-flows':
         return <EnergyFlow />;
-      case 'energy-balance':
-        return <EnergyBalance />;
       case 'model-intercomparison':
         return <ModelIntercomparison />;
       default:
