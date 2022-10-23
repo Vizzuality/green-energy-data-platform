@@ -46,6 +46,7 @@ const Indicator: FC = () => {
   });
 
   const { subgroups, categories, indicators } = useEnergyBalanceGroupData(data);
+
   const toggleDropdown = () => setDropdown(!dropdownOpen);
   return (
     <div>
