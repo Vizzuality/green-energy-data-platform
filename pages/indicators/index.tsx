@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import Link from 'next/link';
 
 import { RootState } from 'store/store';
@@ -39,9 +39,6 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
     (state: RootState) => (state.search),
   );
 
-  useEffect(() => {
-    setFilteredGroups(groups);
-  }, [groups]);
   const searchResults = useSearch(groupsFiltered, searchValue);
 
   const handleGroups = (e, slug) => {
@@ -116,7 +113,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
 
 export const getServerSideProps = async ({ query }) => {
   const { locale } = query;
-  return fetchGroups('', { locale }).then(
+  return fetchGroups(null, { locale }).then(
     ({ data }) => ({ props: { groups: data } }),
   );
 };
