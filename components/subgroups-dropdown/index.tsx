@@ -1,11 +1,16 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, {
+  FC, useState, useCallback, useMemo,
+} from 'react';
 import cx from 'classnames';
+
+import { orderBy } from 'lodash';
 
 import { useRouter } from 'next/router';
 
 // components
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
+import { useSubgroup } from 'hooks/subgroups';
 
 type SubgroupTypes = {
   name: string,
@@ -30,6 +35,12 @@ export interface SubgroupsDropdownTypes {
 
 const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({ data, group }: SubgroupsDropdownTypes) => {
   const router = useRouter();
+  const subgroups = useMemo(() => orderBy(group?.subgroups, 'name'), [group]);
+  const subgroup = useMemo(() => subgroups.find((subg) => !!subg.default_indicator), [subgroups]);
+
+  const { data: subg } = useSubgroup(group.slug, subgroup, {
+    refetchOnWindowFocus: false,
+  });
 
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const handleSubgroupChange = useCallback((url) => {
@@ -37,60 +48,65 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({ data, group }: Subgroup
     router.push(url);
   }, [router]);
   return (
-  group?.subgroups?.length > 1 ? (
-    <Tooltip
-      placement="bottom-start"
-      visible={dropdownVisibility}
-      interactive
-      onClickOutside={() => { setDropdownVisibility(false); }}
-      content={(
-        <ul
-          className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
-        >
-          {group?.subgroups?.map(({
-            slug: sgSlug, id, name, default_indicator,
-          }) => {
-            const indSlug = default_indicator?.slug || group?.subgroups?.[0].slug || '';
-            return (
-              <li
-                key={id}
-                className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-opacity-10"
-              >
-                <button
-                  type="button"
-                  className="flex w-full px-5 py-2 cursor-pointer"
-                  onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${indSlug}`)}
+    subgroups?.length > 1 ? (
+      <Tooltip
+        placement="bottom-start"
+        visible={dropdownVisibility}
+        interactive
+        onClickOutside={() => { setDropdownVisibility(false); }}
+        content={(
+          <ul
+            className="z-10 flex flex-col justify-center w-full divide-y divide-white shadow-sm rounded-xl bg-gray3 divide-opacity-10"
+          >
+            {group?.subgroups?.map(({
+              slug: sgSlug, id, name, default_indicator,
+            }) => {
+              const indSlug = default_indicator?.slug || subg?.default_ind.slug;
+              if (!indSlug) {
+                console.warn(`Visualization rendering: Group (with slug) ${group?.slug} subgroup (with slug) ${sgSlug} has no default indicator data. Widget may not work correctly.`);
+                return null;
+              }
+
+              return (
+                <li
+                  key={id}
+                  className="text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 divide-opacity-10"
                 >
-                  {name}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+                  <button
+                    type="button"
+                    className="flex w-full px-5 py-2 cursor-pointer"
+                    onClick={() => handleSubgroupChange(`/${group.slug}/${sgSlug}/${indSlug}`)}
+                  >
+                    {name}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
     )}
-    >
-      <button
-        type="button"
-        className="flex items-center pt-3"
-        onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
       >
-        <h1 className="text-5.5xl text-left">
-          {data?.subgroup?.name}
-        </h1>
-        <Icon
-          ariaLabel="collapse dropdown"
-          name="triangle_border"
-          size="3xlg"
-          className={cx('ml-3 border-2 text-white border-white border-opacity-30 hover:bg-color1 rounded-full p-4',
-            { 'transform -rotate-180': false })}
-        />
-      </button>
-    </Tooltip>
-  ) : (
-    <h1 className="text-5.5xl text-left">
-      {data?.subgroup?.name}
-    </h1>
-  )
+        <button
+          type="button"
+          className="flex items-center pt-3"
+          onClick={() => { setDropdownVisibility(!dropdownVisibility); }}
+        >
+          <h1 className="text-5.5xl text-left">
+            {data?.subgroup?.name}
+          </h1>
+          <Icon
+            ariaLabel="collapse dropdown"
+            name="triangle_border"
+            size="3xlg"
+            className={cx('ml-3 border-2 text-white border-white border-opacity-30 hover:bg-color1 rounded-full p-4',
+              { 'transform -rotate-180': false })}
+          />
+        </button>
+      </Tooltip>
+    ) : (
+      <h1 className="text-5.5xl text-left">
+        {data?.subgroup?.name}
+      </h1>
+    )
   );
 };
 

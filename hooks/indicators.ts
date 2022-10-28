@@ -218,7 +218,6 @@ export function useDefaultIndicator(group) {
   if (!group) return null;
   const { default_subgroup: defSub, subgroups } = group;
   const defaultSubgroup = defSub || group?.subgroups[0].slug;
-
   const defaultSub = subgroups.find(({ slug }) => slug === defaultSubgroup);
   return defaultSub || subgroups[0];
 }
