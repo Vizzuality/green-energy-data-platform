@@ -36,6 +36,10 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({
         slug: subgroupSlug,
         default_indicator,
       }) => {
+        if (!default_indicator) {
+          console.warn(`Widget grid rendering: Group (with slug) ${groupSlug} subgroup (with slug) ${subgroupSlug} has no default indicator data. Widgets may not work correctly.`);
+          return null;
+        }
         const {
           id,
           name,
