@@ -73,6 +73,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
   }, {
     locale: locale || 'en',
   });
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${groupSlug} analysis`} />
@@ -85,7 +86,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
         <section className="z-10 max-w-6xl m-auto -mt-40">
           {groupSlug !== 'energy-balance' && <IndicatorData />}
           {groupSlug === 'energy-balance' && <EnergyBalanceIndicatorData />}
-          {groupSlug !== 'energy-flows' && <WidgetsGrid />}
+          {groupSlug !== 'energy-flows' && groupSlug !== 'energy-balance' && <WidgetsGrid />}
         </section>
       </div>
 

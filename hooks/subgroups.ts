@@ -11,14 +11,12 @@ export function useSubgroup(group_id, subgroup_id, queryConfig = {}) {
   } = useSelector(
     (state: RootState) => (state.language),
   );
-
   return useQuery(['fetch-subgroup', group_id, subgroup_id, current],
     () => fetchSubgroup(group_id, subgroup_id, { locale: current })
       .then((data) => data),
     {
       enabled: !!group_id && !!subgroup_id,
       ...queryConfig,
-      // keepPreviousData: true,
     });
 }
 

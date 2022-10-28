@@ -62,7 +62,7 @@ export const getCategoriesFromRecords = (
 
   if (visualization === 'line') {
     const cat = categories.filter((category) => {
-      if (categories.length === 1) {
+      if (categories.length >= 1) {
         return (
           category === 'Total'
         );
