@@ -40,7 +40,7 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
   );
 
   const VisualizationsOptions = useMemo(() => {
-    if (groupSlug === 'model-intercomparison') {
+    if (groupSlug === 'scenarios') {
       return ModelIntercomparisonVisualizationsOptions;
     }
     if (groupSlug === 'energy-balance') {

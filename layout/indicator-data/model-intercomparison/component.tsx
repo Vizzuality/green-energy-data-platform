@@ -189,7 +189,6 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     refetchOnWindowFocus: false,
     enabled: !!indicatorSlug && !!visualization,
   });
-
   const categories = useMemo(
     () => getCategoriesFromRecords(records, visualization), [records, visualization],
   );
@@ -224,7 +223,6 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   const mainColors = useColors(widgetDataKeys.length);
   const colorsOpacity = useOpacityColors(mainColors);
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
-
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.
@@ -496,7 +494,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           )}
           {categories.length > 0 && visualization !== 'bar' && (
             <Filters
-              indicator="model-intercomparison"
+              indicator="scenarios"
               visualization={visualization}
               categories={categories}
               hasSubcategories={!!subcategories.length || categories.length === 1}

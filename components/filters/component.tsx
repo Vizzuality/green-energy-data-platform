@@ -41,7 +41,7 @@ const Filters: FC<FiltersProps> = ({
   useEffect(() => {
     if (
       visualization === 'choropleth'
-      || (categories.length === 1 && indicator === 'model-intercomparison')
+      || (categories.length === 1 && indicator === 'scenarios')
     ) {
       const value = categories[0];
       setActive(value);

@@ -61,18 +61,7 @@ export const getCategoriesFromRecords = (
   }
 
   if (visualization === 'line') {
-    const cat = categories.filter((category) => {
-      if (categories.length >= 1) {
-        return (
-          category === 'Total'
-        );
-      }
-      if (categories.length > 1 && visualization === 'line') {
-        return category !== null;
-      }
-      return category;
-    });
-    const categoriesWithTotal = (cat.includes('total') || cat.includes('Total')) ? cat : ['Total', ...cat];
+    const categoriesWithTotal = (categories.includes('total') || categories.includes('Total')) ? categories : ['Total', ...categories];
     return categoriesWithTotal;
   }
 
@@ -131,11 +120,11 @@ export const filterRecords = (
 
     if (visualization === 'choropleth') {
       if (
-        (groupSlug === 'model-intercomparison'
+        (groupSlug === 'scenarios'
           && d.scenario.id === scenario
           && year === d.year
           && (unitId === unit || !unitId)) // some idicators has no unit
-        || (groupSlug !== 'model-intercomparison'
+        || (groupSlug !== 'scenarios'
           && year === d.year
           && (unitId === unit || !unitId)) // some idicators has no unit
       ) { return true; }
@@ -143,10 +132,10 @@ export const filterRecords = (
 
     if (visualization === 'bar') {
       if (
-        (groupSlug === 'model-intercomparison'
+        (groupSlug === 'scenarios'
           && d.scenario.id === scenario
           && (unitId === unit || !unitId))
-        || (groupSlug !== 'model-intercomparison'
+        || (groupSlug !== 'scenarios'
           && year === d.year
           && (unitId === unit || !unitId))
       ) { return true; }
@@ -300,7 +289,7 @@ export const getGroupedValues = (
         return {
           ...acc,
           ...rest,
-          Total: dataByYearWithTotals[year],
+          Total: dataByYearWithTotals[currentYear],
         };
       },
       {
@@ -324,7 +313,7 @@ export const getGroupedValues = (
     .value();
 
   const getBarData = () => {
-    if (groupSlug !== 'model-intercomparison') {
+    if (groupSlug !== 'scenarios') {
       data = flatten(
         chain(filteredData)
           .groupBy('region_id')
@@ -364,7 +353,7 @@ export const getGroupedValues = (
           : true));
     }
 
-    if (groupSlug === 'model-intercomparison') {
+    if (groupSlug === 'scenarios') {
       data = chain(records)
         .groupBy('category_1')
         .map((value) => flatten(
@@ -790,6 +779,7 @@ export const getModelIntercomparisonData = (
         .value(),
     );
     const dataByYear = groupBy(data, 'year');
+
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, ...rest } = next;
