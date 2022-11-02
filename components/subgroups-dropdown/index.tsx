@@ -71,7 +71,6 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
             ({
               slug: sgSlug, id, name, default_indicator,
             }) => {
-              // const indSlug = default_indicator?.slug || subg?.default_indicator.slug;
               const indSlug = getIndicatorSlug(default_indicator);
               if (!indSlug) {
                 console.warn(
