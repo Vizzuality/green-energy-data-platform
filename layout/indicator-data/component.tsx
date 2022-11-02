@@ -58,7 +58,6 @@ const IndicatorData: FC<Component> = ({
 
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
-
   const handleIndicatorChange = useCallback((url) => {
     setDropdownVisibility({
       ...dropdownVisibility,

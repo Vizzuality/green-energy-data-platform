@@ -12,6 +12,7 @@ import store from 'store/store';
 // hooks
 import { useIndicator } from 'hooks/indicators';
 import { useGroup } from 'hooks/groups';
+import { useSubgroup } from 'hooks/subgroups';
 
 // components
 import Head from 'components/head';
@@ -53,6 +54,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
   });
   const {
     data,
+    isLoading,
   }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
       records: [],
@@ -74,12 +76,16 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
     locale: locale || 'en',
   });
 
+  const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <LayoutPage className="text-white bg-gradient-gray1">
       <Head title={`${groupSlug} analysis`} />
       <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
         <Nav className="mt-6" />
-        {groupSlug !== 'energy-balance' && <SubgroupsDropdown group={group} data={data} />}
+        {groupSlug !== 'energy-balance' && <SubgroupsDropdown group={group} data={data} subgroup={subgroup} isLoading={isLoading} />}
         {groupSlug === 'energy-balance' && <EnergyBalanceSubgroupsDropdown group={group} data={data} />}
       </Hero>
       <div className="container pb-20 m-auto">
