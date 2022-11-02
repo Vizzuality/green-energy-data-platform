@@ -39,7 +39,6 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
   data,
   group,
   subgroup,
-  isLoading,
 }: SubgroupsDropdownTypes) => {
   const router = useRouter();
   const subgroups = useMemo(() => orderBy(group?.subgroups, 'name'), [group]);
@@ -58,7 +57,6 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
     }
     return subgroup?.indicators[0].slug;
   }, [subgroup]);
-  console.log(isLoading, data?.subgroup?.name);
   return subgroups?.length > 1 ? (
     <Tooltip
       placement="bottom-start"

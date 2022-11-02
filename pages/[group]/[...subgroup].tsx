@@ -54,7 +54,6 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
   });
   const {
     data,
-    isLoading,
   }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
     placeholderData: queryClient.getQueryData(`indicator-${indicatorSlug}`) || {
       records: [],
@@ -85,7 +84,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
       <Head title={`${groupSlug} analysis`} />
       <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
         <Nav className="mt-6" />
-        {groupSlug !== 'energy-balance' && <SubgroupsDropdown group={group} data={data} subgroup={subgroup} isLoading={isLoading} />}
+        {groupSlug !== 'energy-balance' && <SubgroupsDropdown group={group} data={data} subgroup={subgroup} />}
         {groupSlug === 'energy-balance' && <EnergyBalanceSubgroupsDropdown group={group} data={data} />}
       </Hero>
       <div className="container pb-20 m-auto">
