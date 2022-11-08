@@ -122,7 +122,7 @@ export function useIndicatorMetadata(
   } = query;
 
   const years = useMemo<{ label: number, value: number }[] | []>(
-    () => orderBy(data[visualization]?.year.map((y) => ({
+    () => orderBy(data[visualization]?.year?.map((y) => ({
       label: y,
       value: y,
     })), ['value'], ['desc']) || [], [data, visualization],
@@ -131,7 +131,7 @@ export function useIndicatorMetadata(
   const defaultYear = useMemo<{ label: number, value: number }>(() => years?.[0], [years]);
 
   const regions = useMemo<{ label: string, value: string }[] | []>(
-    () => data[visualization]?.regions.map((reg) => ({
+    () => data[visualization]?.regions?.map((reg) => ({
       label: reg.name,
       value: reg.id,
     })) || [], [data, visualization],
@@ -309,52 +309,48 @@ export function useSankeyData(
     ...restParams
   } = params;
 
-  const query = useQuery<SankeyData, Error>(['sankey-data', id, current, params],
-    () => fetchSankeyData(id, { locale: current, ...restParams }), {
-      placeholderData: {
-        nodes: [],
-        data: [],
-      },
-      ...queryOptions,
-    });
+  // const query = useQuery<SankeyData, Error>(['sankey-data', id, current, params],
+  //   () => fetchSankeyData(id, { locale: current, ...restParams }), {
+  //     placeholderData: {
+  //       nodes: [],
+  //       data: [],
+  //     },
+  //     ...queryOptions,
+  //   });
 
-  const {
-    // data,
-    isFetching, isFetched, isSuccess,
-  } = query;
+  // const {
+  //   // data,
+  //   isFetching, isFetched, isSuccess,
+  // } = query;
 
   // TO - DO - change indicator
   const { year, unit } = useSelector(
     (state: RootState) => (state.indicator),
   );
   const { query: { subgroup } } = useRouter();
+
+  // TO - DO - adapt code when the API gets ready
   const isEmissions = subgroup[1].includes('emission');
-  const data = isEmissions ? fakeData[0] : fakeData[1];
+  const orderedData = orderBy(fakeData[0].data, 'year', 'desc');
+  const data = year ? orderedData.filter((d) => d.year === year) : orderedData[0];
   const widgetData = useMemo<SankeyChartData>(() => {
-    const nodes = data?.nodes.map(({ name_en }) => ({ name: name_en }));
-    const links = flatten(data?.data.filter(
-      (y) => (isEmissions && y.year === year && y.units_en === unit)
-      || (y.units_en === unit && !isEmissions),
-    ) // TO DO - Oscar filters by year
-      .map((l) => l.links.map((i) => ({
-        ...i,
-        class: i.class_en,
-      }))));
+    const nodes = data?.nodes?.map(({ name_en }) => ({ name: name_en }));
+    const links = data?.links;
     return ({
       nodes,
       links,
     });
-  }, [data, unit, year]);
+  }, [data]);
 
   return useMemo(() => ({
-    isFetching,
-    isFetched,
-    isSuccess,
+    isFetching: false,
+    isFetched: true,
+    isSuccess: true,
     data: widgetData,
   }), [
-    isFetching,
-    isFetched,
-    isSuccess,
+    // isFetching,
+    // isFetched,
+    // isSuccess,
     widgetData,
   ]);
 }

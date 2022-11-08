@@ -240,7 +240,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const mainColors = useColors(widgetDataKeys.length);
   const colorsOpacity = useOpacityColors(mainColors);
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
-
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys, lang, records)[visualization],
     [visualization, widgetDataKeys, records, lang],

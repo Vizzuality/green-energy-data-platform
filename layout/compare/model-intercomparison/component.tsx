@@ -277,7 +277,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
         ...defaultCategory && { category: defaultCategory },
         ...((['line'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
         ...(['bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-        ...((['choropleth'].includes(currentVisualization) || groupSlug === 'model-intercomparison') && defaultScenario) && { scenario: currentScenario },
+        ...((['choropleth'].includes(currentVisualization) || groupSlug === 'scenarios') && defaultScenario) && { scenario: currentScenario },
       }));
     } else if (compareIndex === 2) {
       dispatch(setCompareFilters({
@@ -460,7 +460,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
           )}
           {categories.length > 0 && visualization !== 'bar' && (
             <Filters
-              indicator="model-intercomparison"
+              indicator="scenarios"
               visualization={visualization}
               categories={categories}
               hasSubcategories={!!subcategories.length || categories.length === 1}

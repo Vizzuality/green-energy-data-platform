@@ -117,12 +117,13 @@ const IndicatorData: FC<Component> = ({
     switch (groupSlug) {
       case 'energy-flows':
         return <EnergyFlow />;
-      case 'model-intercomparison':
+      case 'scenarios':
         return <ModelIntercomparison />;
       default:
         return <General />;
     }
   }, [groupSlug]);
+
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',
       { [className]: className })}

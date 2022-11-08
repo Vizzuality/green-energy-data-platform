@@ -32,8 +32,8 @@ const DemoSankeyNode: FC<SankeyNodeProps> = (props: SankeyNodeProps) => {
         fillOpacity="1"
       />
       {!!nodeHeight && nodeHeight > 15 && (
-        <foreignObject x={x === 50 ? 0 : payload.x} y={y} width="60" height="100%">
-          <div title={payload?.name} className="flex justify-end max-w-[55px] font-bold text-[10px] pr-2">
+        <foreignObject x={x === 150 ? 0 : payload.x - 50} y={y} width="100" height="100%">
+          <div title={payload?.name} className="flex justify-end max-w-[200px] font-bold text-[10px] pr-2">
             <p title={payload?.name} className="flex text-right text-ellipsis  drop-shadow-2xl shadow-gray-500 tracking-tighter leading-tight">{payload?.name}</p>
           </div>
         </foreignObject>

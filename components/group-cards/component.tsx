@@ -8,6 +8,7 @@ import { RootState } from 'store/store';
 
 import { useDefaultIndicator } from 'hooks/indicators';
 import i18next from 'i18next';
+import { useSubgroup } from 'hooks/subgroups';
 
 interface GroupProps {
   description: string,
@@ -59,8 +60,13 @@ const GroupCard: FC<GroupCardProps> = ({
   );
 
   const defaultData = useDefaultIndicator(group);
+
   const { default_indicator: defaultIndicator, slug: subgroupSlug } = defaultData;
-  const { slug: indicatorSlug } = defaultIndicator || slug;
+  const { data: subgroup } = useSubgroup(group.slug, subgroupSlug, {
+    refetchOnWindowFocus: false,
+  });
+
+  const indicatorSlug = defaultIndicator?.slug || subgroup?.indicators[0]?.slug;
 
   return (
     <div className={cx('w-full items-center', { [className]: className })}>

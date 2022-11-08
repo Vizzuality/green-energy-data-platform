@@ -351,7 +351,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
             {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet . Donec ullamcorper nulla non metus auctor fringilla.'}
           </p>
 
-          {groupSlug !== 'model-intercomparison' && groupSlug !== 'energy-flows' && (
+          {groupSlug !== 'scenarios' && groupSlug !== 'energy-flows' && (
             <General
               groupSlug={groupSlug}
               subgroupSlug={subgroupSlug}
@@ -359,7 +359,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
               compareIndex={compareIndex}
             />
           )}
-          {groupSlug === 'model-intercomparison' && (
+          {groupSlug === 'scenarios' && (
             <ModelIntercomparison
               groupSlug={groupSlug}
               subgroupSlug={subgroupSlug}
