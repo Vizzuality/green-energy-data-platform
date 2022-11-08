@@ -1,3 +1,4 @@
+import { useColors } from 'hooks/utils';
 import React, { FC, useState } from 'react';
 import { Layer } from 'recharts';
 
@@ -33,10 +34,13 @@ const Demo: FC<DemoProps> = ({
   linkWidth,
   payload,
   index,
+  length,
 }: DemoProps) => {
   const [opacity, setOpacity] = useState(0.3);
 
-  const currentColor = COLORS[payload?.class?.toLowerCase()];
+  // const currentColor = COLORS[payload?.class?.toLowerCase()];
+  const COLORS2 = useColors(length);
+  const currentColor = COLORS2[index];
   const gradientID = `linkGradient${index}`;
 
   // target link with losses to make gradient fade away
