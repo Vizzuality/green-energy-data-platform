@@ -204,12 +204,13 @@ const SankeyChart: FC<ComponentTypes> = ({
   ]);
 
   const parsedLinks = useMemo(() => uniqBy(data?.links, 'class'), [data]);
-  const LegendPayload = useMemo(
-    () => parsedLinks.map((item) => ({
-      label: item?.class?.charAt(0).toUpperCase() + item?.class?.slice(1),
-      color: COLORS[item?.class?.toLowerCase()] || COLORS['other energy'],
-    })), [parsedLinks],
-  );
+  const LegendPayload = [];
+  // useMemo(
+  //   () => parsedLinks?.map((item) => ({
+  //     label: item?.class?.charAt(0).toUpperCase() + item?.class?.slice(1),
+  //     color: COLORS[item?.class?.toLowerCase()] || COLORS['other energy'],
+  //   })), [parsedLinks],
+  // );
 
   const handleLinks = useCallback((label) => {
     if (!label) {
@@ -220,12 +221,6 @@ const SankeyChart: FC<ComponentTypes> = ({
         nodes: data.nodes,
       });
       setFilteredData(widgetData);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (data) {
-      setFilteredData(data);
     }
   }, [data]);
 
@@ -368,9 +363,10 @@ const SankeyChart: FC<ComponentTypes> = ({
           </div>
 
           <div className="flex h-full w-full min-h-1/2">
+            {/* hidden until API gets fixed
             {isFetchingRecords && (
               <LoadingSpinner />
-            )}
+            )} */}
             {isFetchedRecords
               && !data
               && !isFetchingRecords
@@ -381,28 +377,31 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <p>{i18next.t('dataNotFound')}</p>
                 </div>
               )}
-            {(!isFetchingRecords && isSuccessRecords) && (
-              <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-                <div className="w-full min-h-screen">
-                  <Sankey
-                    indicatorName={indicatorName}
-                    indicatorSlug={indicatorSlug}
-                    unit={currentUnit}
-                    widgetData={filteredData}
-                    widgetConfig={CONFIG}
-                  />
-                </div>
+            {/* hidden until API gets fixed
+            {(!isFetchingRecords && isSuccessRecords) && ( */}
+            {!!filteredData && (
+            <div className="flex flex-col h-full w-full min-h-1/2 py-8">
+              <div className="w-full min-h-screen">
+                <Sankey
+                  indicatorName={indicatorName}
+                  indicatorSlug={indicatorSlug}
+                  unit={currentUnit}
+                  widgetData={filteredData}
+                  widgetConfig={CONFIG}
+                />
               </div>
+            </div>
             )}
+            {/* )} */}
           </div>
         </section>
         <section className="flex flex-col justify-between ml-8 mb-4">
-          <Legend
+          {/* <Legend
             payload={LegendPayload}
             className="grid lg:grid-cols-4 sm:grid-cols-3"
             onClick={handleLinks}
             interactive
-          />
+          /> */}
         </section>
       </div>
     </div>

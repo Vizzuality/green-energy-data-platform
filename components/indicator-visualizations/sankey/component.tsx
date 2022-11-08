@@ -39,6 +39,7 @@ const Chart: FC<ChartProps> = ({
   const sankeyRef = useRef(null);
   const nodePadding = width > 500 ? 7 : 20;
 
+  const linksLength = widgetData?.links?.length;
   return (
     <ResponsiveContainer width="100%" height={height}>
       <Sankey
@@ -52,7 +53,7 @@ const Chart: FC<ChartProps> = ({
         nodePaddingRatio={0.8}
         linkCurvature={0.5}
         iterations={7}
-        link={<DemoSankeyLink />}
+        link={<DemoSankeyLink length={linksLength} />}
         className="overflow-visible"
         nodePadding={nodePadding}
         {...widgetConfig}

@@ -228,7 +228,7 @@ export const getGroupedValues = (
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
   const mapCategorySelected = category?.label === 'category_1' ? 'Total' : category?.value;
-  const filteredData = label === 'category_2'
+  const filteredData = label === 'category_2' && categorySelected !== 'Total'
     ? records.filter((record) => record.category_1 === categorySelected)
     : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
