@@ -122,20 +122,16 @@ export interface IndicatorMetadata {
 }
 
 type Node = Readonly<{
-  name: string,
+  name_en: string,
+  name_cn: string
 }>;
 
 type Link = Readonly<{
-  class: string,
+  class?: string,
   source: number,
   target: number,
   value: number,
 }>;
-
-export interface SankeyChartData {
-  nodes: Node[],
-  links: Link[]
-}
 
 // pages
 export interface ComparePageProps {
