@@ -14,15 +14,14 @@ import DemoSankeyNode from './demoSankeyNode';
 import DemoSankeyLink from './demoSankeyLink';
 
 // types
-import type { TooltipProps, ChartProps } from './types';
+import type { TooltipProps, SankeyProps } from './types';
 
-const Chart: FC<ChartProps> = ({
+const Chart: FC<SankeyProps> = ({
   indicatorName,
-  indicatorSlug,
   unit,
   widgetData,
   widgetConfig,
-}: ChartProps) => {
+}: SankeyProps) => {
   const width = 1220;
   const height = 800;
 

@@ -1,9 +1,10 @@
 type Node = Readonly<{
-  name?: string,
+  name_en: string,
+  name_cn: string,
 }>;
 
 type Link = Readonly<{
-  class: string;
+  class?: string;
   source: number;
   target: number;
   value: number;
