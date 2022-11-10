@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 
 import { useQueryClient } from 'react-query';
-import { uniqBy } from 'lodash';
 
 import {
   useSelector,
@@ -21,17 +20,15 @@ import { RootState } from 'store/store';
 import {
   useIndicator,
   useSankeyData,
-  useIndicatorMetadata,
+  useSankeyIndicatorMetadata,
 } from 'hooks/indicators';
 
 // components
 import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
-import Legend from 'components/legend';
 import LoadingSpinner from 'components/loading-spinner';
 import Sankey from 'components/indicator-visualizations/sankey';
 
-import { COLORS } from 'components/indicator-visualizations/sankey/constants';
 import CONFIG from 'components/indicator-visualizations/sankey/config';
 
 import { setFilters } from 'store/slices/indicator';
@@ -61,6 +58,7 @@ const SankeyChart: FC<ComponentTypes> = ({
   const {
     year, region, visualization, unit,
   } = filters;
+
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
 
@@ -93,7 +91,7 @@ const SankeyChart: FC<ComponentTypes> = ({
   const {
     data: indicatorData,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
-    placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
+    placeholderData: queryClient.getQueryData(['indicator', groupSlug, subgroupSlug, indicatorSlug]) || {
       categories: [],
       category_filters: {},
       data_source: null,
@@ -110,25 +108,11 @@ const SankeyChart: FC<ComponentTypes> = ({
     },
     keepPreviousData: true,
     refetchOnWindowFocus: false,
+    enable: !!indicatorSlug,
   }, {
     locale: locale || 'en',
   });
-
-  const { id: indicatorId, name: indicatorName } = indicatorData;
-  const {
-    data,
-    isFetching: isFetchingRecords,
-    isFetched: isFetchedRecords,
-    isSuccess: isSuccessRecords,
-  } = useSankeyData(indicatorId, filters, ({
-    placeholderData: queryClient.getQueryData(['sankey-data', indicatorId]) || {
-      nodes: [],
-      data: [],
-    },
-    refetchOnWindowFocus: false,
-  }));
-
-  const [filteredData, setFilteredData] = useState(data);
+  const { name: indicatorName } = indicatorData;
 
   const {
     years,
@@ -137,9 +121,9 @@ const SankeyChart: FC<ComponentTypes> = ({
     defaultUnit,
     regions,
     defaultRegion,
-  } = useIndicatorMetadata(indicatorSlug, visualization, filteredData, {}, {
+  } = useSankeyIndicatorMetadata(indicatorSlug, visualization, filters, {
     refetchOnWindowFocus: false,
-    enabled: filteredData && !!indicatorSlug,
+    enabled: !!indicatorSlug,
   });
 
   const currentYear = useMemo<number>(
@@ -183,6 +167,20 @@ const SankeyChart: FC<ComponentTypes> = ({
     [visualization, indicatorData],
   );
 
+  const {
+    data,
+    isFetching: isFetchingRecords,
+    isFetched: isFetchedRecords,
+    isSuccess: isSuccessRecords,
+  } = useSankeyData(indicatorSlug, filters, ({
+    placeholderData: queryClient.getQueryData(['sankey-data', indicatorSlug, currentYear]) || {
+      nodes: [],
+      data: [],
+    },
+    refetchOnWindowFocus: false,
+    enable: !!indicatorSlug && !!currentYear,
+  }));
+
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
@@ -203,26 +201,8 @@ const SankeyChart: FC<ComponentTypes> = ({
     indicatorSlug,
   ]);
 
-  const parsedLinks = useMemo(() => uniqBy(data?.links, 'class'), [data]);
-  const LegendPayload = [];
-  // useMemo(
-  //   () => parsedLinks?.map((item) => ({
-  //     label: item?.class?.charAt(0).toUpperCase() + item?.class?.slice(1),
-  //     color: COLORS[item?.class?.toLowerCase()] || COLORS['other energy'],
-  //   })), [parsedLinks],
-  // );
-
-  const handleLinks = useCallback((label) => {
-    if (!label) {
-      setFilteredData(data);
-    } else {
-      const widgetData = ({
-        links: data.links.filter((d) => d.class === label),
-        nodes: data.nodes,
-      });
-      setFilteredData(widgetData);
-    }
-  }, [data]);
+  const { nodes, links } = data;
+  if (!nodes || !links) return null;
 
   return (
     <div className={`flex ${className}`}>
@@ -363,10 +343,9 @@ const SankeyChart: FC<ComponentTypes> = ({
           </div>
 
           <div className="flex h-full w-full min-h-1/2">
-            {/* hidden until API gets fixed
             {isFetchingRecords && (
               <LoadingSpinner />
-            )} */}
+            )}
             {isFetchedRecords
               && !data
               && !isFetchingRecords
@@ -377,31 +356,21 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <p>{i18next.t('dataNotFound')}</p>
                 </div>
               )}
-            {/* hidden until API gets fixed
-            {(!isFetchingRecords && isSuccessRecords) && ( */}
-            {!!filteredData && (
+
+            {!isFetchingRecords && isSuccessRecords && (
             <div className="flex flex-col h-full w-full min-h-1/2 py-8">
               <div className="w-full min-h-screen">
                 <Sankey
                   indicatorName={indicatorName}
                   indicatorSlug={indicatorSlug}
                   unit={currentUnit}
-                  widgetData={filteredData}
+                  widgetData={data}
                   widgetConfig={CONFIG}
                 />
               </div>
             </div>
             )}
-            {/* )} */}
           </div>
-        </section>
-        <section className="flex flex-col justify-between ml-8 mb-4">
-          {/* <Legend
-            payload={LegendPayload}
-            className="grid lg:grid-cols-4 sm:grid-cols-3"
-            onClick={handleLinks}
-            interactive
-          /> */}
         </section>
       </div>
     </div>

@@ -5,13 +5,13 @@ import {
 
 import { useMemo } from 'react';
 
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 
 import { useSelector } from 'react-redux';
 import { RootState } from 'store/store';
 
 import {
-  orderBy, uniq, flatten,
+  orderBy, uniq,
 } from 'lodash';
 
 import {
@@ -39,12 +39,9 @@ import {
   IndicatorProps,
   IndicatorMetadata,
   Record,
-  SankeyChartData,
 } from 'types/data';
 
 import type { SankeyData } from 'components/indicator-visualizations/sankey/types';
-
-import fakeData from 'components/indicator-visualizations/sankey/fakeData.json';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
@@ -106,7 +103,7 @@ export function useIndicator(
 export function useIndicatorMetadata(
   id: string,
   visualization: string,
-  records: Record[] | SankeyChartData,
+  records: Record[] | SankeyData,
   params = {},
   queryOptions = {},
 ) {
@@ -214,6 +211,79 @@ export function useIndicatorMetadata(
   ]);
 }
 
+export function useSankeyIndicatorMetadata(
+  id: string,
+  visualization: string,
+  params = {},
+  queryOptions = {},
+) {
+  const query = useQuery<IndicatorMetadata, Error>(['indicator-metadata', id, visualization, params],
+    () => fetchIndicatorMetadata(id, {}, { ...params }), {
+      placeholderData: {},
+      ...queryOptions,
+    });
+
+  const {
+    data, isFetching, isFetched, isSuccess,
+  } = query;
+
+  const years = useMemo<{ label: number, value: number }[] | []>(
+    () => orderBy(data[visualization]?.year?.map((y) => ({
+      label: y,
+      value: y,
+    })), ['value'], ['desc']) || [], [data, visualization],
+  );
+
+  const defaultYear = useMemo<{ label: number, value: number }>(() => years?.[0], [years]);
+
+  const regions = useMemo<{ label: string, value: string }[] | []>(
+    () => data[visualization]?.regions?.map((reg) => ({
+      label: reg.name,
+      value: reg.id,
+    })) || [], [data, visualization],
+  );
+
+  const defaultRegion = useMemo<{ label: string, value: string }>(
+    () => regions.find(({ value }) => value === ID_CHINA || regions[0]),
+    [regions],
+  );
+
+  const units = useMemo<{ label: string, value: string }[]>(
+    () => data[visualization]?.units.map((u) => ({
+      label: u.name,
+      value: u.id,
+    })) || [], [data, visualization],
+  );
+
+  const defaultUnit = useMemo<{ label: string, value: string }>(
+    () => units?.[0], [units],
+  );
+
+  return useMemo(() => ({
+    isFetching,
+    isFetched,
+    isSuccess,
+    id,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    units,
+    defaultUnit,
+  }), [
+    isFetching,
+    isFetched,
+    isSuccess,
+    id,
+    years,
+    defaultYear,
+    regions,
+    defaultRegion,
+    units,
+    defaultUnit,
+  ]);
+}
+
 export function useDefaultIndicator(group) {
   if (!group) return null;
   const { default_subgroup: defSub, subgroups } = group;
@@ -309,32 +379,22 @@ export function useSankeyData(
     ...restParams
   } = params;
 
-  // const query = useQuery<SankeyData, Error>(['sankey-data', id, current, params],
-  //   () => fetchSankeyData(id, { locale: current, ...restParams }), {
-  //     placeholderData: {
-  //       nodes: [],
-  //       data: [],
-  //     },
-  //     ...queryOptions,
-  //   });
+  const query = useQuery<SankeyData, Error>(['sankey-data', id, current, params],
+    () => fetchSankeyData(id, { locale: current, ...restParams }), {
+      placeholderData: {
+        links: [],
+        nodes: [],
+      },
+      ...queryOptions,
+    });
 
-  // const {
-  //   // data,
-  //   isFetching, isFetched, isSuccess,
-  // } = query;
+  const {
+    data,
+    isFetching, isFetched, isSuccess,
+  } = query;
 
-  // TO - DO - change indicator
-  const { year, unit } = useSelector(
-    (state: RootState) => (state.indicator),
-  );
-  const { query: { subgroup } } = useRouter();
-
-  // TO - DO - adapt code when the API gets ready
-  const isEmissions = subgroup[1].includes('emission');
-  const orderedData = orderBy(fakeData[0].data, 'year', 'desc');
-  const data = year ? orderedData.filter((d) => d.year === year) : orderedData[0];
-  const widgetData = useMemo<SankeyChartData>(() => {
-    const nodes = data?.nodes?.map(({ name_en }) => ({ name: name_en }));
+  const widgetData = useMemo(() => {
+    const nodes = data?.nodes;
     const links = data?.links;
     return ({
       nodes,
@@ -343,14 +403,14 @@ export function useSankeyData(
   }, [data]);
 
   return useMemo(() => ({
-    isFetching: false,
-    isFetched: true,
-    isSuccess: true,
+    isFetching,
+    isFetched,
+    isSuccess,
     data: widgetData,
   }), [
-    // isFetching,
-    // isFetched,
-    // isSuccess,
+    isFetching,
+    isFetched,
+    isSuccess,
     widgetData,
   ]);
 }

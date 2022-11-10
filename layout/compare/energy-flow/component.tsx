@@ -21,6 +21,7 @@ import {
   useIndicator,
   useSankeyData,
   useIndicatorMetadata,
+  useSankeyIndicatorMetadata,
 } from 'hooks/indicators';
 
 // components
@@ -141,10 +142,11 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     defaultUnit,
     regions,
     defaultRegion,
-  } = useIndicatorMetadata(indicatorSlug, 'sankey', filteredData, {}, {
-    refetchOnWindowFocus: false,
-    enabled: filteredData && !!indicatorSlug,
-  });
+  } = useSankeyIndicatorMetadata(indicatorSlug, 'sankey', {},
+    {
+      refetchOnWindowFocus: false,
+      enabled: filteredData && !!indicatorSlug,
+    });
 
   const currentYear = useMemo<number>(
     () => {

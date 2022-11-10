@@ -1,7 +1,5 @@
 import { API } from 'lib/api';
 
-import fakeData from 'components/indicator-visualizations/sankey/fakeData.json';
-
 export const fetchIndicators = (
   group_id: string,
   subgroup_id: string,
@@ -83,7 +81,7 @@ export const fetchSankeyData = (
   },
   params,
 })
-  .then(({ data: { sankey } }) => sankey || fakeData);
+  .then(({ data: { sankey: { data } } }) => data[0]);
 
 export default {
   fetchIndicators,
