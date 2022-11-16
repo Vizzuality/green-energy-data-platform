@@ -201,7 +201,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   );
 
   const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(records), [records],
+    () => getSubcategoriesFromRecords(records, visualization), [records, visualization],
   );
 
   const widgetDataKeysLine = category?.label === 'category_1' ? categories : subcategories;

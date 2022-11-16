@@ -141,7 +141,9 @@ const Map = ({
         [bbox[0], bbox[1]],
         [bbox[2], bbox[3]],
       ],
+      padding: 50,
       ...options,
+
     });
 
     const newViewport = {
