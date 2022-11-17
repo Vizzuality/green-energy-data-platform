@@ -8,6 +8,7 @@ export type IndicatorFilters = Readonly<{
   year: number,
   region: string,
   unit: string,
+  uiCategory: CategoryObject,
   category: CategoryObject,
   scenario: string,
   visualization?: string

@@ -1,5 +1,5 @@
 import React, {
-  FC, useState, useEffect, useCallback, useMemo,
+  FC, useEffect, useCallback, useMemo,
 } from 'react';
 import cx from 'classnames';
 import i18next from 'i18next';
@@ -32,67 +32,49 @@ const Filters: FC<FiltersProps> = ({
 }: FiltersProps) => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
-  const { category: cat } = filters;
 
   const categorySelected = useMemo(
-    () => categories.find((c) => c === cat?.value), [cat, categories],
+    () => categories.find((c) => c === filters.category?.value),
+    [categories, filters.category?.value],
   );
-  const [active, setActive] = useState(categorySelected);
 
   useEffect(() => {
-    setActive(categorySelected);
-  }, [setActive, categorySelected]);
-
-  useEffect(() => {
-    if (!hasSubcategories) {
-      setActive(null);
-    }
-  }, [setActive, hasSubcategories]);
-
-  useEffect(() => {
-    if (
-      visualization === 'choropleth'
-      || (categories.length === 1 && indicator === 'scenarios')
-    ) {
+    if (categories.length === 1 && indicator === 'scenarios') {
       const value = categories[0];
-      setActive(value);
       dispatch(onClick({ category: { label: 'category_2', value } }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, onClick, visualization, categories.length]);
 
   const handleClick = (direction) => {
-    const index = categories.indexOf(active);
-    if (direction === 'up' && index > 0) {
+    const index = categories.indexOf(categorySelected);
+    if (hasSubcategories && direction === 'up' && index > 0) {
       dispatch(
         onClick({
           category: { label: 'category_2', value: categories[index - 1] },
+          uiCategory: { label: 'category_2', value: categories[index - 1] },
         }),
       );
-      return setActive(categories[index - 1]);
     }
-    if (direction === 'down' && index < categories.length - 1) {
+    if (hasSubcategories && direction === 'down' && index < categories.length - 1) {
       dispatch(
         onClick({
           category: { label: 'category_2', value: categories[index + 1] },
+          uiCategory: { label: 'category_2', value: categories[index + 1] },
         }),
       );
-      return setActive(categories[index + 1]);
     }
-    return setActive(categories[index]);
   };
 
   const handleCategories = useCallback(
     (value) => {
-      dispatch(onClick({ category: { label: 'category_2', value } }));
-      setActive(value);
+      dispatch(onClick({ category: { label: 'category_2', value }, uiCategory: { label: 'category_2', value } }));
     },
     [dispatch, onClick],
   );
 
   const handleRemoveCategory = () => {
-    dispatch(onClick({ category: { label: 'category_1' } }));
-    setActive('');
+    dispatch(onClick({ category: { label: 'category_1' }, uiCategory: { label: 'category_1' } }));
   };
 
   const categoriesHeight = categories.length * 50;
@@ -128,8 +110,8 @@ const Filters: FC<FiltersProps> = ({
               'flex justify-between items-center w-full mb-1.5 rounded-md text-left text-sm',
               {
                 'active:bg-color1 focus:bg-blue cursor-pointer': hasSubcategories,
-                'bg-color1 text-white clear:bg-white': active === category,
-                'bg-white': active !== category,
+                'bg-color1 text-white clear:bg-white': categorySelected === category,
+                'bg-white': categorySelected !== category,
               },
             )}
           >
@@ -142,10 +124,10 @@ const Filters: FC<FiltersProps> = ({
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories || categories.length === 1}
             >
-              <span className="flex-1 flex text-left pr-2">{category}</span>
+              <span className="flex flex-1 pr-2 text-left">{category}</span>
             </button>
-            {active === category && hasSubcategories && categories.length > 1 && (
-              <div className="h-full flex justify-center items-center border-l border-l-white py-3">
+            {categorySelected === category && hasSubcategories && categories.length > 1 && (
+              <div className="flex items-center justify-center h-full py-3 border-l border-l-white">
                 <Icon
                   ariaLabel="close"
                   name="close"
@@ -165,14 +147,18 @@ const Filters: FC<FiltersProps> = ({
             name="triangle_border"
             size="xlg"
             onClick={() => handleClick('down')}
-            className="cursor-pointer p-2 mr-3 border-gray1 border-2 border-opacity-30 rounded-full hover:bg-gray1 hover:bg-opacity-90 hover:text-white text-gray1"
+            className={cx('p-2 mr-3 border-2 rounded-full border-gray1 border-opacity-30 text-gray1', {
+              'cursor-pointer hover:bg-gray1 hover:bg-opacity-90 hover:text-white': hasSubcategories,
+            })}
           />
           <Icon
             ariaLabel="category-down"
             name="triangle_border"
             size="xlg"
             onClick={() => handleClick('up')}
-            className="cursor-pointer p-2 border-gray1 border-2 border-opacity-30 rounded-full transform rotate-180 hover:bg-gray1 hover:bg-opacity-90 hover:text-white"
+            className={cx('p-2 transform rotate-180 border-2 rounded-full border-gray1 border-opacity-30', {
+              'cursor-pointer hover:bg-gray1 hover:bg-opacity-90 hover:text-white': hasSubcategories,
+            })}
           />
         </div>
       )}

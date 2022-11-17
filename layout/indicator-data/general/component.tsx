@@ -67,6 +67,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+    uiCategory: { label: 'category_1', value: null },
     scenario: false,
   });
 
@@ -81,6 +82,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     unit,
     region,
     category,
+    uiCategory,
     scenario,
     visualization = 'choropleth',
   } = filters;
@@ -310,9 +312,17 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     [scenarios, scenario],
   ) || '';
   const selectedCategory = useMemo(() => {
-    if (category?.label === 'category_2' && category.value && categories.includes(category.value)) return category;
+    const hasSubcategories = subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie');
+    if (!hasSubcategories) return defaultCategory;
+    // Use the last selected filter
+    if (uiCategory.value !== category.value) {
+      return uiCategory;
+    }
+    if (category?.label === 'category_2' && category.value && categories.includes(category.value)) {
+      return category;
+    }
     return defaultCategory;
-  }, [category, categories, defaultCategory]);
+  }, [subcategories.length, visualization, category, uiCategory, categories, defaultCategory]);
 
   useEffect(() => {
     dispatch(
@@ -383,6 +393,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
 
   useEffect(() => {
     if (category?.label === 'category_1' && subcategories.length === 1) { setSubcategoriesTotals(LegendPayload); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, subcategories.length, setSubcategoriesTotals]);
 
   const singleValueLegendColor = useMemo(
