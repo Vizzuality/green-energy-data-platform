@@ -61,7 +61,7 @@ export const getCategoriesFromRecords = (
   }
 
   if (visualization === 'line') {
-    const categoriesWithTotal = (categories.includes('total') || categories.includes('Total')) ? categories : ['Total', ...categories];
+    const categoriesWithTotal = (categories.includes('total') || categories.includes('Total') || categories.length === 1) ? categories : ['Total', ...categories];
     return categoriesWithTotal;
   }
 
@@ -78,15 +78,30 @@ export const getCategoriesFromRecords = (
       return category || 'Total';
     });
   }
+  return categories;
 };
 
-export const getSubcategoriesFromRecords = (records: Record[]) => compact(
-  sortedUniq(
-      records
-        ?.map((d) => (d.category_2 === null ? 'Total' : d.category_2))
+export const getSubcategoriesFromRecords = (
+  records: Record[],
+  visualization?: string,
+) => {
+  let data;
+
+  if (visualization !== 'pie') {
+    data = records
+      ?.map((d) => (d.category_2 === null ? 'Total' : d.category_2));
+  } else {
+    data = records
+      ?.map((r) => (r.category_2))
+      ?.filter((d) => d.toLowerCase() !== 'total');
+  }
+  return compact(
+    sortedUniq(
+      data
         .sort(),
-  ),
-);
+    ),
+  );
+};
 
 export const filterRecords = (
   records: Record[],
@@ -286,10 +301,13 @@ export const getGroupedValues = (
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, visualizationTypes, ...rest } = next;
-        return {
+        return dataByYear[currentYear].length > 1 ? {
           ...acc,
           ...rest,
           Total: dataByYearWithTotals[currentYear],
+        } : {
+          ...acc,
+          ...rest,
         };
       },
       {

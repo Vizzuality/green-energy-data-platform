@@ -202,9 +202,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   );
 
   const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(records), [records],
+    () => getSubcategoriesFromRecords(records, visualization), [records, visualization],
   );
-
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
 
   const mainColors = useColors(widgetDataKeys.length);

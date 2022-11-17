@@ -33,10 +33,21 @@ const Filters: FC<FiltersProps> = ({
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
   const { category: cat } = filters;
+
   const categorySelected = useMemo(
     () => categories.find((c) => c === cat?.value), [cat, categories],
   );
   const [active, setActive] = useState(categorySelected);
+
+  useEffect(() => {
+    setActive(categorySelected);
+  }, [setActive, categorySelected]);
+
+  useEffect(() => {
+    if (!hasSubcategories) {
+      setActive(null);
+    }
+  }, [setActive, hasSubcategories]);
 
   useEffect(() => {
     if (
@@ -109,12 +120,14 @@ const Filters: FC<FiltersProps> = ({
           'max-h-36': !height,
         })}
       >
+
         {categories.map((category) => (
           <div
             key={category}
             className={cx(
-              'flex justify-between cursor-pointer items-center w-full mb-1.5 active:bg-color1 rounded-md focus:bg-blue text-left text-sm',
+              'flex justify-between items-center w-full mb-1.5 rounded-md text-left text-sm',
               {
+                'active:bg-color1 focus:bg-blue cursor-pointer': hasSubcategories,
                 'bg-color1 text-white clear:bg-white': active === category,
                 'bg-white': active !== category,
               },
