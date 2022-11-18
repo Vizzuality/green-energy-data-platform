@@ -12,4 +12,12 @@ module.exports = {
     // a non-locale prefixed path e.g. `/hello`
     defaultLocale: 'en',
   },
+  webpack(config) {
+    // eslint-disable-next-line no-param-reassign
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'mapbox-gl': 'maplibre-gl',
+    };
+    return config;
+  },
 };
