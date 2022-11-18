@@ -207,7 +207,6 @@ const Map = ({
             mapRef.current = _map.getMap();
           }
         }}
-        mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
         // CUSTOM PROPS FROM REACT MAPBOX API
         {...mapboxProps}
         mapStyle={MAP_STYLE}
