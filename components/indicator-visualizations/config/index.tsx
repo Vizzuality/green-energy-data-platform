@@ -89,11 +89,14 @@ const ChartConfig = (categories, language, data) => {
       return categories.map((category) => ({
         dataKey: category,
         strokeWidth: 2,
+        isAnimationActive: false,
+        dot: { strokeWidth: 4, r: 1 },
       }));
     }
     return ([{
       dataKey: !!categories[0] || KEY,
       strokeWidth: 2,
+      isAnimationActive: false,
     }]);
   };
 
@@ -154,7 +157,7 @@ const ChartConfig = (categories, language, data) => {
         interval: 0,
       },
       tooltip: {
-        isAnimationActive: false,
+        isAnimationActive: true,
         content: TooltipContent,
       },
     },

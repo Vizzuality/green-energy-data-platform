@@ -231,20 +231,21 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   );
 
   const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(records),
-    [records],
+    () => getSubcategoriesFromRecords(records, visualization),
+    [records, visualization],
   );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
-
   const mainColors = useColors(widgetDataKeys.length);
   const colorsOpacity = useOpacityColors(mainColors);
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
+  // +  const mainColorsKeys = widgetDataKeys.map((k, index) => ({ [k]: mainColors[index] }));
+  // +  const colorsOpacity = useOpacityColors(mainColorsKeys);
+  // +  const colors = category?.label === 'category_1' ? mainColorsKeys : colorsOpacity;
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys, lang, records)[visualization],
     [visualization, widgetDataKeys, records, lang],
   );
-
   const widgetData = useMemo(
     () => getGroupedValues(
       name,
@@ -256,6 +257,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     ),
     [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
+
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.
@@ -308,10 +310,9 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     [scenarios, scenario],
   ) || '';
   const selectedCategory = useMemo(() => {
-    if (category?.label === 'category_2' && category.value) {
-      return category;
-    } return defaultCategory;
-  }, [category, defaultCategory]);
+    if (category?.label === 'category_2' && category.value && categories.includes(category.value)) return category;
+    return defaultCategory;
+  }, [category, categories, defaultCategory]);
 
   useEffect(() => {
     dispatch(
@@ -346,15 +347,29 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const LegendPayload = useMemo(() => {
     let legendData;
     if (visualization === 'pie') {
-      legendData = widgetData;
+      if (category?.label === 'category_2' && subcategories.length > 1) {
+        legendData = subcategories;
+      } else legendData = widgetData;
     } else {
       legendData = category?.label === 'category_1' ? categories : subcategories;
     }
 
+    // return legendData.map((item) => {
+    //   const label = item.name || item;
+    // const color = colors.find((c) => Object.keys(c)[0] === label) || { red: 'red' };
     return legendData.map((item, index) => ({
       label: item.name || item,
       color: colors[index],
     }));
+    //  return legendData.map((item) => {
+    //    const label = item.name || item;
+    //    const color = colors.find((c) => Object.keys(c)[0] === label) || { red: 'red' };
+    //    return ({
+    //      label,
+    //      color: Object.values(color),
+    //    });
+    //  });
+    // });
   }, [colors, widgetData, categories, category, subcategories, visualization]);
 
   const DynamicChart = useMemo(() => {
@@ -375,7 +390,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       ?.color,
     [category, subcategoriesTotals],
   );
-
   const { data: user } = useMe();
 
   const hasDownloadPermissions = useMemo(
@@ -630,7 +644,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
               visualization={visualization}
               categories={categories}
               hasSubcategories={
-                !!subcategories.length || categories.length === 1
+                subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie')
               }
               className="mb-4 overflow-y-auto"
               onClick={setFilters}

@@ -27,6 +27,9 @@ export const useColors = (
 
 export const useOpacityColors = (colors) => colors.map((color) => chroma(color).luminance(0.5));
 
+// export const useOpacityColors = (colors) => colors
+// .map((color) => ({ [Object.keys(color)[0]]: chroma(Object.values(color)[0]).luminance(0.5) }));
+
 export default {
   useColors,
   useOpacityColors,

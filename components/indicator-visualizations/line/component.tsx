@@ -65,7 +65,6 @@ const Chart: FC<ChartProps> = ({
     height,
     ...rest
   } = widgetConfig;
-
   return (
     <ResponsiveContainer height={height || 400}>
       <LineChart {...rest} data={widgetData}>
@@ -74,7 +73,7 @@ const Chart: FC<ChartProps> = ({
         {xAxis && (<XAxis {...xAxis} />)}
         {yAxis && (<YAxis {...yAxis} tickFormatter={format('.3s')} />)}
         {lines && Object.keys(lines).map((line, index) => (
-          <Line key={line} {...lines[line]} stroke={color || colors[index]} />
+          <Line key={`${line}-${color || colors[index]}`} stroke={color || colors[index]} {...lines[line]} />
         ))}
         {tooltip && (<Tooltip {...tooltip} />)}
       </LineChart>
