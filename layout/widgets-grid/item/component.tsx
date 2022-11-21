@@ -148,6 +148,7 @@ const GridItem: FC<GridItemProps> = ({
   const newFilters = useMemo(() => ({
     visualization: defaultVisualization,
     category: { label: 'category_1' },
+    uiCategory: { label: 'category_1' },
     scenario: null,
     ...(defaultUnit && { unit: currentUnit }) || { unit: null },
     ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion }) || { region: null },
@@ -162,7 +163,7 @@ const GridItem: FC<GridItemProps> = ({
   );
 
   return (
-    <section key={indicatorId} className="h-48 w-full">
+    <section key={indicatorId} className="w-full h-48">
       {(isFetchingMeta || isFetchingRecords) && (
         <div className="flex items-center justify-center w-full h-full">
           <LoadingSpinner key={indicatorId} />

@@ -9,6 +9,7 @@ export type IndicatorCompareFilters = {
   region: string,
   unit: string,
   category: CategoryObject,
+  uiCategory: CategoryObject,
   scenario: string,
   visualization: string,
 };

@@ -8,8 +8,8 @@ export type IndicatorFilters = Readonly<{
   year: number,
   region: string,
   unit: string,
-  uiCategory: CategoryObject,
   category: CategoryObject,
+  uiCategory: CategoryObject,
   scenario: string,
   visualization?: string
 }>;
@@ -17,6 +17,7 @@ export type IndicatorFilters = Readonly<{
 const initialState = {
   year: null,
   category: { label: 'category_1' },
+  uiCategory: { label: 'category_1' },
 } as IndicatorFilters;
 
 export const indicatorSlice = createSlice({
