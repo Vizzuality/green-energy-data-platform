@@ -60,6 +60,8 @@ type ChartProps = {
 };
 
 const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
+/** Max bar chart items */
+const MAX_ITEMS = 30;
 
 const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
@@ -622,8 +624,9 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                   {visualization !== 'choropleth' && (
                     <div className="w-full h-96">
                       {
-                          (visualization === 'bar' && Array.isArray(widgetData) && widgetData.length > 20) ? (
+                          (visualization === 'bar' && Array.isArray(widgetData) && widgetData.length > MAX_ITEMS) ? (
                             <PaginatedDynamicChart
+                              maxItems={MAX_ITEMS}
                               widgetData={widgetData}
                             >
                               <DynamicChart

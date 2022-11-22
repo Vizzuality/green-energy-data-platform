@@ -11,24 +11,22 @@ type ChartProps = {
 
 type PaginatedDynamicChartProps = ChartProps & {
   /** Max page items */
-  maxItems?: number,
+  maxItems: number,
   /** Dynamic chart element */
   children: ReactElement<ChartProps>
 };
 
-/** Max bar chart items */
-const MAX_ITEMS = 30;
-const initialPagination = { from: 0, to: MAX_ITEMS };
-
 /** Sort the data by Total and paginate the chart elements by maxItems */
-const PaginatedDynamicChart = ({ widgetData, maxItems = MAX_ITEMS, children }
+const PaginatedDynamicChart = ({ widgetData, maxItems, children }
 : PaginatedDynamicChartProps) => {
+  const initialPagination = useMemo(() => ({ from: 0, to: maxItems }), [maxItems]);
+
   const [pagination, setPagination] = useState(initialPagination);
   const child = Children.only(children);
 
   useEffect(() => {
     setPagination(initialPagination);
-  }, [widgetData]);
+  }, [initialPagination, widgetData]);
 
   const sortedData = useMemo(() => {
     if (Array.isArray(widgetData)) {
