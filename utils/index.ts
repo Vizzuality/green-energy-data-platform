@@ -409,7 +409,8 @@ export const getGroupedValues = (
         [mapCategorySelected]: d.value,
       };
     });
-    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
+    const geometryTypes = dataWithGeometries
+      ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
 
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries
@@ -981,7 +982,8 @@ export const getGroupedValuesRelatedIndicators = (
       };
     });
 
-    const geometryTypes = dataWithGeometries?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
+    const geometryTypes = dataWithGeometries
+      ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
 
     const mapValues = dataWithGeometries
@@ -1187,6 +1189,7 @@ export const parseDataToDownload = (
 };
 
 export const validateEmail = (email) => {
+  // eslint-disable-next-line no-useless-escape
   const regularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regularExpression.test(String(email).toLowerCase());
 };
