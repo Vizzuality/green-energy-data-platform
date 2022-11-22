@@ -26,6 +26,7 @@ import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 import MapContainer from 'components/indicator-visualizations/choropleth';
 import LoadingSpinner from 'components/loading-spinner';
+import PaginatedDynamicChart from 'components/paginated-dynamic-chart/component';
 
 // utils
 import {
@@ -383,6 +384,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
 
   useEffect(() => {
     if (category?.label === 'category_1' && subcategories.length === 1) { setSubcategoriesTotals(LegendPayload); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, subcategories.length, setSubcategoriesTotals]);
 
   const singleValueLegendColor = useMemo(
@@ -619,12 +621,28 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                   )}
                   {visualization !== 'choropleth' && (
                     <div className="w-full h-96">
-                      <DynamicChart
-                        widgetData={widgetData}
-                        widgetConfig={widgetConfig}
-                        colors={colors}
-                        color={singleValueLegendColor}
-                      />
+                      {
+                          (visualization === 'bar' && Array.isArray(widgetData) && widgetData.length > 20) ? (
+                            <PaginatedDynamicChart
+                              widgetData={widgetData}
+                            >
+                              <DynamicChart
+                                widgetData={widgetData}
+                                widgetConfig={widgetConfig}
+                                colors={colors}
+                                color={singleValueLegendColor}
+                              />
+                            </PaginatedDynamicChart>
+                          )
+                            : (
+                              <DynamicChart
+                                widgetData={widgetData}
+                                widgetConfig={widgetConfig}
+                                colors={colors}
+                                color={singleValueLegendColor}
+                              />
+                            )
+                        }
                     </div>
                   )}
                   {visualization === 'choropleth' && (
