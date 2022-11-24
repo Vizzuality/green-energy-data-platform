@@ -26,6 +26,7 @@ import Legend from 'components/legend';
 import DataSource from 'components/data-source';
 import MapContainer from 'components/indicator-visualizations/choropleth';
 import LoadingSpinner from 'components/loading-spinner';
+import PaginatedDynamicChart from 'components/paginated-dynamic-chart/component';
 
 // utils
 import {
@@ -59,6 +60,8 @@ type ChartProps = {
 };
 
 const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
+/** Max bar chart items */
+const MAX_ITEMS = 30;
 
 const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
@@ -67,6 +70,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+    uiCategory: { label: 'category_1', value: null },
     scenario: false,
   });
 
@@ -81,6 +85,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     unit,
     region,
     category,
+    uiCategory,
     scenario,
     visualization = 'choropleth',
   } = filters;
@@ -310,9 +315,17 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     [scenarios, scenario],
   ) || '';
   const selectedCategory = useMemo(() => {
-    if (category?.label === 'category_2' && category.value && categories.includes(category.value)) return category;
+    const hasSubcategories = subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie');
+    if (!hasSubcategories) return defaultCategory;
+    // Use the last selected filter
+    if (uiCategory.value !== category.value) {
+      return uiCategory;
+    }
+    if (category?.label === 'category_2' && category.value && categories.includes(category.value)) {
+      return category;
+    }
     return defaultCategory;
-  }, [category, categories, defaultCategory]);
+  }, [subcategories.length, visualization, category, uiCategory, categories, defaultCategory]);
 
   useEffect(() => {
     dispatch(
@@ -383,6 +396,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
 
   useEffect(() => {
     if (category?.label === 'category_1' && subcategories.length === 1) { setSubcategoriesTotals(LegendPayload); }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, subcategories.length, setSubcategoriesTotals]);
 
   const singleValueLegendColor = useMemo(
@@ -619,12 +633,29 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                   )}
                   {visualization !== 'choropleth' && (
                     <div className="w-full h-96">
-                      <DynamicChart
-                        widgetData={widgetData}
-                        widgetConfig={widgetConfig}
-                        colors={colors}
-                        color={singleValueLegendColor}
-                      />
+                      {
+                          (visualization === 'bar' && Array.isArray(widgetData) && widgetData.length > MAX_ITEMS) ? (
+                            <PaginatedDynamicChart
+                              maxItems={MAX_ITEMS}
+                              widgetData={widgetData}
+                            >
+                              <DynamicChart
+                                widgetData={widgetData}
+                                widgetConfig={widgetConfig}
+                                colors={colors}
+                                color={singleValueLegendColor}
+                              />
+                            </PaginatedDynamicChart>
+                          )
+                            : (
+                              <DynamicChart
+                                widgetData={widgetData}
+                                widgetConfig={widgetConfig}
+                                colors={colors}
+                                color={singleValueLegendColor}
+                              />
+                            )
+                        }
                     </div>
                   )}
                   {visualization === 'choropleth' && (

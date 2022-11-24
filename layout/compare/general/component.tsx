@@ -77,6 +77,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+    uiCategory: { label: 'category_1', value: null },
     scenario: false,
   });
 
