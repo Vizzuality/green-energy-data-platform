@@ -560,11 +560,12 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
             className={`flex w-full h-full min-h-1/2 ${CLASS_DOM_DOWNLOAD_IMAGE}`}
           >
             {isFetchingRecords && <LoadingSpinner />}
-            {isFetchedRecords
+            {/* Records should not come empty, remove condition when possible */}
+            {(!records.length || (isFetchedRecords
               && !isFetchingRecords
               && !filteredRecords.length
               && !!visualization
-              && (!!region || !!year) && (
+              && (!!region || !!year))) && (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
                   <img
                     alt="No data"
