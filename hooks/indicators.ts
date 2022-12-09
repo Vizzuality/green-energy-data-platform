@@ -310,6 +310,7 @@ export function useIndicatorRecords(
 
   const { data: regions } = useRegions({}, {
     refetchOnWindowsFocus: false,
+    keepPreviousData: true,
     placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
@@ -340,7 +341,9 @@ export function useIndicatorRecords(
       groupId, subgroupId, indicatorId, { locale: current, ...filters },
     ),
     {
+      refetchOnWindowFocus: false,
       placeholderData: queryClient.getQueryData(['indicator-records', groupId, subgroupId, indicatorId, current, ...filterValueKeys]) || [],
+      keepPreviousData: true,
       ...queryOptions,
     });
 

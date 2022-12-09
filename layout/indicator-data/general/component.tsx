@@ -192,7 +192,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     indicatorSlug,
     filtersIndicator,
     {
-      refetchOnWindowFocus: false,
       enabled: !!visualization && (!!region || !!year),
     },
   );
@@ -559,10 +558,11 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
           <div
             className={`flex w-full h-full min-h-1/2 ${CLASS_DOM_DOWNLOAD_IMAGE}`}
           >
-            {isFetchingRecords && <LoadingSpinner />}
+            {(isFetchingRecords || !isFetchedRecords) && <LoadingSpinner />}
             {/* Records should not come empty, remove condition when possible */}
-            {(!records.length || (isFetchedRecords
-              && !isFetchingRecords
+            {((!records.length && !isSuccessRecords) || (!isFetchingRecords
+              && isFetchedRecords
+              && isSuccessRecords
               && !filteredRecords.length
               && !!visualization
               && (!!region || !!year))) && (
@@ -577,6 +577,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
             )}
             {!!filteredRecords.length
               && !isFetchingRecords
+              && isFetchedRecords
               && isSuccessRecords && (
                 <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                   {visualization !== 'choropleth' && units.length === 1 && (

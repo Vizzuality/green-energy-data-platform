@@ -9,14 +9,17 @@ import { setCompareFilters } from 'store/slices/indicator_compare';
 // components
 import Icon from 'components/icon';
 
-import { GeneralVisualizationsOptions, ModelIntercomparisonVisualizationsOptions, EnergyBalanceVisualizationsOptions } from './constants';
+import {
+  GeneralVisualizationsOptions,
+  EnergyBalanceVisualizationsOptions,
+} from './constants';
 
 export interface VisualizationsNavProps {
   groupSlug: string | string[];
-  visualizationTypes: string[],
+  visualizationTypes: string[];
   active: string;
-  mobile?: boolean,
-  compareIndex?: 1 | 2,
+  mobile?: boolean;
+  compareIndex?: 1 | 2;
   className?: string;
 }
 export const VisualizationsNav: FC<VisualizationsNavProps> = ({
@@ -36,7 +39,8 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
       } else {
         dispatch(setCompareFilters({ visualization: id }));
       }
-    }, [compareIndex, dispatch],
+    },
+    [compareIndex, dispatch],
   );
 
   const VisualizationsOptions = useMemo(() => {
@@ -54,17 +58,16 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
     <nav>
       <ul
         role="menu"
-        className={cx('flex border-b border-b-gray',
-          {
-            [className]: !!className,
-            'justify-between flex-grow': !dataFormat,
-          })}
+        className={cx('flex border-b border-b-gray', {
+          [className]: !!className,
+          'justify-between flex-grow': !dataFormat,
+        })}
       >
         {!mobile && (
-        <p className="pt-4 whitespace-nowrap">
-          {dataFormat ? i18next.t('dataFormat') : i18next.t('visualization')}
-          :
-        </p>
+          <p className="pt-4 whitespace-nowrap">
+            {dataFormat ? i18next.t('dataFormat') : i18next.t('visualization')}
+            :
+          </p>
         )}
 
         {VisualizationsOptions?.map(({
@@ -73,15 +76,22 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
           <li
             role="menuitem"
             key={id}
-            onClick={() => handleVisualization(id)}
-            onKeyPress={() => handleVisualization(id)}
-            className={cx('relative flex flex-col p-4 text-color1 cursor-pointer',
-              { 'font-bold text-opacity-100': active === slug || dataFormat },
-              { 'text-opacity-20': !visualizationTypes?.includes(id) && !dataFormat },
-              { 'pointer-events-none': VisualizationsOptions.length === 1 },
-              { 'border rounded border-color1': (active === id) && mobile })}
+            className={cx('relative flex flex-col p-4 text-color1', {
+              'cursor-pointer': visualizationTypes?.includes(id) && !dataFormat,
+              'font-bold text-opacity-100': active === slug || dataFormat,
+              'text-opacity-20':
+                !visualizationTypes?.includes(id) && !dataFormat,
+              'pointer-events-none': VisualizationsOptions.length === 1,
+              'border rounded border-color1': active === id && mobile,
+            })}
           >
-            <div className="flex items-center">
+            <button
+              type="button"
+              className="flex items-center"
+              onClick={() => handleVisualization(id)}
+              onKeyPress={() => handleVisualization(id)}
+              disabled={!visualizationTypes?.includes(id)}
+            >
               <Icon
                 ariaLabel={`${label}-visualization`}
                 name={icon}
@@ -89,15 +99,21 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
                 className="text-current"
               />
               {!mobile && (
-              <span className={cx('ml-3 hidden sm:block', { 'text-gray2': active === id })}>
+              <span
+                className={cx('ml-3 hidden sm:block', {
+                  'text-gray2': active === id,
+                })}
+              >
                 {i18next.t(label)}
               </span>
               )}
-            </div>
+            </button>
             {!mobile && (
-            <div className={cx(
-              { 'absolute left-4 right-4 bottom-0 rounded-2xl h-1 bg-current': active === id },
-            )}
+            <div
+              className={cx({
+                'absolute left-4 right-4 bottom-0 rounded-2xl h-1 bg-current':
+                    active === id,
+              })}
             />
             )}
           </li>
