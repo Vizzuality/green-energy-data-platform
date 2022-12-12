@@ -102,7 +102,6 @@ const IndicatorData: FC<Component> = ({
       group: null,
       subgroup: null,
     },
-    keepPreviousData: true,
     refetchOnWindowFocus: false,
   }, { locale: locale || 'en' });
 

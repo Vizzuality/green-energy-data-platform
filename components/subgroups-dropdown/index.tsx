@@ -51,6 +51,7 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
     },
     [router],
   );
+
   const getIndicatorSlug = useCallback((default_indicator) => {
     if (default_indicator && default_indicator.slug) {
       return default_indicator.slug;

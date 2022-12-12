@@ -126,7 +126,6 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
       group: null,
       subgroup: null,
     },
-    keepPreviousData: true,
     refetchOnWindowFocus: false,
   }, {
     locale: lang,

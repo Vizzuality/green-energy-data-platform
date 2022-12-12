@@ -42,6 +42,7 @@ import {
 } from 'types/data';
 
 import type { SankeyData } from 'components/indicator-visualizations/sankey/types';
+import { useRouter } from 'next/router';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
@@ -96,7 +97,6 @@ export function useIndicator(
         subgroup: null,
       },
       ...queryOptions,
-      ...params,
     });
 }
 

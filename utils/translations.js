@@ -106,6 +106,7 @@ export const resources = {
       dataFormat: 'Data format',
       CSVfiles: 'CSV files',
       downloadDataFiles: 'Download data files',
+      value: 'Value',
     },
   },
   cn: {
@@ -205,6 +206,7 @@ export const resources = {
       dataFormat: '数据格式',
       CSVfiles: 'CSV 文件',
       downloadDataFiles: '下载数据文件',
+      value: '数值',
     },
   },
 };

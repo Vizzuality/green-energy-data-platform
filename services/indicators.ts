@@ -26,6 +26,7 @@ export const fetchIndicator = (
   params,
 })
   .then(({ data }) => data);
+
 export const fetchIndicatorRecords = (
   group_id: string,
   subgroup_id: string,

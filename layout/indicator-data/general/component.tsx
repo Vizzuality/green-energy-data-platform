@@ -154,7 +154,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
         group: null,
         subgroup: null,
       },
-      keepPreviousData: true,
       refetchOnWindowFocus: false,
     },
     {

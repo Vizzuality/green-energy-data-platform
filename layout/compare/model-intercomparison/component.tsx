@@ -133,7 +133,6 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
       group: null,
       subgroup: null,
     },
-    keepPreviousData: true,
     refetchOnWindowFocus: false,
   }, { locale: lang });
 

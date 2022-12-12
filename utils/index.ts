@@ -393,6 +393,7 @@ export const getGroupedValues = (
     }
     return data;
   };
+
   const getChoroplethData = (): {
     layers: MapLayersProps;
     visualizationTypes: string[];
@@ -418,7 +419,7 @@ export const getGroupedValues = (
       .map((r) => r[mapCategorySelected]) as number[];
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
-    const colors = chroma.scale(['#e7b092', '#dd96ab']).colors(8);
+    const colors = chroma.scale(minValue < 0 ? ['#1B5183', '#C9E6E8', '#e7b092', '#dd96ab'] : ['#e7b092', '#dd96ab']).colors(8);
 
     const ITEMS = colors.map((d, index) => {
       let value = 0;
@@ -487,7 +488,7 @@ export const getGroupedValues = (
                   items: [
                     {
                       color: '#c9e6e8',
-                      value: Math.floor(minValue),
+                      value: 0,
                     },
                     {
                       color: '#b0d1da',
@@ -658,10 +659,28 @@ export const getGroupedValues = (
                     source: 'earthquakes',
                     filter: ['!', ['has', 'point_count']],
                     paint: {
-                      'circle-color': '#e7b092',
+                      'circle-color': [
+                        'case',
+                        ['<', ['get', categorySelected], 0],
+                        '#1B5183',
+                        ['all', ['==', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
+                        '#C9E6E8',
+                        ['all', ['>', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
+                        '#e7b092',
+                        '#e7b092',
+                      ],
                       'circle-stroke-width': 1.5,
                       'circle-stroke-opacity': 0.5,
-                      'circle-stroke-color': '#e7b092',
+                      'circle-stroke-color': [
+                        'case',
+                        ['<', ['get', categorySelected], 0],
+                        '#1B5183',
+                        ['all', ['==', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
+                        '#C9E6E8',
+                        ['all', ['>', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
+                        '#e7b092',
+                        '#e7b092',
+                      ],
                     },
                   },
                 ],
