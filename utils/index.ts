@@ -18,6 +18,8 @@ import resources from 'utils/translations';
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import ID_CHINA from 'utils/constants';
 
+import { theme } from 'tailwind.config';
+
 const numberFormat = ValueFormat('.2s');
 export const initializeLanguage = () => i18n.init({
   resources,
@@ -45,7 +47,9 @@ export const Filter = (arr: (string | number)[], param: number) => {
 export const getCategoriesFromRecords = (
   records: Record[],
   visualization: string,
+  lang?: string | string[],
 ) => {
+  const KEY = lang === 'cn' ? '全部的' : 'Total';
   const categories = visualization !== 'sankey'
     ? compact(
       sortedUniq(
@@ -61,7 +65,7 @@ export const getCategoriesFromRecords = (
   }
 
   if (visualization === 'line') {
-    const categoriesWithTotal = (categories.includes('total') || categories.includes('Total') || categories.length === 1) ? categories : ['Total', ...categories];
+    const categoriesWithTotal = (categories.includes('total') || categories.includes('Total') || categories.length === 1) ? categories : [KEY, ...categories];
     return categoriesWithTotal;
   }
 
@@ -393,6 +397,7 @@ export const getGroupedValues = (
     }
     return data;
   };
+
   const getChoroplethData = (): {
     layers: MapLayersProps;
     visualizationTypes: string[];
@@ -418,7 +423,7 @@ export const getGroupedValues = (
       .map((r) => r[mapCategorySelected]) as number[];
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
-    const colors = chroma.scale(['#e7b092', '#dd96ab']).colors(8);
+    const colors = chroma.scale(minValue < 0 ? ['#1B5183', '#C9E6E8', '#e7b092', '#dd96ab'] : ['#e7b092', '#dd96ab']).colors(8);
 
     const ITEMS = colors.map((d, index) => {
       let value = 0;
@@ -487,7 +492,7 @@ export const getGroupedValues = (
                   items: [
                     {
                       color: '#c9e6e8',
-                      value: Math.floor(minValue),
+                      value: 0,
                     },
                     {
                       color: '#b0d1da',
@@ -658,10 +663,28 @@ export const getGroupedValues = (
                     source: 'earthquakes',
                     filter: ['!', ['has', 'point_count']],
                     paint: {
-                      'circle-color': '#e7b092',
+                      'circle-color': [
+                        'case',
+                        ['<', ['get', categorySelected], 0],
+                        '#1B5183',
+                        ['all', ['==', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
+                        '#C9E6E8',
+                        ['all', ['>', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
+                        '#e7b092',
+                        '#e7b092',
+                      ],
                       'circle-stroke-width': 1.5,
                       'circle-stroke-opacity': 0.5,
-                      'circle-stroke-color': '#e7b092',
+                      'circle-stroke-color': [
+                        'case',
+                        ['<', ['get', categorySelected], 0],
+                        '#1B5183',
+                        ['all', ['==', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
+                        '#C9E6E8',
+                        ['all', ['>', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
+                        '#e7b092',
+                        '#e7b092',
+                      ],
                     },
                   },
                 ],
@@ -1192,4 +1215,36 @@ export const validateEmail = (email) => {
   // eslint-disable-next-line no-useless-escape
   const regularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regularExpression.test(String(email).toLowerCase());
+};
+
+/** Get color setting Total as color1 */
+export const getStrokeColor = (
+  index: number, label: string, colors: string[], color?: string,
+): string => {
+  if (color) return color;
+  if (label === 'Total' || label === '全部的') {
+    return chroma(theme.extend.colors.color1);
+  }
+  return colors[index];
+};
+
+export const getLegendData = (widgetData: unknown, visualization: string) => {
+  const data = widgetData as { [key: string]: string | number }[];
+  let legendData = [];
+  if (visualization === 'line') {
+    legendData = data.reduce((prev, curr) => {
+      const newKeys = prev;
+      Object.keys(curr).forEach((key) => {
+        if (!prev?.includes(key) && key !== 'year') {
+          newKeys.push(key);
+        }
+      });
+      return newKeys;
+    }, []);
+  }
+  if (visualization === 'pie') {
+    legendData = data.map(({ name }) => name);
+  }
+
+  return legendData.sort((a) => (a === 'Total' || a === '全部的' ? -1 : 0));
 };

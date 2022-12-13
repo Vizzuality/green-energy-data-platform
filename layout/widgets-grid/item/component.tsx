@@ -30,6 +30,7 @@ import { setRelatedFilters } from 'store/slices/indicator_related';
 
 import { RootState } from 'store/store';
 
+import { useRouter } from 'next/router';
 import CONFIG from '../config';
 
 interface GridItemProps {
@@ -58,7 +59,7 @@ const GridItem: FC<GridItemProps> = ({
   const queryClient = useQueryClient();
 
   const dispatch = useDispatch();
-
+  const { query: { locale } } = useRouter();
   const {
     defaultCategory,
     defaultYear,
@@ -68,7 +69,7 @@ const GridItem: FC<GridItemProps> = ({
     isFetching: isFetchingMeta,
     isFetched,
     isSuccess,
-  } = useIndicatorMetadata(indicatorId, defaultVisualization, [], {}, {
+  } = useIndicatorMetadata(indicatorId, defaultVisualization, [], { locale }, {
     refetchOnWindowFocus: false,
     enabled: !!indicatorId && !!defaultVisualization,
   });

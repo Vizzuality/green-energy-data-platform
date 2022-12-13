@@ -18,6 +18,7 @@ import {
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 
 import { format } from 'd3-format';
+import { getStrokeColor } from 'utils';
 
 type Object = {
   [key: string]: string | number | (() => void),
@@ -65,6 +66,7 @@ const Chart: FC<ChartProps> = ({
     height,
     ...rest
   } = widgetConfig;
+
   return (
     <ResponsiveContainer height={height || 400}>
       <LineChart {...rest} data={widgetData}>
@@ -73,7 +75,7 @@ const Chart: FC<ChartProps> = ({
         {xAxis && (<XAxis {...xAxis} />)}
         {yAxis && (<YAxis {...yAxis} tickFormatter={format('.3s')} />)}
         {lines && Object.keys(lines).map((line, index) => (
-          <Line key={`${line}-${color || colors[index]}`} stroke={color || colors[index]} {...lines[line]} />
+          <Line key={`${line}-${color || colors[index]}`} stroke={getStrokeColor(index, lines[index].dataKey, colors, color)} {...lines[line]} />
         ))}
         {tooltip && (<Tooltip {...tooltip} />)}
       </LineChart>

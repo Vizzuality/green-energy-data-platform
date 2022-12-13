@@ -91,7 +91,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
         <section className="z-10 max-w-6xl m-auto -mt-40">
           {groupSlug !== 'energy-balance' && <IndicatorData />}
           {groupSlug === 'energy-balance' && <EnergyBalanceIndicatorData />}
-          {groupSlug !== 'energy-flows' && groupSlug !== 'energy-balance' && <WidgetsGrid />}
+          {/* {groupSlug !== 'energy-flows' && groupSlug !== 'energy-balance' && <WidgetsGrid />} */}
         </section>
       </div>
 
@@ -104,19 +104,19 @@ export const getServerSideProps = async ({ query }) => {
   const {
     group: groupSlug,
     subgroup,
+    locale,
   } = query;
   const subgroupSlug = subgroup?.[0];
   const indicatorSlug = subgroup?.[1];
 
-  const { language: { current } } = store.getState();
   const queryClient = new QueryClient();
   // prefetch indicator
   await queryClient.prefetchQuery(
-    ['indicator', indicatorSlug, current],
+    ['indicator', indicatorSlug, locale],
     () => fetchIndicator(
-      groupSlug, subgroupSlug, indicatorSlug,
-      { locale: current },
-      { keepPreviousData: true, enabled: indicatorSlug },
+      groupSlug, subgroupSlug, 'indicatorSlug',
+      { locale },
+      { enabled: indicatorSlug },
     ),
   );
 

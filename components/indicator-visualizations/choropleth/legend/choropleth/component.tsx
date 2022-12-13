@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
-
 import cx from 'classnames';
+import { format } from 'd3-format';
 
 import type { LegendTypeChoroplethProps } from './types';
+
+const numberFormat = format(',.0f');
 
 export const LegendTypeChoropleth: FC<LegendTypeChoroplethProps> = ({
   className = '',
@@ -35,7 +37,7 @@ export const LegendTypeChoropleth: FC<LegendTypeChoroplethProps> = ({
             width: `${100 / items.length}%`,
           }}
         >
-          {value}
+          {numberFormat(value)}
         </li>
       ))}
     </ul>

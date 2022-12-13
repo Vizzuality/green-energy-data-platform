@@ -20,7 +20,6 @@ import { RootState } from 'store/store';
 import {
   useIndicator,
   useSankeyData,
-  useIndicatorMetadata,
   useSankeyIndicatorMetadata,
 } from 'hooks/indicators';
 
@@ -115,7 +114,6 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
       group: null,
       subgroup: null,
     },
-    keepPreviousData: true,
     refetchOnWindowFocus: false,
   }, { locale: locale || 'en' });
 

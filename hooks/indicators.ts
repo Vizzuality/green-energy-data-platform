@@ -96,7 +96,6 @@ export function useIndicator(
         subgroup: null,
       },
       ...queryOptions,
-      ...params,
     });
 }
 
@@ -104,7 +103,7 @@ export function useIndicatorMetadata(
   id: string,
   visualization: string,
   records: Record[] | SankeyData,
-  params = {},
+  params: { locale: string | string[] },
   queryOptions = {},
 ) {
   const queryClient = useQueryClient();
@@ -170,8 +169,8 @@ export function useIndicatorMetadata(
   const categories = useMemo(
     () => {
       if (visualization !== 'sankey') return [];
-      return getCategoriesFromRecords(records as Record[], visualization) || [];
-    }, [records, visualization],
+      return getCategoriesFromRecords(records as Record[], visualization, params.locale) || [];
+    }, [records, visualization, params.locale],
   );
 
   const defaultCategory = useMemo(() => ({ label: 'category_1' }), []);
@@ -310,6 +309,7 @@ export function useIndicatorRecords(
 
   const { data: regions } = useRegions({}, {
     refetchOnWindowsFocus: false,
+    keepPreviousData: true,
     placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
@@ -340,7 +340,9 @@ export function useIndicatorRecords(
       groupId, subgroupId, indicatorId, { locale: current, ...filters },
     ),
     {
+      refetchOnWindowFocus: false,
       placeholderData: queryClient.getQueryData(['indicator-records', groupId, subgroupId, indicatorId, current, ...filterValueKeys]) || [],
+      keepPreviousData: true,
       ...queryOptions,
     });
 

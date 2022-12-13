@@ -34,6 +34,8 @@ import {
   getGroupedValues,
   getCategoriesFromRecords,
   getSubcategoriesFromRecords,
+  getStrokeColor,
+  getLegendData,
 } from 'utils';
 
 import { RootState } from 'store/store';
@@ -61,7 +63,7 @@ type ChartProps = {
 
 const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 /** Max bar chart items */
-const MAX_ITEMS = 30;
+const MAX_ITEMS = 35;
 
 const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
@@ -154,7 +156,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
         group: null,
         subgroup: null,
       },
-      keepPreviousData: true,
       refetchOnWindowFocus: false,
     },
     {
@@ -192,7 +193,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     indicatorSlug,
     filtersIndicator,
     {
-      refetchOnWindowFocus: false,
       enabled: !!visualization && (!!region || !!year),
     },
   );
@@ -226,8 +226,8 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   } = indicatorData;
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization),
-    [records, visualization],
+    () => getCategoriesFromRecords(records, visualization, lang),
+    [records, visualization, lang],
   );
 
   const filteredRecords = useMemo(
@@ -240,17 +240,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     [records, visualization],
   );
 
-  const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
-  const mainColors = useColors(widgetDataKeys.length);
-  const colorsOpacity = useOpacityColors(mainColors);
-  const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
-  // +  const mainColorsKeys = widgetDataKeys.map((k, index) => ({ [k]: mainColors[index] }));
-  // +  const colorsOpacity = useOpacityColors(mainColorsKeys);
-  // +  const colors = category?.label === 'category_1' ? mainColorsKeys : colorsOpacity;
-  const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, lang, records)[visualization],
-    [visualization, widgetDataKeys, records, lang],
-  );
   const widgetData = useMemo(
     () => getGroupedValues(
       name,
@@ -261,6 +250,17 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       units,
     ),
     [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+  );
+  const widgetDataKeys = category?.label === 'category_1' ? categories : getLegendData(widgetData, visualization);
+  const mainColors = useColors(widgetDataKeys.length);
+  const colorsOpacity = useOpacityColors(mainColors);
+  const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
+  // +  const mainColorsKeys = widgetDataKeys.map((k, index) => ({ [k]: mainColors[index] }));
+  // +  const colorsOpacity = useOpacityColors(mainColorsKeys);
+  // +  const colors = category?.label === 'category_1' ? mainColorsKeys : colorsOpacity;
+  const widgetConfig = useMemo(
+    () => ChartConfig(widgetDataKeys, lang, records)[visualization],
+    [visualization, widgetDataKeys, records, lang],
   );
 
   const currentVisualization = useMemo<string>(
@@ -343,46 +343,35 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
           && defaultScenario && { scenario: currentScenario }),
       }),
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    dispatch,
     defaultYear,
-    currentYear,
-    currentRegion,
     defaultUnit,
-    currentUnit,
-    selectedCategory,
     defaultScenario,
-    currentScenario,
     currentVisualization,
     indicatorSlug,
   ]);
 
   const LegendPayload = useMemo(() => {
     let legendData;
-    if (visualization === 'pie') {
-      if (category?.label === 'category_2' && subcategories.length > 1) {
-        legendData = subcategories;
-      } else legendData = widgetData;
+    if (visualization === 'pie' && (category?.label === 'category_1' || subcategories.length <= 1)) {
+      legendData = widgetData;
+    } else if (category?.label === 'category_1') {
+      legendData = categories;
+    } else if (visualization === 'bar') {
+      legendData = subcategories;
     } else {
-      legendData = category?.label === 'category_1' ? categories : subcategories;
+      legendData = getLegendData(widgetData, visualization);
     }
 
-    // return legendData.map((item) => {
-    //   const label = item.name || item;
-    // const color = colors.find((c) => Object.keys(c)[0] === label) || { red: 'red' };
-    return legendData.map((item, index) => ({
-      label: item.name || item,
-      color: colors[index],
-    }));
-    //  return legendData.map((item) => {
-    //    const label = item.name || item;
-    //    const color = colors.find((c) => Object.keys(c)[0] === label) || { red: 'red' };
-    //    return ({
-    //      label,
-    //      color: Object.values(color),
-    //    });
-    //  });
-    // });
+    return legendData
+      .map((item, index) => {
+        const legendColor = visualization === 'line' ? getStrokeColor(index, item.name || item, colors) : colors[index];
+        return {
+          label: item.name || item,
+          color: legendColor,
+        };
+      });
   }, [colors, widgetData, categories, category, subcategories, visualization]);
 
   const DynamicChart = useMemo(() => {
@@ -559,12 +548,14 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
           <div
             className={`flex w-full h-full min-h-1/2 ${CLASS_DOM_DOWNLOAD_IMAGE}`}
           >
-            {isFetchingRecords && <LoadingSpinner />}
-            {isFetchedRecords
-              && !isFetchingRecords
+            {(isFetchingRecords || !isFetchedRecords) && <LoadingSpinner />}
+            {/* Records should not come empty, remove condition when possible */}
+            {((!records.length && !isSuccessRecords) || (!isFetchingRecords
+              && isFetchedRecords
+              && isSuccessRecords
               && !filteredRecords.length
               && !!visualization
-              && (!!region || !!year) && (
+              && (!!region || !!year))) && (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
                   <img
                     alt="No data"
@@ -576,6 +567,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
             )}
             {!!filteredRecords.length
               && !isFetchingRecords
+              && isFetchedRecords
               && isSuccessRecords && (
                 <div className="flex flex-col w-full h-full py-8 min-h-1/2">
                   {visualization !== 'choropleth' && units.length === 1 && (

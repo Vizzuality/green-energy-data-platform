@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
-
 import cx from 'classnames';
+import { format } from 'd3-format';
 
 import type { LegendTypeGradientProps } from './types';
+
+const numberFormat = format(',.0f');
 
 export const LegendTypeGradient: FC<LegendTypeGradientProps> = ({
   className = '',
@@ -25,7 +27,7 @@ export const LegendTypeGradient: FC<LegendTypeGradientProps> = ({
         .filter(({ value }) => !!value)
         .map(({ value }) => (
           <li key={`${value}`} className="flex-shrink-0 text-xs">
-            {value}
+            {numberFormat(value)}
           </li>
         ))}
     </ul>

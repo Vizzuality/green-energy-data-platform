@@ -81,7 +81,7 @@ const Chart: FC<ChartProps> = ({
           Object.keys(bars)
             .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={color || colors[index]} />
             )))}
-        {!!tooltip && (<Tooltip {...tooltip} />)}
+        {!!tooltip && (<Tooltip cursor={{ opacity: 0.5 }} {...tooltip} />)}
       </BarChart>
     </ResponsiveContainer>
   );
