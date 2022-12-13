@@ -42,6 +42,7 @@ import {
 } from 'types/data';
 
 import type { SankeyData } from 'components/indicator-visualizations/sankey/types';
+import { useRouter } from 'next/router';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
@@ -96,7 +97,6 @@ export function useIndicator(
         subgroup: null,
       },
       ...queryOptions,
-      ...params,
     });
 }
 
@@ -310,6 +310,7 @@ export function useIndicatorRecords(
 
   const { data: regions } = useRegions({}, {
     refetchOnWindowsFocus: false,
+    keepPreviousData: true,
     placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
   });
 
@@ -340,7 +341,9 @@ export function useIndicatorRecords(
       groupId, subgroupId, indicatorId, { locale: current, ...filters },
     ),
     {
+      refetchOnWindowFocus: false,
       placeholderData: queryClient.getQueryData(['indicator-records', groupId, subgroupId, indicatorId, current, ...filterValueKeys]) || [],
+      keepPreviousData: true,
       ...queryOptions,
     });
 

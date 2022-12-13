@@ -63,7 +63,7 @@ interface MapContainerProps {
   style?: Object;
 }
 
-const numberFormat = format('.2f');
+const numberFormat = format(',.2f');
 
 const MapContainer: FC<MapContainerProps> = ({
   layers,
@@ -374,7 +374,7 @@ const MapContainer: FC<MapContainerProps> = ({
                   <div className="flex flex-col">
                     <div className="flex">
                       <span className="mr-2 text-sm">
-                        {i18next.t('total')}
+                        {i18next.t('value')}
                         :
                       </span>
                       <span className="mr-2 text-sm">

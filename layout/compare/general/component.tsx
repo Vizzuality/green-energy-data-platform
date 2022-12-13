@@ -137,7 +137,6 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
       group: null,
       subgroup: null,
     },
-    keepPreviousData: true,
     refetchOnWindowFocus: false,
   }, { locale: locale || 'en' });
 

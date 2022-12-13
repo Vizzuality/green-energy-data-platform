@@ -13,11 +13,10 @@ export const useGroups = (queryConfig = {}, params = {}) => useQuery(['fetch-gro
     ...queryConfig,
   });
 
-export const useGroup = (id: string | string[], queryConfig = {}, params = {}) => useQuery(['fetch-group', id],
+export const useGroup = (id: string | string[], queryConfig = {}, params = {}) => useQuery(['fetch-group', id, params],
   () => fetchGroup(id, params)
     .then((data) => data),
   {
-    keepPreviousData: true,
     enabled: !!id,
     ...queryConfig,
   });

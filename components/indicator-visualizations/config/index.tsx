@@ -105,11 +105,13 @@ const ChartConfig = (categories, language, data) => {
       return categories.map((c) => ({
         dataKey: c,
         stackId: 'a',
+        maxBarSize: 30,
       }));
     }
     return ([{
       stackId: 'a',
       dataKey: KEY,
+      maxBarSize: 30,
     }]);
   };
 
