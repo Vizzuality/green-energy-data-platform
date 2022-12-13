@@ -124,7 +124,7 @@ const Filters: FC<FiltersProps> = ({
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories || categories.length === 1}
             >
-              {category.toLowerCase() === 'total' && <span className="flex flex-1 pr-2 text-left">Value</span>}
+              {category.toLowerCase() === 'total' && <span className="flex flex-1 pr-2 text-left">Total</span>}
               {category === '全部的' && <span className="flex flex-1 pr-2 text-left">数值</span>}
               {category.toLowerCase() !== 'total' && category !== '全部的' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
             </button>

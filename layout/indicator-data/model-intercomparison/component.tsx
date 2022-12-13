@@ -184,12 +184,12 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     defaultUnit,
     scenarios,
     defaultScenario,
-  } = useIndicatorMetadata(indicatorSlug, visualization, records, {}, {
+  } = useIndicatorMetadata(indicatorSlug, visualization, records, { locale: lang }, {
     refetchOnWindowFocus: false,
     enabled: !!indicatorSlug && !!visualization,
   });
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization), [records, visualization],
+    () => getCategoriesFromRecords(records, visualization, lang), [records, visualization, lang],
   );
 
   const [activeModels, setActiveModel] = useState(categories);

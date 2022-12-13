@@ -20,7 +20,6 @@ import { RootState } from 'store/store';
 import {
   useIndicator,
   useSankeyData,
-  useIndicatorMetadata,
   useSankeyIndicatorMetadata,
 } from 'hooks/indicators';
 

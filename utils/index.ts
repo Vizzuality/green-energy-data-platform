@@ -47,7 +47,9 @@ export const Filter = (arr: (string | number)[], param: number) => {
 export const getCategoriesFromRecords = (
   records: Record[],
   visualization: string,
+  lang?: string | string[],
 ) => {
+  const KEY = lang === 'cn' ? '全部的' : 'Total';
   const categories = visualization !== 'sankey'
     ? compact(
       sortedUniq(
@@ -63,7 +65,7 @@ export const getCategoriesFromRecords = (
   }
 
   if (visualization === 'line') {
-    const categoriesWithTotal = (categories.includes('total') || categories.includes('Total') || categories.length === 1) ? categories : ['Total', ...categories];
+    const categoriesWithTotal = (categories.includes('total') || categories.includes('Total') || categories.length === 1) ? categories : [KEY, ...categories];
     return categoriesWithTotal;
   }
 

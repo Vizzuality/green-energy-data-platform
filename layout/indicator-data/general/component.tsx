@@ -226,8 +226,8 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   } = indicatorData;
 
   const categories = useMemo(
-    () => getCategoriesFromRecords(records, visualization),
-    [records, visualization],
+    () => getCategoriesFromRecords(records, visualization, lang),
+    [records, visualization, lang],
   );
 
   const filteredRecords = useMemo(

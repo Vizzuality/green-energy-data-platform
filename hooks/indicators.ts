@@ -42,7 +42,6 @@ import {
 } from 'types/data';
 
 import type { SankeyData } from 'components/indicator-visualizations/sankey/types';
-import { useRouter } from 'next/router';
 
 export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
   const {
@@ -104,7 +103,7 @@ export function useIndicatorMetadata(
   id: string,
   visualization: string,
   records: Record[] | SankeyData,
-  params = {},
+  params: { locale: string | string[] },
   queryOptions = {},
 ) {
   const queryClient = useQueryClient();
@@ -170,8 +169,8 @@ export function useIndicatorMetadata(
   const categories = useMemo(
     () => {
       if (visualization !== 'sankey') return [];
-      return getCategoriesFromRecords(records as Record[], visualization) || [];
-    }, [records, visualization],
+      return getCategoriesFromRecords(records as Record[], visualization, params.locale) || [];
+    }, [records, visualization, params.locale],
   );
 
   const defaultCategory = useMemo(() => ({ label: 'category_1' }), []);
