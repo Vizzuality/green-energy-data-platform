@@ -18,6 +18,8 @@ import resources from 'utils/translations';
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import ID_CHINA from 'utils/constants';
 
+import { theme } from 'tailwind.config';
+
 const numberFormat = ValueFormat('.2s');
 export const initializeLanguage = () => i18n.init({
   resources,
@@ -1192,4 +1194,36 @@ export const validateEmail = (email) => {
   // eslint-disable-next-line no-useless-escape
   const regularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regularExpression.test(String(email).toLowerCase());
+};
+
+/** Get color setting Total as color1 */
+export const getStrokeColor = (
+  index: number, label: string, colors: string[], color?: string,
+): string => {
+  if (color) return color;
+  if (label === 'Total' || label === '全部的') {
+    return chroma(theme.extend.colors.color1);
+  }
+  return colors[index];
+};
+
+export const getLegendData = (widgetData: unknown, visualization: string) => {
+  const data = widgetData as { [key: string]: string | number }[];
+  let legendData = [];
+  if (visualization === 'line') {
+    legendData = data.reduce((prev, curr) => {
+      const newKeys = prev;
+      Object.keys(curr).forEach((key) => {
+        if (!prev?.includes(key) && key !== 'year') {
+          newKeys.push(key);
+        }
+      });
+      return newKeys;
+    }, []);
+  }
+  if (visualization === 'pie') {
+    legendData = data.map(({ name }) => name);
+  }
+
+  return legendData.sort((a) => (a === 'Total' || a === '全部的' ? -1 : 0));
 };
