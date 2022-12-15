@@ -57,7 +57,7 @@ const FiltersMI: FC<FiltersProps> = ({
           </p>
 
         </div>
-        {models.length > 1 && (
+        {models.length > 0 && (
         <label
           htmlFor="select-all"
           className="flex items-center text-left text-sm opacity-20 cursor-pointer"

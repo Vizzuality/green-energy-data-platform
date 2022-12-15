@@ -819,6 +819,7 @@ export const getModelIntercomparisonData = (
         ))
         .value(),
     );
+
     const dataByYear = groupBy(data, 'year');
 
     const dataByYearFilteredBycategoriesKeys = Object.keys(dataByYear).map(
@@ -877,7 +878,7 @@ export const getModelIntercomparisonData = (
           chain(value)
             .groupBy('category_2')
             .map((res, key) => ({
-              [key !== 'null' ? key : 'Total']: res.reduce(
+              [key]: res.reduce(
                 (previous, current) => (current.value || 0) + previous,
                 0,
               ),
@@ -889,6 +890,7 @@ export const getModelIntercomparisonData = (
         .value(),
     );
     const dataByYear = groupBy(groupedData, 'year');
+
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, ...rest } = next;
