@@ -91,7 +91,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     scenario,
     visualization = 'choropleth',
   } = filters;
-
   const router = useRouter();
   const {
     query: { group: groupSlug, subgroup: subgroupQuery, locale },
