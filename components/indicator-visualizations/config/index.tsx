@@ -238,7 +238,7 @@ const ChartConfig = (categories, language, data) => {
       margin: {
         top: 20, right: 0, left: 0, bottom: 100,
       },
-      width: 200,
+      width: 350,
       height: 250,
       cartesianGrid: {
         vertical: false,
