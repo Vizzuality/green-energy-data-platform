@@ -856,7 +856,6 @@ export const getModelIntercomparisonData = (
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, ...rest } = next;
-        console.log(dataByYearWithTotals[currentYear]);
 
         return {
           ...acc,
