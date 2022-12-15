@@ -301,7 +301,6 @@ export const getGroupedValues = (
       },
       {},
     );
-
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, visualizationTypes, ...rest } = next;
@@ -792,7 +791,7 @@ export const getModelIntercomparisonData = (
   const { category, visualization } = filters;
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
-  const filteredData = label === 'category_2'
+  const filteredData = label === 'category_2' && categorySelected !== 'Total'
     ? records.filter((record) => record.category_1 === categorySelected)
     : records;
   const filteredDataBars = activeModels.length
@@ -822,12 +821,47 @@ export const getModelIntercomparisonData = (
     );
     const dataByYear = groupBy(data, 'year');
 
+    const dataByYearFilteredBycategoriesKeys = Object.keys(dataByYear).map(
+      (year) => dataByYear[year].reduce(
+        (acc, next) => {
+          const { year: currentYear, visualizationTypes, ...rest } = next;
+          return {
+            ...acc,
+            [year]: Object.values(rest).reduce(
+              (a: number, value: number) => a + value,
+              0,
+            ),
+          };
+        },
+        {
+          year,
+        },
+      ),
+    );
+
+    const dataByYearWithTotals = dataByYearFilteredBycategoriesKeys.reduce(
+      (a, h) => {
+        const { year, ...rest } = h;
+        return {
+          ...a,
+          [year]: Object.values(rest).reduce(
+            (acc: number, value: number) => acc + value,
+            0,
+          ),
+        };
+      },
+      {},
+    );
+
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, ...rest } = next;
+        console.log(dataByYearWithTotals[currentYear]);
+
         return {
           ...acc,
           ...rest,
+          // Total: dataByYearWithTotals[currentYear],
         };
       },
       {

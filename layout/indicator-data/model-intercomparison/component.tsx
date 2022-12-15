@@ -68,6 +68,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     region: false,
     unit: false,
     category: { label: 'category_1', value: null },
+    uiCategory: { label: 'category_1', value: null },
     scenario: false,
   });
 
@@ -76,7 +77,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, unit, region, scenario, visualization, category,
+    year, unit, region, scenario, visualization, category, uiCategory,
   } = filters;
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
@@ -269,11 +270,25 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   const displayUnit = useMemo(() => units?.find(({ value }) => value === unit)?.label, [units, unit]) || '';
   const displayScenario = useMemo(() => scenarios?.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
 
+  const selectedCategory = useMemo(() => {
+    const hasSubcategories = subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie');
+    if (!hasSubcategories) return defaultCategory;
+    // Use the last selected filter
+    if (uiCategory.value !== category.value) {
+      return uiCategory;
+    }
+    if (category?.label === 'category_2' && category.value && categories.includes(category.value)) {
+      return category;
+    }
+    return defaultCategory;
+  }, [subcategories.length, visualization, category, uiCategory, categories, defaultCategory]);
+
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
       ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-      ...defaultCategory && { category: defaultCategory },
+      ...(selectedCategory && { category: selectedCategory }),
+
       ...((['line'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
       ...(['bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
       scenario: currentScenario || null,
@@ -291,6 +306,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     currentScenario,
     currentVisualization,
     indicatorSlug,
+    selectedCategory,
   ]);
 
   // const resetFilters = useCallback(() => {
@@ -329,6 +345,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
     [accessibleBy, user]);
+
   return (
     <section className={`flex flex-col  ${className}`}>
 
