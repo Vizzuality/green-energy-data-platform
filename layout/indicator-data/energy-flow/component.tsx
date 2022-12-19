@@ -4,6 +4,7 @@ import React, {
   useState,
   useMemo,
   useCallback,
+  useRef,
 } from 'react';
 
 import { useQueryClient } from 'react-query';
@@ -119,9 +120,9 @@ const SankeyChart: FC<ComponentTypes> = ({
     years,
     defaultYear,
     units,
-    defaultUnit,
     regions,
     defaultRegion,
+    isFetching: isFetchingRecordsMetadata,
   } = useSankeyIndicatorMetadata(indicatorSlug, visualization, filters, {
     refetchOnWindowFocus: false,
     enabled: !!indicatorSlug,
@@ -174,10 +175,12 @@ const SankeyChart: FC<ComponentTypes> = ({
 
   const { nodes, links, units: currentUnit } = data;
 
+  const load = useRef(1);
   useEffect(() => {
+    console.log('load', load.current);
+    load.current += 1;
     dispatch(setFilters({
       visualization: currentVisualization,
-      ...(currentUnit && { unit: currentUnit }) || { unit: null },
       category: null,
       region: currentRegion || null,
       year: currentYear || null,
@@ -185,13 +188,9 @@ const SankeyChart: FC<ComponentTypes> = ({
     }));
   }, [
     dispatch,
-    defaultYear,
     currentYear,
-    defaultUnit,
-    currentUnit,
     currentRegion,
     currentVisualization,
-    indicatorSlug,
   ]);
 
   if (!nodes || !links) return null;
@@ -335,7 +334,7 @@ const SankeyChart: FC<ComponentTypes> = ({
           </div>
 
           <div className="flex w-full h-full min-h-1/2">
-            {isFetchingRecords && (
+            {(isFetchingRecords || isFetchingRecordsMetadata) && (
               <LoadingSpinner />
             )}
             {isFetchedRecords
