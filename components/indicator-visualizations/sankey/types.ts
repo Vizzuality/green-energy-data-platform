@@ -43,4 +43,5 @@ type Link = Readonly<{
 export interface SankeyData {
   links: Link[],
   nodes: Node[],
+  units: string,
 }

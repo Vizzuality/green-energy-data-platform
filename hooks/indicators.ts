@@ -375,6 +375,7 @@ export function useSankeyData(
       placeholderData: {
         links: [],
         nodes: [],
+        units: '',
       },
       ...queryOptions,
     });
@@ -387,9 +388,11 @@ export function useSankeyData(
   const widgetData = useMemo(() => {
     const nodes = data?.nodes;
     const links = data?.links;
+    const units = data?.units;
     return ({
       nodes,
       links,
+      units,
     });
   }, [data]);
 
