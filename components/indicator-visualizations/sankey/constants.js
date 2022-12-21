@@ -23,4 +23,14 @@ export const COLORS = {
   'oil products': '#BCD9DE',
 };
 
+/** Sankey color palette
+ * https://vizzuality.atlassian.net/browse/GECHINA-352
+ */
+export const NODE_COLORS = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272'];
+
+/** Node min value to display label as name + value
+ * https://vizzuality.atlassian.net/browse/GECHINA-352
+ */
+export const BIG_NODE_VALUE = 200000;
+
 export default { COLORS };
