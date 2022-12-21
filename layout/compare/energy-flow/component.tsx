@@ -400,7 +400,6 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
             )}
           </div>
         </section>
-        { visualization !== 'sankey' && (
         <section className="flex flex-col justify-between mb-4">
           <Legend
             payload={LegendPayload}
@@ -408,7 +407,6 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
             onClick={handleLinks}
           />
         </section>
-        )}
       </div>
     </div>
   );
