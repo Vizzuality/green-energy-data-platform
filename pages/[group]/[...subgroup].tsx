@@ -42,6 +42,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { query: { subgroup: subgroupQuery, locale } } = router;
+  const lang = locale || 'en';
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
 
@@ -50,7 +51,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
     placeholderData: [],
   },
   {
-    locale: locale || 'en',
+    locale: lang,
   });
   const {
     data,
@@ -72,7 +73,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
     },
     refetchOnWindowFocus: false,
   }, {
-    locale: locale || 'en',
+    locale: lang,
   });
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {

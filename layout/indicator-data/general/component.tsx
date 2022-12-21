@@ -139,6 +139,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       placeholderData: queryClient.getQueryData([
         'indicator',
         indicatorSlug,
+        locale,
       ]) || {
         categories: [],
         category_filters: {},
@@ -161,25 +162,25 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       locale: lang,
     },
   );
-  const filterByRegion = useMemo(
-    () => visualization !== 'choropleth' && visualization !== 'bars',
-    [visualization],
-  );
+  // const filterByRegion = useMemo(
+  //   () => visualization !== 'choropleth' && visualization !== 'bars',
+  //   [visualization],
+  // );
 
-  const filtersIndicator = useMemo(() => {
-    if (filterByRegion) {
-      return {
-        visualization,
-        region,
-        unit,
-      };
-    }
-    return {
-      visualization,
-      unit,
-      year,
-    };
-  }, [visualization, region, unit, year, filterByRegion]);
+  // const filtersIndicator = useMemo(() => {
+  //   if (filterByRegion) {
+  //     return {
+  //       visualization,
+  //       region,
+  //       unit,
+  //     };
+  //   }
+  //   return {
+  //     visualization,
+  //     unit,
+  //     year,
+  //   };
+  // }, [visualization, region, unit, year, filterByRegion]);
 
   const {
     data: records,
@@ -190,7 +191,9 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     groupSlug,
     subgroupSlug,
     indicatorSlug,
-    filtersIndicator,
+    {
+      locale: lang,
+    },
     {
       enabled: !!visualization && (!!region || !!year),
     },

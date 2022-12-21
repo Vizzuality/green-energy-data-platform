@@ -83,7 +83,7 @@ const ChartConfig = (categories, language, data) => {
   const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China').map((d) => d.value), [data]);
   const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
   const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
-  const KEY = language === 'cn' ? '全部的' : 'Total';
+  const KEY = language === 'cn' ? '总量' : 'Total';
   const getLines = () => {
     if (categories.length) {
       return categories.map((category) => ({
@@ -238,7 +238,7 @@ const ChartConfig = (categories, language, data) => {
       margin: {
         top: 20, right: 0, left: 0, bottom: 100,
       },
-      width: 200,
+      width: 350,
       height: 250,
       cartesianGrid: {
         vertical: false,

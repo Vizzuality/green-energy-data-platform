@@ -91,17 +91,17 @@ const SigninPage: FC<SigninProps> = ({
         <Header />
         <div className="flex items-center justify-center flex-1 h-full max-w-6xl p-12 m-auto">
           <section className="flex flex-col justify-between flex-1 w-full h-full max-w-xs mx-20 text-white">
-            <h1 className="text-5.5xl font-bold pt-7 tracking-tight">Sign in</h1>
+            <h1 className="text-5.5xl font-bold pt-7 tracking-tight">{i18next.t('signin')}</h1>
             <img alt="Sign-up" src="/images/signup.svg" className="py-3" />
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
-            <p className="mt-10">Don&apos;t have an account?</p>
+            <p className="mt-10">{i18next.t('dontHaveAccount')}</p>
             <div className="py-4">
               <Link href={{ pathname: '/signup' }} passHref>
                 <a
                   href="/signup"
                   className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black py-0.5 px-4 text-center rounded-full focus:outline-none"
                 >
-                  Sign up
+                  {i18next.t('signup')}
                 </a>
               </Link>
             </div>
@@ -117,7 +117,8 @@ const SigninPage: FC<SigninProps> = ({
                 />
                 <div className="pb-6">
                   <label htmlFor="email" className="text-2.5xl font-bold">
-                    Your email is:
+                    {i18next.t('yourEmail')}
+                    :
                     <div className="relative mb-10 font-normal sm:mb-4">
                       <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
                       <input
@@ -137,7 +138,8 @@ const SigninPage: FC<SigninProps> = ({
                     </div>
                   </label>
                   <label htmlFor="password" className="text-2.5xl font-bold">
-                    Enter your password:
+                    {i18next.t('enterPassword')}
+                    :
                     <div className="relative mb-10 font-normal sm:mb-4">
                       <Icon ariaLabel="password-input" name="password" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
                       <input
@@ -165,7 +167,7 @@ const SigninPage: FC<SigninProps> = ({
                     className="w-full text-xs text-right underline"
                     onClick={toggleRecovery}
                   >
-                    I don&apos;t remember my password
+                    {i18next.t('dontRememberPassword')}
                   </button>
                 </div>
                 <Button
@@ -183,10 +185,10 @@ const SigninPage: FC<SigninProps> = ({
               <div className="inline-flex flex-col justify-between flex-1 w-full min-h-1/2">
                 <div className="relative justify-items-start">
                   <Icon ariaLabel="back-button" name="arrow" size="lg" className="absolute font-bold transform rotate-180 -left-10 top-3" onClick={toggleRecovery} />
-                  <p className="text-2.5xl font-bold py-1">Forgot password</p>
+                  <p className="text-2.5xl font-bold py-1">{i18next.t('forgotPassword')}</p>
                   <p>
-                    Please enter your registered email and we will help
-                    you to recover your password.
+                    {i18next.t('recoveryPasswordRequirements')}
+                    .
                   </p>
                   <div className="py-6">
                     <label htmlFor="email" className="text-2.5xl font-bold">
@@ -219,7 +221,7 @@ const SigninPage: FC<SigninProps> = ({
                   disabled={!isValid}
                   onClick={handleRequestResetLink}
                 >
-                  Request reset link
+                  {i18next.t('resetLink')}
                 </Button>
               </div>
             )}

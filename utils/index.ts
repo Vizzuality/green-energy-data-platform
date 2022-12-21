@@ -49,7 +49,7 @@ export const getCategoriesFromRecords = (
   visualization: string,
   lang?: string | string[],
 ) => {
-  const KEY = lang === 'cn' ? '全部的' : 'Total';
+  const KEY = lang === 'cn' ? '总量' : 'Total';
   const categories = visualization !== 'sankey'
     ? compact(
       sortedUniq(
@@ -73,7 +73,7 @@ export const getCategoriesFromRecords = (
     return categories.filter((category) => {
       if (categories.length > 1 && visualization !== 'line') {
         return (
-          category !== 'Total' && category !== '全部的' && category !== null
+          category !== 'Total' && category !== '总量' && category !== null
         );
       }
       if (categories.length > 1 && visualization === 'line') {
@@ -819,6 +819,7 @@ export const getModelIntercomparisonData = (
         ))
         .value(),
     );
+
     const dataByYear = groupBy(data, 'year');
 
     const dataByYearFilteredBycategoriesKeys = Object.keys(dataByYear).map(
@@ -856,7 +857,6 @@ export const getModelIntercomparisonData = (
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, ...rest } = next;
-        console.log(dataByYearWithTotals[currentYear]);
 
         return {
           ...acc,
@@ -878,7 +878,7 @@ export const getModelIntercomparisonData = (
           chain(value)
             .groupBy('category_2')
             .map((res, key) => ({
-              [key !== 'null' ? key : 'Total']: res.reduce(
+              [key]: res.reduce(
                 (previous, current) => (current.value || 0) + previous,
                 0,
               ),
@@ -890,6 +890,7 @@ export const getModelIntercomparisonData = (
         .value(),
     );
     const dataByYear = groupBy(groupedData, 'year');
+
     return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, ...rest } = next;
@@ -1256,7 +1257,7 @@ export const getStrokeColor = (
   index: number, label: string, colors: string[], color?: string,
 ): string => {
   if (color) return color;
-  if (label === 'Total' || label === '全部的') {
+  if (label === 'Total' || label === '总量') {
     return chroma(theme.extend.colors.color1);
   }
   return colors[index];
@@ -1280,5 +1281,5 @@ export const getLegendData = (widgetData: unknown, visualization: string) => {
     legendData = data.map(({ name }) => name);
   }
 
-  return legendData.sort((a) => (a === 'Total' || a === '全部的' ? -1 : 0));
+  return legendData.sort((a) => (a === 'Total' || a === '总量' ? -1 : 0));
 };

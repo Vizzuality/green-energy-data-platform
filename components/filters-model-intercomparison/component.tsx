@@ -57,10 +57,10 @@ const FiltersMI: FC<FiltersProps> = ({
           </p>
 
         </div>
-        {models.length > 1 && (
+        {models.length > 0 && (
         <label
           htmlFor="select-all"
-          className="flex items-center text-left text-sm opacity-20 cursor-pointer"
+          className="flex items-center text-sm text-left cursor-pointer opacity-20"
         >
           {areAllSelected ? i18next.t('history') : i18next.t('selectAll')}
           <input
@@ -78,7 +78,7 @@ const FiltersMI: FC<FiltersProps> = ({
       </div>
       <div
         ref={filtersRef}
-        className="flex flex-col overflow-y-auto items-start"
+        className="flex flex-col items-start overflow-y-auto"
       >
         {models.map((category) => (
           <div
@@ -89,13 +89,13 @@ const FiltersMI: FC<FiltersProps> = ({
             <button
               name={category}
               type="button"
-              className="py-3 pl-6 flex-1"
+              className="flex-1 py-3 pl-6"
               onClick={() => handleCategories(category)}
             >
-              <span className="flex-1 flex text-left pr-2">{category}</span>
+              <span className="flex flex-1 pr-2 text-left">{category}</span>
             </button>
             {(activeModels.includes(category) && models.length > 1) && (
-              <div className="h-full flex justify-center items-center border-l border-l-white py-3">
+              <div className="flex items-center justify-center h-full py-3 border-l border-l-white">
                 <Icon
                   ariaLabel="close"
                   name="close"

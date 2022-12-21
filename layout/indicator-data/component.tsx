@@ -55,7 +55,7 @@ const IndicatorData: FC<Component> = ({
 
   const router = useRouter();
   const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
-
+  const lang = locale || 'en';
   const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
   const handleIndicatorChange = useCallback((url) => {
@@ -63,7 +63,6 @@ const IndicatorData: FC<Component> = ({
       ...dropdownVisibility,
       indicator: false,
     });
-
     router.push(url);
   }, [router, dropdownVisibility]);
 
@@ -103,7 +102,7 @@ const IndicatorData: FC<Component> = ({
       subgroup: null,
     },
     refetchOnWindowFocus: false,
-  }, { locale: locale || 'en' });
+  }, { locale: lang });
 
   const {
     name,
@@ -131,7 +130,7 @@ const IndicatorData: FC<Component> = ({
       <VisualizationsNav
         active={visualization}
         groupSlug={groupSlug}
-        className="w-full lg:px-32 md:px-24 sm:px-16 px-8"
+        className="w-full px-8 lg:px-32 md:px-24 sm:px-16"
         visualizationTypes={visualizationTypesIndicator}
       />
       )}
@@ -156,7 +155,7 @@ const IndicatorData: FC<Component> = ({
                         <button
                           type="button"
                           className="flex items-center w-full py-2 last:border-b-0"
-                          onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${encodeURIComponent(slug)}`)}
+                          onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${encodeURIComponent(slug)}?locale=${lang}`)}
                         >
                           {groupName}
                         </button>

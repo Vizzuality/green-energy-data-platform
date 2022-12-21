@@ -14,10 +14,10 @@ const PreFooter: FC<PreFooterProps> = ({
 }: PreFooterProps) => {
   const { query: { locale } } = useRouter();
   const { data: groups } = useGroups({
+    locale: locale || 'en',
+  }, {
     refetchOnWindowFocus: false,
     placeholderData: [],
-  }, {
-    locale: locale || 'en',
   });
 
   const defaultGroupSlugs = useGroupsDefaults(groups);
@@ -27,7 +27,7 @@ const PreFooter: FC<PreFooterProps> = ({
       <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10 w-full relative mb-[4.65rem]',
         { [className]: className })}
       >
-        <div className="flex justify-center w-full xlg:text-xl lg:text-lg md:text-base p-12 space-x-2">
+        <div className="flex justify-center w-full p-12 space-x-2 xlg:text-xl lg:text-lg md:text-base">
           {defaultGroupSlugs?.map(({
             name, groupSlug, subgroupSlug, indicatorSlug,
           }) => (
