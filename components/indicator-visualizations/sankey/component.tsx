@@ -1,12 +1,7 @@
 import React, {
-  FC,
-  useRef,
+  FC, useEffect, useRef, useState,
 } from 'react';
-import {
-  ResponsiveContainer,
-  Tooltip,
-  Sankey,
-} from 'recharts';
+import { ResponsiveContainer, Tooltip, Sankey } from 'recharts';
 
 import CustomTooltip from './tooltip';
 
@@ -22,12 +17,25 @@ const Chart: FC<SankeyProps> = ({
   widgetData,
   widgetConfig,
 }: SankeyProps) => {
+  const [selectedNodes, setSelectedNodes] = useState<number[]>([]);
+  const [selectedLinks, setSelectedLinks] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (selectedLinks.length === 1) {
+      const link = widgetData.links[selectedLinks[0]];
+      if (link) {
+        setSelectedNodes([link.source, link.target]);
+      }
+    }
+    if (!selectedLinks.length) {
+      setSelectedNodes([]);
+    }
+  }, [selectedLinks, widgetData.links]);
+
   const width = 1220;
   const height = 800;
 
-  const TooltipContent: FC<TooltipProps> = ({
-    payload,
-  }: TooltipProps) => (
+  const TooltipContent: FC<TooltipProps> = ({ payload }: TooltipProps) => (
     <CustomTooltip
       unit={unit}
       indicatorName={indicatorName}
@@ -38,7 +46,6 @@ const Chart: FC<SankeyProps> = ({
   const sankeyRef = useRef(null);
   const nodePadding = width > 500 ? 7 : 20;
 
-  const linksLength = widgetData?.links?.length;
   return (
     <ResponsiveContainer width="100%" height={height}>
       <Sankey
@@ -47,14 +54,23 @@ const Chart: FC<SankeyProps> = ({
         height="100%"
         width="100%"
         node={(
-          <DemoSankeyNode />
+          <DemoSankeyNode
+            selectedNodes={selectedNodes}
+            setSelectedNodes={setSelectedNodes}
+            setSelectedLinks={setSelectedLinks}
+          />
         )}
-        nodePaddingRatio={0.8}
+        link={(
+          <DemoSankeyLink
+            selectedLinks={selectedLinks}
+            setSelectedLinks={setSelectedLinks}
+          />
+        )}
         linkCurvature={0.5}
-        iterations={7}
-        link={<DemoSankeyLink length={linksLength} />}
         className="overflow-visible"
+        iterations={6}
         nodePadding={nodePadding}
+        nodePaddingRatio={0.8}
         {...widgetConfig}
       >
         <Tooltip content={TooltipContent} />

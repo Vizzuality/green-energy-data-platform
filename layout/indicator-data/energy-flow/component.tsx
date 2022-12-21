@@ -4,7 +4,6 @@ import React, {
   useState,
   useMemo,
   useCallback,
-  useRef,
 } from 'react';
 
 import { useQueryClient } from 'react-query';
@@ -175,10 +174,7 @@ const SankeyChart: FC<ComponentTypes> = ({
 
   const { nodes, links, units: currentUnit } = data;
 
-  const load = useRef(1);
   useEffect(() => {
-    console.log('load', load.current);
-    load.current += 1;
     dispatch(setFilters({
       visualization: currentVisualization,
       category: null,
@@ -350,7 +346,7 @@ const SankeyChart: FC<ComponentTypes> = ({
 
             {!isFetchingRecords && isSuccessRecords && (
             <div className="flex flex-col w-full h-full py-8 min-h-1/2">
-              <div className="w-full min-h-screen">
+              <div className="w-full min-h-1/2">
                 <Sankey
                   indicatorName={indicatorName}
                   indicatorSlug={indicatorSlug}

@@ -235,6 +235,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
       const widgetData = ({
         links: data.links.filter((d) => d.class === label),
         nodes: data.nodes,
+        units: data.units,
       });
       setFilteredData(widgetData);
     }
@@ -248,12 +249,12 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
 
   return (
     <div className={`flex ${className}`}>
-      <div className="flex flex-col h-full w-full">
+      <div className="flex flex-col w-full h-full">
         <section className="flex flex-col w-full">
-          <div className="flex w-full justify-between">
+          <div className="flex justify-between w-full">
             {/* filters */}
 
-            <div className="flex items-center flex-wrap">
+            <div className="flex flex-wrap items-center">
               <span className="pr-2 mb-2">
                 {i18next.t('showing')}
                 :
@@ -370,7 +371,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
             </div>
           </div>
 
-          <div className="flex h-full w-full min-h-1/2">
+          <div className="flex w-full h-full min-h-1/2">
             {isFetchingRecords && (
             <LoadingSpinner />
             )}
@@ -379,14 +380,14 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
                 && !isFetchingRecords
                 && !!visualization && !!year
                 && (
-                  <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                    <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                  <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                    <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                     <p>Data not found</p>
                   </div>
                 )}
             {(!isFetchingRecords && isSuccessRecords) && (
-            <div className="flex flex-col h-full w-full min-h-1/2 py-4">
-              <div className="w-full min-h-screen">
+            <div className="flex flex-col w-full h-full py-4 min-h-1/2">
+              <div className="w-full h-full">
                 <Sankey
                   indicatorName={indicatorName}
                   indicatorSlug={indicatorSlug}
@@ -399,6 +400,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
             )}
           </div>
         </section>
+        { visualization !== 'sankey' && (
         <section className="flex flex-col justify-between mb-4">
           <Legend
             payload={LegendPayload}
@@ -406,6 +408,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
             onClick={handleLinks}
           />
         </section>
+        )}
       </div>
     </div>
   );

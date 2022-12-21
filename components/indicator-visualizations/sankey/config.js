@@ -1,9 +1,9 @@
 const CONFIG = {
   margin: {
-    left: 50,
-    right: 5,
+    left: 0,
+    right: 100,
     top: 50,
-    bottom: 20,
+    bottom: 0,
   },
   iterations: 0,
 };
