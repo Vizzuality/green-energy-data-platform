@@ -6,6 +6,8 @@ import { useGroup, useGroups } from 'hooks/groups';
 import { useIndicators } from 'hooks/indicators';
 import { useSubgroup } from 'hooks/subgroups';
 
+import { useRouter } from 'next/router';
+
 import Icon from 'components/icon';
 
 type CompareDropdownContentProps = Readonly <{
@@ -25,10 +27,13 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
     subgroupSlug: null,
   });
 
-  const { data: groups } = useGroups({
-    placeholderData: [],
-    refetchOnWindowFocus: false,
-  });
+  const { query: { locale } } = useRouter();
+  const lang = locale || 'en';
+  const { data: groups } = useGroups({ locale: lang },
+    {
+      placeholderData: [],
+      refetchOnWindowFocus: false,
+    });
 
   const { groupSlug, subgroupSlug } = currentSlugs;
 
@@ -37,12 +42,18 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
     refetchOnWindowFocus: false,
     enabled: !!groupSlug,
     keepPreviousData: true,
+  },
+  {
+    locale: lang,
   });
 
   const { data: indicators } = useIndicators(groupSlug, subgroupSlug, {
     placeholderData: [],
     refetchOnWindowFocus: false,
     enabled: !!subgroupSlug && !!groupSlug,
+  },
+  {
+    locale: lang,
   });
 
   const handleClick = (key, value, direction) => {
@@ -65,7 +76,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
   const groupsToCompare = useMemo(() => groups.filter(({ slug }) => slug !== 'energy-balance'), [groups]);
 
   return (
-    <div className="text-white justify-center flex flex-col w-full z-10 rounded-xl bg-gray3 shadow-sm first:pt-2 last:pb-2">
+    <div className="z-10 flex flex-col justify-center w-full text-white shadow-sm rounded-xl bg-gray3 first:pt-2 last:pb-2">
       {step === 1 && (
         <ul>
           {groupsToCompare?.map(({
@@ -73,7 +84,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
           }) => (
             <li key={id} className="px-7 first:rounded-t-xl last:rounded-b-xl">
               <button
-                className="w-full h-full py-2 flex items-center flex-1 border-b border-white border-opacity-10 last:border-0"
+                className="flex items-center flex-1 w-full h-full py-2 border-b border-white border-opacity-10 last:border-0"
                 type="button"
                 aria-haspopup="listbox"
                 aria-labelledby="exp_elem exp_button"
@@ -94,12 +105,12 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
       )}
 
       {step === 2 && (
-      <div className="px-7 py-2">
-        <div className="flex font-bold items-center">
+      <div className="py-2 px-7">
+        <div className="flex items-center font-bold">
           <Icon
             ariaLabel="arrow"
             name="arrow"
-            className="transform rotate-180 mr-2 cursor-pointer"
+            className="mr-2 transform rotate-180 cursor-pointer"
             onClick={() => setStep(1)}
           />
           <span className="text-left">{groupName}</span>
@@ -110,13 +121,13 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
           />
         </div>
 
-        <ul className="items-center px-9 max-w-sm">
+        <ul className="items-center max-w-sm px-9">
           {subgroups?.map(({
             name, id, slug,
           }) => (
             <li key={id} className="first:rounded-t-xl last:rounded-b-xl">
               <button
-                className="w-full h-full py-2 flex items-center flex-1"
+                className="flex items-center flex-1 w-full h-full py-2"
                 type="button"
                 aria-haspopup="listbox"
                 aria-labelledby="exp_elem exp_button"
@@ -132,17 +143,17 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
       )}
 
       {step === 3 && (
-      <div className="px-7 py-2">
-        <div className="flex font-bold items-center">
+      <div className="py-2 px-7">
+        <div className="flex items-center font-bold">
           <Icon
             ariaLabel="arrow"
             name="arrow"
-            className="transform rotate-180 mr-2 cursor-pointer"
+            className="mr-2 transform rotate-180 cursor-pointer"
             onClick={() => setStep(2)}
           />
           <span>{subgroupName}</span>
         </div>
-        <ul className="items-center px-9 max-w-sm">
+        <ul className="items-center max-w-sm px-9">
           {indicators?.map(({
             name, id, slug,
           }) => (
@@ -160,7 +171,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
               }}
               >
                 <a
-                  className="h-full py-2 flex items-center flex-1"
+                  className="flex items-center flex-1 h-full py-2"
                   href="/compare"
                 >
                   {name}

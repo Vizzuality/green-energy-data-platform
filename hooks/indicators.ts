@@ -43,15 +43,9 @@ import {
 
 import type { SankeyData } from 'components/indicator-visualizations/sankey/types';
 
-export function useIndicators(group_id, subgroup_id, queryConfig = {}) {
-  const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
-  const query = useQuery(['fetch-indicators', current],
-    () => fetchIndicators(group_id, subgroup_id, { locale: current }), { ...queryConfig });
-
+export function useIndicators(group_id, subgroup_id, queryConfig = {}, params = {}) {
+  const query = useQuery(['fetch-indicators', params],
+    () => fetchIndicators(group_id, subgroup_id, params), { ...queryConfig });
   const {
     data, status, error, isSuccess, isLoading,
   } = query;
@@ -298,19 +292,14 @@ export function useIndicatorRecords(
   params,
   queryOptions = {},
 ) {
-  const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
   const queryClient = useQueryClient();
 
-  const { visualization } = params;
+  const { visualization, locale } = params;
 
   const { data: regions } = useRegions({}, {
     refetchOnWindowsFocus: false,
     keepPreviousData: true,
-    placeholderData: queryClient.getQueryData(['fetch-regions', current]) || [],
+    placeholderData: queryClient.getQueryData(['fetch-regions', locale]) || [],
   });
 
   const {
@@ -335,19 +324,19 @@ export function useIndicatorRecords(
   const filters = (visualization === 'choropleth' || visualization === 'bars') ? restParamsYear : restParamsRegion;
 
   const filterValueKeys = Object.values(filters).filter((filter) => Boolean(filter));
-  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, current, ...filterValueKeys],
+  const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, locale, ...filterValueKeys],
     () => fetchIndicatorRecords(
-      groupId, subgroupId, indicatorId, { locale: current, ...filters },
+      groupId, subgroupId, indicatorId, { locale, ...filters },
     ),
     {
       refetchOnWindowFocus: false,
-      placeholderData: queryClient.getQueryData(['indicator-records', groupId, subgroupId, indicatorId, current, ...filterValueKeys]) || [],
+      placeholderData: queryClient.getQueryData(['indicator-records', groupId, subgroupId, indicatorId, locale, ...filterValueKeys]) || [],
       keepPreviousData: true,
       ...queryOptions,
     });
 
   const { data } = query;
-  const KEY = current === 'cn' ? '全部的' : 'Total';
+  const KEY = locale === 'cn' ? '总量' : 'Total';
 
   return useMemo(() => ({
     ...query,
