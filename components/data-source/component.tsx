@@ -59,7 +59,7 @@ const Card: FC<DataProps> = ({
               size="xlg"
               onClick={signInPage}
             >
-              Log in
+              {i18next.t('login')}
             </Button>
           </div>
         )
