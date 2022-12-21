@@ -122,7 +122,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const {
     data: indicatorData,
   } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
-    placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
+    placeholderData: queryClient.getQueryData(['indicator', indicatorSlug, locale]) || {
       categories: [],
       category_filters: {},
       data_source: null,
@@ -138,7 +138,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
       subgroup: null,
     },
     refetchOnWindowFocus: false,
-  }, { locale: locale || 'en' });
+  }, { locale: lang });
 
   const filterByRegion = useMemo(() => (visualization !== 'choropleth' && visualization !== 'bars'), [visualization]);
 

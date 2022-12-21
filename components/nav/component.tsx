@@ -15,13 +15,15 @@ export const Nav: React.FC<NavProps> = ({
 }: NavProps) => {
   const router = useRouter();
   const { group, locale } = router.query;
-  const { data: groups } = useGroups({
-    placeholderData: [],
-    refetchOnWindowFocus: false,
-  },
-  {
-    locale: locale || 'en',
-  });
+  const { data: groups } = useGroups(
+    {
+      locale: locale || 'en',
+    },
+    {
+      placeholderData: [],
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const defaultGroupSlugs = useGroupsDefaults(groups);
 

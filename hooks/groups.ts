@@ -7,7 +7,7 @@ import {
 import { fetchGroups, fetchGroup } from 'services/groups';
 import { GroupProps } from 'types/data';
 
-export const useGroups = (queryConfig = {}, params = {}) => useQuery(['fetch-groups', params],
+export const useGroups = (params = {}, queryConfig = {}) => useQuery(['fetch-groups', params],
   () => fetchGroups('', params).then(({ data }) => data), {
     // keepPreviousData: true
     ...queryConfig,
