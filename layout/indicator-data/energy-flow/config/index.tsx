@@ -58,7 +58,7 @@ const TooltipContent: FC<TooltipProps> = ({
 }: TooltipProps) => <Tooltip payload={payload} />;
 
 const ChartConfig = (categories, language) => {
-  const KEY = language === 'cn' ? '全部的' : 'Total';
+  const KEY = language === 'cn' ? '总量' : 'Total';
   const getLines = () => {
     if (categories.length) {
       return categories.map((category) => ({

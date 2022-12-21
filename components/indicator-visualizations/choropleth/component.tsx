@@ -305,7 +305,7 @@ const MapContainer: FC<MapContainerProps> = ({
                       <span className="mr-4 text-sm first-letter:uppercase">
                         {t}
                       </span>
-                      {t === 'Total' || t === 'total' ? (
+                      {t.toLowerCase() === 'total' ? (
                         <span className="text-sm">
                           {numberFormat(tooltipInfo[t])}
                         </span>

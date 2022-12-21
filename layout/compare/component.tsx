@@ -61,12 +61,13 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const router = useRouter();
   const { query } = router;
-  const { locale } = query;
+  const lang = query.locale || 'en';
 
-  const { data: groups } = useGroups({
-    placeholderData: [],
-    refetchOnWindowFocus: false,
-  });
+  const { data: groups } = useGroups({ locale: lang },
+    {
+      placeholderData: [],
+      refetchOnWindowFocus: false,
+    });
 
   const defaultGroupSlugs = useGroupsDefaults(groups);
 
@@ -150,7 +151,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
     },
     refetchOnWindowFocus: false,
   },
-  { locale: locale || 'en' });
+  { locale: lang });
 
   const {
     name,
@@ -164,7 +165,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
       name: null,
       subgroups: [],
     },
-  });
+  }, { locale: lang });
 
   const { name: groupName } = group;
 

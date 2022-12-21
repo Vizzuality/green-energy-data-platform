@@ -507,7 +507,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
             {(!!filteredRecords.length && !isFetchingRecords && isSuccessRecords) && (
               <div className="flex flex-col w-full h-full py-4 min-h-1/2">
                 <div className={cx('w-full', {
-                  'flex flex-wrap': visualization === 'bar',
+                  'flex flex-wrap justify-between': visualization === 'bar',
                   'h-96': visualization !== 'bar',
                 })}
                 >
@@ -520,7 +520,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
                   )}
                   {visualization === 'bar' && widgetData.map(
                     (widget) => (
-                      <div key={widget.model} className="mr-2">
+                      <div key={widget.model}>
                         <span className="flex justify-center w-full text-sm tracking-tight opacity-50">{widget.model}</span>
                         <Bar
                           widgetData={widget.data}
