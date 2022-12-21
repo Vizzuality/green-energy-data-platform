@@ -56,7 +56,7 @@ const SankeyChart: FC<ComponentTypes> = ({
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
   const {
-    year, region, visualization, unit,
+    year, region, visualization,
   } = filters;
 
   const router = useRouter();
@@ -112,15 +112,16 @@ const SankeyChart: FC<ComponentTypes> = ({
   }, {
     locale: locale || 'en',
   });
+
   const { name: indicatorName } = indicatorData;
 
   const {
     years,
     defaultYear,
     units,
-    defaultUnit,
     regions,
     defaultRegion,
+    isFetching: isFetchingRecordsMetadata,
   } = useSankeyIndicatorMetadata(indicatorSlug, visualization, filters, {
     refetchOnWindowFocus: false,
     enabled: !!indicatorSlug,
@@ -135,15 +136,6 @@ const SankeyChart: FC<ComponentTypes> = ({
     },
     [year, years, defaultYear],
   );
-  const currentUnit = useMemo<string>(
-    () => {
-      if (units.find(({ label }) => label === unit)) {
-        return unit;
-      }
-      return defaultUnit?.label;
-    },
-    [unit, units, defaultUnit],
-  );
 
   const currentRegion = useMemo<string>(
     () => {
@@ -157,7 +149,6 @@ const SankeyChart: FC<ComponentTypes> = ({
 
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayRegion = useMemo(() => regions.find(({ label }) => label === region)?.label, [regions, region]) || '';
-  const displayUnit = useMemo(() => units.find(({ label }) => label === unit)?.label, [units, unit]) || '';
 
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
@@ -181,10 +172,11 @@ const SankeyChart: FC<ComponentTypes> = ({
     enable: !!indicatorSlug && !!currentYear,
   }));
 
+  const { nodes, links, units: currentUnit } = data;
+
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
-      ...(currentUnit && { unit: currentUnit }) || { unit: null },
       category: null,
       region: currentRegion || null,
       year: currentYear || null,
@@ -192,33 +184,28 @@ const SankeyChart: FC<ComponentTypes> = ({
     }));
   }, [
     dispatch,
-    defaultYear,
     currentYear,
-    defaultUnit,
-    currentUnit,
     currentRegion,
     currentVisualization,
-    indicatorSlug,
   ]);
 
-  const { nodes, links } = data;
   if (!nodes || !links) return null;
 
   return (
     <div className={`flex ${className}`}>
-      <div className="flex flex-col h-full w-full py-8">
+      <div className="flex flex-col w-full h-full py-8">
         <section className="flex flex-col w-full">
-          <div className="flex w-full justify-between">
+          <div className="flex justify-between w-full">
             {/* filters */}
             {/* year filter */}
-            <div className="flex items-center flex-wrap">
+            <div className="flex flex-wrap items-center">
               <span className="pr-2 mb-2">
                 {i18next.t('showing')}
                 :
               </span>
               {years.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
-                  <span className="mr-2 hidden md:flex">
+                  <span className="hidden mr-2 md:flex">
                     {i18next.t('year')}
                     :
                   </span>
@@ -246,7 +233,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                     onClick={() => { toggleDropdown('year'); }}
                     className={DROPDOWN_BUTTON_STYLES}
                   >
-                    <span className="mr-2 hidden md:flex">
+                    <span className="hidden mr-2 md:flex">
                       {i18next.t('year')}
                       :
                     </span>
@@ -260,12 +247,12 @@ const SankeyChart: FC<ComponentTypes> = ({
               {/* unit filter */}
               {units.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
-                  <span className="mr-2 hidden md:flex">
+                  <span className="hidden mr-2 md:flex">
                     {i18next.t('unit')}
                     :
                   </span>
                   <span>
-                    {displayUnit || i18next.t('selectUnit')}
+                    {currentUnit}
                   </span>
                 </div>
               )}
@@ -288,12 +275,12 @@ const SankeyChart: FC<ComponentTypes> = ({
                     onClick={() => { toggleDropdown('unit'); }}
                     className={DROPDOWN_BUTTON_STYLES}
                   >
-                    <span className="mr-2 md:flex hidden">
+                    <span className="hidden mr-2 md:flex">
                       {i18next.t('unit')}
                       :
                     </span>
                     <span>
-                      {displayUnit || i18next.t('selectUnit')}
+                      {currentUnit || i18next.t('selectUnit')}
                     </span>
                   </button>
                 </Tooltip>
@@ -301,7 +288,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               {/* region filter  */}
               {regions.length === 1 && displayRegion && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
-                  <span className="mr-2 hidden md:flex">
+                  <span className="hidden mr-2 md:flex">
                     {i18next.t('region')}
                     :
                   </span>
@@ -329,7 +316,7 @@ const SankeyChart: FC<ComponentTypes> = ({
                     onClick={() => { toggleDropdown('region'); }}
                     className={DROPDOWN_BUTTON_STYLES}
                   >
-                    <span className="mr-2 hidden md:flex">
+                    <span className="hidden mr-2 md:flex">
                       {i18next.t('region')}
                       :
                     </span>
@@ -342,8 +329,8 @@ const SankeyChart: FC<ComponentTypes> = ({
             </div>
           </div>
 
-          <div className="flex h-full w-full min-h-1/2">
-            {isFetchingRecords && (
+          <div className="flex w-full h-full min-h-1/2">
+            {(isFetchingRecords || isFetchingRecordsMetadata) && (
               <LoadingSpinner />
             )}
             {isFetchedRecords
@@ -351,15 +338,15 @@ const SankeyChart: FC<ComponentTypes> = ({
               && !isFetchingRecords
               && !!visualization && !!year
               && (
-                <div className="w-full h-full min-h-1/2 flex flex-col items-center justify-center">
-                  <img alt="No data" src="/images/illus_nodata.svg" className="w-28 h-auto" />
+                <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
+                  <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
                   <p>{i18next.t('dataNotFound')}</p>
                 </div>
               )}
 
             {!isFetchingRecords && isSuccessRecords && (
-            <div className="flex flex-col h-full w-full min-h-1/2 py-8">
-              <div className="w-full min-h-screen">
+            <div className="flex flex-col w-full h-full py-8 min-h-1/2">
+              <div className="w-full min-h-1/2">
                 <Sankey
                   indicatorName={indicatorName}
                   indicatorSlug={indicatorSlug}
