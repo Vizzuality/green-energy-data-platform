@@ -7,6 +7,7 @@ import cx from 'classnames';
 import Link from 'next/link';
 
 import { useGroups } from 'hooks/groups';
+import { useRouter } from 'next/router';
 
 // components
 import LayoutPage from 'layout';
@@ -23,7 +24,9 @@ import { InView } from 'react-intersection-observer';
 import CookieBanner from 'components/cookie-banner';
 
 const HomePage: FC = () => {
-  const { data: groups, isLoading } = useGroups();
+  const { query: { locale } } = useRouter();
+  const lang = locale || 'en';
+  const { data: groups, isLoading } = useGroups({ locale: lang });
 
   return (
     <LayoutPage className="h-full min-h-screen">
@@ -52,7 +55,7 @@ const HomePage: FC = () => {
         : groups?.map((group, index) => {
           const textPosition = index % 2 !== 0 ? 'left' : 'right';
           return (
-            <InView key={group} triggerOnce>
+            <InView key={group.id} triggerOnce>
               {({ ref, inView }) => (
                 <div ref={ref} key={group.id} className="container px-8 m-auto pb-28 lg:px-32 md:px-24 sm:px-16">
                   {inView && <GroupCard textPosition={textPosition} group={group} className={cx('flex justify-between items-start', { 'flex-row-reverse': textPosition === 'left' })} />}
