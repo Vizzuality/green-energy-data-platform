@@ -18,6 +18,12 @@ import { useRouter } from 'next/router';
 import { updateUser } from 'services/user';
 import i18next from 'i18next';
 
+// language keys
+const createPassword = i18next.t('createPassword');
+const differentPasswordMessage = i18next.t('differentPasswordMessage');
+const passwordMismatchMessage = i18next.t('passwordMismatchMessage');
+const changePassword = i18next.t('changePassword');
+
 const NewPasswordPage: FC = () => {
   const queryClient = useQueryClient();
 
@@ -86,16 +92,16 @@ const NewPasswordPage: FC = () => {
   return (
     <LayoutPage className="m-auto bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
-      <main className="min-h-screen flex flex-col h-full w-full m-auto pb-20">
+      <main className="flex flex-col w-full h-full min-h-screen pb-20 m-auto">
         <Header />
         <div className="m-auto max-w-2xl flex flex-col flex-1 w-full justify-start  my-20 py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 px-16 min-w-70 shadow-sm">
           <form onSubmit={handleSubmit} className="flex flex-col items-start">
             <h2 className="text-3.5xl font-bold">
-              {i18next.t('createPassword')}
+              {createPassword}
               .
             </h2>
             <p className="py-7">
-              {i18next.t('differentPasswordMessage')}
+              {differentPasswordMessage}
               .
             </p>
             <fieldset className="w-full text-xs">
@@ -103,7 +109,7 @@ const NewPasswordPage: FC = () => {
                 htmlFor="password"
                 className="pb-10 tracking-tight text-grayProfile"
               >
-                <div className="relative my-3 p-2">
+                <div className="relative p-2 my-3">
                   <Icon
                     ariaLabel="password"
                     name="password"
@@ -149,7 +155,7 @@ const NewPasswordPage: FC = () => {
                 htmlFor="password-confirmation"
                 className="pb-10 tracking-tight text-grayProfile"
               >
-                <div className="relative my-3 p-2">
+                <div className="relative p-2 my-3">
                   <Icon
                     ariaLabel="confirm password"
                     name="password"
@@ -193,7 +199,7 @@ const NewPasswordPage: FC = () => {
               </label>
               {passwordMismatch && (
                 <p className="mb-14 text-warning">
-                  {i18next.t('passwordMismatchMessage')}
+                  {passwordMismatchMessage}
                 </p>
               )}
             </fieldset>
@@ -202,9 +208,9 @@ const NewPasswordPage: FC = () => {
               aria-label="Sign in"
               theme="secondary"
               size="xlg"
-              className="w-full bg-gray1 border-gray1 text-white text-sm"
+              className="w-full text-sm text-white bg-gray1 border-gray1"
             >
-              {i18next.t('changePassword')}
+              {changePassword}
             </Button>
           </form>
         </div>

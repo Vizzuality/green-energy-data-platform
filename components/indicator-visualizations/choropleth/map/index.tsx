@@ -14,6 +14,7 @@ import ReactMapGL, {
   InteractiveMapProps,
   FullscreenControl,
 } from 'react-map-gl';
+
 import { fitBounds } from '@math.gl/web-mercator';
 
 import { easeCubic } from 'd3-ease';
@@ -25,7 +26,7 @@ import MAP_STYLE from './style';
 export interface MapProps extends InteractiveMapProps {
   hasInteraction: boolean,
   /** A function that returns the map instance */
-  children?: React.ReactNode;
+  children?: (unknown) => React.ReactNode;
 
   /** Custom css class for styling */
   className?: string;

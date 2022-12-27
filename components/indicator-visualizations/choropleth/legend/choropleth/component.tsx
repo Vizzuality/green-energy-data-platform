@@ -28,8 +28,9 @@ export const LegendTypeChoropleth: FC<LegendTypeChoroplethProps> = ({
       ))}
     </ul>
 
-    <ul className="flex w-full mt-1">
+    <ul className="flex justify-between w-full mt-1">
       {items.map(({ color, value }) => (
+        value && (
         <li
           key={`${color}-${value}`}
           className="flex-shrink-0 text-xs text-center"
@@ -39,6 +40,7 @@ export const LegendTypeChoropleth: FC<LegendTypeChoroplethProps> = ({
         >
           {numberFormat(value)}
         </li>
+        )
       ))}
     </ul>
   </div>

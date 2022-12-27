@@ -247,6 +247,9 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     }
   }, [data]);
 
+  // language keys
+  const showing = i18next.t('showing');
+
   return (
     <div className={`flex ${className}`}>
       <div className="flex flex-col w-full h-full">
@@ -256,7 +259,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
 
             <div className="flex flex-wrap items-center">
               <span className="pr-2 mb-2">
-                {i18next.t('showing')}
+                {showing}
                 :
               </span>
 

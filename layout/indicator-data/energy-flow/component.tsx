@@ -6,6 +6,8 @@ import React, {
   useCallback,
 } from 'react';
 
+import cx from 'classnames';
+
 import { useQueryClient } from 'react-query';
 
 import {
@@ -18,7 +20,6 @@ import { RootState } from 'store/store';
 
 // hooks
 import {
-  useIndicator,
   useSankeyData,
   useSankeyIndicatorMetadata,
 } from 'hooks/indicators';
@@ -36,13 +37,27 @@ import i18next from 'i18next';
 
 import DropdownContent from 'layout/dropdown-content';
 
-import { ComponentTypes } from 'types/data';
+type SankeyWrapper = {
+  indicatorName: string,
+  className?: string
+};
 
-const DROPDOWN_BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
+const DROPDOWN_BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 
-const SankeyChart: FC<ComponentTypes> = ({
+// language keys
+const showing = i18next.t('showing');
+const yearLang = i18next.t('yearLang');
+const selectYear = i18next.t('selectYear');
+const unitLang = i18next.t('unitLang');
+const selectUnit = i18next.t('selectUnit');
+const regionLang = i18next.t('regionLang');
+const selectRegion = i18next.t('selectRegion');
+const dataNotFound = i18next.t('dataNotFound');
+
+const SankeyChart: FC<SankeyWrapper> = ({
+  indicatorName,
   className,
-}: ComponentTypes) => {
+}: SankeyWrapper) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -59,10 +74,9 @@ const SankeyChart: FC<ComponentTypes> = ({
     year, region, visualization,
   } = filters;
 
-  const router = useRouter();
-  const { query: { group: groupSlug, subgroup: subgroupQuery, locale } } = router;
+  const { query } = useRouter();
+  const { subgroup: subgroupQuery, locale } = query;
 
-  const subgroupSlug = subgroupQuery?.[0];
   const indicatorSlug = subgroupQuery?.[1];
 
   const toggleDropdown = useCallback((key) => {
@@ -81,40 +95,11 @@ const SankeyChart: FC<ComponentTypes> = ({
 
   const handleChange = useCallback((key, value) => {
     dispatch(setFilters({ [key]: value }));
-
     setDropdownVisibility({
       ...dropdownVisibility,
       [key]: false,
     });
   }, [dispatch, dropdownVisibility]);
-
-  const {
-    data: indicatorData,
-  } = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {
-    placeholderData: queryClient.getQueryData(['indicator', groupSlug, subgroupSlug, indicatorSlug]) || {
-      categories: [],
-      category_filters: {},
-      data_source: null,
-      default_visualization: null,
-      description: null,
-      end_date: null,
-      id: null,
-      name: null,
-      published: false,
-      start_date: null,
-      visualization_types: [],
-      group: null,
-      subgroup: null,
-    },
-    keepPreviousData: true,
-    refetchOnWindowFocus: false,
-    enable: !!indicatorSlug,
-  }, {
-    locale: locale || 'en',
-  });
-
-  const { name: indicatorName } = indicatorData;
-
   const {
     years,
     defaultYear,
@@ -122,7 +107,7 @@ const SankeyChart: FC<ComponentTypes> = ({
     regions,
     defaultRegion,
     isFetching: isFetchingRecordsMetadata,
-  } = useSankeyIndicatorMetadata(indicatorSlug, visualization, filters, {
+  } = useSankeyIndicatorMetadata(indicatorSlug, visualization, { locale }, {
     refetchOnWindowFocus: false,
     enabled: !!indicatorSlug,
   });
@@ -150,14 +135,6 @@ const SankeyChart: FC<ComponentTypes> = ({
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
   const displayRegion = useMemo(() => regions.find(({ label }) => label === region)?.label, [regions, region]) || '';
 
-  const currentVisualization = useMemo<string>(
-    // if the current visualization is not allowed when the user changes the indicator,
-    // it will fallback into the default one. If it is, it will remain.
-    () => (indicatorData?.visualization_types?.includes(visualization)
-      ? visualization : indicatorData?.default_visualization),
-    [visualization, indicatorData],
-  );
-
   const {
     data,
     isFetching: isFetchingRecords,
@@ -171,22 +148,20 @@ const SankeyChart: FC<ComponentTypes> = ({
     refetchOnWindowFocus: false,
     enable: !!indicatorSlug && !!currentYear,
   }));
-
   const { nodes, links, units: currentUnit } = data;
 
   useEffect(() => {
     dispatch(setFilters({
-      visualization: currentVisualization,
+      visualization: 'sankey',
       category: null,
-      region: currentRegion || null,
-      year: currentYear || null,
+      region: currentRegion,
+      year: currentYear,
       scenario: null,
     }));
   }, [
     dispatch,
     currentYear,
     currentRegion,
-    currentVisualization,
   ]);
 
   if (!nodes || !links) return null;
@@ -200,17 +175,17 @@ const SankeyChart: FC<ComponentTypes> = ({
             {/* year filter */}
             <div className="flex flex-wrap items-center">
               <span className="pr-2 mb-2">
-                {i18next.t('showing')}
+                {showing}
                 :
               </span>
               {years.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {i18next.t('year')}
+                    {yearLang}
                     :
                   </span>
                   <span>
-                    {displayYear || i18next.t('selectYear')}
+                    {displayYear || selectYear}
                   </span>
                 </div>
               )}
@@ -231,14 +206,14 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('year'); }}
-                    className={DROPDOWN_BUTTON_STYLES}
+                    className={cx(DROPDOWN_BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                   >
                     <span className="hidden mr-2 md:flex">
-                      {i18next.t('year')}
+                      {yearLang}
                       :
                     </span>
                     <span>
-                      {displayYear || i18next.t('selectYear')}
+                      {displayYear || selectYear}
                     </span>
                     <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                   </button>
@@ -248,7 +223,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               {units.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {i18next.t('unit')}
+                    {unitLang}
                     :
                   </span>
                   <span>
@@ -273,14 +248,14 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('unit'); }}
-                    className={DROPDOWN_BUTTON_STYLES}
+                    className={cx(DROPDOWN_BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                   >
                     <span className="hidden mr-2 md:flex">
-                      {i18next.t('unit')}
+                      {unitLang}
                       :
                     </span>
                     <span>
-                      {currentUnit || i18next.t('selectUnit')}
+                      {currentUnit || selectUnit}
                     </span>
                   </button>
                 </Tooltip>
@@ -289,11 +264,11 @@ const SankeyChart: FC<ComponentTypes> = ({
               {regions.length === 1 && displayRegion && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {i18next.t('region')}
+                    {regionLang}
                     :
                   </span>
                   <span>
-                    {displayRegion || i18next.t('selectRegion')}
+                    {displayRegion || selectRegion}
                   </span>
                 </div>
               )}
@@ -314,14 +289,14 @@ const SankeyChart: FC<ComponentTypes> = ({
                   <button
                     type="button"
                     onClick={() => { toggleDropdown('region'); }}
-                    className={DROPDOWN_BUTTON_STYLES}
+                    className={cx(DROPDOWN_BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                   >
                     <span className="hidden mr-2 md:flex">
-                      {i18next.t('region')}
+                      {regionLang}
                       :
                     </span>
                     <span>
-                      {displayRegion || i18next.t('selectRegion')}
+                      {displayRegion || selectRegion}
                     </span>
                   </button>
                 </Tooltip>
@@ -340,7 +315,7 @@ const SankeyChart: FC<ComponentTypes> = ({
               && (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
                   <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-                  <p>{i18next.t('dataNotFound')}</p>
+                  <p>{dataNotFound}</p>
                 </div>
               )}
 

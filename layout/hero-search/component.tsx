@@ -18,6 +18,9 @@ interface HeroProps {
   className?: string,
 }
 
+// language keys
+const close = i18next.t('close');
+
 const Hero: FC<HeroProps> = ({
   className,
   items,
@@ -27,16 +30,15 @@ const Hero: FC<HeroProps> = ({
   const { fallbackUrl } = query;
 
   const handleClose = () => {
-    if (!!fallbackUrl) {
+    if (fallbackUrl) {
       push(decodeURIComponent(`${fallbackUrl}`));
-    }
-    else {
+    } else {
       push('/');
     }
   };
 
   return (
-    <div className="w-full bg-gray1 text-white">
+    <div className="w-full text-white bg-gray1">
       <div className={cx('flex justify-between items-center px-12 py-2 border-b border-white border-opacity-30 relative',
         { [className]: !!className })}
       >
@@ -57,10 +59,10 @@ const Hero: FC<HeroProps> = ({
         />
         <button
           type="button"
-          className="flex items-center pl-13 h-full"
+          className="flex items-center h-full pl-13"
           onClick={handleClose}
         >
-          <span>{i18next.t('close')}</span>
+          <span>{close}</span>
           <Icon
             ariaLabel="close"
             name="close"

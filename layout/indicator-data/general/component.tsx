@@ -65,6 +65,13 @@ const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-
 /** Max bar chart items */
 const MAX_ITEMS = 35;
 
+// language keys
+const showing = i18next.t('showing');
+const selectYear = i18next.t('selectYear');
+const regionLang = i18next.t('region');
+const scenarioLang = i18next.t('scenario');
+const selectScenario = i18next.t('selectScenario');
+
 const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
@@ -316,8 +323,10 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     () => scenarios.find(({ value }) => value === scenario)?.label,
     [scenarios, scenario],
   ) || '';
+
+  const hasSubcategories = useMemo(() => subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie' && visualization !== 'choropleth'), [subcategories, visualization]);
+
   const selectedCategory = useMemo(() => {
-    const hasSubcategories = subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie');
     if (!hasSubcategories) return defaultCategory;
     // Use the last selected filter
     if (uiCategory.value !== category.value) {
@@ -391,7 +400,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   }, [category, subcategories.length, setSubcategoriesTotals]);
 
   const singleValueLegendColor = useMemo(
-    () => subcategoriesTotals?.find((subcat) => subcat?.label === category?.value)
+    () => subcategoriesTotals?.find((s) => s?.label === category?.value)
       ?.color,
     [category, subcategoriesTotals],
   );
@@ -414,7 +423,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
               && !!years.length && (
                 <div className="flex flex-wrap items-center">
                   <span className="pr-2 mb-2 whitespace-nowrap">
-                    {i18next.t('showing')}
+                    {showing}
                     :
                   </span>
                   {years.length === 1 && (
@@ -444,7 +453,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                           'hover:bg-color1 hover:text-white',
                         )}
                       >
-                        <span>{displayYear || i18next.t('selectYear')}</span>
+                        <span>{displayYear || selectYear}</span>
                         <Icon
                           ariaLabel="change date"
                           name="calendar"
@@ -462,7 +471,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
               && displayRegion && (
                 <div className="flex items-center">
                   <span className="pr-2 mb-2">
-                    {i18next.t('region')}
+                    {regionLang}
                     :
                   </span>
                   {regions.length === 1 && (
@@ -508,7 +517,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
             {['choropleth'].includes(visualization) && !!scenarios.length && (
               <div className="flex items-center">
                 <span className="pr-2 mb-2">
-                  {i18next.t('scenario')}
+                  {scenarioLang}
                   :
                 </span>
                 {scenarios?.length > 1 && (
@@ -533,7 +542,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                       className={DROPDOWN_BUTTON_STYLES}
                     >
                       <span>
-                        {displayScenario || i18next.t('selectScenario')}
+                        {displayScenario || selectScenario}
                       </span>
                       <Icon
                         ariaLabel="dropdown"
@@ -668,9 +677,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
             <Filters
               visualization={visualization}
               categories={categories}
-              hasSubcategories={
-                subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie')
-              }
+              hasSubcategories={hasSubcategories}
               className="mb-4 overflow-y-auto"
               onClick={setFilters}
             />

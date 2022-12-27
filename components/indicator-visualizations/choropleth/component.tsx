@@ -8,8 +8,8 @@ import React, {
 } from 'react';
 
 // Layer manager
-import { LayerManager, Layer } from 'layer-manager/dist/components';
-import { PluginMapboxGl } from 'layer-manager';
+import { LayerManager, Layer } from '@vizzuality/layer-manager-react';
+import PluginMapboxGl from '@vizzuality/layer-manager-plugin-mapboxgl';
 import { Popup } from 'react-map-gl';
 
 // hooks
@@ -65,6 +65,11 @@ interface MapContainerProps {
 
 const numberFormat = format(',.2f');
 
+// language keys
+const infoPlant = i18next.t('infoPlant');
+const numberPlants = i18next.t('numberPlants');
+const value = i18next.t('value');
+
 const MapContainer: FC<MapContainerProps> = ({
   layers,
   hasInteraction = true,
@@ -88,7 +93,6 @@ const MapContainer: FC<MapContainerProps> = ({
   );
 
   const [lngLat, setLngLat] = useState([0, 0]);
-  const [sortArray, setSortArray] = useState([]);
   const [disclaimerVisibility, setDisclaimerVisibility] = useState(true);
 
   const handleViewportChange = useCallback((v) => {
@@ -105,14 +109,6 @@ const MapContainer: FC<MapContainerProps> = ({
     [viewport],
   );
 
-  // Sorted
-  const sortedItems = useMemo(() => {
-    const itms = layers[0]?.legendConfig?.sort(
-      (a, b) => sortArray.indexOf(a.id) - sortArray.indexOf(b.id),
-    );
-    return itms || [];
-  }, [sortArray, layers]);
-
   const [spiderInfo, setSpiderInfo] = useState(null);
 
   const { tooltipInfo, tooltipInfoHeaders } = useCoalPowerPlantTooltip(
@@ -123,11 +119,6 @@ const MapContainer: FC<MapContainerProps> = ({
     tooltipInfo: spiderTooltipInfo,
     tooltipInfoHeaders: spiderTooltipInfoHeaders,
   } = useCoalPowerPlantTooltip(spiderInfo);
-
-  // Callbacks
-  const onChangeOrder = useCallback((ids) => {
-    setSortArray(ids);
-  }, []);
 
   const mapRefCurrent = mapRef.current;
   const spiderifier = useMemo(() => {
@@ -282,7 +273,7 @@ const MapContainer: FC<MapContainerProps> = ({
                   <div className="flex flex-col">
                     <div className="flex">
                       <span className="mr-2 text-sm">
-                        {i18next.t('numberPlants')}
+                        {numberPlants}
                       </span>
                       <span className="mr-2 text-sm">
                         {hoverInteractions?.properties?.point_count}
@@ -329,7 +320,7 @@ const MapContainer: FC<MapContainerProps> = ({
                   tipSize={10}
                   className="z-20 max-w-sm rounded-2xl"
                 >
-                  <span className="mr-4 text-xs">{i18next.t('infoPlant')}</span>
+                  <span className="mr-4 text-xs">{infoPlant}</span>
                 </Popup>
             )}
 
@@ -374,7 +365,7 @@ const MapContainer: FC<MapContainerProps> = ({
                   <div className="flex flex-col">
                     <div className="flex">
                       <span className="mr-2 text-sm">
-                        {i18next.t('value')}
+                        {value}
                         :
                       </span>
                       <span className="mr-2 text-sm">
@@ -400,8 +391,9 @@ const MapContainer: FC<MapContainerProps> = ({
         />
       )}
       {hasInteraction && (
-        <Legend onChangeOrder={onChangeOrder}>
-          {sortedItems?.map((i) => {
+        <Legend>
+
+          {layers[0]?.legendConfig?.map((i) => {
             const { type, items } = i;
 
             return (

@@ -41,7 +41,7 @@ interface ConfigProps {
   cartesianAxis?: Object,
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
-  yAxis?: YAxisProps,
+  yAxis?: YAxisProps & { isPercentage: boolean },
   tooltip?: Object,
   height: number,
 }
@@ -67,13 +67,20 @@ const Chart: FC<ChartProps> = ({
     ...rest
   } = widgetConfig;
 
+  const { isPercentage } = yAxis;
+
   return (
     <ResponsiveContainer height={height || 400}>
       <LineChart {...rest} data={widgetData}>
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
-        {yAxis && (<YAxis {...yAxis} tickFormatter={format('.3s')} />)}
+        {yAxis && (
+          <YAxis
+            {...yAxis}
+            tickFormatter={isPercentage ? format('.0f') : format(',.3s')}
+          />
+        )}
         {lines && Object.keys(lines).map((line, index) => (
           <Line key={`${line}-${color || colors[index]}`} connectNulls stroke={getStrokeColor(index, lines[index].dataKey, colors, color)} {...lines[line]} />
         ))}

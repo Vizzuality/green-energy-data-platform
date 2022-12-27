@@ -10,6 +10,10 @@ interface FooterProps {
   className?: string,
 }
 
+// language keys
+const privacy = i18next.t('privacy');
+const terms = i18next.t('terms');
+
 const Footer: FC<FooterProps> = ({
   className = '',
 }: FooterProps) => (
@@ -17,18 +21,18 @@ const Footer: FC<FooterProps> = ({
     { [className]: className })}
 
   >
-    <div className="flex w-full justify-around p-1 items-center">
+    <div className="flex items-center justify-around w-full p-1">
       <Link href="/" passHref>
         <a href="/">
-          <img alt="Green Energy Data Platform" src="/images/logo_GEDP.svg" className="w-28 h-auto" />
+          <img alt="Green Energy Data Platform" src="/images/logo_GEDP.svg" className="h-auto w-28" />
         </a>
       </Link>
       <div className="flex divide-x">
         <Link href="/privacy-policy" passHref>
-          <a href="/privacy-policy" className="px-4 cursor-pointer">{i18next.t('privacy')}</a>
+          <a href="/privacy-policy" className="px-4 cursor-pointer">{privacy}</a>
         </Link>
         <Link href="/terms-conditions" passHref>
-          <a href="/terms-conditions" className="px-4 cursor-pointer">{i18next.t('terms')}</a>
+          <a href="/terms-conditions" className="px-4 cursor-pointer">{terms}</a>
         </Link>
       </div>
       <LanguageSelect />

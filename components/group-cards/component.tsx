@@ -40,6 +40,9 @@ const subtitles = {
   },
 };
 
+// language keys
+const discover = i18next.t('discover');
+
 const GroupCard: FC<GroupCardProps> = ({
   group,
   className,
@@ -78,11 +81,11 @@ const GroupCard: FC<GroupCardProps> = ({
       >
         <h3 className="text-3.5xl text-gray3">{name}</h3>
         <h4 className="text-2.5xl text-color1 pb-2 font-bold leading-loose">{subtitle || subtitles[slug]?.[current]}</h4>
-        <p className="text-sm leading-7 my-9 cursor-pointer">
+        <p className="text-sm leading-7 cursor-pointer my-9">
           {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.'}
         </p>
         <Link href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} passHref>
-          <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="py-3 px-6 text-sm text-white rounded-full bg-gradient-color1 hover:shadow-sm active:bg-gradient-color1-reverse active:shadow-sm">{i18next.t('discover')}</a>
+          <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="px-6 py-3 text-sm text-white rounded-full bg-gradient-color1 hover:shadow-sm active:bg-gradient-color1-reverse active:shadow-sm">{discover}</a>
         </Link>
       </div>
       <img

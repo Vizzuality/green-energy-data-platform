@@ -12,6 +12,9 @@ interface DisclaimerProps {
   onDisclaimerClose: (boolean) => void;
 }
 
+// language keys
+const close = i18next.t('close');
+
 export const Disclaimer: FC<DisclaimerProps> = ({
   message,
   className,
@@ -23,7 +26,7 @@ export const Disclaimer: FC<DisclaimerProps> = ({
   >
     <p className="w-48 pr-4">{message}</p>
     <button type="button" className="flex items-center text-xs" onClick={() => onDisclaimerClose(false)}>
-      <p className="uppercase pr-2">{i18next.t('close')}</p>
+      <p className="pr-2 uppercase">{close}</p>
       <Icon ariaLabel="close disclaimer" size="sm" name="close" />
     </button>
   </div>

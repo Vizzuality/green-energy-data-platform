@@ -65,7 +65,8 @@ export const getCategoriesFromRecords = (
   }
 
   if (visualization === 'line') {
-    const categoriesWithTotal = (categories.includes('total') || categories.includes('Total') || categories.length === 1) ? categories : [KEY, ...categories];
+    const categoriesWithTotal = (categories.includes(KEY)
+    || categories.length === 1) ? categories : [...categories, KEY];
     return categoriesWithTotal;
   }
 
@@ -79,7 +80,7 @@ export const getCategoriesFromRecords = (
       if (categories.length > 1 && visualization === 'line') {
         return category !== null;
       }
-      return category || 'Total';
+      return category || KEY;
     });
   }
   return categories;
@@ -354,7 +355,6 @@ export const getGroupedValues = (
           .value(),
       );
       const dataByProvince = groupBy(data, 'province');
-
       return Object.keys(dataByProvince)
         .map((province) => dataByProvince[province].reduce(
           (acc, next) => {
@@ -438,7 +438,6 @@ export const getGroupedValues = (
         value,
       };
     });
-
     const media = (maxValue - minValue) / 2;
 
     const unitLabel = units.find((u) => u.value === unit)?.label;

@@ -38,6 +38,19 @@ interface NewDetailProps {
   token: string;
   password?: string;
 }
+
+// language keys
+const profile = i18next.t('profile');
+const personalData = i18next.t('personalData');
+const titleLang = i18next.t('title');
+const nameLang = i18next.t('name');
+const organisationLang = i18next.t('organisation');
+const emailLang = i18next.t('email');
+const save = i18next.t('save');
+const changePassword = i18next.t('changePassword');
+const deleteWarning = i18next.t('deleteWarning');
+const deleteLang = i18next.t('delete');
+
 const ProfilePage: FC = () => {
   const queryClient = useQueryClient();
   const { isLoading, data: user } = useMe({
@@ -188,16 +201,16 @@ const ProfilePage: FC = () => {
   };
 
   return (
-    <LayoutPage className="text-white bg-gradient-gray1 min-h-screen">
+    <LayoutPage className="min-h-screen text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
-      <Hero className="lg:px-32 md:px-24 sm:px-16 px-8">
-        <h1 className="text-5.5xl pt-3 text-left">{i18next.t('profile')}</h1>
+      <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
+        <h1 className="text-5.5xl pt-3 text-left">{profile}</h1>
       </Hero>
       <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow -mt-40 divide-x flex px-10 max-w-[1200px]">
         <section className="flex flex-col w-1/2">
-          <div className="p-16 flex-1 flex flex-col">
+          <div className="flex flex-col flex-1 p-16">
             <h2 className="text-2.5xl font-bold">
-              {i18next.t('personalData')}
+              {personalData}
             </h2>
             <form
               onSubmit={handleSave}
@@ -205,10 +218,10 @@ const ProfilePage: FC = () => {
             >
               <label
                 htmlFor="title"
-                className="uppercase w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
+                className="w-full pb-6 text-xs tracking-tight uppercase text-grayProfile text-opacity-95"
               >
-                {i18next.t('title')}
-                <div className="relative mt-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
+                {titleLang}
+                <div className="relative p-2 mt-3 border border-opacity-50 rounded-sm border-grayProfile">
                   <input
                     id="title"
                     name="title"
@@ -224,16 +237,16 @@ const ProfilePage: FC = () => {
                     ariaLabel="mail-input"
                     name="profile"
                     size="lg"
-                    className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold"
+                    className="absolute font-bold transform -translate-y-1/2 left-4 top-1/2"
                   />
                 </div>
               </label>
               <label
                 htmlFor="name"
-                className="uppercase w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
+                className="w-full pb-6 text-xs tracking-tight uppercase text-grayProfile text-opacity-95"
               >
-                {i18next.t('name')}
-                <div className="relative mt-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
+                {nameLang}
+                <div className="relative p-2 mt-3 border border-opacity-50 rounded-sm border-grayProfile">
                   <input
                     id="name"
                     name="name"
@@ -249,16 +262,16 @@ const ProfilePage: FC = () => {
                     ariaLabel="mail-input"
                     name="profile"
                     size="lg"
-                    className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold"
+                    className="absolute font-bold transform -translate-y-1/2 left-4 top-1/2"
                   />
                 </div>
               </label>
               <label
                 htmlFor="organisation"
-                className="uppercase w-full text-xs pb-6 tracking-tight text-grayProfile text-opacity-95"
+                className="w-full pb-6 text-xs tracking-tight uppercase text-grayProfile text-opacity-95"
               >
-                {i18next.t('organisation')}
-                <div className="relative mt-3 p-2 rounded-sm border border-grayProfile border-opacity-50">
+                {organisationLang}
+                <div className="relative p-2 mt-3 border border-opacity-50 rounded-sm border-grayProfile">
                   <input
                     id="organisation"
                     name="organisation"
@@ -277,21 +290,21 @@ const ProfilePage: FC = () => {
                     ariaLabel="Organization"
                     name="Organization"
                     size="lg"
-                    className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold"
+                    className="absolute font-bold transform -translate-y-1/2 left-4 top-1/2"
                   />
                 </div>
               </label>
               <label
                 htmlFor="email"
-                className="uppercase w-full text-xs pb-2 tracking-tight text-grayProfile text-opacity-50"
+                className="w-full pb-2 text-xs tracking-tight text-opacity-50 uppercase text-grayProfile"
               >
-                {i18next.t('email')}
-                <div className="bg-gray-100  relative mt-3 p-2 rounded-sm">
+                {emailLang}
+                <div className="relative p-2 mt-3 bg-gray-100 rounded-sm">
                   <Icon
                     ariaLabel="mail-input"
                     name="mail"
                     size="lg"
-                    className="absolute left-4 transform -translate-y-1/2 top-1/2 font-bold "
+                    className="absolute font-bold transform -translate-y-1/2 left-4 top-1/2 "
                   />
                   <input
                     id="email"
@@ -299,7 +312,7 @@ const ProfilePage: FC = () => {
                     type="email"
                     placeholder="Write your email account"
                     defaultValue={user?.email}
-                    className="bg-gray-100 pl-10 w-full overflow-ellipsis text-sm text-grayProfile"
+                    className="w-full pl-10 text-sm bg-gray-100 overflow-ellipsis text-grayProfile"
                     onChange={(e) => handleChange('email', e)}
                   />
                 </div>
@@ -308,41 +321,41 @@ const ProfilePage: FC = () => {
                 type="submit"
                 aria-label="Sign in"
                 theme="secondary"
-                className="py-20 mt-5 bg-gray1 border-gray1 text-white text-sm"
+                className="py-20 mt-5 text-sm text-white bg-gray1 border-gray1"
                 disabled={isValid}
               >
-                {i18next.t('save')}
+                {save}
               </Button>
             </form>
           </div>
         </section>
         <section className="flex flex-col w-1/2">
-          <div className="p-16 flex-1 flex flex-col">
+          <div className="flex flex-col flex-1 p-16">
             <h2 className="text-2.5xl font-bold">
-              {i18next.t('changePassword')}
+              {changePassword}
             </h2>
             <div className="flex flex-col items-start max-w-[380px]">
-              <p className="text-grayProfile text-opacity-50 pb-10 text-sm pt-4">
-                {i18next.t('deleteWarning')}
+              <p className="pt-4 pb-10 text-sm text-opacity-50 text-grayProfile">
+                {deleteWarning}
               </p>
-              <div className="flex w-full justify-between">
+              <div className="flex justify-between w-full">
                 <Button
                   type="button"
                   aria-label="delete account"
                   theme="warning"
-                  className="flex justify-left text-sm w-max"
+                  className="flex text-sm justify-left w-max"
                   onClick={handleDelete}
                 >
-                  {i18next.t('delete')}
+                  {deleteLang}
                 </Button>
                 <Button
                   type="button"
                   aria-label="Sign in"
                   theme="secondary"
                   onClick={handlePasswordChange}
-                  className="py-20 bg-gray1 border-gray1 text-white text-sm"
+                  className="py-20 text-sm text-white bg-gray1 border-gray1"
                 >
-                  {i18next.t('changePassword')}
+                  {changePassword}
                 </Button>
               </div>
             </div>

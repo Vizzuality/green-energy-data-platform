@@ -64,6 +64,13 @@ interface ChartProps {
   colors: string[]
 }
 
+// language keys
+const showing = i18next.t('showing');
+const selectYear = i18next.t('selectYear');
+const scenarioLang = i18next.t('scenario');
+const selectScenario = i18next.t('selectScenario');
+const regionLang = i18next.t('region');
+
 const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   groupSlug,
   subgroupSlug,
@@ -336,7 +343,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   }, [category, subcategories.length, setSubcategoriesTotals]);
 
   const singleValueLegendColor = useMemo(
-    () => subcategoriesTotals?.find(((subcat) => subcat?.label === category?.value))?.color,
+    () => subcategoriesTotals?.find(((s) => s?.label === category?.value))?.color,
     [category, subcategoriesTotals],
   );
 
@@ -363,7 +370,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             {['bar', 'pie', 'choropleth'].includes(visualization) && (
               <div className="flex flex-wrap items-center">
                 <span className="pr-2 mb-2 whitespace-nowrap">
-                  {i18next.t('showing')}
+                  {showing}
                   :
                 </span>
                 {years.length === 1 && (
@@ -390,7 +397,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                           'hover:bg-color1 hover:text-white': years.length > 1,
                         })}
                     >
-                      <span className={TEXT_BUTTON_STYLES}>{displayYear || i18next.t('selectYear')}</span>
+                      <span className={TEXT_BUTTON_STYLES}>{displayYear || selectYear}</span>
                       <Icon ariaLabel="change date" name="calendar" className="ml-4 text-color-1" />
                     </button>
                   </Tooltip>
@@ -400,7 +407,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                 {['choropleth'].includes(visualization) && !!scenarios.length && (
                   <div className="flex items-center">
                     <span className="pr-2 mb-2">
-                      {i18next.t('scenario')}
+                      {scenarioLang}
                       :
                     </span>
                     {scenarios?.length > 1 && (
@@ -422,7 +429,9 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                           onClick={() => { toggleDropdown('scenario'); }}
                           className={DROPDOWN_BUTTON_STYLES}
                         >
-                          <span className={TEXT_BUTTON_STYLES}>{displayScenario || i18next.t('selectScenario')}</span>
+                          <span className={TEXT_BUTTON_STYLES}>
+                            {displayScenario || selectScenario}
+                          </span>
                         </button>
                       </Tooltip>
                     )}
@@ -435,7 +444,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
             {(['line', 'pie'].includes(visualization) && !!regions.length && displayRegion) && (
               <div className="flex items-center">
                 <span className="pr-2 mb-2">
-                  {i18next.t('region')}
+                  {regionLang}
                   :
                 </span>
                 {regions.length === 1 && (

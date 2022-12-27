@@ -29,6 +29,9 @@ interface IndicatorsPageProps {
   groups: GroupProps[]
 }
 
+// language keys
+const filterBy = i18next.t('filterBy');
+
 const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps) => {
   const [disabledGroups, setActive] = useState([]);
   const [groupsFiltered, setFilteredGroups] = useState(groups);
@@ -56,12 +59,12 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
   const results = searchValue === '' ? groupsFiltered : searchResults;
 
   return (
-    <LayoutPage className="text-white bg-gradient-gray1 overflow-y-auto">
+    <LayoutPage className="overflow-y-auto text-white bg-gradient-gray1">
       <Head title="Green Energy Data Platform" />
       <Hero items={groupsFiltered}>
-        <div className="flex container m-auto py-6 lg:px-32 md:px-24 px-16">
+        <div className="container flex px-16 py-6 m-auto lg:px-32 md:px-24">
           <p className="py-2 mr-5">
-            {i18next.t('filterBy')}
+            {filterBy}
             :
           </p>
           <div className="flex flex-wrap flex-1">
@@ -72,7 +75,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
                 size="xlg"
                 theme={disabledGroups.includes(slug) ? 'active' : 'primary'}
                 onClick={(e) => handleGroups(e, slug)}
-                className="mr-5 mb-5"
+                className="mb-5 mr-5"
               >
                 {name}
               </Button>
@@ -80,7 +83,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
           </div>
         </div>
       </Hero>
-      <main className="container m-auto pt-6 pb-40 lg:px-32 md:px-24 px-16 text-gray1 divide-y divide-gray1 divide-opacity-20">
+      <main className="container px-16 pt-6 pb-40 m-auto divide-y lg:px-32 md:px-24 text-gray1 divide-gray1 divide-opacity-20">
         {results.length && results.map(({
           id: groupId,
           name: groupName,
@@ -89,7 +92,7 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
         }: GroupProps) => (
           <div key={groupId} className="flex flex-col">
             <h2 className="text-3.5xl pt-2">{groupName}</h2>
-            <div className="flex flex-col text-lg py-10">
+            <div className="flex flex-col py-10 text-lg">
               {subgroups?.map(({
                 id: subgroupId,
                 name: subgroupName,

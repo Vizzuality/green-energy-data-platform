@@ -33,6 +33,9 @@ const FUELTYPE = [
   'Electricity.CSV',
 ];
 
+// language keys
+const downloadDataFiles = i18next.t('downloadDataFiles');
+
 const Indicator: FC = () => {
   const router = useRouter();
   const { query: { group: groupSlug } } = router;
@@ -52,10 +55,10 @@ const Indicator: FC = () => {
     <div>
       <div>
         <h4 className="py-10">
-          {i18next.t('downloadDataFiles')}
+          {downloadDataFiles}
           :
         </h4>
-        <ul className="space-y-4">{dataFiles.map((d) => <li key={d} className="text-color1 underline">{d}</li>)}</ul>
+        <ul className="space-y-4">{dataFiles.map((d) => <li key={d} className="underline text-color1">{d}</li>)}</ul>
       </div>
       <div>
         {subgroups?.map((subgroup) => (
@@ -73,7 +76,7 @@ const Indicator: FC = () => {
             </span>
           </button>
         ))}
-        {dropdownOpen && <ul className="space-y-4">{FUELTYPE.map((d) => <li key={d} className="text-color1 underline"><a href="">{d}</a></li>)}</ul>}
+        {dropdownOpen && <ul className="space-y-4">{FUELTYPE.map((d) => <li key={d} className="underline text-color1"><a href="">{d}</a></li>)}</ul>}
       </div>
     </div>
   );

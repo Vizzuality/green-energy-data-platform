@@ -1,7 +1,9 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 
 import Tooltip from 'components/widgets/tooltip';
 import i18next from 'i18next';
+
+import { uniq } from 'lodash';
 
 type PayloadObject = {
   name: string,
@@ -66,10 +68,13 @@ const Tick: FC<TickProps> = (({
   );
 });
 
+// language keys
+const region = i18next.t('region');
+
 const LabelContent = () => (
   <g>
     <text x="50%" y={400} textAnchor="middle" fill="#C4C4C4" fontSize="14px">
-      {i18next.t('region')}
+      {region}
     </text>
   </g>
 );
@@ -80,9 +85,12 @@ const TooltipContent: FC<TooltipProps> = ({
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
 const ChartConfig = (categories, language, data) => {
-  const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China').map((d) => d.value), [data]);
-  const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
-  const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
+  const unitId = uniq(data.map(({ unit }) => unit.id))[0];
+  const isPercentage = unitId === '542351b7-2813-4856-a7d8-1ceadd1f4a03';
+  // const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China')
+  // .map((d) => d.value), [data]);
+  // const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
+  // const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
   const KEY = language === 'cn' ? '总量' : 'Total';
   const getLines = () => {
     if (categories.length) {
@@ -151,12 +159,15 @@ const ChartConfig = (categories, language, data) => {
       xAxis: {
         dataKey: 'year',
         tick: { fill: '#3A3F59', opacity: 0.5, fontSize: 12 },
-        interval: 'preserveStartEnd',
+        interval: 0,
       },
       yAxis: {
+        type: 'number',
         tick: DefaultTick,
-        // domain: [MINVALUE, MAXVALUE],
+        ...isPercentage && { domain: [0, 100] },
+        ...isPercentage && { ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] },
         interval: 0,
+        isPercentage,
       },
       tooltip: {
         isAnimationActive: true,
@@ -260,161 +271,6 @@ const ChartConfig = (categories, language, data) => {
         isAnimationActive: false,
         content: TooltipContent,
       },
-    },
-    table: {
-      headers: ['Region name', 1995, 2000, 2005, 2010, 2015],
-      items: [
-        {
-          label: 'Beijing',
-          value: [
-            {
-              label: 1995,
-              value: 50,
-            },
-            {
-              label: 2000,
-              value: 70,
-            },
-            {
-              label: 2005,
-              value: 84,
-            },
-            {
-              label: 2010,
-              value: 88,
-            },
-            {
-              label: 2015,
-              value: 90,
-            },
-          ],
-        },
-        {
-          label: 'Chengdu',
-          value: [
-            {
-              label: 1995,
-              value: 60,
-            },
-            {
-              label: 2000,
-              value: 64,
-            },
-            {
-              label: 2005,
-              value: 60,
-            },
-            {
-              label: 2010,
-              value: 72,
-            },
-            {
-              label: 2015,
-              value: 84,
-            },
-          ],
-        },
-        {
-          label: 'Guizhou',
-          value: [
-            {
-              label: 1995,
-              value: 70,
-            },
-            {
-              label: 2000,
-              value: 74,
-            },
-            {
-              label: 2005,
-              value: 60,
-            },
-            {
-              label: 2010,
-              value: 82,
-            },
-            {
-              label: 2015,
-              value: 20,
-            },
-          ],
-        },
-        {
-          label: 'Shanghai',
-          value: [
-            {
-              label: 1995,
-              value: 60,
-            },
-            {
-              label: 2000,
-              value: 65,
-            },
-            {
-              label: 2005,
-              value: 72,
-            },
-            {
-              label: 2010,
-              value: 90,
-            },
-            {
-              label: 2015,
-              value: 50,
-            },
-          ],
-        },
-        {
-          label: 'Shenyang',
-          value: [
-            {
-              label: 1995,
-              value: 54,
-            },
-            {
-              label: 2000,
-              value: 64,
-            },
-            {
-              label: 2005,
-              value: 74,
-            },
-            {
-              label: 2010,
-              value: 84,
-            },
-            {
-              label: 2015,
-              value: 94,
-            },
-          ],
-        },
-        {
-          label: 'Wuhan',
-          value: [
-            {
-              label: 1995,
-              value: 54,
-            },
-            {
-              label: 2000,
-              value: 59,
-            },
-            {
-              label: 2005,
-              value: 54,
-            },
-            {
-              label: 2010,
-              value: 60,
-            },
-            {
-              label: 2015,
-              value: 63,
-            },
-          ],
-        },
-      ],
     },
   });
 };

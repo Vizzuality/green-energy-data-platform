@@ -13,6 +13,9 @@ import { setLanguage } from 'store/slices/language';
 import Icon from 'components/icon';
 import { useRouter } from 'next/router';
 
+// language keys
+const language = i18n.t('language');
+
 const LanguageSelect = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -38,14 +41,14 @@ const LanguageSelect = () => {
     getItemProps,
   } = useSelect({ items: languages, onSelectedItemChange });
   return (
-    <div className="flex items-center relative">
+    <div className="relative flex items-center">
       <button
         type="button"
         className="flex items-center"
         {...getToggleButtonProps()}
       >
         <Icon className="text-white" ariaLabel="world ball" name="language" size="lg" />
-        <span className="px-3">{i18n.t('language')}</span>
+        <span className="px-3">{language}</span>
         <Icon
           className={cx('fill-current text-white', { 'transform rotate-180': !isOpen })}
           ariaLabel="arrow"
@@ -55,7 +58,7 @@ const LanguageSelect = () => {
       </button>
       {isOpen && (
       <ul
-        className="flex-col bg-gray1 absolute bottom-11 w-full rounded-xl border border-white border-opacity-25 divide-y divide-white divide-opacity-10"
+        className="absolute flex-col w-full border border-white border-opacity-25 divide-y divide-white bg-gray1 bottom-11 rounded-xl divide-opacity-10"
         {...getMenuProps()}
       >
         {languages.map((item, index) => (
@@ -68,7 +71,7 @@ const LanguageSelect = () => {
               }
             key={`${item.code}`}
             {...getItemProps({ item, index })}
-            className="pl-8 p-2 first:rounded-t-xl last:rounded-b-xl "
+            className="p-2 pl-8 first:rounded-t-xl last:rounded-b-xl "
           >
             {item.name}
           </li>

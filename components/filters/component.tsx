@@ -21,6 +21,11 @@ interface FiltersProps {
   indicator?: string;
 }
 
+// language keys
+const filtersLang = i18next.t('filters');
+const valueLang = i18next.t('value');
+const total = i18next.t('value');
+
 const Filters: FC<FiltersProps> = ({
   visualization,
   categories,
@@ -92,7 +97,7 @@ const Filters: FC<FiltersProps> = ({
         <div className="flex">
           <Icon ariaLabel="filters" name="filter" size="lg" className="mr-5" />
           <p>
-            {i18next.t('filters')}
+            {filtersLang}
             :
           </p>
         </div>
@@ -102,7 +107,6 @@ const Filters: FC<FiltersProps> = ({
           'max-h-36': !height,
         })}
       >
-
         {categories.map((category) => (
           <div
             key={category}
@@ -124,9 +128,11 @@ const Filters: FC<FiltersProps> = ({
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories || categories.length === 1}
             >
-              {category.toLowerCase() === 'total' && <span className="flex flex-1 pr-2 text-left">Total</span>}
-              {category === '总量' && <span className="flex flex-1 pr-2 text-left">总量</span>}
-              {category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
+              {visualization === 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{valueLang}</span>}
+              {visualization === 'choropleth' && category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
+
+              {visualization !== 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{total}</span>}
+              {visualization !== 'choropleth' && category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
             </button>
             {categorySelected === category && hasSubcategories && categories.length > 1 && (
               <div className="flex items-center justify-center h-full py-3 border-l border-l-white">

@@ -169,6 +169,9 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const { name: groupName } = group;
 
+  // language keys
+  const change = i18next.t('change');
+
   return (
     <div className="py-24 text-gray1" key={compareIndex}>
       <Hero
@@ -336,7 +339,7 @@ const CompareLayout: FC<CompareLayoutProps> = ({
                     onClick={() => { toggleDropdown('indicator'); }}
                     className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full text-sm"
                   >
-                    <span className="text-sm">{i18next.t('change')}</span>
+                    <span className="text-sm">{change}</span>
                     <Icon
                       ariaLabel="change indicator"
                       size="sm"
