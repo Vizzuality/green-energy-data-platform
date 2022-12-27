@@ -61,11 +61,11 @@ const Search: FC<SearchProps> = ({
       })}
     >
       <button
-        className="flex box-border w-full m-auto relative items-center"
+        className="box-border relative flex items-center w-full m-auto"
         type="button"
         onClick={handleMenu}
       >
-        <div className="flex flex-1 overflow-auto justify-start items-center relative px-10">
+        <div className="relative flex items-center justify-start flex-1 px-10 overflow-auto">
           <Icon
             ariaLabel="search"
             name="search"
@@ -75,7 +75,7 @@ const Search: FC<SearchProps> = ({
           <input
             ref={inputRef}
             type="search"
-            className="search-input bg-transparent ml-6 w-56 flex-1"
+            className="flex-1 w-56 ml-6 bg-transparent search-input"
             placeholder={`${i18next.t('searchIndicator')}...`}
             value={searchValue}
             onChange={updateSearch}
@@ -83,14 +83,14 @@ const Search: FC<SearchProps> = ({
           {searchValue && (
           <button
             type="button"
-            className="flex items-center absolute right-0"
+            className="absolute right-0 flex items-center"
             onClick={handleClearSearch}
           >
             <Icon
               ariaLabel="close"
               name="close"
               size="lg"
-              className="rounded-full bg-white bg-opacity-30 text-white fill-current ml-5 p-1"
+              className="p-1 ml-5 text-white bg-white rounded-full fill-current bg-opacity-30"
             />
           </button>
           )}

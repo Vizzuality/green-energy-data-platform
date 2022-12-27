@@ -5,11 +5,6 @@ import {
 
 import { useMemo } from 'react';
 
-// import { useRouter } from 'next/router';
-
-import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
-
 import {
   orderBy, uniq,
 } from 'lodash';
@@ -322,7 +317,6 @@ export function useIndicatorRecords(
   } = restParams as IndicatorFilters;
 
   const filters = (visualization === 'choropleth' || visualization === 'bars') ? restParamsYear : restParamsRegion;
-
   const filterValueKeys = Object.values(filters).filter((filter) => Boolean(filter));
   const query = useQuery<Record[], Error>(['indicator-records', groupId, subgroupId, indicatorId, locale, ...filterValueKeys],
     () => fetchIndicatorRecords(
@@ -358,20 +352,14 @@ export function useSankeyData(
   queryOptions = {},
 ) {
   const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
-
-  const {
     visualization,
     // region,
     // unit,
     ...restParams
   } = params;
 
-  const query = useQuery<SankeyData, Error>(['sankey-data', id, current, params],
-    () => fetchSankeyData(id, { locale: current, ...restParams }), {
+  const query = useQuery<SankeyData, Error>(['sankey-data', id, params],
+    () => fetchSankeyData(id, { ...restParams }), {
       placeholderData: {
         links: [],
         nodes: [],

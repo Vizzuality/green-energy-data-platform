@@ -27,7 +27,7 @@ const PreFooter: FC<PreFooterProps> = ({
       <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10 w-full relative mb-[4.65rem]',
         { [className]: className })}
       >
-        <div className="flex justify-center w-full p-12 space-x-2 xlg:text-xl lg:text-lg md:text-base">
+        <div className="flex w-full p-12 px-16 space-x-2 justify-evenly xlg:text-xl lg:text-lg md:text-base lg:px-32 md:px-24 ">
           {defaultGroupSlugs?.map(({
             name, groupSlug, subgroupSlug, indicatorSlug,
           }) => (

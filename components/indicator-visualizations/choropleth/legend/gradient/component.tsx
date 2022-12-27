@@ -21,14 +21,15 @@ export const LegendTypeGradient: FC<LegendTypeGradientProps> = ({
         backgroundImage: `linear-gradient(to right, ${items.map((i) => i.color).join(',')})`,
       }}
     />
-
     <ul className="flex justify-between w-full mt-1">
       {items
         .filter(({ value }) => !!value)
         .map(({ value }) => (
+          value && (
           <li key={`${value}`} className="flex-shrink-0 text-xs">
             {numberFormat(value)}
           </li>
+          )
         ))}
     </ul>
   </div>
