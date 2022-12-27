@@ -316,8 +316,10 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     () => scenarios.find(({ value }) => value === scenario)?.label,
     [scenarios, scenario],
   ) || '';
+
+  const hasSubcategories = useMemo(() => subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie' && visualization !== 'choropleth'), [subcategories, visualization]);
+
   const selectedCategory = useMemo(() => {
-    const hasSubcategories = subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie');
     if (!hasSubcategories) return defaultCategory;
     // Use the last selected filter
     if (uiCategory.value !== category.value) {
@@ -668,9 +670,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
             <Filters
               visualization={visualization}
               categories={categories}
-              hasSubcategories={
-                subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie')
-              }
+              hasSubcategories={hasSubcategories}
               className="mb-4 overflow-y-auto"
               onClick={setFilters}
             />

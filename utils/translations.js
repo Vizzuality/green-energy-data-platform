@@ -111,13 +111,14 @@ export const resources = {
       forgotPassword: 'Forgot password',
       recoveryPasswordRequirements: 'Please enter your registered email and we will help you to recover your password',
       resetLink: 'Request reset link',
+      China: 'China',
     },
   },
   cn: {
     translation: {
       aboutInfo: '关于本站信息',
       change: '更改指标',
-      compare: '相比',
+      compare: '比较',
       copyright: '版权所有 © 2021 能源基金会。版权所有',
       region: '地区',
       language: '选择语言',
@@ -216,6 +217,7 @@ export const resources = {
       forgotPassword: '忘记密码',
       recoveryPasswordRequirements: '请输入您的注册邮箱，我们将帮您找回密码',
       resetLink: '请求重置链接',
+      China: '中国',
     },
   },
 };

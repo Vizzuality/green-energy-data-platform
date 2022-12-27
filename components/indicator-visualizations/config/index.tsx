@@ -3,6 +3,8 @@ import React, { FC, useMemo } from 'react';
 import Tooltip from 'components/widgets/tooltip';
 import i18next from 'i18next';
 
+import { uniq } from 'lodash';
+
 type PayloadObject = {
   name: string,
   value: number,
@@ -80,6 +82,8 @@ const TooltipContent: FC<TooltipProps> = ({
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
 const ChartConfig = (categories, language, data) => {
+  const unitId = uniq(data.map(({ unit }) => unit.id))[0];
+  const isPercentage = unitId === '542351b7-2813-4856-a7d8-1ceadd1f4a03';
   const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China').map((d) => d.value), [data]);
   const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
   const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
@@ -151,12 +155,15 @@ const ChartConfig = (categories, language, data) => {
       xAxis: {
         dataKey: 'year',
         tick: { fill: '#3A3F59', opacity: 0.5, fontSize: 12 },
-        interval: 'preserveStartEnd',
+        interval: 0,
       },
       yAxis: {
+        type: 'number',
         tick: DefaultTick,
-        // domain: [MINVALUE, MAXVALUE],
+        ...isPercentage && { domain: [0, 100] },
+        ...isPercentage && { ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] },
         interval: 0,
+        isPercentage,
       },
       tooltip: {
         isAnimationActive: true,

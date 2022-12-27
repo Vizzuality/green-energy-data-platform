@@ -81,6 +81,7 @@ const IndicatorData: FC<Component> = ({
   }, [dropdownVisibility]);
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
+    keepPreviousData: true,
     refetchOnWindowFocus: false,
   });
 
@@ -114,13 +115,13 @@ const IndicatorData: FC<Component> = ({
   const groupVisualization = useMemo(() => {
     switch (groupSlug) {
       case 'energy-flows':
-        return <EnergyFlow />;
+        return <EnergyFlow indicatorName={name} />;
       case 'scenarios':
         return <ModelIntercomparison />;
       default:
         return <General />;
     }
-  }, [groupSlug]);
+  }, [groupSlug, name]);
 
   return (
     <div className={cx('bg-white rounded-2.5xl text-gray1 divide-y divide-gray shadow',

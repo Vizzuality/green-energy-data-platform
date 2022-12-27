@@ -124,11 +124,6 @@ const MapContainer: FC<MapContainerProps> = ({
     tooltipInfoHeaders: spiderTooltipInfoHeaders,
   } = useCoalPowerPlantTooltip(spiderInfo);
 
-  // Callbacks
-  const onChangeOrder = useCallback((ids) => {
-    setSortArray(ids);
-  }, []);
-
   const mapRefCurrent = mapRef.current;
   const spiderifier = useMemo(() => {
     if (mapRefCurrent !== null) {
@@ -400,7 +395,8 @@ const MapContainer: FC<MapContainerProps> = ({
         />
       )}
       {hasInteraction && (
-        <Legend onChangeOrder={onChangeOrder}>
+        <Legend>
+
           {sortedItems?.map((i) => {
             const { type, items } = i;
 
