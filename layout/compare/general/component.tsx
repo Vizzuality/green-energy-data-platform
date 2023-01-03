@@ -277,7 +277,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
   const displayScenario = useMemo(() => scenarios.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
   const selectedCategory = useMemo(() => {
-    if (category?.label === 'category_2' && category.value) {
+    if (category?.label === 'category_2' && category?.value) {
       return category;
     } return defaultCategory;
   }, [category, defaultCategory]);

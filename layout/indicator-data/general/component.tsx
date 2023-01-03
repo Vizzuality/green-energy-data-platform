@@ -62,8 +62,6 @@ type ChartProps = {
 };
 
 const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
-/** Max bar chart items */
-const MAX_ITEMS = 35;
 
 // language keys
 const showing = i18next.t('showing');
@@ -98,6 +96,10 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     scenario,
     visualization = 'choropleth',
   } = filters;
+
+  /** Max bar chart items */
+  const MAX_ITEMS = visualization === 'bar' ? 35 : 13;
+
   const router = useRouter();
   const {
     query: { group: groupSlug, subgroup: subgroupQuery, locale },
@@ -329,10 +331,10 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const selectedCategory = useMemo(() => {
     if (!hasSubcategories) return defaultCategory;
     // Use the last selected filter
-    if (uiCategory.value !== category.value) {
+    if (uiCategory.value !== category?.value) {
       return uiCategory;
     }
-    if (category?.label === 'category_2' && category.value && categories.includes(category.value)) {
+    if (category?.label === 'category_2' && category?.value && categories.includes(category?.value)) {
       return category;
     }
     return defaultCategory;
@@ -637,7 +639,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                   {visualization !== 'choropleth' && (
                     <div className="w-full h-96">
                       {
-                          (visualization === 'bar' && Array.isArray(widgetData) && widgetData.length > MAX_ITEMS) ? (
+                          ((visualization === 'bar' || visualization === 'line') && Array.isArray(widgetData) && widgetData.length > MAX_ITEMS) ? (
                             <PaginatedDynamicChart
                               maxItems={MAX_ITEMS}
                               widgetData={widgetData}

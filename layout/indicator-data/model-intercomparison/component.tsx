@@ -284,10 +284,10 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
     const hasSubcategories = subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie');
     if (!hasSubcategories) return defaultCategory;
     // Use the last selected filter
-    if (uiCategory.value !== category.value) {
+    if (uiCategory.value !== category?.value) {
       return uiCategory;
     }
-    if (category?.label === 'category_2' && category.value && categories.includes(category.value)) {
+    if (category?.label === 'category_2' && category?.value && categories.includes(category?.value)) {
       return category;
     }
     return defaultCategory;
