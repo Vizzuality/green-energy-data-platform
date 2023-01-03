@@ -30,6 +30,8 @@ const THEME = {
   transparent: 'bg-transparent border-gray1 text-gray1 border-opacity-20',
 };
 
+// language keys
+const browse = i18next.t('browse');
 const Hero: FC<HeroProps> = ({
   children,
   header = true,
@@ -63,7 +65,7 @@ const Hero: FC<HeroProps> = ({
                     'bg-white text-gray1': theme !== 'transparent',
                   })}
               >
-                {i18next.t('browse')}
+                {browse}
               </a>
             </Link>
           </div>

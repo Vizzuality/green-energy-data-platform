@@ -58,6 +58,9 @@ import ChartConfig from 'components/indicator-visualizations/config';
 import type { ChartLine, ChartBar } from 'types/model-intercomparison';
 import type IndicatorCompareDataProps from '../types';
 
+// language keys
+const showing = i18next.t('showing');
+
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   groupSlug,
   subgroupSlug,
@@ -331,7 +334,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     <section className={`flex flex-col  ${className}`}>
       <section className="flex flex-wrap items-center">
         <span className="pr-2 whitespace-nowrap">
-          {i18next.t('showing')}
+          {showing}
           :
         </span>
         <div className="flex-wrap items-center py-4">

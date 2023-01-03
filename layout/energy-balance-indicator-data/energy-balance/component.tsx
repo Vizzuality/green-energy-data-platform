@@ -9,12 +9,14 @@ import cx from 'classnames';
 import { groupBy } from 'lodash';
 // hooks
 import {
-  useGroup, useEnergyBalanceGroupData, useEnergyBalanceSelectedSubgroup, useEnergyBalanceGroupIndicators,
+  useGroup, useEnergyBalanceGroupData, useEnergyBalanceSelectedSubgroup,
 } from 'hooks/groups';
 
 import { useRouter } from 'next/router';
 
 import Icon from 'components/icon';
+
+const downloadDataFiles = i18next.t('downloadDataFiles');
 
 const Indicator: FC = () => {
   const router = useRouter();
@@ -45,7 +47,7 @@ const Indicator: FC = () => {
   return (
     <div>
       <h4 className="py-10">
-        {i18next.t('downloadDataFiles')}
+        {downloadDataFiles}
         :
       </h4>
 
@@ -54,7 +56,7 @@ const Indicator: FC = () => {
           (d) => (
             Object.values(dataByIndicator[d])[0].category_1_en === ''
               ? (
-                <span className="text-color1 underline pl-6">
+                <span className="pl-6 underline text-color1">
                   {Object.values(dataByIndicator[d])[0].indicator_en}
                 </span>
               )
@@ -76,7 +78,7 @@ const Indicator: FC = () => {
                   <ul>
                     {Object.values(dataByIndicator[d]).map(({ file_name }) => (
                       dropdownVisibility[d] && (
-                        <li key={d} className="text-color1 underline pl-6 space-y-3 my-4">
+                        <li key={d} className="pl-6 my-4 space-y-3 underline text-color1">
                           <a href="" />
                           {file_name}
                         </li>

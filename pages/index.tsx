@@ -23,6 +23,10 @@ import i18next from 'i18next';
 import { InView } from 'react-intersection-observer';
 import CookieBanner from 'components/cookie-banner';
 
+// language keys
+const browse = i18next.t('browse');
+const landingTitle = i18next.t('landingTitle');
+
 const HomePage: FC = () => {
   const { query: { locale } } = useRouter();
   const lang = locale || 'en';
@@ -32,7 +36,7 @@ const HomePage: FC = () => {
     <LayoutPage className="h-full min-h-screen">
       <Head title="Welcome to Green Energy Data Platform" />
       <Hero className="flex flex-col px-8 py-24 text-center lg:px-32 md:px-24 sm:px-16">
-        <h1 className="text-5.5xl pb-14">{i18next.t('landingTitle')}</h1>
+        <h1 className="text-5.5xl pb-14">{landingTitle}</h1>
         <h3 className="text-lg">Longer description about the site and benefits, lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla.</h3>
       </Hero>
       <div className="container px-8 m-auto -mt-11 lg:px-32 md:px-24 sm:px-16 mb-28">
@@ -45,7 +49,7 @@ const HomePage: FC = () => {
               href="/indicators"
               className="items-center justify-center py-5 ml-3 text-sm text-center text-white border rounded bg-gray1 border-gray1 focus-within:flex hover:bg-opacity-90 active:bg-white active:text-gray1 focus:outline-none px-11"
             >
-              {i18next.t('browse')}
+              {browse}
             </a>
           </Link>
         </Search>
@@ -66,7 +70,6 @@ const HomePage: FC = () => {
         })}
 
       <CookieBanner />
-
       <PreFooter />
     </LayoutPage>
   );

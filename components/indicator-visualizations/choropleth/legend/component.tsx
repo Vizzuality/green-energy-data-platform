@@ -14,6 +14,9 @@ interface LegendProps {
   maxHeight?: string | number;
 }
 
+// language keys
+const legend = i18next.t('legend');
+
 export const Legend: FC<LegendProps> = ({
   children,
   className = '',
@@ -26,6 +29,7 @@ export const Legend: FC<LegendProps> = ({
   const onToggleActive = useCallback(() => {
     setActive(!active);
   }, [active]);
+
   return (
     <div
       className={cx('absolute text-left bottom-2 left-2 bg-gray1 rounded-3xl text-sm text-white flex flex-col flex-grow z-20 max-w-[60%]',
@@ -38,7 +42,7 @@ export const Legend: FC<LegendProps> = ({
         className="relative flex items-center w-full px-5 py-1.5 space-x-2 text-sm text-white font-heading"
         onClick={onToggleActive}
       >
-        <span>{i18next.t('legend')}</span>
+        <span>{legend}</span>
         <Icon
           ariaLabel={active ? 'collapse dropdown' : 'expand dropdown'}
           name="triangle_border"

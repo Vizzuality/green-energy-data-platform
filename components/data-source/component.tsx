@@ -36,6 +36,10 @@ const Card: FC<DataProps> = ({
   const signInPage = () => router.push('/signin');
   const indSlug = indicatorSlug || subgroup?.[1];
 
+  // language keys
+  const downloadLoginMode = i18next.t('downloadLoginMode');
+  const login = i18next.t('login');
+
   return (
     <div className={cx('flex divide-gray4 divide-opacity-90 text-center bg-gray5 text-gray1 rounded-2xl',
       {
@@ -50,7 +54,7 @@ const Card: FC<DataProps> = ({
           <div className={cx('flex-col items-center p-4',
             { 'w-full justify-center': type === 'horizontal' })}
           >
-            <p>{i18next.t('downloadLoginMode')}</p>
+            <p>{downloadLoginMode}</p>
             <Button
               className="mx-auto mt-6"
               type="submit"
@@ -59,7 +63,7 @@ const Card: FC<DataProps> = ({
               size="xlg"
               onClick={signInPage}
             >
-              {i18next.t('login')}
+              {login}
             </Button>
           </div>
         )

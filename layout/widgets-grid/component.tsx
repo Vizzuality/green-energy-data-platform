@@ -16,6 +16,9 @@ interface WidgetsGridProps {
   className?: string;
 }
 
+// language keys
+const otherIndicators = i18next.t('otherIndicators');
+
 const WidgetsGrid: FC<WidgetsGridProps> = ({ className }: WidgetsGridProps) => {
   const router = useRouter();
   const {
@@ -93,9 +96,9 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({ className }: WidgetsGridProps) => {
           <a
             key="other-indicators"
             href="/indicators"
-            className="w-full h-full items-center flex justify-center m-auto p-6 text-lg"
+            className="flex items-center justify-center w-full h-full p-6 m-auto text-lg"
           >
-            {i18next.t('otherIndicators')}
+            {otherIndicators}
           </a>
         </Link>
       </div>

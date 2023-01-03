@@ -8,7 +8,7 @@ import Link from 'next/link';
 import cx from 'classnames';
 
 interface HeaderProps {
-  children?: ReactChildren | ReactElement<any, string> & ReactNode,
+  children?: ReactChildren | ReactElement<any, string> & ReactNode | ReactElement,
   className?: string,
   theme?: string
 }
@@ -22,17 +22,19 @@ const Header: FC<HeaderProps> = ({ children, className, theme = 'light' }: Heade
   <div className={cx('flex justify-between items-center px-12 py-2 border-b border-white border-opacity-30 relative',
     { [className]: !!className })}
   >
-    <Link href="/" passHref>
-      <a href="/">
-        <img
-          alt="GEDP"
-          src={`/images/${THEME[theme]}`}
-          className="w-36"
-        />
-      </a>
-    </Link>
+    <>
+      <Link href="/" passHref>
+        <a href="/">
+          <img
+            alt="GEDP"
+            src={`/images/${THEME[theme]}`}
+            className="w-36"
+          />
+        </a>
+      </Link>
 
-    { children }
+      { children }
+    </>
   </div>
 );
 

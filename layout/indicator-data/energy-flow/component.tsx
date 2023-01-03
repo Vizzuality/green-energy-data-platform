@@ -44,6 +44,16 @@ type SankeyWrapper = {
 
 const DROPDOWN_BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 
+// language keys
+const showing = i18next.t('showing');
+const yearLang = i18next.t('yearLang');
+const selectYear = i18next.t('selectYear');
+const unitLang = i18next.t('unitLang');
+const selectUnit = i18next.t('selectUnit');
+const regionLang = i18next.t('regionLang');
+const selectRegion = i18next.t('selectRegion');
+const dataNotFound = i18next.t('dataNotFound');
+
 const SankeyChart: FC<SankeyWrapper> = ({
   indicatorName,
   className,
@@ -165,17 +175,17 @@ const SankeyChart: FC<SankeyWrapper> = ({
             {/* year filter */}
             <div className="flex flex-wrap items-center">
               <span className="pr-2 mb-2">
-                {i18next.t('showing')}
+                {showing}
                 :
               </span>
               {years.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {i18next.t('year')}
+                    {yearLang}
                     :
                   </span>
                   <span>
-                    {displayYear || i18next.t('selectYear')}
+                    {displayYear || selectYear}
                   </span>
                 </div>
               )}
@@ -199,11 +209,11 @@ const SankeyChart: FC<SankeyWrapper> = ({
                     className={cx(DROPDOWN_BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                   >
                     <span className="hidden mr-2 md:flex">
-                      {i18next.t('year')}
+                      {yearLang}
                       :
                     </span>
                     <span>
-                      {displayYear || i18next.t('selectYear')}
+                      {displayYear || selectYear}
                     </span>
                     <Icon ariaLabel="change date" name="calendar" className="ml-4" />
                   </button>
@@ -213,7 +223,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
               {units.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {i18next.t('unit')}
+                    {unitLang}
                     :
                   </span>
                   <span>
@@ -241,11 +251,11 @@ const SankeyChart: FC<SankeyWrapper> = ({
                     className={cx(DROPDOWN_BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                   >
                     <span className="hidden mr-2 md:flex">
-                      {i18next.t('unit')}
+                      {unitLang}
                       :
                     </span>
                     <span>
-                      {currentUnit || i18next.t('selectUnit')}
+                      {currentUnit || selectUnit}
                     </span>
                   </button>
                 </Tooltip>
@@ -254,11 +264,11 @@ const SankeyChart: FC<SankeyWrapper> = ({
               {regions.length === 1 && displayRegion && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {i18next.t('region')}
+                    {regionLang}
                     :
                   </span>
                   <span>
-                    {displayRegion || i18next.t('selectRegion')}
+                    {displayRegion || selectRegion}
                   </span>
                 </div>
               )}
@@ -282,11 +292,11 @@ const SankeyChart: FC<SankeyWrapper> = ({
                     className={cx(DROPDOWN_BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                   >
                     <span className="hidden mr-2 md:flex">
-                      {i18next.t('region')}
+                      {regionLang}
                       :
                     </span>
                     <span>
-                      {displayRegion || i18next.t('selectRegion')}
+                      {displayRegion || selectRegion}
                     </span>
                   </button>
                 </Tooltip>
@@ -305,7 +315,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
               && (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
                   <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-                  <p>{i18next.t('dataNotFound')}</p>
+                  <p>{dataNotFound}</p>
                 </div>
               )}
 

@@ -33,6 +33,10 @@ import EnergyFlow from './energy-flow';
 import ModelIntercomparison from './model-intercomparison';
 import CompareDropdownContent from './compare-dropdown/component';
 
+// language keys
+const compare = i18next.t('compare');
+const change = i18next.t('change');
+
 const IndicatorData: FC<Component> = ({
   className,
 }: Component) => {
@@ -135,7 +139,7 @@ const IndicatorData: FC<Component> = ({
         visualizationTypes={visualizationTypesIndicator}
       />
       )}
-      <div className="flex flex-col w-full px-16 lg:px-32 md:px-24 py-11 space-y-7.5">
+      <div className="flex flex-col w-full px-16 lg:px-32 md:px-24 py-11 space-y-7.5 min-h-1/2">
         {groupSlug !== 'energy-balance' && (
         <div className="flex items-center justify-between w-full">
           <h2 className="flex flex-wrap text-3.5xl max-w-6xl mr-4">
@@ -171,7 +175,7 @@ const IndicatorData: FC<Component> = ({
                 onClick={() => { toggleDropdown('indicator'); }}
                 className="flex items-center border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4 whitespace-nowrap"
               >
-                <span className="text-sm">{i18next.t('change')}</span>
+                <span className="text-sm">{change}</span>
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" size="sm" />
               </button>
             </Tooltip>
@@ -194,7 +198,7 @@ const IndicatorData: FC<Component> = ({
                 type="button"
                 className="text-sm border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full"
               >
-                {i18next.t('compare')}
+                {compare}
               </button>
             </Tooltip>
           </div>

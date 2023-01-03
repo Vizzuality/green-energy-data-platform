@@ -23,6 +23,20 @@ import Icon from 'components/icon';
 import i18next from 'i18next';
 import { useRouter } from 'next/router';
 
+// language keys
+const signup = i18next.t('signup');
+const createAccountLong = i18next.t('createAccountLong');
+const registered = i18next.t('registered');
+const yourTitle = i18next.t('yourTitle');
+const yourName = i18next.t('yourName');
+const yourEmail = i18next.t('yourEmail');
+const yourOrganization = i18next.t('yourOrganization');
+const enterPassword = i18next.t('enterPassword');
+const agreement = i18next.t('agreement');
+const terms = i18next.t('terms');
+const privacy = i18next.t('privacy');
+const createAccountShort = i18next.t('createAccountShort');
+
 const SignupPage: FC = () => {
   const [credentials, setCredentials] = useState({
     name: '',
@@ -75,12 +89,12 @@ const SignupPage: FC = () => {
         <Header />
         <div className="flex items-center justify-center flex-grow h-full max-w-5xl p-12 m-auto overflow-y-auto md:p-4">
           <section className="flex flex-col justify-start max-w-xs mx-20 text-white">
-            <h1 className="text-5.5xl font-bold py-7 tracking-tight">{i18next.t('signup')}</h1>
+            <h1 className="text-5.5xl font-bold py-7 tracking-tight">{signup}</h1>
             <p className="pb-20 text-lg">
-              {i18next.t('createAccountLong')}
+              {createAccountLong}
             </p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
-            <p className="py-4">{i18next.t('registered')}</p>
+            <p className="py-4">{registered}</p>
             <Link href={{ pathname: '/signin' }} passHref>
               <a href="/signin" className="flex items-center justify-center text-center text-white bg-transparent border-2 border-white rounded-full hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black focus:outline-none">Sign in</a>
             </Link>
@@ -89,7 +103,7 @@ const SignupPage: FC = () => {
             <form onSubmit={handleSubmit} className="inline-flex flex-col flex-grow w-full">
               <div className="pb-6">
                 <label htmlFor="title" className="text-base font-bold">
-                  {i18next.t('yourTitle')}
+                  {yourTitle}
                   :
                   <div className="relative mt-3 mb-8 font-normal">
                     <Icon ariaLabel="title-input" name="title" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
@@ -110,7 +124,7 @@ const SignupPage: FC = () => {
                   </div>
                 </label>
                 <label htmlFor="name" className="text-base font-bold">
-                  {i18next.t('yourName')}
+                  {yourName}
                   :
                   <div className="relative mt-3 mb-8 font-normal">
                     <Icon
@@ -138,7 +152,7 @@ const SignupPage: FC = () => {
                   </div>
                 </label>
                 <label htmlFor="email" className="text-base font-bold">
-                  {i18next.t('yourEmail')}
+                  {yourEmail}
                   :
                   <div className="relative mt-3 mb-8 font-normal">
                     <Icon ariaLabel="mail-input" name="mail" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
@@ -159,7 +173,7 @@ const SignupPage: FC = () => {
                   </div>
                 </label>
                 <label htmlFor="organization" className="pb-10 text-base font-bold">
-                  {i18next.t('yourOrganization')}
+                  {yourOrganization}
                   :
                   <div className="relative mt-3 mb-8 font-normal">
                     <Icon ariaLabel="organization-input" name="organization" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
@@ -180,7 +194,7 @@ const SignupPage: FC = () => {
                   </div>
                 </label>
                 <label htmlFor="password" className="pb-10 text-base font-bold">
-                  {i18next.t('enterPassword')}
+                  {enterPassword}
 
                   <div className="relative mt-3 mb-5 font-normal">
                     <Icon ariaLabel="password-input" name="password" size="lg" className="absolute font-bold transform -translate-y-1/2 -left-10 top-1/2" />
@@ -207,11 +221,11 @@ const SignupPage: FC = () => {
                 )}
                 <label htmlFor="terms-conditions" className="flex flex-row-reverse items-center justify-end text-sm text-gray1">
                   <span>
-                    {`${i18next.t('agreement')} `}
+                    {`${agreement} `}
 
                     <Link href={{ pathname: '/terms-conditions' }} passHref>
                       <a href="/terms-conditions" className="underline">
-                        {i18next.t('terms')}
+                        {terms}
                       </a>
                     </Link>
                   </span>
@@ -225,10 +239,10 @@ const SignupPage: FC = () => {
                 </label>
                 <label htmlFor="privacy-policy" className="flex flex-row-reverse items-center justify-end text-sm mb-9 text-gray1">
                   <span>
-                    {`${i18next.t('agreement')} `}
+                    {`${agreement} `}
                     <Link href={{ pathname: '/privacy-policy' }} passHref>
                       <a href="/privacy-policy" className="underline">
-                        {i18next.t('privacy')}
+                        {privacy}
                       </a>
                     </Link>
                   </span>
@@ -247,7 +261,7 @@ const SignupPage: FC = () => {
                 theme="secondary-background-dark"
                 size="xlg"
               >
-                {i18next.t('createAccountShort')}
+                {createAccountShort}
               </Button>
             </form>
           </section>

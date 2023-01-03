@@ -59,6 +59,16 @@ import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
 import type { ChartLine, ChartBar } from 'types/model-intercomparison';
 import type { ComponentTypes } from 'types/data';
 
+// language keys
+const showing = i18next.t('showing');
+const regionLang = i18next.t('region');
+const selectRegion = i18next.t('selectRegion');
+const unitLang = i18next.t('unit');
+const selectUnit = i18next.t('selectUnit');
+const scenarioLang = i18next.t('scenario');
+const selectScenario = i18next.t('selectScenario');
+const dataNotFound = i18next.t('dataNotFound');
+
 const ModelIntercomparison: FC<ComponentTypes> = ({
   className,
 }: ComponentTypes) => {
@@ -351,7 +361,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
       <section className="flex flex-wrap items-center">
         <span className="pr-2 mb-2 whitespace-nowrap">
-          {i18next.t('showing')}
+          {showing}
           :
         </span>
         <div className="inline-flex flex-wrap items-center text-sm">
@@ -361,11 +371,11 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               {regions.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {i18next.t('region')}
+                    {regionLang}
                     :
                   </span>
                   <span className={TEXT_BUTTON_STYLES}>
-                    {displayRegion || i18next.t('selectRegion')}
+                    {displayRegion || selectRegion}
                   </span>
                 </div>
               )}
@@ -389,11 +399,11 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                     className={DROPDOWN_BUTTON_STYLES}
                   >
                     <span className="hidden mr-2 md:flex">
-                      {i18next.t('region')}
+                      {regionLang}
                       :
                     </span>
                     <span className={TEXT_BUTTON_STYLES}>
-                      {displayRegion || i18next.t('selectRegion')}
+                      {displayRegion || selectRegion}
                     </span>
                     <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
                   </button>
@@ -405,11 +415,11 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           {scenarios.length === 1 && (
             <div className={DROPDOWN_BUTTON_STYLES}>
               <span className="hidden mr-2 md:flex">
-                {i18next.t('scenario')}
+                {scenarioLang}
                 :
               </span>
               <span className={TEXT_BUTTON_STYLES}>
-                {displayScenario || i18next.t('selectScenario')}
+                {displayScenario || selectScenario}
               </span>
             </div>
           )}
@@ -435,11 +445,11 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 className={DROPDOWN_BUTTON_STYLES}
               >
                 <span className="hidden mr-2 md:flex">
-                  {i18next.t('scenario')}
+                  {scenarioLang}
                   :
                 </span>
                 <span className={TEXT_BUTTON_STYLES}>
-                  {displayScenario || i18next.t('selectScenario')}
+                  {displayScenario || selectScenario}
                 </span>
                 <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
               </button>
@@ -449,11 +459,11 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
           {units.length === 1 && (
             <div className={DROPDOWN_BUTTON_STYLES}>
               <span className="hidden mr-2 md:flex">
-                {i18next.t('unit')}
+                {unitLang}
                 :
               </span>
               <span className={TEXT_BUTTON_STYLES}>
-                {displayUnit || i18next.t('selectUnit')}
+                {displayUnit || selectUnit}
               </span>
             </div>
           )}
@@ -477,11 +487,11 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
                 className={DROPDOWN_BUTTON_STYLES}
               >
                 <span className="hidden mr-2 md:flex">
-                  {i18next.t('unit')}
+                  {unitLang}
                   :
                 </span>
                 <span className={TEXT_BUTTON_STYLES}>
-                  {displayUnit || i18next.t('selectUnit')}
+                  {displayUnit || selectUnit}
                 </span>
                 <Icon ariaLabel="dropdown" name="triangle_border" className="ml-4" size="sm" />
               </button>
@@ -552,7 +562,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               && (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
                   <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-                  <p>Data not found</p>
+                  <p>{dataNotFound}</p>
                 </div>
               )}
 

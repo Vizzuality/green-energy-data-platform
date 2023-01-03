@@ -11,21 +11,26 @@ import Head from 'components/head';
 import Button from 'components/button';
 import i18next from 'i18next';
 
+// language keys
+const error = i18next.t('error');
+const errorMessage = i18next.t('errorMessage');
+const homepage = i18next.t('homepage');
+
 export const ErrorPage: FC = () => (
   <LayoutPage className="text-white bg-color1">
     <Head title="Error" />
-    <main className="flex flex-col h-full w-full m-auto flex-grow">
-      <div className="container m-auto lg:px-10 p-4 flex flex-col flex-grow">
+    <main className="flex flex-col flex-grow w-full h-full m-auto">
+      <div className="container flex flex-col flex-grow p-4 m-auto lg:px-10">
         <Image
           alt="GEDP"
           src="/images/logo_GEDP.svg"
           width="100%"
           height="100%"
         />
-        <div className="flex flex-col p-10 items-center justify-around">
-          <h1 className="text-9xl pb-5">{i18next.t('error')}</h1>
+        <div className="flex flex-col items-center justify-around p-10">
+          <h1 className="pb-5 text-9xl">{error}</h1>
           <h2 className="text-3.5xl pb-5">
-            {i18next.t('errorMessage')}
+            {errorMessage}
             .
           </h2>
           <div className="h-0.2 w-full bg-gradient-white mb-5" />
@@ -33,7 +38,7 @@ export const ErrorPage: FC = () => (
         <div className="flex justify-center">
           <Link href="/">
             <Button theme="primary-background" size="xlg" className="py-20">
-              {i18next.t('homepage')}
+              {homepage}
             </Button>
           </Link>
         </div>

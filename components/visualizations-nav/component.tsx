@@ -54,6 +54,11 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
   // (line, pie, bar chart and map) or data format
   // At the moment, just energy balance is showing data format
   const dataFormat = groupSlug === 'energy-balance';
+
+  // language keys
+  const visualization = i18next.t('visualization');
+  const dataFormatLang = i18next.t('dataFormat');
+
   return (
     <nav>
       <ul
@@ -65,59 +70,62 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
       >
         {!mobile && (
           <p className="pt-4 whitespace-nowrap">
-            {dataFormat ? i18next.t('dataFormat') : i18next.t('visualization')}
+            {dataFormatLang || visualization}
             :
           </p>
         )}
 
         {VisualizationsOptions?.map(({
           icon, label, id, slug,
-        }) => (
-          <li
-            role="menuitem"
-            key={id}
-            className={cx('relative flex flex-col p-4 text-color1', {
-              'cursor-pointer': visualizationTypes?.includes(id) && !dataFormat,
-              'font-bold text-opacity-100': active === slug || dataFormat,
-              'text-opacity-20':
+        }) => {
+          const visualizationLabel = i18next.t(label);
+          return (
+            <li
+              role="menuitem"
+              key={id}
+              className={cx('relative flex flex-col p-4 text-color1', {
+                'cursor-pointer': visualizationTypes?.includes(id) && !dataFormat,
+                'font-bold text-opacity-100': active === slug || dataFormat,
+                'text-opacity-20':
                 !visualizationTypes?.includes(id) && !dataFormat,
-              'pointer-events-none': VisualizationsOptions.length === 1,
-              'border rounded border-color1': active === id && mobile,
-            })}
-          >
-            <button
-              type="button"
-              className="flex items-center"
-              onClick={() => handleVisualization(id)}
-              onKeyPress={() => handleVisualization(id)}
-              disabled={!visualizationTypes?.includes(id)}
-            >
-              <Icon
-                ariaLabel={`${label}-visualization`}
-                name={icon}
-                size="lg"
-                className="text-current"
-              />
-              {!mobile && (
-              <span
-                className={cx('ml-3 hidden sm:block', {
-                  'text-gray2': active === id,
-                })}
-              >
-                {i18next.t(label)}
-              </span>
-              )}
-            </button>
-            {!mobile && (
-            <div
-              className={cx({
-                'absolute left-4 right-4 bottom-0 rounded-2xl h-1 bg-current':
-                    active === id,
+                'pointer-events-none': VisualizationsOptions.length === 1,
+                'border rounded border-color1': active === id && mobile,
               })}
-            />
-            )}
-          </li>
-        ))}
+            >
+              <button
+                type="button"
+                className="flex items-center"
+                onClick={() => handleVisualization(id)}
+                onKeyPress={() => handleVisualization(id)}
+                disabled={!visualizationTypes?.includes(id)}
+              >
+                <Icon
+                  ariaLabel={`${label}-visualization`}
+                  name={icon}
+                  size="lg"
+                  className="text-current"
+                />
+                {!mobile && (
+                <span
+                  className={cx('ml-3 hidden sm:block', {
+                    'text-gray2': active === id,
+                  })}
+                >
+                  {visualizationLabel}
+                </span>
+                )}
+              </button>
+              {!mobile && (
+              <div
+                className={cx({
+                  'absolute left-4 right-4 bottom-0 rounded-2xl h-1 bg-current':
+                    active === id,
+                })}
+              />
+              )}
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

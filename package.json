@@ -10,12 +10,17 @@
     "email": "hello@vizzuality.com",
     "url": "https://vizzuality.com"
   },
+  "engines": {
+    "node": "~16.14 || ~14.19"
+  },
   "dependencies": {
+    "@deck.gl/core": "^8.8.21",
     "@dnd-kit/core": "^4.0.0",
     "@dnd-kit/modifiers": "^4.0.0",
     "@dnd-kit/sortable": "^5.0.0",
     "@dnd-kit/utilities": "^3.0.0",
-    "@math.gl/web-mercator": "^3.4.2",
+    "@luma.gl/constants": "8.4.5",
+    "@math.gl/web-mercator": "^3.6.3",
     "@popperjs/core": "^2.9.0",
     "@react-aria/button": "^3.3.1",
     "@react-aria/focus": "^3.2.4",
@@ -34,18 +39,21 @@
     "@turf/turf": "^6.5.0",
     "@types/file-saver": "^2.0.3",
     "@types/lodash.orderby": "^4.6.6",
-    "@types/react-map-gl": "^5.2.9",
     "@types/supercluster": "^5.0.3",
     "@urbica/react-map-gl": "^1.14.4",
     "@urbica/react-map-gl-cluster": "^0.2.0",
+    "@vizzuality/layer-manager-layers-deckgl": "2.0.2",
+    "@vizzuality/layer-manager-plugin-mapboxgl": "2.0.2",
+    "@vizzuality/layer-manager-provider-carto": "2.0.2",
+    "@vizzuality/layer-manager-react": "2.0.2",
     "autoprefixer": "^10.4.2",
     "axios": "^0.21.1",
     "babel-eslint": "^10.1.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "chroma-js": "^2.1.2",
     "classnames": "^2.2.6",
-    "d3-ease": "^2.0.0",
-    "d3-format": "2.0.0",
+    "d3-ease": "^3.0.1",
+    "d3-format": "^3.1.0",
     "d3-scale": "3.3.0",
     "deck.gl": "7.3.6",
     "dom-to-image": "2.6.0",
@@ -53,9 +61,7 @@
     "file-saver": "^2.0.5",
     "fuse.js": "^6.4.6",
     "i18next": "^20.4.0",
-    "layer-manager": "3.0.8",
     "lodash": "^4.17.20",
-    "luma.gl": "7.3.2",
     "mapbox-gl": "^1.12.0",
     "mapboxgl-spiderifier": "^1.0.10",
     "maplibre-gl": "^2.4.0",
@@ -63,12 +69,12 @@
     "next-auth": "^3.27.3",
     "next-redux-wrapper": "^6.0.2",
     "postcss": "^8.4.7",
-    "react": "^17.0.1",
+    "react": "^18.2.0",
     "react-dom": "^17.0.1",
-    "react-hot-toast": "^2.3.0",
+    "react-hot-toast": "^2.4.0",
     "react-i18next": "^11.11.4",
     "react-intersection-observer": "^8.32.1",
-    "react-map-gl": "6.0.1",
+    "react-map-gl": "6.1.21",
     "react-popper": "^2.2.4",
     "react-query": "^3.12.0",
     "react-redux": "^7.2.1",
@@ -79,11 +85,11 @@
     "tailwindcss-border-gradients": "^2.0.3",
     "turf": "^3.0.14",
     "use-debounce": "^6.0.1",
-    "use-supercluster": "^0.4.0"
+    "use-supercluster": "^0.4.0",
+    "viewport-mercator-project": "^7.0.4"
   },
   "devDependencies": {
-    "@types/node": "^14.14.10",
-    "@types/react": "^18.0.26",
+    "@types/react": "18.0.1",
     "@types/recharts": "^1.8.19",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
@@ -121,5 +127,11 @@
     "start": "next start",
     "cy:open": "cypress open",
     "cy:run": "cypress run"
-  }
+  },
+  "resolutions": {
+    "@deck.gl/core": "8.7.8",
+    "@deck.gl/mapbox": "8.7.8",
+    "webpack": "^5"
+  },
+  "packageManager": "yarn@3.1.1"
 }

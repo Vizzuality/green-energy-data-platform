@@ -12,6 +12,9 @@ interface SignInProps {
   className?: string
 }
 
+// language keys
+const signin = i18next.t('signin');
+
 const SignIn: FC<SignInProps> = ({
   className,
 }: SignInProps) => {
@@ -27,7 +30,7 @@ const SignIn: FC<SignInProps> = ({
       className={cx('w-max inline-flex items-center text-sm border-box z-index-10',
         { [className]: !!className })}
     >
-      {i18next.t('signin')}
+      {signin}
       <Icon
         ariaLabel="sign-in"
         name="profile"

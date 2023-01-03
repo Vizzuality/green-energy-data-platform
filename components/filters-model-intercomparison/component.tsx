@@ -15,6 +15,11 @@ interface FiltersProps {
   height: number
 }
 
+// strings translations
+const filtersLang = i18next.t('filters');
+const history = i18next.t('history');
+const selectAll = i18next.t('selectAll');
+
 const FiltersMI: FC<FiltersProps> = ({
   models,
   activeModels,
@@ -52,7 +57,7 @@ const FiltersMI: FC<FiltersProps> = ({
         <div className="flex">
           <Icon ariaLabel="filters" name="filter" size="lg" className="mr-5" />
           <p>
-            {i18next.t('filters')}
+            {filtersLang}
             :
           </p>
 
@@ -62,7 +67,7 @@ const FiltersMI: FC<FiltersProps> = ({
           htmlFor="select-all"
           className="flex items-center text-sm text-left cursor-pointer opacity-20"
         >
-          {areAllSelected ? i18next.t('history') : i18next.t('selectAll')}
+          {areAllSelected ? history : selectAll}
           <input
             id="select-all"
             name="select-all"

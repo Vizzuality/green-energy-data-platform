@@ -21,6 +21,11 @@ interface FiltersProps {
   indicator?: string;
 }
 
+// language keys
+const filtersLang = i18next.t('filters');
+const valueLang = i18next.t('value');
+const total = i18next.t('value');
+
 const Filters: FC<FiltersProps> = ({
   visualization,
   categories,
@@ -92,7 +97,7 @@ const Filters: FC<FiltersProps> = ({
         <div className="flex">
           <Icon ariaLabel="filters" name="filter" size="lg" className="mr-5" />
           <p>
-            {i18next.t('filters')}
+            {filtersLang}
             :
           </p>
         </div>
@@ -123,10 +128,10 @@ const Filters: FC<FiltersProps> = ({
               onClick={() => handleCategories(category)}
               disabled={!hasSubcategories || categories.length === 1}
             >
-              {visualization === 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{i18next.t('value')}</span>}
+              {visualization === 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{valueLang}</span>}
               {visualization === 'choropleth' && category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
 
-              {visualization !== 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{i18next.t('total')}</span>}
+              {visualization !== 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{total}</span>}
               {visualization !== 'choropleth' && category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
             </button>
             {categorySelected === category && hasSubcategories && categories.length > 1 && (

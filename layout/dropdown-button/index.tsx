@@ -21,17 +21,23 @@ const DropdownButton: FC<DrodownButtonTypes> = ({
   translationKey,
   icon,
   iconLabel,
-}: DrodownButtonTypes) => (
-  <div className={DROPDOWN_BUTTON_STYLES}>
-    <span className="mr-2 hidden md:flex">
-      {i18next.t(elKey)}
-      :
-    </span>
-    <span title={display.toString() || i18next.t(translationKey)} className={TEXT_BUTTON_STYLES}>
-      {display || i18next.t(translationKey)}
-    </span>
-    {!!icon && <Icon ariaLabel={iconLabel} name={icon} size="sm" className="ml-4" />}
-  </div>
-);
+}: DrodownButtonTypes) => {
+  // language keys
+  const translationKeyLang = i18next.t(translationKey);
+  const elKeyLang = i18next.t(elKey);
+
+  return (
+    <div className={DROPDOWN_BUTTON_STYLES}>
+      <span className="hidden mr-2 md:flex">
+        {elKeyLang}
+        :
+      </span>
+      <span title={display.toString() || translationKeyLang} className={TEXT_BUTTON_STYLES}>
+        {display || translationKeyLang}
+      </span>
+      {!!icon && <Icon ariaLabel={iconLabel} name={icon} size="sm" className="ml-4" />}
+    </div>
+  );
+};
 
 export default DropdownButton;

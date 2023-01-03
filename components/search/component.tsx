@@ -53,6 +53,9 @@ const Search: FC<SearchProps> = ({
   const searchResults = useSearch(items, searchValue);
   const results = searchValue === '' ? items : searchResults;
   const noResults = !results?.length;
+
+  // language keys
+  const searchIndicator = i18next.t('searchIndicator');
   return (
     <div className={cx('flex h-full relative', className,
       {
@@ -76,7 +79,7 @@ const Search: FC<SearchProps> = ({
             ref={inputRef}
             type="search"
             className="flex-1 w-56 ml-6 bg-transparent search-input"
-            placeholder={`${i18next.t('searchIndicator')}...`}
+            placeholder={`${searchIndicator}...`}
             value={searchValue}
             onChange={updateSearch}
           />
