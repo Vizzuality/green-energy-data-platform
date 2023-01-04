@@ -30,12 +30,13 @@ yarn-error.log*
 # keys
 gee.key.json
 
+# typescript
+*.tsbuildinfo
+
 # Yarn
 .yarn/*
-log/
-!.yarn/patches
 !.yarn/releases
 !.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
 .pnp.*
+
+/logs
