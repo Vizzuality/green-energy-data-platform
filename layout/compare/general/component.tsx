@@ -194,7 +194,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const {
     name,
-    accessible_by: accessibleBy,
+    only_admins_can_download: onlyAdminsCanDownload,
     data_source: dataSource,
   } = indicatorData;
 
@@ -349,8 +349,8 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
 
   const { data: user } = useMe();
 
-  const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
-    [accessibleBy, user]);
+  const hasDownloadPermissions = useMemo(() => user && user.role && (!onlyAdminsCanDownload || user.role === 'admin'),
+    [onlyAdminsCanDownload, user]);
 
   return (
     <div className={`flex flex-col ${className}`}>

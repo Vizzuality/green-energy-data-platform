@@ -71,7 +71,7 @@ export function useIndicator(
         categories: [],
         category_filters: {},
         data_source: null,
-        accessible_by: [],
+        only_admins_can_download: true,
         default_visualization: null,
         description: null,
         end_date: null,
