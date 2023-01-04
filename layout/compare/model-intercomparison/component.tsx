@@ -123,7 +123,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     placeholderData: queryClient.getQueryData(['indicator', indicatorSlug]) || {
       categories: [],
       category_filters: {},
-      accessible_by: [],
+      only_admins_can_download: true,
       data_source: null,
       default_visualization: null,
       description: null,
@@ -140,7 +140,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   }, { locale: lang });
 
   const {
-    accessible_by: accessibleBy,
+    only_admins_can_download: onlyAdminsCanDownload,
     data_source: dataSource,
   } = indicatorData;
 
@@ -327,8 +327,8 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   const { data: user } = useMe();
 
-  const hasDownloadPermissions = useMemo(() => user && user.role && (accessibleBy.includes(user.role) || user.role === 'admin'),
-    [accessibleBy, user]);
+  const hasDownloadPermissions = useMemo(() => user && user.role && (!onlyAdminsCanDownload || user.role === 'admin'),
+    [onlyAdminsCanDownload, user]);
 
   return (
     <section className={`flex flex-col  ${className}`}>

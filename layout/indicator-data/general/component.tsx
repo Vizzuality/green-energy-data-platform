@@ -152,7 +152,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       ]) || {
         categories: [],
         category_filters: {},
-        accessible_by: [],
+        only_admins_can_download: true,
         data_source: null,
         default_visualization: null,
         description: null,
@@ -232,7 +232,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
 
   const {
     name,
-    accessible_by: accessibleBy,
+    only_admins_can_download: onlyAdminsCanDownload,
     data_source: dataSource,
   } = indicatorData;
 
@@ -411,8 +411,8 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const hasDownloadPermissions = useMemo(
     () => user
       && user.role
-      && (accessibleBy.includes(user.role) || user.role === 'admin'),
-    [accessibleBy, user],
+      && (!onlyAdminsCanDownload || user.role === 'admin'),
+    [onlyAdminsCanDownload, user],
   );
 
   return (

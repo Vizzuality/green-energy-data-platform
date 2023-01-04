@@ -82,7 +82,7 @@ export interface DataIdProps {
 export interface IndicatorProps {
   categories: string[],
   category_filters: CategoryFilters | string[],
-  accessible_by: string[],
+  only_admins_can_download: boolean,
   data_source: string,
   default_visualization: string,
   description: string;
