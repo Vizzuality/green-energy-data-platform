@@ -7,7 +7,7 @@ set :deploy_to, '/var/www/gedp_frontend'
 set :nvm_type, :user
 set :nvm_node, 'v16.14.0'
 set :nvm_map_bins, %w{node npm yarn}
-set :yarn_flags, %w{--silent --no-progress}
+set :yarn_flags, %w{--silent}
 
 set :keep_releases, 3
 

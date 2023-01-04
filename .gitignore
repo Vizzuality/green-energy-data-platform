@@ -39,4 +39,4 @@ gee.key.json
 !.yarn/plugins
 .pnp.*
 
-/logs
+/log
