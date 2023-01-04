@@ -126,7 +126,7 @@
     "build": "next build",
     "start": "next start",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run --headless --browser chrome"
   },
   "resolutions": {
     "@deck.gl/core": "8.7.8",
