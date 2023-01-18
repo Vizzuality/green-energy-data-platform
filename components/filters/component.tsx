@@ -44,7 +44,7 @@ const Filters: FC<FiltersProps> = ({
   );
 
   useEffect(() => {
-    if (categories.length === 1 && indicator === 'scenarios') {
+    if ((categories.length === 1 && indicator === 'scenarios') || visualization === 'choropleth') {
       const value = categories[0];
       dispatch(onClick({ category: { label: 'category_2', value } }));
     }
@@ -126,7 +126,7 @@ const Filters: FC<FiltersProps> = ({
                 cursor: hasSubcategories || categories.length !== 1,
               })}
               onClick={() => handleCategories(category)}
-              disabled={!hasSubcategories || categories.length === 1}
+              disabled={(!hasSubcategories || categories.length === 1) && visualization !== 'choropleth'}
             >
               {visualization === 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{valueLang}</span>}
               {visualization === 'choropleth' && category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}

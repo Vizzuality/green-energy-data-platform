@@ -57,6 +57,8 @@ import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
 
 import type IndicatorCompareDataProps from '../types';
 
+const dataNotFound = i18next.t('dataNotFound');
+
 interface ChartProps {
   widgetData: unknown,
   widgetConfig: unknown,
@@ -490,7 +492,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
               && (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
                   <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-                  <p>Data not found</p>
+                  <p>{dataNotFound}</p>
                 </div>
               )}
 

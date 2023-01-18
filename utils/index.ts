@@ -100,6 +100,7 @@ export const getSubcategoriesFromRecords = (
       ?.map((r) => (r.category_2))
       ?.filter((d) => d.toLowerCase() !== 'total');
   }
+
   return compact(
     sortedUniq(
       data
@@ -139,15 +140,7 @@ export const filterRecords = (
     }
 
     if (visualization === 'choropleth') {
-      if (
-        (groupSlug === 'scenarios'
-          && d.scenario.id === scenario
-          && year === d.year
-          && (unitId === unit || !unitId)) // some idicators has no unit
-        || (groupSlug !== 'scenarios'
-          && year === d.year
-          && (unitId === unit || !unitId)) // some idicators has no unit
-      ) { return true; }
+      if (year === d.year && (unitId === unit || !unitId)) { return true; } // some indicators has no unit
     }
 
     if (visualization === 'bar') {
@@ -1270,6 +1263,18 @@ export const getLegendData = (widgetData: unknown, visualization: string) => {
       const newKeys = prev;
       Object.keys(curr).forEach((key) => {
         if (!prev?.includes(key) && key !== 'year') {
+          newKeys.push(key);
+        }
+      });
+      return newKeys;
+    }, []);
+  }
+
+  if (visualization === 'bar') {
+    legendData = data.reduce((prev, curr) => {
+      const newKeys = prev;
+      Object.keys(curr).forEach((key) => {
+        if (!prev?.includes(key) && key.toLocaleLowerCase() !== 'province' && key.toLocaleLowerCase() !== 'visualizationTypes') {
           newKeys.push(key);
         }
       });

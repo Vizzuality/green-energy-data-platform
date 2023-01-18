@@ -16,7 +16,7 @@ interface LegendProps {
 
 // language keys
 const legend = i18next.t('legend');
-
+const noDataMap = i18next.t('noDataMap');
 export const Legend: FC<LegendProps> = ({
   children,
   className = '',
@@ -25,10 +25,10 @@ export const Legend: FC<LegendProps> = ({
   const [active, setActive] = useState(true);
 
   const id = useId();
-
   const onToggleActive = useCallback(() => {
     setActive(!active);
   }, [active]);
+
   return (
     <div
       className={cx('absolute text-left bottom-2 left-2 bg-gray1 rounded-3xl text-sm text-white flex flex-col flex-grow z-20 max-w-[60%]',
@@ -50,7 +50,7 @@ export const Legend: FC<LegendProps> = ({
         />
 
       </button>
-
+      {!children && <div className="px-6 py-4 italic">{noDataMap}</div>}
       {active && (
         <div
           className="relative flex flex-col flex-grow overflow-hidden rounded-3xl"

@@ -112,6 +112,7 @@ export const resources = {
       recoveryPasswordRequirements: 'Please enter your registered email and we will help you to recover your password',
       resetLink: 'Request reset link',
       China: 'China',
+      noDataMap: "There is no data for current filter's selection",
     },
   },
   cn: {
@@ -218,6 +219,7 @@ export const resources = {
       recoveryPasswordRequirements: '请输入您的注册邮箱，我们将帮您找回密码',
       resetLink: '请求重置链接',
       China: '中国',
+      noDataMap: '当前过滤器的选择没有数据',
     },
   },
 };

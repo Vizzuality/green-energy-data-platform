@@ -7,6 +7,8 @@ import React, {
   useRef,
 } from 'react';
 
+import compact from 'lodash/compact';
+
 // Layer manager
 import { LayerManager, Layer } from '@vizzuality/layer-manager-react';
 import PluginMapboxGl from '@vizzuality/layer-manager-plugin-mapboxgl';
@@ -354,6 +356,7 @@ const MapContainer: FC<MapContainerProps> = ({
             {/* Pop up for choropleth */}
             {!!hoverInteractions?.properties
               && Object.keys(hoverInteractions?.properties).length === 1
+              && layers[0]?.legendConfig
               && hasInteraction && (
                 <Popup
                   latitude={lngLat[1]}
@@ -391,11 +394,10 @@ const MapContainer: FC<MapContainerProps> = ({
         />
       )}
       {hasInteraction && (
-        <Legend>
 
+        <Legend>
           {layers[0]?.legendConfig?.map((i) => {
             const { type, items } = i;
-
             return (
               <LegendItem key={i.id} {...i}>
                 {type === 'choropleth' && (

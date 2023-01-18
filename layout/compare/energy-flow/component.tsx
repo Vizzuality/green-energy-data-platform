@@ -42,6 +42,8 @@ import DropdownButton from 'layout/dropdown-button';
 import { useRouter } from 'next/router';
 import type IndicatorCompareDataProps from '../types';
 
+const dataNotFound = i18next.t('dataNotFound');
+
 const SankeyChart: FC<IndicatorCompareDataProps> = ({
   groupSlug,
   subgroupSlug,
@@ -385,7 +387,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
                 && (
                   <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
                     <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-                    <p>Data not found</p>
+                    <p>{dataNotFound}</p>
                   </div>
                 )}
             {(!isFetchingRecords && isSuccessRecords) && (

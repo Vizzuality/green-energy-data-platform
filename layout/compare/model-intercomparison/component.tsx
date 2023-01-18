@@ -60,6 +60,7 @@ import type IndicatorCompareDataProps from '../types';
 
 // language keys
 const showing = i18next.t('showing');
+const dataNotFound = i18next.t('dataNotFound');
 
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   groupSlug,
@@ -503,7 +504,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
               && (
                 <div className="flex flex-col items-center justify-center w-full h-full min-h-1/2">
                   <img alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-                  <p>Data not found</p>
+                  <p>{dataNotFound}</p>
                 </div>
               )}
 

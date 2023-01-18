@@ -47,7 +47,7 @@
     "@vizzuality/layer-manager-provider-carto": "2.0.2",
     "@vizzuality/layer-manager-react": "2.0.2",
     "autoprefixer": "^10.4.2",
-    "axios": "^0.21.1",
+    "axios": "^1.2.2",
     "babel-eslint": "^10.1.0",
     "babel-plugin-module-resolver": "^4.0.0",
     "chroma-js": "^2.1.2",

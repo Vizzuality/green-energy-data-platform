@@ -26,6 +26,7 @@ export const ErrorPage: FC = () => (
           src="/images/logo_GEDP.svg"
           width="100%"
           height="100%"
+          loading="lazy"
         />
         <div className="flex flex-col items-center justify-around p-10">
           <h1 className="pb-5 text-9xl">{error}</h1>
