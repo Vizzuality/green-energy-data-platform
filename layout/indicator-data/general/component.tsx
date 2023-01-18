@@ -69,6 +69,7 @@ const selectYear = i18next.t('selectYear');
 const regionLang = i18next.t('region');
 const scenarioLang = i18next.t('scenario');
 const selectScenario = i18next.t('selectScenario');
+const dataNotFound = i18next.t('dataNotFound');
 
 const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const [dropdownVisibility, setDropdownVisibility] = useState({
@@ -262,6 +263,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     ),
     [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
+
   const widgetDataKeys = category?.label === 'category_1' ? categories : getLegendData(widgetData, visualization);
   const mainColors = useColors(widgetDataKeys.length);
   const colorsOpacity = useOpacityColors(mainColors);
@@ -419,7 +421,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     <div className={`grid grid-cols-12 ${className}`}>
       <div className="w-full h-full col-span-8">
         <section className="flex flex-col w-full">
-          <div className="flex justify-between w-full">
+          <div className="flex items-end justify-between w-full">
             {/* year filter */}
             {['bar', 'pie', 'choropleth'].includes(visualization)
               && !!years.length && (
@@ -465,6 +467,45 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                     </Tooltip>
                   )}
                 </div>
+            )}
+            {['choropleth'].includes(visualization) && units.length > 1 && (
+            <div className="flex items-center mb-2">
+              <Tooltip
+                placement="bottom-start"
+                visible={dropdownVisibility.unit}
+                interactive
+                onClickOutside={() => closeDropdown('unit')}
+                content={(
+                  <DropdownContent
+                    list={units}
+                    keyEl="unit"
+                    onClick={handleChange}
+                  />
+                        )}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    toggleDropdown('unit');
+                  }}
+                  className={cx(
+                    'text-sm flex items-center cursor-pointer whitespace-nowrap hover:font-bold',
+                    {
+                      'border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full mr-4':
+                                visualization === 'choropleth',
+                    },
+                  )}
+                >
+                  <span>{displayUnit}</span>
+                  <Icon
+                    ariaLabel="units dropdown"
+                    name="triangle_border"
+                    size="sm"
+                    className="ml-2"
+                  />
+                </button>
+              </Tooltip>
+            </div>
             )}
 
             {/* region filter */}
@@ -575,7 +616,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                     src="/images/illus_nodata.svg"
                     className="h-auto w-28"
                   />
-                  <p>Data not found</p>
+                  <p>{dataNotFound}</p>
                 </div>
             )}
             {!!filteredRecords.length

@@ -20,7 +20,7 @@ const Legend: FC<WidgetLegendProps> = ({
   }, [onClick]);
 
   return (
-    <div className="w-full max-h-72 inline-flex flex-col justify-start text-center bg-white rounded-md border-gray5 border-6 hover:opacity-90 p-4 text-gray1">
+    <div className="inline-flex flex-col justify-start w-full p-4 text-center bg-white rounded-md max-h-72 border-gray5 border-6 hover:opacity-90 text-gray1">
       <ul className={cx('items-start', { [className]: className })}>
         {payload.map(({ label, color }) => (
           <li key={label}>
@@ -38,7 +38,7 @@ const Legend: FC<WidgetLegendProps> = ({
               onClick={() => handleClick(label)}
             >
               <span
-                className="flex w-4 h-4 rounded-full flex-shrink-0"
+                className="flex flex-shrink-0 w-4 h-4 rounded-full"
                 style={{ backgroundColor: singleValueLegendColor || color }}
               />
               <span title={label} className="py-1 pl-4 text-left truncate whitespace-nowrap text-ellipsis">{label}</span>
@@ -53,10 +53,10 @@ const Legend: FC<WidgetLegendProps> = ({
                 type="button"
                 disabled={!interactive}
                 onClick={() => handleClick(null)}
-                className="flex items-center rounded-md focus:bg-blue text-left text-sm whitespace-nowrap w-full text-ellipsis"
+                className="flex items-center w-full text-sm text-left rounded-md focus:bg-blue whitespace-nowrap text-ellipsis"
               >
                 <span
-                  className="flex w-4 h-4 rounded-full flex-shrink-0"
+                  className="flex flex-shrink-0 w-4 h-4 rounded-full"
                   style={{
                     backgroundColor: '#A97500',
                   }}

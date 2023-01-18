@@ -7,6 +7,8 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import i18next from 'i18next';
+
 // components
 import BarChart from 'components/indicator-visualizations/bar';
 import LineChart from 'components/indicator-visualizations/line';
@@ -40,6 +42,8 @@ interface GridItemProps {
   indicatorId: string,
   defaultVisualization: string
 }
+
+const dataNotFound = i18next.t('dataNotFound');
 
 const GridItem: FC<GridItemProps> = ({
   group,
@@ -174,7 +178,7 @@ const GridItem: FC<GridItemProps> = ({
       {!!isFetchedRecords && !records?.length && (
       <div className="flex flex-col items-center justify-center w-full h-full">
         <img key="no-data" alt="No data" src="/images/illus_nodata.svg" className="h-auto w-28" />
-        <p key="no-data">Data not found</p>
+        <p key="no-data">{dataNotFound}</p>
       </div>
       )}
 

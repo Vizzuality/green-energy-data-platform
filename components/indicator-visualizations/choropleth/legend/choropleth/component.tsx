@@ -43,6 +43,7 @@ export const LegendTypeChoropleth: FC<LegendTypeChoroplethProps> = ({
         )
       ))}
     </ul>
+
   </div>
 );
 

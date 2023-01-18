@@ -80,7 +80,7 @@ const Tooltip: FC<TooltipProps> = ({
             />
             <span className="flex flex-1 justify-between max-w-[300px] items-center">
               <p title={name} className="py-1 pl-2 overflow-hidden text-left truncate whitespace-normal text-ellipsis">{name}</p>
-              <span className="py-1 pl-4 font-bold">{value.toFixed(2)}</span>
+              {typeof value === 'number' && <span className="py-1 pl-4 font-bold">{value.toFixed(2)}</span>}
             </span>
           </li>
         ))}
