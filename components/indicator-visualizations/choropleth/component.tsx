@@ -7,7 +7,10 @@ import React, {
   useRef,
 } from 'react';
 
-import compact from 'lodash/compact';
+// import bboxTurf from '@turf/bbox';
+
+// import compact from 'lodash/compact';
+// import { flatten } from 'lodash';
 
 // Layer manager
 import { LayerManager, Layer } from '@vizzuality/layer-manager-react';
@@ -79,6 +82,7 @@ const MapContainer: FC<MapContainerProps> = ({
 }: MapContainerProps) => {
   const mapRef = useRef(null);
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
+  const [bounds, setBounds] = useState(null);
   const [hoverInteractions, setHoverInteractions] = useState(
     {} || {
       regions: layers[0].name,
@@ -183,10 +187,18 @@ const MapContainer: FC<MapContainerProps> = ({
     if (hoverInteractions?.cluster?.point_count) {
       setDisclaimerVisibility(false);
     }
-  }, [hoverInteractions, setDisclaimerVisibility]);
+  }, [hoverInteractions, setDisclaimerVisibility, layers]);
 
   const { current } = useAppSelector((state: RootState) => state.language);
   const LABEL_CODE = useMemo(() => (current === 'cn' ? 'cva' : 'eva'), [current]);
+  // const features = useMemo(() => layers[0]?.source?.data?.features?.filter((d) => !!d.geometry), [layers]);
+
+  // useEffect(() => {
+  //   if (!!layers.length && layers[0]?.source?.data) {
+  //     const bbox = bboxTurf({ type: 'FeatureCollection', features });
+  //     setBounds([bbox]);
+  //   }
+  // }, [layers, features]);
 
   return (
     <div
@@ -197,10 +209,12 @@ const MapContainer: FC<MapContainerProps> = ({
         hasInteraction={hasInteraction}
         width="100%"
         height="100%"
+        // bounds={bounds}
         viewport={viewport}
         className="z-10"
         onMapViewportChange={handleViewportChange}
         preserveDrawingBuffer
+        bounds={bounds}
         onClick={(e) => {
           setDisclaimerVisibility(false);
           const { zoom, maxZoom } = viewport;

@@ -134,7 +134,6 @@ const Map = ({
       console.error("mapContainerRef doesn't have dimensions");
       return null;
     }
-
     const { longitude, latitude, zoom } = fitBounds({
       width: mapContainerRef.current.offsetWidth || 100,
       height: mapContainerRef.current.offsetHeight || 100,
@@ -146,7 +145,6 @@ const Map = ({
       ...options,
 
     });
-
     const newViewport = {
       longitude,
       latitude,

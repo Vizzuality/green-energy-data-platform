@@ -22,7 +22,7 @@ export const Legend: FC<LegendProps> = ({
   className = '',
   maxHeight,
 }: LegendProps) => {
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
 
   const id = useId();
   const onToggleActive = useCallback(() => {

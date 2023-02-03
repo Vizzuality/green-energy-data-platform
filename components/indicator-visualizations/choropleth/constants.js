@@ -1,9 +1,9 @@
 export const DEFAULT_VIEWPORT = {
-  zoom: 3,
+  zoom: 2.7,
   minZoom: 2,
   maxZoom: 12,
-  latitude: 35.8617,
-  longitude: 104.1954,
+  latitude: 36.3,
+  longitude: 105.7,
   transitionDuration: 500,
 };
 
