@@ -63,7 +63,13 @@ export const getServerSideProps = async ({ query }) => {
 
   return ({
     props: {
-      g1, sg1, ind1, g2, sg2, ind2,
+      g1,
+      sg1,
+      ind1,
+      g2,
+      sg2,
+      ind2,
+      locale: query?.locale ?? null,
     },
   });
 };

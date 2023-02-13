@@ -219,4 +219,10 @@ const NewPasswordPage: FC = () => {
   );
 };
 
+export const getServerSideProps = async (context) => ({
+  props: ({
+    locale: context.query?.locale ?? null,
+  }),
+});
+
 export default NewPasswordPage;

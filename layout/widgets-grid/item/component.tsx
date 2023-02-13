@@ -105,9 +105,9 @@ const GridItem: FC<GridItemProps> = ({
   } = useIndicatorRecords(group, subgroup, indicator, {
     visualization: defaultVisualization,
     unit: currentUnit || null,
-    ...defaultCategory && { category: defaultCategory },
-    ...['line', 'pie'].includes(defaultVisualization) ? { region: currentRegion } : { region: null },
-    ...['pie', 'choropleth', 'bar'].includes(defaultVisualization) ? { year: currentYear } : { year: null },
+    ...(defaultCategory && { category: defaultCategory }),
+    ...(['line', 'pie'].includes(defaultVisualization) ? { region: currentRegion } : { region: null }),
+    ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) ? { year: currentYear } : { year: null }),
   }, {
     enabled: !!isFetched && !!isSuccess,
     refetchOnWindowFocus: false,
@@ -116,9 +116,9 @@ const GridItem: FC<GridItemProps> = ({
   useEffect(() => {
     dispatch(setRelatedFilters({
       visualization: defaultVisualization,
-      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-      ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion }) || { region: null },
-      ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) && { year: currentYear }) || { year: null },
+      ...(defaultUnit && { unit: currentUnit } || { unit: null }),
+      ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion } || { region: null }),
+      ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) && { year: currentYear } || { year: null }),
     }));
   }, [
     dispatch,
@@ -155,9 +155,9 @@ const GridItem: FC<GridItemProps> = ({
     category: { label: 'category_1' },
     uiCategory: { label: 'category_1' },
     scenario: null,
-    ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-    ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion }) || { region: null },
-    ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) && { year: currentYear }) || { year: null },
+    ...(defaultUnit && { unit: currentUnit } || { unit: null }),
+    ...((['line', 'pie'].includes(defaultVisualization)) && { region: currentRegion } || { region: null }),
+    ...(['pie', 'choropleth', 'bar'].includes(defaultVisualization) && { year: currentYear } || { year: null }),
   }), [currentRegion, currentUnit, currentYear, defaultVisualization, defaultUnit]);
 
   const widgetData = useMemo(

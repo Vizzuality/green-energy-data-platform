@@ -24,25 +24,28 @@ import { passwordRecovery } from 'services/user';
 import router from 'next/router';
 import { validateEmail } from 'utils';
 
+import type { Language } from 'types/data';
+
 type SigninProps = {
   csrfToken?: string,
 };
 
-// language keys
-const signin = i18next.t('signin');
-const dontHaveAccount = i18next.t('dontHaveAccount');
-const signup = i18next.t('signup');
-const yourEmail = i18next.t('yourEmail');
-const enterPassword = i18next.t('enterPassword');
-const dontRememberPassword = i18next.t('dontRememberPassword');
-const accessAccount = i18next.t('accessAccount');
-const forgotPassword = i18next.t('forgotPassword');
-const recoveryPasswordRequirements = i18next.t('recoveryPasswordRequirements');
-const resetLink = i18next.t('resetLink');
-
-const SigninPage: FC<SigninProps> = ({
+const SigninPage: FC<SigninProps & Language> = ({
   csrfToken,
-}: SigninProps) => {
+  locale
+}: SigninProps & Language) => {
+  // language keys
+  const signin = i18next.t('signin');
+  const dontHaveAccount = i18next.t('dontHaveAccount');
+  const signup = i18next.t('signup');
+  const yourEmail = i18next.t('yourEmail');
+  const enterPassword = i18next.t('enterPassword');
+  const dontRememberPassword = i18next.t('dontRememberPassword');
+  const accessAccount = i18next.t('accessAccount');
+  const forgotPassword = i18next.t('forgotPassword');
+  const recoveryPasswordRequirements = i18next.t('recoveryPasswordRequirements');
+  const resetLink = i18next.t('resetLink');
+  
   const [credentials, setCredentials] = useState({
     name: '',
     email: '',
@@ -108,13 +111,8 @@ const SigninPage: FC<SigninProps> = ({
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="mt-10">{dontHaveAccount}</p>
             <div className="py-4">
-              <Link href={{ pathname: '/signup' }} passHref>
-                <a
-                  href="/signup"
-                  className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black py-0.5 px-4 text-center rounded-full focus:outline-none"
-                >
-                  {signup}
-                </a>
+              <Link href={{ pathname: '/signup', query: { locale } }} className="border-2 border-white bg-transparent text-white hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black py-0.5 px-4 text-center rounded-full focus:outline-none">
+                {signup}
               </Link>
             </div>
           </section>
@@ -259,6 +257,7 @@ export const getServerSideProps = async (context) => {
   return ({
     props: {
       csrfToken: await getCSRFToken(context),
+      locale: context.query?.locale ?? null,
     },
   });
 };

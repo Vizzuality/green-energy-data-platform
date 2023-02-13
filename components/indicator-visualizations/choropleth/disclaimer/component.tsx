@@ -12,24 +12,25 @@ interface DisclaimerProps {
   onDisclaimerClose: (boolean) => void;
 }
 
-// language keys
-const close = i18next.t('close');
-
 export const Disclaimer: FC<DisclaimerProps> = ({
   message,
   className,
   onDisclaimerClose,
-}: DisclaimerProps) => (
-  <div
-    className={cx('p-4 absolute text-left bg-gray1 rounded-xl text-sm text-white flex z-20 items-baseline',
-      { [className]: !!className })}
-  >
-    <p className="w-48 pr-4">{message}</p>
-    <button type="button" className="flex items-center text-xs" onClick={() => onDisclaimerClose(false)}>
-      <p className="pr-2 uppercase">{close}</p>
-      <Icon ariaLabel="close disclaimer" size="sm" name="close" />
-    </button>
-  </div>
-);
+}: DisclaimerProps) => {
+  // language keys
+  const close = i18next.t('close');
+  return (
+    <div
+      className={cx('p-4 absolute text-left bg-gray1 rounded-xl text-sm text-white flex z-20 items-baseline',
+        { [className]: !!className })}
+    >
+      <p className="w-48 pr-4">{message}</p>
+      <button type="button" className="flex items-center text-xs" onClick={() => onDisclaimerClose(false)}>
+        <p className="pr-2 uppercase">{close}</p>
+        <Icon ariaLabel="close disclaimer" size="sm" name="close" />
+      </button>
+    </div>
+  );
+};
 
 export default Disclaimer;

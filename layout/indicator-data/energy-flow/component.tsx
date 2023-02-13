@@ -44,20 +44,21 @@ type SankeyWrapper = {
 
 const DROPDOWN_BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 
-// language keys
-const showing = i18next.t('showing');
-const yearLang = i18next.t('yearLang');
-const selectYear = i18next.t('selectYear');
-const unitLang = i18next.t('unitLang');
-const selectUnit = i18next.t('selectUnit');
-const regionLang = i18next.t('regionLang');
-const selectRegion = i18next.t('selectRegion');
-const dataNotFound = i18next.t('dataNotFound');
-
 const SankeyChart: FC<SankeyWrapper> = ({
   indicatorName,
   className,
 }: SankeyWrapper) => {
+
+  // language keys
+  const showing = i18next.t('showing');
+  const yearLang = i18next.t('yearLang');
+  const selectYear = i18next.t('selectYear');
+  const unitLang = i18next.t('unitLang');
+  const selectUnit = i18next.t('selectUnit');
+  const regionLang = i18next.t('regionLang');
+  const selectRegion = i18next.t('selectRegion');
+  const dataNotFound = i18next.t('dataNotFound');
+
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,

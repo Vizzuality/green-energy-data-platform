@@ -38,12 +38,12 @@ export default NextAuth({
   ],
   callbacks: {
     async jwt(token, user) {
-      return ({
+      return {
         ...token,
-        ...user?.jwt_token && {
+        ...(user?.jwt_token && {
           accessToken: user.jwt_token,
-        },
-      });
+        }),
+      };
     },
     async session(session, token) {
       return ({

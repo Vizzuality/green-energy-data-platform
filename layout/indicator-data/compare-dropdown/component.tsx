@@ -67,7 +67,9 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
 
   const { data: groupData } = useGroup(groupSlug);
   const groupName = groupData?.name;
-  const { data: subgroupData } = useSubgroup(groupSlug, subgroupSlug);
+  const { data: subgroupData } = useSubgroup(groupSlug, subgroupSlug, {}, {
+    locale
+  });
   const subgroupName = subgroupData?.name;
 
   const groupsToCompare = useMemo(() => groups.filter(({ slug }) => slug !== 'energy-balance'), [groups]);
@@ -155,24 +157,22 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
             name, id, slug,
           }) => (
             <li key={id} className="first:rounded-t-xl last:rounded-b-xl">
-              <Link href={{
-                pathname: '/compare',
-                query: {
-                  g1: compareGroupSlug,
-                  sg1: compareSubgroupSlug,
-                  ind1: compareIndicatorSlug,
-                  g2: groupSlug,
-                  sg2: subgroupSlug,
-                  ind2: slug,
-                },
-              }}
+              <Link
+                href={{
+                  pathname: '/compare',
+                  query: {
+                    g1: compareGroupSlug,
+                    sg1: compareSubgroupSlug,
+                    ind1: compareIndicatorSlug,
+                    g2: groupSlug,
+                    sg2: subgroupSlug,
+                    ind2: slug,
+                    locale,
+                  },
+                }}
+                className="flex items-center flex-1 h-full py-2"
               >
-                <a
-                  className="flex items-center flex-1 h-full py-2"
-                  href="/compare"
-                >
-                  {name}
-                </a>
+                {name}
               </Link>
             </li>
           ))}

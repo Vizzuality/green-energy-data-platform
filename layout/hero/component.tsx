@@ -30,8 +30,6 @@ const THEME = {
   transparent: 'bg-transparent border-gray1 text-gray1 border-opacity-20',
 };
 
-// language keys
-const browse = i18next.t('browse');
 const Hero: FC<HeroProps> = ({
   children,
   header = true,
@@ -39,8 +37,10 @@ const Hero: FC<HeroProps> = ({
   className,
   theme = 'light',
 }: HeroProps) => {
+  // language keys
+  const browse = i18next.t('browse');
+  
   const { asPath } = useRouter();
-
   const {
     current,
   } = useSelector(
@@ -56,17 +56,15 @@ const Hero: FC<HeroProps> = ({
         <Header theme={theme === 'transparent' ? 'dark' : 'light'}>
           <div className="flex items-center">
             <UserDropdown theme={theme} className="mr-4" />
-            <Link href={{ pathname: '/indicators', query: { fallbackUrl: encodeURIComponent(asPath), locale: current } }} passHref>
-              <a
-                href="/indicators"
-                className={cx('ml-3 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm active:font-bold',
-                  {
-                    'bg-gray1 text-white': theme === 'transparent',
-                    'bg-white text-gray1': theme !== 'transparent',
-                  })}
-              >
-                {browse}
-              </a>
+            <Link
+              href={{ pathname: '/indicators', query: { fallbackUrl: encodeURIComponent(asPath), locale: current } }}
+              className={cx('ml-3 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm active:font-bold',
+                {
+                  'bg-gray1 text-white': theme === 'transparent',
+                  'bg-white text-gray1': theme !== 'transparent',
+                })}
+            >
+             {browse}
             </Link>
           </div>
         </Header>

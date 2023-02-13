@@ -14,14 +14,15 @@ interface LegendProps {
   maxHeight?: string | number;
 }
 
-// language keys
-const legend = i18next.t('legend');
-const noDataMap = i18next.t('noDataMap');
 export const Legend: FC<LegendProps> = ({
   children,
   className = '',
   maxHeight,
 }: LegendProps) => {
+  // language keys
+  const legend = i18next.t('legend');
+  const noDataMap = i18next.t('noDataMap');
+  
   const [active, setActive] = useState(false);
 
   const id = useId();

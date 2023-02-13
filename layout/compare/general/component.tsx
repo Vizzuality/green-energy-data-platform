@@ -66,12 +66,6 @@ interface ChartProps {
   colors: string[]
 }
 
-// language keys
-const showing = i18next.t('showing');
-const selectYear = i18next.t('selectYear');
-const scenarioLang = i18next.t('scenario');
-const selectScenario = i18next.t('selectScenario');
-const regionLang = i18next.t('region');
 
 const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   groupSlug,
@@ -80,6 +74,14 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   className,
   compareIndex = 1,
 }: IndicatorCompareDataProps) => {
+  
+  // language keys
+  const showing = i18next.t('showing');
+  const selectYear = i18next.t('selectYear');
+  const scenarioLang = i18next.t('scenario');
+  const selectScenario = i18next.t('selectScenario');
+  const regionLang = i18next.t('region');
+
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -211,8 +213,9 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
   );
 
   const subcategories = useMemo(
-    () => getSubcategoriesFromRecords(records, visualization), [records, visualization],
+    () => getSubcategoriesFromRecords(filteredRecords, visualization), [filteredRecords, visualization],
   );
+
   const widgetDataKeys = category?.label === 'category_1' ? categories : subcategories;
 
   const mainColors = useColors(widgetDataKeys.length);
@@ -288,20 +291,20 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     if (compareIndex === 1) {
       dispatch(setFilters({
         visualization: currentVisualization,
-        ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-        ...selectedCategory && { category: selectedCategory },
-        ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-        ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-        ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
+        ...(defaultUnit && { unit: currentUnit } || { unit: null }),
+        ...(selectedCategory && { category: selectedCategory }),
+        ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion } || { region: null }),
+        ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear } || { year: null }),
+        ...(['choropleth'].includes(currentVisualization) && defaultScenario && { scenario: currentScenario }),
       }));
     } else {
       dispatch(setCompareFilters({
         visualization: currentVisualization,
-        ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-        ...selectedCategory && { category: selectedCategory },
-        ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-        ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-        ...(['choropleth'].includes(currentVisualization) && defaultScenario) && { scenario: currentScenario },
+        ...(defaultUnit && { unit: currentUnit } || { unit: null }),
+        ...(selectedCategory && { category: selectedCategory }),
+        ...((['line', 'pie'].includes(currentVisualization)) && { region: currentRegion } || { region: null }),
+        ...(['pie', 'choropleth', 'bar'].includes(currentVisualization) && { year: currentYear } || { year: null }),
+        ...(['choropleth'].includes(currentVisualization) && defaultScenario && { scenario: currentScenario }),
       }));
     }
   }, [

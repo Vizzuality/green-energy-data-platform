@@ -68,16 +68,16 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
     }
   };
 
-  const { data: groupData } = useGroup(groupSlug);
-  const groupName = groupData?.name;
-  const { data: subgroupData } = useSubgroup(groupSlug, subgroupSlug);
-  const subgroupName = subgroupData?.name;
+  // const { data: groupData } = useGroup(groupSlug);
+  // const groupName = groupData?.name;
+  // const { data: subgroupData } = useSubgroup(groupSlug, subgroupSlug);
+  // const subgroupName = subgroupData?.name;
 
-  const groupsToCompare = useMemo(() => groups.filter(({ slug }) => slug !== 'energy-balance'), [groups]);
+  // const groupsToCompare = useMemo(() => groups.filter(({ slug }) => slug !== 'energy-balance'), [groups]);
 
   return (
     <div className="z-10 flex flex-col justify-center w-full text-white shadow-sm rounded-xl bg-gray3 first:pt-2 last:pb-2">
-      {step === 1 && (
+      {/* {step === 1 && (
         <ul>
           {groupsToCompare?.map(({
             name, id, slug,
@@ -181,7 +181,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
           ))}
         </ul>
       </div>
-      )}
+      )} */}
     </div>
   );
 };

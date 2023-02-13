@@ -70,16 +70,16 @@ interface MapContainerProps {
 
 const numberFormat = format(',.2f');
 
-// language keys
-const infoPlant = i18next.t('infoPlant');
-const numberPlants = i18next.t('numberPlants');
-const value = i18next.t('value');
 
 const MapContainer: FC<MapContainerProps> = ({
   layers,
   hasInteraction = true,
   style = {},
 }: MapContainerProps) => {
+  // language keys
+  const infoPlant = i18next.t('infoPlant');
+  const numberPlants = i18next.t('numberPlants');
+  const value = i18next.t('value');
   const mapRef = useRef(null);
   const [viewport, setViewport] = useState(DEFAULT_VIEWPORT);
   const [bounds, setBounds] = useState(null);

@@ -130,6 +130,8 @@ const CompareLayout: FC<CompareLayoutProps> = ({
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
+  }, {
+    locale: lang
   });
 
   const {

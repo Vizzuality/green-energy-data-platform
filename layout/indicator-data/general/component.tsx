@@ -63,15 +63,15 @@ type ChartProps = {
 
 const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
 
-// language keys
-const showing = i18next.t('showing');
-const selectYear = i18next.t('selectYear');
-const regionLang = i18next.t('region');
-const scenarioLang = i18next.t('scenario');
-const selectScenario = i18next.t('selectScenario');
-const dataNotFound = i18next.t('dataNotFound');
-
 const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
+  // language keys
+  const showing = i18next.t('showing');
+  const selectYear = i18next.t('selectYear');
+  const regionLang = i18next.t('region');
+  const scenarioLang = i18next.t('scenario');
+  const selectScenario = i18next.t('selectScenario');
+  const dataNotFound = i18next.t('dataNotFound');
+  
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -131,14 +131,16 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
 
   const handleChange = useCallback(
     (key, value) => {
-      dispatch(setFilters({ [key]: value }));
-
+      dispatch(setFilters({
+        ...filters,
+        [key]: value,
+      }));
       setDropdownVisibility({
         ...dropdownVisibility,
         [key]: false,
       });
     },
-    [dispatch, dropdownVisibility],
+    [dispatch, dropdownVisibility, filters],
   );
 
   const { data: indicatorData } = useIndicator(
@@ -172,25 +174,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       locale: lang,
     },
   );
-  // const filterByRegion = useMemo(
-  //   () => visualization !== 'choropleth' && visualization !== 'bars',
-  //   [visualization],
-  // );
-
-  // const filtersIndicator = useMemo(() => {
-  //   if (filterByRegion) {
-  //     return {
-  //       visualization,
-  //       region,
-  //       unit,
-  //     };
-  //   }
-  //   return {
-  //     visualization,
-  //     unit,
-  //     year,
-  //   };
-  // }, [visualization, region, unit, year, filterByRegion]);
 
   const {
     data: records,
@@ -202,6 +185,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     subgroupSlug,
     indicatorSlug,
     {
+      ...(visualization === 'line' && { region: filters.region }),
       locale: lang,
     },
     {
@@ -363,6 +347,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     defaultYear,
     defaultUnit,
     defaultScenario,
+    currentRegion,
     currentVisualization,
     indicatorSlug,
   ]);

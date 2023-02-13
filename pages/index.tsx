@@ -23,14 +23,14 @@ import i18next from 'i18next';
 import { InView } from 'react-intersection-observer';
 import CookieBanner from 'components/cookie-banner';
 
-// language keys
-const browse = i18next.t('browse');
-const landingTitle = i18next.t('landingTitle');
-
 const HomePage: FC = () => {
   const { query: { locale } } = useRouter();
   const lang = locale || 'en';
   const { data: groups, isLoading } = useGroups({ locale: lang });
+  
+  // language keys
+  const browse = i18next.t('browse');
+  const landingTitle = i18next.t('landingTitle');
 
   return (
     <LayoutPage className="h-full min-h-screen">
@@ -44,13 +44,11 @@ const HomePage: FC = () => {
           items={groups}
           className="h-24 p-4 -mt-4 bg-white shadow-sm"
         >
-          <Link href="/indicators" passHref>
-            <a
-              href="/indicators"
-              className="items-center justify-center py-5 ml-3 text-sm text-center text-white border rounded bg-gray1 border-gray1 focus-within:flex hover:bg-opacity-90 active:bg-white active:text-gray1 focus:outline-none px-11"
-            >
-              {browse}
-            </a>
+          <Link
+            href={{ pathname: "/indicators", query: { locale } }}
+            className="items-center justify-center py-5 ml-3 text-sm text-center text-white border rounded bg-gray1 border-gray1 focus-within:flex hover:bg-opacity-90 active:bg-white active:text-gray1 focus:outline-none px-11"
+          >
+            {browse}
           </Link>
         </Search>
       </div>
@@ -74,5 +72,11 @@ const HomePage: FC = () => {
     </LayoutPage>
   );
 };
+
+export const getServerSideProps = async (context) => ({
+  props: ({
+    locale: context.query?.locale ?? 'en',
+  }),
+});
 
 export default HomePage;

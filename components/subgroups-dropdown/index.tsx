@@ -42,7 +42,6 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
 }: SubgroupsDropdownTypes) => {
   const router = useRouter();
   const subgroups = useMemo(() => orderBy(group?.subgroups, 'name'), [group]);
-
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const handleSubgroupChange = useCallback(
     (url) => {
@@ -109,7 +108,7 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
             setDropdownVisibility(!dropdownVisibility);
           }}
         >
-          <h1 className="text-5.5xl text-left">{data?.subgroup?.name}</h1>
+          <h1 className="text-5.5xl text-left">{subgroup?.name}</h1>
           <Icon
             ariaLabel="collapse dropdown"
             name="triangle_border"
@@ -123,7 +122,7 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
       ) : <LoadingSpinner />}
     </Tooltip>
   ) : (
-    <h1 className="text-5.5xl text-left">{data?.subgroup?.name}</h1>
+    <h1 className="text-5.5xl text-left">{subgroup?.name}</h1>
   );
 };
 

@@ -39,19 +39,19 @@ interface NewDetailProps {
   password?: string;
 }
 
-// language keys
-const profile = i18next.t('profile');
-const personalData = i18next.t('personalData');
-const titleLang = i18next.t('title');
-const nameLang = i18next.t('name');
-const organisationLang = i18next.t('organisation');
-const emailLang = i18next.t('email');
-const save = i18next.t('save');
-const changePassword = i18next.t('changePassword');
-const deleteWarning = i18next.t('deleteWarning');
-const deleteLang = i18next.t('delete');
-
 const ProfilePage: FC = () => {
+  // language keys
+  const profile = i18next.t('profile');
+  const personalData = i18next.t('personalData');
+  const titleLang = i18next.t('title');
+  const nameLang = i18next.t('name');
+  const organisationLang = i18next.t('organisation');
+  const emailLang = i18next.t('email');
+  const save = i18next.t('save');
+  const changePassword = i18next.t('changePassword');
+  const deleteWarning = i18next.t('deleteWarning');
+  const deleteLang = i18next.t('delete');
+
   const queryClient = useQueryClient();
   const { isLoading, data: user } = useMe({
     refetchOnWindowFocus: false,
@@ -379,7 +379,9 @@ const customServerSideProps = async (context) => {
   }
 
   return {
-    props: {},
+    props: {
+      locale: context.query?.locale ?? null,
+    },
   };
 };
 

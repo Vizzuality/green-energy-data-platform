@@ -12,6 +12,7 @@ import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 
 import i18next from 'i18next';
+import { useRouter } from 'next/router';
 
 interface UserDropdownProps {
   className?: string,
@@ -27,6 +28,7 @@ const UserDropdown: FC<UserDropdownProps> = ({
   className,
   theme = 'light',
 }: UserDropdownProps) => {
+  const { query: { locale } } = useRouter();
   const [visible, setVisible] = useState(false);
   const toggleVisibility = () => {
     setVisible(!visible);
@@ -39,10 +41,8 @@ const UserDropdown: FC<UserDropdownProps> = ({
 
   if (!user) {
     return (
-      <Link href="/signin" passHref>
-        <a href="/signin">
-          <Icon ariaLabel="sign in" className="cursor-pointer" name="profile" size="xlg" />
-        </a>
+      <Link href={{ pathname: '/signin', query: { locale } }}>
+        <Icon ariaLabel="sign in" className="cursor-pointer" name="profile" size="xlg" />
       </Link>
     );
   }
@@ -61,12 +61,20 @@ const UserDropdown: FC<UserDropdownProps> = ({
       placement="bottom-start"
       content={(
         <div className="z-10 flex flex-col justify-center w-full divide-y divide-white rounded-xl bg-gray3 divide-opacity-10">
-          <Link key="profile-link" href="/profile">
-            <a className="px-12 py-2 rounded-t-xl hover:bg-white hover:text-gray3 hover:rounded-t-xl" href="/profile">{profile}</a>
+          <Link
+            key="profile-link"
+            href={{ pathname: '/profile', query: { locale } }}
+            className="px-12 py-2 rounded-t-xl hover:bg-white hover:text-gray3 hover:rounded-t-xl"
+          >
+            {profile}
           </Link>
           {isAdmin && (
-          <Link key="admin-panel" href={process.env.NEXT_PUBLIC_ADMIN_PANEL}>
-            <a className="px-12 py-2 hover:bg-white hover:text-gray3" href={process.env.NEXT_PUBLIC_ADMIN_PANEL}>{adminPanel}</a>
+          <Link
+            key="admin-panel"
+            href={process.env.NEXT_PUBLIC_ADMIN_PANEL}
+            className="px-12 py-2 hover:bg-white hover:text-gray3"
+          >
+            {adminPanel}
           </Link>
           )}
           <button className="relative flex px-12 py-2 rounded-b-xl hover:bg-white hover:text-gray3 hover:rounded-b-x" type="button" onClick={handleClick}>

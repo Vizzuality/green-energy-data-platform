@@ -56,4 +56,10 @@ const PrivacyPolicyPage: FC = () => (
   </LayoutPage>
 );
 
+export const getServerSideProps = async (context) => ({
+  props: ({
+    locale: context.query?.locale ?? null,
+  }),
+});
+
 export default PrivacyPolicyPage;

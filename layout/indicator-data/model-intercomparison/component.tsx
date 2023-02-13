@@ -59,19 +59,19 @@ import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
 import type { ChartLine, ChartBar } from 'types/model-intercomparison';
 import type { ComponentTypes } from 'types/data';
 
-// language keys
-const showing = i18next.t('showing');
-const regionLang = i18next.t('region');
-const selectRegion = i18next.t('selectRegion');
-const unitLang = i18next.t('unit');
-const selectUnit = i18next.t('selectUnit');
-const scenarioLang = i18next.t('scenario');
-const selectScenario = i18next.t('selectScenario');
-const dataNotFound = i18next.t('dataNotFound');
-
 const ModelIntercomparison: FC<ComponentTypes> = ({
   className,
 }: ComponentTypes) => {
+  // language keys
+  const showing = i18next.t('showing');
+  const regionLang = i18next.t('region');
+  const selectRegion = i18next.t('selectRegion');
+  const unitLang = i18next.t('unit');
+  const selectUnit = i18next.t('selectUnit');
+  const scenarioLang = i18next.t('scenario');
+  const selectScenario = i18next.t('selectScenario');
+  const dataNotFound = i18next.t('dataNotFound');
+
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -296,11 +296,11 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
   useEffect(() => {
     dispatch(setFilters({
       visualization: currentVisualization,
-      ...(defaultUnit && { unit: currentUnit }) || { unit: null },
+      ...(defaultUnit && { unit: currentUnit } || { unit: null }),
       ...(selectedCategory && { category: selectedCategory }),
 
-      ...((['line'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-      ...(['bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+      ...((['line'].includes(currentVisualization)) && { region: currentRegion } || { region: null }),
+      ...(['bar'].includes(currentVisualization) && { year: currentYear } || { year: null }),
       scenario: currentScenario || null,
     }));
   }, [

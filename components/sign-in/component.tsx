@@ -12,12 +12,13 @@ interface SignInProps {
   className?: string
 }
 
-// language keys
-const signin = i18next.t('signin');
 
 const SignIn: FC<SignInProps> = ({
   className,
 }: SignInProps) => {
+  // language keys
+  const signin = i18next.t('signin');
+  
   const handleClick = () => {
     signOut({ callbackUrl: 'http://localhost:3000/signin' });
   };

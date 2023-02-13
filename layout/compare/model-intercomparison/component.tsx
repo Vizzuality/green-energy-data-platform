@@ -58,10 +58,6 @@ import ChartConfig from 'components/indicator-visualizations/config';
 import type { ChartLine, ChartBar } from 'types/model-intercomparison';
 import type IndicatorCompareDataProps from '../types';
 
-// language keys
-const showing = i18next.t('showing');
-const dataNotFound = i18next.t('dataNotFound');
-
 const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   groupSlug,
   subgroupSlug,
@@ -69,6 +65,11 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
   className,
   compareIndex = 1,
 }: IndicatorCompareDataProps) => {
+  
+  // language keys
+  const showing = i18next.t('showing');
+  const dataNotFound = i18next.t('dataNotFound');
+
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -276,19 +277,19 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     if (compareIndex === 1) {
       dispatch(setFilters({
         visualization: currentVisualization,
-        ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-        ...defaultCategory && { category: defaultCategory },
-        ...((['line'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-        ...(['bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
-        ...((['choropleth'].includes(currentVisualization) || groupSlug === 'scenarios') && defaultScenario) && { scenario: currentScenario },
+        ...(defaultUnit && { unit: currentUnit } || { unit: null }),
+        ...(defaultCategory && { category: defaultCategory }),
+        ...((['line'].includes(currentVisualization)) && { region: currentRegion } || { region: null }),
+        ...(['bar'].includes(currentVisualization) && { year: currentYear } || { year: null }),
+        ...((['choropleth'].includes(currentVisualization) || groupSlug === 'scenarios') && defaultScenario && { scenario: currentScenario }),
       }));
     } else if (compareIndex === 2) {
       dispatch(setCompareFilters({
         visualization: currentVisualization,
-        ...(defaultUnit && { unit: currentUnit }) || { unit: null },
-        ...defaultCategory && { category: defaultCategory },
-        ...((['line'].includes(currentVisualization)) && { region: currentRegion }) || { region: null },
-        ...(['bar'].includes(currentVisualization) && { year: currentYear }) || { year: null },
+        ...(defaultUnit && { unit: currentUnit } || { unit: null }),
+        ...(defaultCategory && { category: defaultCategory }),
+        ...((['line'].includes(currentVisualization)) && { region: currentRegion } || { region: null }),
+        ...(['bar'].includes(currentVisualization) && { year: currentYear } || { year: null }),
         scenario: currentScenario || null,
       }));
     }

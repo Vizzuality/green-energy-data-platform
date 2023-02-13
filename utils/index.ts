@@ -1,12 +1,14 @@
 import {
-  compact, sortedUniq, chain, flatten, groupBy,
+  compact, sortedUniq, chain, flatten, groupBy, orderBy, uniqWith, isEqual,
 } from 'lodash';
 
 import chroma from 'chroma-js';
 
 import { format as ValueFormat } from 'd3-format';
 
-import i18n from 'i18next';
+import i18next from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+// import { initReactI18next } from 'react-i18next';
 
 import { saveAs } from 'file-saver';
 
@@ -21,9 +23,10 @@ import ID_CHINA from 'utils/constants';
 import { theme } from 'tailwind.config';
 
 const numberFormat = ValueFormat('.2s');
-export const initializeLanguage = () => i18n.init({
+
+export const initializeLanguage = (lng) => i18next.init({
   resources,
-  lng: 'en',
+  lng: lng || 'en'
 });
 
 export const getMostFrequent = (array) => {
@@ -116,7 +119,7 @@ export const filterRecords = (
   groupSlug: string | string[],
 ) => {
   const {
-    year, region, unit, scenario, visualization,
+    year, region, unit, scenario, visualization, category,
   } = filters;
 
   const recordsByFilters = records.filter((d) => {
@@ -124,8 +127,9 @@ export const filterRecords = (
     if (visualization === 'line') {
       // API return region name to null for China
       if (
-        (categories.length > 1 && d.category_1 !== 'Total')
-        || categories.length === 1
+        (category.label === 'category_1' || category?.value === d.category_1)
+        && ((categories.length > 1 && d.category_1 !== 'Total')
+        || categories.length === 1)
       ) { return true; }
     }
 
@@ -134,6 +138,7 @@ export const filterRecords = (
         (d.region_id === region || d.region_id === null)
         && (unitId === unit || !unitId)
         && year === d.year
+        && (category.label === 'category_1' || category?.value === d.category_1)
         && ((categories.length > 1 && d.category_1 !== 'Total')
           || categories.length === 1)
       ) { return true; }
@@ -150,6 +155,7 @@ export const filterRecords = (
           && (unitId === unit || !unitId))
         || (groupSlug !== 'scenarios'
           && year === d.year
+          && (category.label === 'category_1' || category?.value === d.category_1)
           && (unitId === unit || !unitId))
       ) { return true; }
     }
@@ -295,7 +301,7 @@ export const getGroupedValues = (
       },
       {},
     );
-    return Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
+    return orderBy(Object.keys(dataByYear).map((year) => dataByYear[year].reduce(
       (acc, next) => {
         const { year: currentYear, visualizationTypes, ...rest } = next;
         return dataByYear[currentYear].length > 1 ? {
@@ -308,9 +314,9 @@ export const getGroupedValues = (
         };
       },
       {
-        year,
+        year: Number(year),
       },
-    ));
+    )), ['year'], ['asc']);
   };
 
   const getPieData = () => chain(filteredData)
@@ -363,7 +369,7 @@ export const getGroupedValues = (
           },
         ))
         .filter((p) => (Object.keys(dataByProvince).length > 1
-          ? p.province !== i18n.t('China')
+          ? p.province !== i18next.t('China')
           : true));
     }
 
@@ -772,7 +778,8 @@ export const getGroupedValues = (
     default:
       data = [];
   }
-  return data;
+
+  return orderBy(data, ['year', 'province'], ['asc']);
 };
 
 export const getModelIntercomparisonData = (

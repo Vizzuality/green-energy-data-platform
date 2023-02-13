@@ -42,7 +42,7 @@ const PaginatedDynamicChart = ({
   const sortedData = useMemo(() => {
     if (Array.isArray(widgetData)) {
       return widgetData
-        .sort((a, b) => Number(b.Total) - Number(a.Total));
+        .sort((a, b) => Number(a.Total) - Number(b.Total));
     }
     return [];
   }, [widgetData]);

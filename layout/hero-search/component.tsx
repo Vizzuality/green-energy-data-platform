@@ -27,6 +27,7 @@ const Hero: FC<HeroProps> = ({
   children,
 }: HeroProps) => {
   const { query, push } = useRouter();
+  const { locale } = query;
   const { fallbackUrl } = query;
 
   const handleClose = () => {
@@ -42,14 +43,12 @@ const Hero: FC<HeroProps> = ({
       <div className={cx('flex justify-between items-center px-12 py-2 border-b border-white border-opacity-30 relative',
         { [className]: !!className })}
       >
-        <Link href="/" passHref>
-          <a href="/">
-            <img
-              alt="GEDP"
-              src="/images/logo_GEDP.svg"
-              className="w-36"
-            />
-          </a>
+        <Link href={{ pathname: '/', query: { locale } }}>
+          <img
+            alt="GEDP"
+            src="/images/logo_GEDP.svg"
+            className="w-36"
+          />
         </Link>
 
         <Search

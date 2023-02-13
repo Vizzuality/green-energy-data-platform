@@ -22,6 +22,7 @@ import Button from 'components/button';
 import Icon from 'components/icon';
 import i18next from 'i18next';
 import { useRouter } from 'next/router';
+import type { Language } from 'types/data';
 
 // language keys
 const signup = i18next.t('signup');
@@ -37,7 +38,7 @@ const terms = i18next.t('terms');
 const privacy = i18next.t('privacy');
 const createAccountShort = i18next.t('createAccountShort');
 
-const SignupPage: FC = () => {
+const SignupPage: FC<Language> = ({ locale }: Language) => {
   const [credentials, setCredentials] = useState({
     name: '',
     email: '',
@@ -46,7 +47,6 @@ const SignupPage: FC = () => {
     password: '',
   });
   const router = useRouter();
-  const { locale } = router.query;
   const [errorMessage, setErrorMessage] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const passwordInputRef = useRef(null);
@@ -95,8 +95,11 @@ const SignupPage: FC = () => {
             </p>
             <div className="h-0.2 bg-gradient-to-r from-white to-white-50" />
             <p className="py-4">{registered}</p>
-            <Link href={{ pathname: '/signin' }} passHref>
-              <a href="/signin" className="flex items-center justify-center text-center text-white bg-transparent border-2 border-white rounded-full hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black focus:outline-none">Sign in</a>
+            <Link
+              href={{ pathname: '/signin', query: { locale } }}
+              className="flex items-center justify-center text-center text-white bg-transparent border-2 border-white rounded-full hover:text-opacity-50 hover:border-opacity-50 active:bg-white active:text-black focus:outline-none"
+            >
+              Sign in
             </Link>
           </section>
           <section className="flex flex-col flex-grow justify-start py-20 md:py-10 bg-white rounded-2.5xl lg:px-20 md:px-24 px-0 min-w-70 shadow max-w-3xl">
@@ -223,10 +226,12 @@ const SignupPage: FC = () => {
                   <span>
                     {`${agreement} `}
 
-                    <Link href={{ pathname: '/terms-conditions' }} passHref>
-                      <a href="/terms-conditions" className="underline">
-                        {terms}
-                      </a>
+                    <Link
+                      href={{ pathname: '/terms-conditions', query: { locale } }}
+                      className="underline"
+                    >
+                      {terms}
+
                     </Link>
                   </span>
                   <input
@@ -240,10 +245,11 @@ const SignupPage: FC = () => {
                 <label htmlFor="privacy-policy" className="flex flex-row-reverse items-center justify-end text-sm mb-9 text-gray1">
                   <span>
                     {`${agreement} `}
-                    <Link href={{ pathname: '/privacy-policy' }} passHref>
-                      <a href="/privacy-policy" className="underline">
-                        {privacy}
-                      </a>
+                    <Link
+                      href={{ pathname: '/privacy-policy', query: { locale } }}
+                      className="underline"
+                    >
+                      {privacy}
                     </Link>
                   </span>
                   <input
@@ -284,7 +290,9 @@ export const getServerSideProps = async (context) => {
   }
 
   return ({
-    props: ({}),
+    props: ({
+      locale: context.query?.locale ?? null,
+    }),
   });
 };
 

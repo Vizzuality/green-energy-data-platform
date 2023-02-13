@@ -1,28 +1,33 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelect } from 'downshift';
 import cx from 'classnames';
 
 import { useDispatch } from 'react-redux';
 
 // language utils
-import i18n from 'i18next';
-import { languages } from 'utils/translations';
+import i18next from 'i18next';
 import { setLanguage } from 'store/slices/language';
 
 // components
 import Icon from 'components/icon';
 import { useRouter } from 'next/router';
 
-// language keys
-const language = i18n.t('language');
-
 const LanguageSelect = () => {
+  const languages = [{
+    name: i18next.t('english'),
+    code: 'en',
+  },
+  {
+    name: i18next.t('chinese'),
+    code: 'cn',
+  }];
   const dispatch = useDispatch();
   const router = useRouter();
   const { query } = router;
 
-  const onSelectedItemChange = (item) => {
+  const onSelectedItemChange = useCallback((item) => {
     const { selectedItem: { code } } = item;
+
     router.replace({
       query: {
         ...query,
@@ -30,8 +35,8 @@ const LanguageSelect = () => {
       },
     });
     dispatch(setLanguage(code));
-    i18n.changeLanguage(code);
-  };
+    i18next.changeLanguage(code);
+  }, [dispatch, query, router]);
 
   const {
     isOpen,
@@ -40,6 +45,9 @@ const LanguageSelect = () => {
     highlightedIndex,
     getItemProps,
   } = useSelect({ items: languages, onSelectedItemChange });
+
+  // language keys
+  const language = i18next.t('language');
   return (
     <div className="relative flex items-center">
       <button

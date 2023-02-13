@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import cx from 'classnames';
 
 import Link from 'next/link';
@@ -9,6 +9,7 @@ import { RootState } from 'store/store';
 import { useDefaultIndicator } from 'hooks/indicators';
 import i18next from 'i18next';
 import { useSubgroup } from 'hooks/subgroups';
+import { useRouter } from 'next/router';
 
 interface GroupProps {
   description: string,
@@ -40,14 +41,17 @@ const subtitles = {
   },
 };
 
-// language keys
-const discover = i18next.t('discover');
-
 const GroupCard: FC<GroupCardProps> = ({
   group,
   className,
   textPosition,
 }: GroupCardProps) => {
+  // language keys
+  const discover = i18next.t('discover');
+
+  const { query: { locale } } = useRouter();
+  const lang = useMemo(() => locale || 'en', [locale]); 
+
   const {
     slug,
     name,
@@ -67,25 +71,25 @@ const GroupCard: FC<GroupCardProps> = ({
   const { default_indicator: defaultIndicator, slug: subgroupSlug } = defaultData;
   const { data: subgroup } = useSubgroup(group.slug, subgroupSlug, {
     refetchOnWindowFocus: false,
+  }, {
+    locale
   });
 
   const indicatorSlug = defaultIndicator?.slug || subgroup?.indicators[0]?.slug;
 
   return (
     <div className={cx('w-full items-center', { [className]: className })}>
-      <div className={cx('max-w-md sm:my-8',
-        {
-          'ml-12 ': textPosition === 'left',
-          'mr-12 ': textPosition === 'right',
-        })}
-      >
+      <div className={cx('max-w-sm sm:my-8 m-4')}>
         <h3 className="text-3.5xl text-gray3">{name}</h3>
         <h4 className="text-2.5xl text-color1 pb-2 font-bold leading-loose">{subtitle || subtitles[slug]?.[current]}</h4>
         <p className="text-sm leading-7 cursor-pointer my-9">
           {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.'}
         </p>
-        <Link href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} passHref>
-          <a href={`/${slug}/${subgroupSlug}/${indicatorSlug}`} className="px-6 py-3 text-sm text-white rounded-full bg-gradient-color1 hover:shadow-sm active:bg-gradient-color1-reverse active:shadow-sm">{discover}</a>
+        <Link
+          href={{ pathname: `/${slug}/${subgroupSlug}/${indicatorSlug}`, query: { locale: lang } }}
+          className="px-6 py-3 text-sm text-white rounded-full bg-gradient-color1 hover:shadow-sm active:bg-gradient-color1-reverse active:shadow-sm"
+          >
+          {discover}
         </Link>
       </div>
       <img

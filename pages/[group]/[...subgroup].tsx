@@ -7,7 +7,6 @@ import {
 } from 'react-query';
 import { useRouter } from 'next/router';
 import { dehydrate } from 'react-query/hydration';
-import store from 'store/store';
 
 // hooks
 import { useIndicator } from 'hooks/indicators';
@@ -18,7 +17,6 @@ import { useSubgroup } from 'hooks/subgroups';
 import Head from 'components/head';
 import Nav from 'components/nav';
 import SubgroupsDropdown from 'components/subgroups-dropdown';
-import EnergyBalanceSubgroupsDropdown from 'components/energy-balance-subgroups-dropdown';
 import PreFooter from 'components/pre-footer/component';
 
 // services
@@ -28,7 +26,7 @@ import { fetchIndicator } from 'services/indicators';
 import LayoutPage from 'layout';
 import Hero from 'layout/hero';
 import IndicatorData from 'layout/indicator-data';
-import EnergyBalanceIndicatorData from 'layout/energy-balance-indicator-data';
+import EnergyBalanceIndicatorData from 'layout/indicator-data/energy-balance';
 import WidgetsGrid from 'layout/widgets-grid';
 
 // types
@@ -78,6 +76,9 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
 
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     refetchOnWindowFocus: false,
+  },
+  {
+    locale
   });
 
   return (
@@ -85,8 +86,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
       <Head title={`${groupSlug} analysis`} />
       <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
         <Nav className="mt-6" />
-        {groupSlug !== 'energy-balance' && <SubgroupsDropdown group={group} data={data} subgroup={subgroup} />}
-        {groupSlug === 'energy-balance' && <EnergyBalanceSubgroupsDropdown group={group} data={data} />}
+        <SubgroupsDropdown group={group} data={data} subgroup={subgroup} />
       </Hero>
       <div className="container pb-20 m-auto">
         <section className="z-10 max-w-6xl m-auto -mt-40">
@@ -125,6 +125,7 @@ export const getServerSideProps = async ({ query }) => {
     props: ({
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
       groupSlug,
+      locale: locale ?? null,
     }),
   });
 };

@@ -18,25 +18,27 @@ import Icons from 'components/icons';
 // styles
 import 'styles/index.css';
 
-initializeLanguage();
 const queryClient = new QueryClient();
 
-const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => (
-  <>
-    <ReduxProvider store={makeStore}>
-      <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
-          <Provider session={pageProps.session}>
-            <I18nextProvider i18n={i18n}>
-              <Translation>{() => <Component {...pageProps} />}</Translation>
-            </I18nextProvider>
-          </Provider>
-        </Hydrate>
-      </QueryClientProvider>
-    </ReduxProvider>
-    <Icons />
-    <Toaster position="top-center" />
-  </>
-);
+const GreenEnergyDataApp = ({ Component, pageProps }: AppProps) => {
+  initializeLanguage(pageProps.locale);
+  return (
+    <>
+      <ReduxProvider store={makeStore}>
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Provider session={pageProps.session}>
+              <I18nextProvider i18n={i18n}>
+                <Translation>{() => <Component {...pageProps} />}</Translation>
+              </I18nextProvider>
+            </Provider>
+          </Hydrate>
+        </QueryClientProvider>
+      </ReduxProvider>
+      <Icons />
+      <Toaster position="top-center" />
+    </>
+  );
+};
 
 export default GreenEnergyDataApp;

@@ -21,11 +21,6 @@ interface FiltersProps {
   indicator?: string;
 }
 
-// language keys
-const filtersLang = i18next.t('filters');
-const valueLang = i18next.t('value');
-const total = i18next.t('value');
-
 const Filters: FC<FiltersProps> = ({
   visualization,
   categories,
@@ -35,6 +30,11 @@ const Filters: FC<FiltersProps> = ({
   height,
   indicator = null,
 }: FiltersProps) => {
+  // language keys
+  const filtersLang = i18next.t('filters');
+  const valueLang = i18next.t('value');
+  const total = i18next.t('value');
+
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
 

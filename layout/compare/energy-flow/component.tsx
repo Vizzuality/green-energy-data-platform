@@ -194,7 +194,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     if (compareIndex === 1) {
       dispatch(setFilters({
         visualization: currentVisualization,
-        ...(currentUnit && { unit: currentUnit }) || { unit: null },
+        ...(currentUnit && { unit: currentUnit } || { unit: null }),
         category: null,
         region: currentRegion || null,
         year: currentYear || null,
@@ -203,7 +203,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
     } else {
       dispatch(setCompareFilters({
         visualization: currentVisualization,
-        ...(currentUnit && { unit: currentUnit }) || { unit: null },
+        ...(currentUnit && { unit: currentUnit } || { unit: null }),
         category: null,
         region: currentRegion || null,
         year: currentYear || null,

@@ -16,22 +16,29 @@ interface WidgetsGridProps {
   className?: string;
 }
 
-// language keys
-const otherIndicators = i18next.t('otherIndicators');
-
 const WidgetsGrid: FC<WidgetsGridProps> = ({ className }: WidgetsGridProps) => {
+
+  // language keys
+  const otherIndicators = i18next.t('otherIndicators');
+
   const router = useRouter();
   const {
-    query: { group: groupSlug },
+    query: { group: groupSlug, locale },
   } = router;
+  const lang = locale || 'en';
   const { data: group }: AxiosRequestConfig = useGroup(groupSlug, {
     refetchOnWindowFocus: false,
     placeholderData: {
       subgroups: [],
     },
+
+  },
+  {
+    locale: lang,
   });
 
   const { subgroups } = group;
+
   return (
     <section className="grid grid-cols-3 grid-flow gap-x-3 gap-y-6.5 py-11">
       {subgroups?.map(({ slug: subgroupSlug, default_indicator }) => {
@@ -56,13 +63,10 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({ className }: WidgetsGridProps) => {
               >
                 {inView && (
                   <Link
-                    href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}
-                    passHref
+                    key={`${groupSlug}-${indicatorSlug}`}
+                    href={{ pathname: `/${groupSlug}/${subgroupSlug}/${indicatorSlug}`, query: { locale } }}
                   >
-                    <a
-                      key={`${groupSlug}-${indicatorSlug}`}
-                      href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}
-                    >
+                    <>
                       <p
                         title={name}
                         className="max-w-[100%] max-h-[50px] inline-block text-ellipsis overflow-hidden whitespace-nowrap"
@@ -78,7 +82,7 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({ className }: WidgetsGridProps) => {
                         indicatorId={id}
                         defaultVisualization={defaultVisualization}
                       />
-                    </a>
+                    </>
                   </Link>
                 )}
               </div>
@@ -92,14 +96,12 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({ className }: WidgetsGridProps) => {
           [className]: className,
         })}
       >
-        <Link key="other-indicators" href="/indicators" passHref>
-          <a
-            key="other-indicators"
-            href="/indicators"
-            className="flex items-center justify-center w-full h-full p-6 m-auto text-lg"
-          >
-            {otherIndicators}
-          </a>
+        <Link
+          key="other-indicators"
+          className="flex items-center justify-center w-full h-full p-6 m-auto text-lg"
+          href={{ pathname: '/indicators', query: { locale } }}
+        >
+          {otherIndicators}
         </Link>
       </div>
     </section>

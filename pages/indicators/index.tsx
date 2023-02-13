@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useMemo } from 'react';
 import Link from 'next/link';
 
 import { RootState } from 'store/store';
@@ -22,19 +22,21 @@ import { useSearch } from 'hooks/search';
 import { fetchGroups } from 'services/groups';
 
 // types
-import { GroupProps } from 'types/data';
+import { GroupProps, Language } from 'types/data';
 import i18next from 'i18next';
 
 interface IndicatorsPageProps {
   groups: GroupProps[]
 }
 
-// language keys
-const filterBy = i18next.t('filterBy');
+const IndicatorsPage: FC<IndicatorsPageProps & Language> = ({ groups, locale }: IndicatorsPageProps & Language) => {
 
-const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps) => {
+  // language keys
+  const filterBy = i18next.t('filterBy');
+
   const [disabledGroups, setActive] = useState([]);
   const [groupsFiltered, setFilteredGroups] = useState(groups);
+  const lang = useMemo(() => locale || 'en', [locale]);
 
   const {
     searchValue,
@@ -102,7 +104,12 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
                 const indicatorSlug = !default_indicator
                   ? subgroups[0].slug : default_indicator?.slug;
                 return (
-                  <Link key={subgroupId} href={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}>{subgroupName}</Link>
+                  <Link
+                    key={subgroupId}
+                    href={{ pathname: `/${groupSlug}/${subgroupSlug}/${indicatorSlug}`, query: { locale: lang }}}
+                  >
+                    {subgroupName}
+                  </Link>
                 );
               })}
             </div>
@@ -117,7 +124,12 @@ const IndicatorsPage: FC<IndicatorsPageProps> = ({ groups }: IndicatorsPageProps
 export const getServerSideProps = async ({ query }) => {
   const { locale } = query;
   return fetchGroups(null, { locale }).then(
-    ({ data }) => ({ props: { groups: data } }),
+    ({ data }) => ({
+      props: {
+        groups: data,
+        locale: locale ?? null,
+      },
+    }),
   );
 };
 export default IndicatorsPage;

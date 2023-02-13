@@ -1,15 +1,8 @@
-export const languages = [{
-  name: 'English',
-  code: 'en',
-},
-{
-  name: 'Chinese',
-  code: 'cn',
-}];
-
 export const resources = {
   en: {
     translation: {
+      chinese: 'Chinese',
+      english: 'English',
       aboutInfo: 'About the information in this site',
       change: 'Change indicator',
       compare: 'Compare',
@@ -80,7 +73,7 @@ export const resources = {
       finalConsumption: 'Final consumption',
       download: 'Download',
       dataSource: 'Data Source',
-      downloadLoginMode: 'Data is only available for registered users.',
+      downloadLoginMode: 'Data download is only available for registered users.',
       fullscreenDisclaimer: 'Change to full screen for a better view of the map',
       otherIndicators: 'View datasets for other indicators',
       total: 'Total',
@@ -117,6 +110,8 @@ export const resources = {
   },
   cn: {
     translation: {
+      chinese: '中国人',
+      english: '英语',
       aboutInfo: '关于本站信息',
       change: '更改指标',
       compare: '比较',
@@ -187,7 +182,7 @@ export const resources = {
       finalConsumption: '最终消费',
       download: '下载',
       dataSource: '数据源',
-      downloadLoginMode: '数据仅供注册用户使用。',
+      downloadLoginMode: '数据下载仅适用于注册用户',
       fullscreenDisclaimer: '更改为全屏以更好地查看地图',
       otherIndicators: '查看其他指标的数据集',
       total: '总量',

@@ -44,15 +44,12 @@ export const Nav: React.FC<NavProps> = ({
               { 'font-bold': groupSlug === group })}
           >
             <Link
-              href="/[group]/[...subgroup]"
+              href={{ pathname: '/[group]/[...subgroup]', query: { locale } }}
               as={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}
-            >
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a className={cx('text-white',
+              className={cx('text-white',
                 { 'before:-bottom-4 before:absolute before:left-0 before:w-full before:block before:h-1 before:rounded-2xl before:bg-white': groupSlug === group })}
-              >
-                {name}
-              </a>
+            >
+              {name}
             </Link>
           </li>
         ))}

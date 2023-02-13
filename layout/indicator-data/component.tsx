@@ -33,13 +33,15 @@ import EnergyFlow from './energy-flow';
 import ModelIntercomparison from './model-intercomparison';
 import CompareDropdownContent from './compare-dropdown/component';
 
-// language keys
-const compare = i18next.t('compare');
-const change = i18next.t('change');
+
 
 const IndicatorData: FC<Component> = ({
   className,
 }: Component) => {
+  // language keys
+  const compare = i18next.t('compare');
+  const change = i18next.t('change');
+
   const [dropdownVisibility, setDropdownVisibility] = useState({
     indicator: false,
     year: false,
@@ -87,6 +89,8 @@ const IndicatorData: FC<Component> = ({
   const { data: subgroup } = useSubgroup(groupSlug, subgroupSlug, {
     keepPreviousData: true,
     refetchOnWindowFocus: false,
+  }, {
+    locale
   });
 
   const {

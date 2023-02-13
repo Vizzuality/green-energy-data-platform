@@ -19,7 +19,10 @@ export const fetchGroup = (
   headers: {
     ...headers,
   },
-  params,
+  params: {
+    ...params,
+    ...id === 'energy-balance' && { load_nested_data: true },
+  },
 })
   .then(({ data }) => data);
 

@@ -148,3 +148,7 @@ export interface Region {
   name: string,
   region_type: string
 }
+
+export type Language = Readonly<{
+  locale: 'en' | 'cn',
+}>;

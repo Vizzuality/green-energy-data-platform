@@ -128,7 +128,7 @@ const ChartConfig = (categories, language, data) => {
     opacity: 0.5,
     fontSize: '14px',
   };
-  return ({
+  return {
     line: {
       margin: {
         top: 20, right: 0, left: 0, bottom: 0,
@@ -164,8 +164,8 @@ const ChartConfig = (categories, language, data) => {
       yAxis: {
         type: 'number',
         tick: DefaultTick,
-        ...isPercentage && { domain: [0, 100] },
-        ...isPercentage && { ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] },
+        ...(isPercentage && { domain: [0, 100] }),
+        ...(isPercentage && { ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] }),
         interval: 0,
         isPercentage,
       },
@@ -272,7 +272,7 @@ const ChartConfig = (categories, language, data) => {
         content: TooltipContent,
       },
     },
-  });
+  };
 };
 
 export default ChartConfig;
