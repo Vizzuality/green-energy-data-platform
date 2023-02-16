@@ -27,7 +27,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
   });
 
   const { query: { locale } } = useRouter();
-  const lang = locale || 'en';
+  const lang = useMemo(() => locale || 'en', [locale]);
 
   const { data: groups } = useGroups({ locale: lang },
     {
@@ -42,6 +42,8 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
     refetchOnWindowFocus: false,
     enabled: !!groupSlug,
     keepPreviousData: true,
+  }, {
+    locale: lang
   });
 
   const { data: indicators } = useIndicators(groupSlug, subgroupSlug, {
@@ -65,7 +67,13 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
     }
   };
 
-  const { data: groupData } = useGroup(groupSlug);
+  const { data: groupData } = useGroup(groupSlug, {
+    refetchOnWindowFocus: false,
+  },
+  {
+    locale: lang
+  });
+
   const groupName = groupData?.name;
   const { data: subgroupData } = useSubgroup(groupSlug, subgroupSlug, {}, {
     locale

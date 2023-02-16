@@ -51,6 +51,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
   {
     locale: lang,
   });
+  
   const {
     data,
   }: AxiosRequestConfig = useIndicator(groupSlug, subgroupSlug, indicatorSlug, {

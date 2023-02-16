@@ -24,9 +24,9 @@ import { theme } from 'tailwind.config';
 
 const numberFormat = ValueFormat('.2s');
 
-export const initializeLanguage = (lng) => i18next.init({
+export const initializeLanguage = (lng = 'en') => i18next.use(LanguageDetector).init({
   resources,
-  lng: lng || 'en'
+  lng
 });
 
 export const getMostFrequent = (array) => {

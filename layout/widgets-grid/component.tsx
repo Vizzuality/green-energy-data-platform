@@ -31,7 +31,6 @@ const WidgetsGrid: FC<WidgetsGridProps> = ({ className }: WidgetsGridProps) => {
     placeholderData: {
       subgroups: [],
     },
-
   },
   {
     locale: lang,

@@ -13,12 +13,17 @@ import Icon from 'components/icon';
 import { useRouter } from 'next/router';
 
 const LanguageSelect = () => {
+  // language keys
+  const language = i18next.t('language');
+  const english = i18next.t('english');
+  const chinese = i18next.t('chinese');
+
   const languages = [{
-    name: i18next.t('english'),
+    name: english,
     code: 'en',
   },
   {
-    name: i18next.t('chinese'),
+    name: chinese,
     code: 'cn',
   }];
   const dispatch = useDispatch();
@@ -46,8 +51,6 @@ const LanguageSelect = () => {
     getItemProps,
   } = useSelect({ items: languages, onSelectedItemChange });
 
-  // language keys
-  const language = i18next.t('language');
   return (
     <div className="relative flex items-center">
       <button
