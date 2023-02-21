@@ -328,7 +328,8 @@ const MapContainer: FC<MapContainerProps> = ({
             {!spiderInfo
               && !tooltipInfoHeaders.length
               && !tooltipInfo.length
-              && hoverInteractions.cluster && (
+              && hoverInteractions.cluster &&
+              hasInteraction && (
                 <Popup
                   latitude={lngLat[1]}
                   longitude={lngLat[0]}

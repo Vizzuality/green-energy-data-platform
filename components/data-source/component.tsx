@@ -41,7 +41,7 @@ const Card: FC<DataProps> = ({
   const login = i18next.t('login');
 
   return (
-    <div className={cx('flex divide-gray4 divide-opacity-90 text-center bg-gray5 text-gray1 rounded-2xl',
+    <div className={cx('flex divide-gray4 divide-opacity-90 text-center bg-gray5 text-gray1 rounded-2xl shadow',
       {
         [className]: className,
         'opacity-50': !isAccessible,
@@ -51,7 +51,7 @@ const Card: FC<DataProps> = ({
     >
       {!session
         ? (
-          <div className={cx('flex-col items-center p-4',
+          <div className={cx('flex-col items-center p-4 shadow',
             { 'w-full justify-center': type === 'horizontal' })}
           >
             <p>{downloadLoginMode}</p>
