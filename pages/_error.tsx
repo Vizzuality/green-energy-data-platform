@@ -41,9 +41,9 @@ export const ErrorPage: FC = () => {
             </h2>
             <div className="h-0.2 w-full bg-gradient-white mb-5" />
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center py-20">
             <Link href={{ pathname: '/', query: { locale } }}>
-              <Button theme="primary-background" size="xlg" className="py-20">
+              <Button theme="primary-background" size="xlg">
                 {homepage}
               </Button>
             </Link>

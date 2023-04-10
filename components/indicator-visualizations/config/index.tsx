@@ -85,7 +85,7 @@ const TooltipContent: FC<TooltipProps> = ({
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
 const ChartConfig = (categories, language, data) => {
-  const unitId = uniq(data.map(({ unit }) => unit.id))[0];
+  const unitId = uniq(data.map(({ unit }) => unit?.id))[0];
   const isPercentage = unitId === '542351b7-2813-4856-a7d8-1ceadd1f4a03';
   // const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China')
   // .map((d) => d.value), [data]);

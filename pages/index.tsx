@@ -75,7 +75,7 @@ const HomePage: FC = () => {
 
 export const getServerSideProps = async (context) => ({
   props: ({
-    locale: context.query?.locale,
+    locale: context.query?.locale ?? null,
   }),
 });
 
