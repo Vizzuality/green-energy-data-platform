@@ -91,7 +91,7 @@ const Indicator: FC = () => {
                 {indicator.records.map(({ category_1, file }) => (
                   dropdownVisibility[indicator.name] && (
                   <li key={category_1} className="pl-6 my-4 space-y-3 underline text-color1">
-                    <a href={decodeURIComponent(`https://gefc-bucket.s3.ap-southeast-1.amazonaws.com/${dataBySubgroup.name}/${file}`.replaceAll(' ', '+'))}>
+                    <a href={decodeURIComponent(`https://gefc-public-data.s3.ap-southeast-1.amazonaws.com/${dataBySubgroup.name}/${file}`.replaceAll(' ', '+'))}>
                       <span>
                         {category_1}
                       </span>
