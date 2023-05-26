@@ -38,7 +38,7 @@ const SuccessEmailPage: FC<{ locale: 'en' | 'cn' }> = ({ locale }) => (
 
 export const getServerSideProps = async (context) => ({
   props: ({
-    locale: context.query?.locale ?? null,
+    locale: context.query?.locale ?? 'en',
   }),
 });
 

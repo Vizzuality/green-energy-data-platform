@@ -4,7 +4,7 @@ import cx from 'classnames';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode | string,
   className?: string,
-  type?: 'reset' | 'button' | 'submit',
+  // type?: 'reset' | 'button' | 'submit',
   onClick?: (evt: any | '') => void,
   size?: 'sm' | 'md' | 'lg' | 'xlg',
   theme?: 'primary' | 'primary-background' | 'secondary' | 'secondary-background-dark' | 'secondary-background-light' | 'warning' | 'border-light' | 'border-dark' | 'active' | 'info'

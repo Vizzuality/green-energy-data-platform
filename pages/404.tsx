@@ -37,7 +37,7 @@ const NotFoundPage: FC = () => {
             <div className="h-0.2 w-full bg-gradient-white mb-5" />
           </div>
           <div className="flex justify-center">
-            <Link href={{ pathname: "/", query: { locale } }} className="py-20">
+            <Link href={{ pathname: "/", query: { locale:  locale || 'en' }}} className="py-20">
               <Button theme="primary-background" size="xlg">
                 {homepage}
               </Button>

@@ -44,8 +44,8 @@ export const Nav: React.FC<NavProps> = ({
               { 'font-bold': groupSlug === group })}
           >
             <Link
-              href={{ pathname: '/[group]/[...subgroup]', query: { locale } }}
-              as={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}`}
+              href={{ pathname: '/[group]/[...subgroup]', query: { locale: locale || 'en' }}}
+              as={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}?locale=${locale || 'en'}`}
               className={cx('text-white',
                 { 'before:-bottom-4 before:absolute before:left-0 before:w-full before:block before:h-1 before:rounded-2xl before:bg-white': groupSlug === group })}
             >

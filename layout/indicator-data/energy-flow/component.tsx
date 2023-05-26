@@ -51,11 +51,11 @@ const SankeyChart: FC<SankeyWrapper> = ({
 
   // language keys
   const showing = i18next.t('showing');
-  const yearLang = i18next.t('yearLang');
+  const yearLang = i18next.t('year');
   const selectYear = i18next.t('selectYear');
-  const unitLang = i18next.t('unitLang');
+  const unitLang = i18next.t('unit');
   const selectUnit = i18next.t('selectUnit');
-  const regionLang = i18next.t('regionLang');
+  const regionLang = i18next.t('region');
   const selectRegion = i18next.t('selectRegion');
   const dataNotFound = i18next.t('dataNotFound');
 
@@ -182,7 +182,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
               {years.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {yearLang}
+                    {i18next.t('yearLang')}
                     :
                   </span>
                   <span>
@@ -209,7 +209,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
                     onClick={() => { toggleDropdown('year'); }}
                     className={cx(DROPDOWN_BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                   >
-                    <span className="hidden mr-2 md:flex">
+                    <span key={yearLang} className="hidden mr-2 md:flex">
                       {yearLang}
                       :
                     </span>

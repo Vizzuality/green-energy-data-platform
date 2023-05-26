@@ -127,7 +127,7 @@ export const getServerSideProps = async ({ query }) => {
     ({ data }) => ({
       props: {
         groups: data,
-        locale: locale ?? null,
+        locale: locale ?? 'en',
       },
     }),
   );

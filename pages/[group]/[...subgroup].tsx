@@ -126,7 +126,7 @@ export const getServerSideProps = async ({ query }) => {
     props: ({
       dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
       groupSlug,
-      locale: locale ?? null,
+      locale: locale ?? 'en',
     }),
   });
 };

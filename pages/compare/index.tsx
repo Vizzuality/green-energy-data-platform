@@ -69,7 +69,7 @@ export const getServerSideProps = async ({ query }) => {
       g2,
       sg2,
       ind2,
-      locale: query?.locale ?? null,
+      locale: query?.locale ?? 'en',
     },
   });
 };

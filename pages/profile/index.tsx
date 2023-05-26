@@ -380,7 +380,7 @@ const customServerSideProps = async (context) => {
 
   return {
     props: {
-      locale: context.query?.locale ?? null,
+      locale: context.query?.locale ?? 'en',
     },
   };
 };

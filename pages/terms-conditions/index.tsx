@@ -58,7 +58,7 @@ const TermsAndConditionsPage: FC = () => {
 
 export const getServerSideProps = async (context) => ({
   props: ({
-    locale: context.query?.locale ?? null,
+    locale: context.query?.locale ?? 'en',
   }),
 });
 

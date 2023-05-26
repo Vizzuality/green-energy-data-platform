@@ -122,7 +122,7 @@ export const filterRecords = (
     year, region, unit, scenario, visualization, category,
   } = filters;
 
-  const recordsByFilters = records.filter((d) => {
+  const recordsByFilters = records?.filter((d) => {
     const unitId = d.unit?.id;
     if (visualization === 'line') {
       // API return region name to null for China

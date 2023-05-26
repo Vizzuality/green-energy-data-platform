@@ -257,7 +257,7 @@ export const getServerSideProps = async (context) => {
   return ({
     props: {
       csrfToken: await getCSRFToken(context),
-      locale: context.query?.locale ?? null,
+      locale: context.query?.locale ?? 'en',
     },
   });
 };
