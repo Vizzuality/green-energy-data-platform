@@ -64,7 +64,7 @@ export function useIndicator(
   queryOptions = {},
   params = {},
 ) {
-  return useQuery<IndicatorProps, Error>(['indicator', indicatorId, params],
+  return useQuery<IndicatorProps, Error>(['indicator', groupId, subgroupId, indicatorId, params],
     () => fetchIndicator(groupId, subgroupId, indicatorId, params), {
       placeholderData: {
         records: [],

@@ -663,7 +663,7 @@ export const getGroupedValues = (
                       'circle-color': [
                         'case',
                         ['<', ['get', categorySelected], 0],
-                        '#1B5183',
+                        '#e7b092',
                         ['all', ['==', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
                         '#C9E6E8',
                         ['all', ['>', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
@@ -675,7 +675,7 @@ export const getGroupedValues = (
                       'circle-stroke-color': [
                         'case',
                         ['<', ['get', categorySelected], 0],
-                        '#1B5183',
+                        '#e7b092',
                         ['all', ['==', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
                         '#C9E6E8',
                         ['all', ['>', ['get', categorySelected], 2], ['<', ['get', categorySelected], 0]],
