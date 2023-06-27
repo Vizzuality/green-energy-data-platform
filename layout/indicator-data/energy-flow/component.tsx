@@ -182,7 +182,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
               {years.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {i18next.t('yearLang')}
+                    {yearLang}
                     :
                   </span>
                   <span>

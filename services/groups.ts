@@ -15,7 +15,7 @@ export const fetchGroup = (
   id: string | string[],
   params = {},
   headers = {},
-) => API.get(`/groups/${id}`, {
+) => API.get(`/groups/${(id)}`, {
   headers: {
     ...headers,
   },
