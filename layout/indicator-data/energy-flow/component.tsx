@@ -182,7 +182,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
               {years.length === 1 && (
                 <div className={DROPDOWN_BUTTON_STYLES}>
                   <span className="hidden mr-2 md:flex">
-                    {yearLang}hdsifds
+                    {yearLang}
                     :
                   </span>
                   <span>
@@ -209,7 +209,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
                     onClick={() => { toggleDropdown('year'); }}
                     className={cx(DROPDOWN_BUTTON_STYLES, 'hover:bg-color1 hover:text-white')}
                   >
-                    <span key='year-sankey' className="hidden mr-2 md:flex">
+                    <span key={yearLang} className="hidden mr-2 md:flex">
                       {yearLang}
                       :
                     </span>

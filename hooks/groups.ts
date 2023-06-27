@@ -4,10 +4,14 @@ import { useQuery } from 'react-query';
 import { fetchGroups, fetchGroup } from 'services/groups';
 import { GroupProps } from 'types/data';
 
-export const useGroups = (params = {}, queryConfig = {}) => useQuery(['fetch-groups', params],
-  () => fetchGroups('', params).then(({ data }) => data), {
+export const useGroups = (params = {}, queryConfig = {}) => {
+  const query = useQuery(['fetch-groups', JSON.stringify(params)],
+  () => fetchGroups('', params).then(({ data }) => {
+    return data} ), {
     ...queryConfig,
-  });
+  })
+  return query
+};
 
 export const useGroup = (id: string | string[], queryConfig = {}, params = {}) => useQuery(['fetch-group', id, params],
   () => fetchGroup(id, params)

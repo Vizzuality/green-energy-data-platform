@@ -33,7 +33,7 @@ const HomePage: FC = () => {
   const landingTitle = i18next.t('landingTitle');
 
   return (
-    <LayoutPage className="h-full min-h-screen">
+    <LayoutPage className="h-full">
       <Head title="Welcome to Green Energy Data Platform" />
       <Hero className="flex flex-col px-8 py-24 text-center lg:px-32 md:px-24 sm:px-16">
         <h1 className="text-5.5xl pb-14">{landingTitle}</h1>
