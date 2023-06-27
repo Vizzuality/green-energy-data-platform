@@ -107,7 +107,7 @@ export function useIndicatorMetadata(
   } = query;
 
   const years = useMemo<{ label: number, value: number }[] | []>(
-    () => orderBy(data[visualization]?.year?.map((y) => ({
+    () => orderBy(data?.[visualization]?.year?.map((y) => ({
       label: y,
       value: y,
     })), ['value'], ['desc']) || [], [data, visualization],
@@ -216,7 +216,7 @@ export function useSankeyIndicatorMetadata(
   } = query;
 
   const years = useMemo<{ label: number, value: number }[] | []>(
-    () => orderBy(data[visualization]?.year?.map((y) => ({
+    () => orderBy(data?.[visualization]?.year?.map((y) => ({
       label: y,
       value: y,
     })), ['value'], ['desc']) || [], [data, visualization],
