@@ -1,6 +1,8 @@
 import React, {
   FC,
 } from 'react';
+
+import orderBy from 'lodash/orderBy';
 import {
   ResponsiveContainer,
   CartesianGrid,
@@ -71,7 +73,7 @@ const Chart: FC<ChartProps> = ({
 
   return (
     <ResponsiveContainer height={height || 400}>
-      <LineChart {...rest} data={widgetData}>
+      <LineChart {...rest} data={orderBy(widgetData, 'year')}>
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
