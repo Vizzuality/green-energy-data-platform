@@ -53,6 +53,7 @@ import { DROPDOWN_BUTTON_STYLES } from 'layout/indicator-data/constants';
 import type { ComponentTypes } from 'types/data';
 
 import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
+import { filter } from 'lodash';
 
 type ChartProps = {
   widgetData: unknown;
@@ -186,6 +187,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     indicatorSlug,
     {
       ...(visualization === 'line' && { region: filters.region }),
+      ...unit && { unit: filters.unit },
       locale: lang,
     },
     {
