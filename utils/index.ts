@@ -67,13 +67,7 @@ export const getCategoriesFromRecords = (
     return categories;
   }
 
-  if (visualization === 'line') {
-    const categoriesWithTotal = (categories.includes(KEY)
-    || categories.length === 1) ? categories : [...categories, KEY];
-    return categoriesWithTotal;
-  }
-
-  if (visualization !== 'line') {
+  if (visualization !== 'choropleth') {
     return categories.filter((category) => {
       if (categories.length > 1 && visualization !== 'line') {
         return (
@@ -307,7 +301,7 @@ export const getGroupedValues = (
         return dataByYear[currentYear].length > 1 ? {
           ...acc,
           ...rest,
-          Total: dataByYearWithTotals[currentYear],
+          // Total: dataByYearWithTotals[currentYear],
         } : {
           ...acc,
           ...rest,
