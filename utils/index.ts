@@ -1274,7 +1274,7 @@ export const getLegendData = (widgetData: unknown, visualization: string) => {
     legendData = data.reduce((prev, curr) => {
       const newKeys = prev;
       Object.keys(curr).forEach((key) => {
-        if (!prev?.includes(key) && key.toLocaleLowerCase() !== 'province' && key.toLocaleLowerCase() !== 'visualizationTypes') {
+        if (!prev?.includes(key) && key.toLocaleLowerCase() !== 'province' && key !== 'visualizationTypes') {
           newKeys.push(key);
         }
       });
