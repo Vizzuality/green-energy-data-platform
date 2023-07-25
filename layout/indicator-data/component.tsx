@@ -157,13 +157,13 @@ const IndicatorData: FC<Component> = ({
               interactive
               onClickOutside={() => closeDropdown('indicator')}
               content={(
-                <ul className="z-10 w-full min-w-full overflow-y-auto divide-y divide-white shadow-sm rounded-xl divide-opacity-10 max-h-96">
+                <ul className="z-10 w-full min-w-full max-w-[300px] overflow-y-auto divide-y divide-white shadow-sm rounded-xl divide-opacity-10 max-h-96">
                   {subgroup?.indicators?.map(
                     ({ name: groupName, id, slug }) => (
                       <li key={id} className="px-5 text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-opacity-10 bg-gray3">
                         <button
                           type="button"
-                          className="flex items-center w-full py-2 last:border-b-0"
+                          className="text-start flex items-center w-full py-2 last:border-b-0"
                           onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${encodeURIComponent(slug)}?locale=${lang}`)}
                         >
                           {groupName}
