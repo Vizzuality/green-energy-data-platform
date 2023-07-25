@@ -113,7 +113,7 @@ const Filters: FC<FiltersProps> = ({
             className={cx(
               'flex justify-between items-center w-full mb-1.5 rounded-md text-left text-sm',
               {
-                'active:bg-color1 focus:bg-blue cursor-pointer': hasSubcategories,
+                'active:bg-color1 focus:bg-blue cursor-pointer': !!hasSubcategories,
                 'bg-color1 text-white clear:bg-white': categorySelected === category,
                 'bg-white': categorySelected !== category,
               },

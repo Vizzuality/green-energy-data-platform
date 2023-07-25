@@ -314,17 +314,27 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     [scenarios, scenario],
   ) || '';
 
-  const hasSubcategories = useMemo(() => subcategories.length > 1 || (subcategories.length === 1 && visualization !== 'pie' && visualization !== 'choropleth'), [subcategories, visualization]);
+  const hasSubcategories = useMemo(() => subcategories.length > 1 || (subcategories.length === 1 && categories.length > 1), [subcategories, visualization]);
 
   const selectedCategory = useMemo(() => {
     if (!hasSubcategories) return defaultCategory;
     // Use the last selected filter
-    if (uiCategory.value !== category?.value) {
-      return uiCategory;
-    }
     if (category?.label === 'category_2' && category?.value && categories.includes(category?.value)) {
       return category;
     }
+
+    if (category?.label === 'category_2' && category?.value && !categories.includes(category?.value)) {
+      dispatch(setFilters({
+        ...filters,
+        category: defaultCategory
+      }));
+      return defaultCategory;
+    }
+
+    if (uiCategory.value !== category?.value) {
+      return uiCategory;
+    }
+
     return defaultCategory;
   }, [subcategories.length, visualization, category, uiCategory, categories, defaultCategory]);
 
@@ -333,7 +343,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       setFilters({
         visualization: currentVisualization,
         ...((currentUnit && { unit: currentUnit }) || { unit: null }),
-        ...(selectedCategory && { category: selectedCategory }),
+        ...((selectedCategory && categories.includes(category?.value)) ? { category: selectedCategory } : { category: selectedCategory }),
         ...((['line', 'pie'].includes(currentVisualization) && {
           region: currentRegion,
         }) || { region: null }),
@@ -344,7 +354,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
           && defaultScenario && { scenario: currentScenario }),
       }),
     );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     defaultYear,
     defaultUnit,

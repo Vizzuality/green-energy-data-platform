@@ -398,7 +398,8 @@ export const getGroupedValues = (
   }[] => {
     const dataWithGeometries = filteredData?.map(({ id, ...d }) => {
       const geometry = filteredRegions?.find(
-        (r): boolean => d.region.name === r.name,
+        // id === '88ff1d74-d37a-437b-998c-316f15a4b91a' is China, please remove is case you want to show it
+        (r): boolean => (d.region.name === r.name) && d.region.id !== '88ff1d74-d37a-437b-998c-316f15a4b91a', 
       );
       return {
         geometry,
@@ -406,6 +407,7 @@ export const getGroupedValues = (
         [mapCategorySelected]: d.value,
       };
     });
+
     const geometryTypes = dataWithGeometries
       ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
 
@@ -449,7 +451,6 @@ export const getGroupedValues = (
       );
       return Object.assign({}, ...properties);
     };
-
     if (layerType === 'multipolygon' || layerType === 'polygon') {
       data = [
         {
@@ -465,12 +466,14 @@ export const getGroupedValues = (
                 data: {
                   type: 'FeatureCollection',
                   features: dataWithGeometries.map(
-                    ({ geometry, visualizationTypes, ...cat }) => ({
+                    ({ geometry, visualizationTypes, ...cat }) => {
+                      return ({
                       type: 'Feature',
                       geometry: geometry?.geometry,
                       properties: cat,
-                      total: Object.values(cat),
-                    }),
+                      Total: Object.values(cat),
+                      ...cat,
+                    })},
                   ),
                 },
               },
@@ -750,7 +753,6 @@ export const getGroupedValues = (
         },
       ];
     }
-
     return data;
   };
 
@@ -770,7 +772,6 @@ export const getGroupedValues = (
     default:
       data = [];
   }
-
   return orderBy(data, ['year', 'province'], ['asc']);
 };
 

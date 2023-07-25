@@ -109,7 +109,7 @@ const ChartConfig = (categories, language, data) => {
   };
 
   const getBars = () => {
-    if (categories.length) {
+    if (!!categories.length) {
       return categories.map((c) => ({
         dataKey: c,
         stackId: 'a',
@@ -117,7 +117,6 @@ const ChartConfig = (categories, language, data) => {
       }));
     }
     return ([{
-      stackId: 'a',
       dataKey: KEY,
       maxBarSize: 30,
     }]);
@@ -221,28 +220,6 @@ const ChartConfig = (categories, language, data) => {
       tooltip: {
         isAnimationActive: false,
         content: TooltipContent,
-      },
-    },
-    stacked_bar: {
-      margin: {
-        top: 20, right: 0, left: 0, bottom: 0,
-      },
-      cartesianGrid: {
-        vertical: false,
-      },
-      bars: [
-        {
-          dataKey: 'value1',
-          stackId: 'a',
-        },
-        {
-          dataKey: 'value2',
-          stackId: 'a',
-        },
-      ],
-      xAxis: {
-        dataKey: 'province',
-        tick: DefaultTick,
       },
     },
     model_intercomparison_bar: {
