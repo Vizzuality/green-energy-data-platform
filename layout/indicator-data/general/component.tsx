@@ -319,6 +319,10 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const selectedCategory = useMemo(() => {
     if (!hasSubcategories) return defaultCategory;
     // Use the last selected filter
+    if (uiCategory.value !== category?.value && categories.includes(category?.value)) {
+      return uiCategory;
+    }
+
     if (category?.label === 'category_2' && category?.value && categories.includes(category?.value)) {
       return category;
     }
@@ -331,9 +335,6 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       return defaultCategory;
     }
 
-    if (uiCategory.value !== category?.value) {
-      return uiCategory;
-    }
 
     return defaultCategory;
   }, [subcategories.length, visualization, category, uiCategory, categories, defaultCategory]);

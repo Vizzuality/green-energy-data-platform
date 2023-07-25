@@ -52,6 +52,7 @@ export const getCategoriesFromRecords = (
   visualization: string,
   lang?: string | string[],
 ) => {
+
   const KEY = lang === 'cn' ? '总量' : 'Total';
   const categories = visualization !== 'sankey'
     ? compact(
@@ -122,7 +123,7 @@ export const filterRecords = (
       // API return region name to null for China
       if (
         (category.label === 'category_1' || category?.value === d.category_1)
-        && ((categories.length > 1 && d.category_1 !== 'Total')
+        && ((categories.length > 1)
         || categories.length === 1)
       ) { return true; }
     }
@@ -348,6 +349,7 @@ export const getGroupedValues = (
           .value(),
       );
       const dataByProvince = groupBy(data, 'province');
+     
       return Object.keys(dataByProvince)
         .map((province) => dataByProvince[province].reduce(
           (acc, next) => {
@@ -363,7 +365,7 @@ export const getGroupedValues = (
           },
         ))
         .filter((p) => (Object.keys(dataByProvince).length > 1
-          ? p.province !== i18next.t('China')
+          ? (p.province !== i18next.t('China'))
           : true));
     }
 

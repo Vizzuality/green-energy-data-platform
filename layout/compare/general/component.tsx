@@ -321,7 +321,6 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
     currentVisualization,
     indicatorSlug,
   ]);
-
   const LegendPayload = useMemo<{ label: string, color: string }[]>(
     () => {
       let legendData;

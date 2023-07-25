@@ -330,6 +330,7 @@ export function useIndicatorRecords(
     });
 
   const { data } = query;
+
   const KEY = locale === 'cn' ? '总量' : 'Total';
 
   return useMemo(() => ({
