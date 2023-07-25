@@ -257,6 +257,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   // +  const mainColorsKeys = widgetDataKeys.map((k, index) => ({ [k]: mainColors[index] }));
   // +  const colorsOpacity = useOpacityColors(mainColorsKeys);
   // +  const colors = category?.label === 'category_1' ? mainColorsKeys : colorsOpacity;
+
   const widgetConfig = useMemo(
     () => ChartConfig(widgetDataKeys, lang, records)[visualization],
     [visualization, widgetDataKeys, records, lang],
