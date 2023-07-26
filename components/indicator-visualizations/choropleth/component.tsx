@@ -257,7 +257,8 @@ const MapContainer: FC<MapContainerProps> = ({
         }}
         onMapLoad={hanldeMapLoad}
       >
-        {(map) => (
+        {(map) => {
+          return (
           <>
             <LayerManager map={map} plugin={PluginMapboxGl}>
               {layers?.map((l) => (
@@ -396,7 +397,7 @@ const MapContainer: FC<MapContainerProps> = ({
                 </Popup>
             )}
           </>
-        )}
+        )}}
       </Map>
       {hasInteraction && (
         <ZoomControl viewport={viewport} onZoomChange={handleZoomChange} />

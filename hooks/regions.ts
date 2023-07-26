@@ -8,6 +8,7 @@ import {
 
 // services
 import { fetchRegion, fetchRegions } from 'services/regions';
+import { useRouter } from 'next/router';
 
 export const useRegions = (params = {}, queryConfig = {}) => {
   const {
@@ -15,8 +16,11 @@ export const useRegions = (params = {}, queryConfig = {}) => {
   } = useSelector(
     (state: RootState) => (state.language),
   );
-  const queryParams = { ...params, locale: current };
-  return useQuery<Region[], Error>(['fetch-regions', current], () => fetchRegions(queryParams), { ...queryConfig });
+
+  const { query } = useRouter();
+  const lang = query.locale || 'en';
+  const queryParams = { ...params, locale: lang };
+  return useQuery<Region[], Error>(['fetch-regions', current, lang], () => fetchRegions(queryParams), { ...queryConfig });
 };
 
 export const useRegion = (id, params = {}, queryConfig = {}) => {
@@ -26,8 +30,9 @@ export const useRegion = (id, params = {}, queryConfig = {}) => {
     (state: RootState) => (state.language),
   );
   const queryParams = { ...params, locale: current };
-
-  return useQuery(['fetch-region', id, queryParams], () => fetchRegion(id, queryParams), { ...queryConfig });
+  const { query } = useRouter();
+  const lang = query.locale || 'en';
+  return useQuery(['fetch-region', id, queryParams, lang], () => fetchRegion(id, queryParams), { ...queryConfig });
 };
 
 export const useRegionIdFromName = (regions, name) => regions.find((region) => name === region);

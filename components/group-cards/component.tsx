@@ -56,7 +56,6 @@ const GroupCard: FC<GroupCardProps> = ({
     slug,
     name,
     subtitle,
-    description,
     header_image: headerImage,
   } = group;
 
@@ -76,15 +75,15 @@ const GroupCard: FC<GroupCardProps> = ({
   });
 
   const indicatorSlug = defaultIndicator?.slug || subgroup?.indicators[0]?.slug;
-
+  const groupSlugDescription  = i18next.t(slug);
   return (
-    <div className={cx('w-full items-center', { [className]: className })}>
-      <div className={cx('max-w-sm sm:my-8 m-4')}>
+    <div className={cx('flex w-full items-center justify-between space-x-14', { [className]: className })}>
+      <div className={cx({"flex-1 w-full": true, 'ml-10': textPosition === 'left', 'mr-10': textPosition === 'right'})}>
         <h3 className="text-3.5xl text-gray3">{name}</h3>
         <h4 className="text-2.5xl text-color1 pb-2 font-bold leading-loose">{subtitle || subtitles[slug]?.[current]}</h4>
-        <p className="text-sm leading-7 cursor-pointer my-9">
-          {description || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.'}
-        </p>
+        <div className="text-sm leading-7 cursor-pointer my-9" dangerouslySetInnerHTML={{__html: groupSlugDescription}} />
+          {/* {groupSlugDescription || 'Metadata lorem ipsum sit amet. Donec ullamcorper nulla non metus auctor fringilla. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.'}
+        </div> */}
         <Link
           href={{ pathname: `/${slug}/${subgroupSlug}/${indicatorSlug}`, query: { locale: lang } }}
           className="px-6 py-3 text-sm text-white rounded-full bg-gradient-color1 hover:shadow-sm active:bg-gradient-color1-reverse active:shadow-sm"
@@ -95,10 +94,10 @@ const GroupCard: FC<GroupCardProps> = ({
       <img
         src={headerImage || `/images/landing/${slug}.png`}
         alt={slug}
-        className={cx('rounded-2xl max-w-sm lg:w-full w-72',
+        className={cx('rounded-2xl max-w-sm flex-1 w-16',
           {
-            'shadow-md-left': textPosition === 'left',
-            'shadow-md-right': textPosition === 'right',
+            'shadow-md-left mr-5 ': textPosition === 'left',
+            'shadow-md-right ml-5 ': textPosition === 'right',
           })}
       />
     </div>

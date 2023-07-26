@@ -109,7 +109,7 @@ const ChartConfig = (categories, language, data) => {
   };
 
   const getBars = () => {
-    if (!!categories.length && categories.length > 1) {
+    if (!!categories.length) {
       return categories.map((c) => ({
         dataKey: c,
         stackId: 'a',

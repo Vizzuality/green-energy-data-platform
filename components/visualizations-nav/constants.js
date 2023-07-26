@@ -19,11 +19,29 @@ export const GeneralVisualizationsOptions = [
     icon: 'bar',
     label: 'provinces',
   },
-  // {
-  //   id: 'table',
-  //   icon: 'columns',
-  //   label: 'table',
-  // },
+];
+
+export const GeneralVisualizationsOptionsInternational = [
+  {
+    id: 'line',
+    icon: 'line',
+    label: 'trend',
+  },
+  {
+    id: 'pie',
+    icon: 'pie',
+    label: 'distribution',
+  },
+  {
+    id: 'choropleth',
+    icon: 'map',
+    label: 'map',
+  },
+  {
+    id: 'bar',
+    icon: 'bar',
+    label: 'countries',
+  },
 ];
 
 export const ModelIntercomparisonVisualizationsOptions = [
@@ -37,11 +55,7 @@ export const ModelIntercomparisonVisualizationsOptions = [
     icon: 'bar',
     label: 'breakDown',
   },
-  // {
-  //   id: 'table',
-  //   icon: 'columns',
-  //   label: 'table',
-  // },
+
 ];
 
 export const EnergyBalanceVisualizationsOptions = [
@@ -51,3 +65,5 @@ export const EnergyBalanceVisualizationsOptions = [
     label: 'CSVfiles',
   },
 ];
+
+export default GeneralVisualizationsOptions;

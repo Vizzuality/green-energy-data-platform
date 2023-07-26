@@ -142,7 +142,6 @@ export function useIndicatorMetadata(
     refetchOnWindowFocus: false,
     placeholderData: queryClient.getQueryData(['fetch-regions', params]) || [],
   });
-
   const scenarios = useMemo<{ label: string, value: string }[]>(
     () => (uniq(data[visualization]?.scenarios)).map((s: { name: string, id: string }) => ({
       label: s.name,

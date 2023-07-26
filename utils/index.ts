@@ -401,18 +401,18 @@ export const getGroupedValues = (
     const dataWithGeometries = filteredData?.map(({ id, ...d }) => {
       const geometry = filteredRegions?.find(
         // id === '88ff1d74-d37a-437b-998c-316f15a4b91a' is China, please remove is case you want to show it
-        (r): boolean => (d.region.name === r.name) && d.region.id !== '88ff1d74-d37a-437b-998c-316f15a4b91a', 
+        (r): boolean => 
+        ((d.region.name === r.name) || (d.region_id === r.id) || (d.region.id === r.id)) && d.region.id !== '88ff1d74-d37a-437b-998c-316f15a4b91a'
       );
       return {
         geometry,
         visualizationTypes: d.visualization_types,
         [mapCategorySelected]: d.value,
       };
-    });
-
+    }).filter((d) => d.geometry);
     const geometryTypes = dataWithGeometries
-      ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
-
+    ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
+    
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries
       ?.filter((d) => numberFormat(d[mapCategorySelected]))
@@ -757,7 +757,6 @@ export const getGroupedValues = (
     }
     return data;
   };
-
   switch (visualization) {
     case 'line':
       data = getLineData();

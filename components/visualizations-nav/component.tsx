@@ -12,10 +12,12 @@ import Icon from 'components/icon';
 import {
   GeneralVisualizationsOptions,
   EnergyBalanceVisualizationsOptions,
+  GeneralVisualizationsOptionsInternational,
 } from './constants';
 
 export interface VisualizationsNavProps {
   groupSlug: string | string[];
+  subgroupSlug?: string | string[];
   visualizationTypes: string[];
   active: string;
   mobile?: boolean;
@@ -24,6 +26,7 @@ export interface VisualizationsNavProps {
 }
 export const VisualizationsNav: FC<VisualizationsNavProps> = ({
   groupSlug,
+  subgroupSlug,
   visualizationTypes,
   className,
   mobile = false,
@@ -46,6 +49,9 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
   const VisualizationsOptions = useMemo(() => {
     if (groupSlug === 'energy-balance') {
       return EnergyBalanceVisualizationsOptions;
+    }
+    if (groupSlug === 'energy' && subgroupSlug === 'international-comparison') {
+      return GeneralVisualizationsOptionsInternational;
     }
     return GeneralVisualizationsOptions;
   }, [groupSlug]);
