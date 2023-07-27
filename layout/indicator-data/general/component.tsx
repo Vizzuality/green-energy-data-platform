@@ -319,15 +319,15 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const selectedCategory = useMemo(() => {
     if (!hasSubcategories) return defaultCategory;
     // Use the last selected filter
-    if (uiCategory.value !== category?.value && categories.includes(category?.value)) {
+    if (uiCategory?.value !== category?.value && categories?.includes(category?.value)) {
       return uiCategory;
     }
 
-    if (category?.label === 'category_2' && category?.value && categories.includes(category?.value)) {
+    if (category?.label === 'category_2' && category?.value && categories?.includes(category?.value)) {
       return category;
     }
 
-    if (category?.label === 'category_2' && category?.value && !categories.includes(category?.value)) {
+    if (category?.label === 'category_2' && category?.value && !categories?.includes(category?.value)) {
       dispatch(setFilters({
         ...filters,
         category: defaultCategory
@@ -337,7 +337,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
 
 
     return defaultCategory;
-  }, [subcategories.length, visualization, category, uiCategory, categories, defaultCategory]);
+  }, [subcategories, visualization, category, uiCategory, categories, defaultCategory]);
 
   useEffect(() => {
     dispatch(

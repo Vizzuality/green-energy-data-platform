@@ -94,7 +94,7 @@ const GroupCard: FC<GroupCardProps> = ({
       <img
         src={headerImage || `/images/landing/${slug}.png`}
         alt={slug}
-        className={cx('rounded-2xl max-w-sm flex-1 w-16',
+        className={cx('rounded-2xl max-w-sm max-h-sm flex-1 w-16',
           {
             'shadow-md-left mr-5 ': textPosition === 'left',
             'shadow-md-right ml-5 ': textPosition === 'right',

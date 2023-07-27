@@ -80,7 +80,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
   });
   const subgroupName = subgroupData?.name;
 
-  const groupsToCompare = useMemo(() => groups.filter(({ slug }) => slug !== 'energy-balance'), [groups]);
+  const groupsToCompare = useMemo(() => groups?.filter(({ slug }) => slug !== 'energy-balance'), [groups]);
 
   return (
     <div className="z-10 flex flex-col justify-center w-full text-white shadow-sm rounded-xl bg-gray3 first:pt-2 last:pb-2">
