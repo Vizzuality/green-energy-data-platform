@@ -200,7 +200,7 @@ const IndicatorData: FC<Component> = ({
             >
               <button
                 type="button"
-                className="text-sm border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full"
+                className="whitespace-nowrap text-sm border text-color1 border-gray1 border-opacity-20 hover:bg-color1 hover:text-white py-0.5 px-4 rounded-full"
               >
                 {compare}
               </button>

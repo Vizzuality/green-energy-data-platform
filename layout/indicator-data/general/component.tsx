@@ -241,13 +241,14 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const widgetData = useMemo(
     () => getGroupedValues(
       name,
+      categories,
       groupSlug,
       filters,
       filteredRecords,
       regionsGeometries,
       units,
     ),
-    [name, groupSlug, filters, filteredRecords, regionsGeometries, units],
+    [name, categories, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
   const widgetDataKeys = category?.label === 'category_1' ? categories : getLegendData(widgetData, visualization);
@@ -367,7 +368,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const LegendPayload = useMemo(() => {
     let legendData;
     if (visualization === 'pie' && (category?.label === 'category_1' || subcategories.length <= 1)) {
-      legendData = widgetData;
+      legendData = widgetDataKeys
     } else if (category?.label === 'category_1') {
       legendData = categories;
     } else if (visualization === 'bar') {

@@ -11,6 +11,7 @@ import Icon from 'components/icon';
 
 import {
   GeneralVisualizationsOptions,
+  ScenariosVisualizationsOptions,
   EnergyBalanceVisualizationsOptions,
   GeneralVisualizationsOptionsInternational,
 } from './constants';
@@ -50,6 +51,11 @@ export const VisualizationsNav: FC<VisualizationsNavProps> = ({
     if (groupSlug === 'energy-balance') {
       return EnergyBalanceVisualizationsOptions;
     }
+    
+    if (groupSlug === 'scenarios') {
+      return ScenariosVisualizationsOptions;
+    }
+    
     if (groupSlug === 'energy' && subgroupSlug === 'international-comparison') {
       return GeneralVisualizationsOptionsInternational;
     }

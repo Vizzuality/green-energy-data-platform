@@ -68,13 +68,12 @@ export const getCategoriesFromRecords = (
     return categories;
   }
 
+  if (visualization === 'pie') {
+    return categories.filter((d) => d.toLowerCase() !== 'total' && d !== '总计' )
+  }
+
   if (visualization !== 'choropleth') {
     return categories.filter((category) => {
-      if (categories.length > 1 && visualization !== 'line') {
-        return (
-          category !== 'Total' && category !== '总量' && category !== null
-        );
-      }
       if (categories.length > 1 && visualization === 'line') {
         return category !== null;
       }
@@ -96,7 +95,7 @@ export const getSubcategoriesFromRecords = (
   } else {
     data = records
       ?.map((r) => (r.category_2))
-      ?.filter((d) => d.toLowerCase() !== 'total');
+      ?.filter((d) => d.toLowerCase() !== 'total' && d !== '总计');
   }
 
   return compact(
@@ -134,7 +133,7 @@ export const filterRecords = (
         && (unitId === unit || !unitId)
         && year === d.year
         && (category.label === 'category_1' || category?.value === d.category_1)
-        && ((categories.length > 1 && d.category_1 !== 'Total')
+        && ((categories.length > 1 && d.category_1.toLocaleLowerCase() !== 'total' && d.category_1 !== '总量' && d.category_1 !== '总计')
           || categories.length === 1)
       ) { return true; }
     }
@@ -232,6 +231,7 @@ interface Bar {
 
 export const getGroupedValues = (
   name: string,
+  categories: string[],
   groupSlug: string | string[],
   filters: IndicatorFilters,
   records: Record[],
@@ -241,7 +241,7 @@ export const getGroupedValues = (
   const { category, unit, visualization } = filters;
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
-  const mapCategorySelected = category?.label === 'category_1' ? 'Total' : category?.value;
+  const mapCategorySelected = category?.label === 'category_1' ? categories[0] : category?.value;
   const filteredData = label === 'category_2' && categorySelected !== 'Total'
     ? records.filter((record) => record.category_1 === categorySelected)
     : records;
@@ -412,7 +412,7 @@ export const getGroupedValues = (
     }).filter((d) => d.geometry);
     const geometryTypes = dataWithGeometries
     ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
-    
+
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries
       ?.filter((d) => numberFormat(d[mapCategorySelected]))
@@ -442,7 +442,7 @@ export const getGroupedValues = (
     const visualizations = dataWithGeometries[0]
       ?.visualizationTypes as string[];
 
-    const getTooltipProperties = (tooltipData) => {
+      const getTooltipProperties = (tooltipData) => {
       if (!tooltipData) return null;
       const properties = tooltipData?.map(
         ({
@@ -919,6 +919,7 @@ export const getModelIntercomparisonData = (
     default:
       data = [];
   }
+
   return data;
 };
 
@@ -1283,8 +1284,9 @@ export const getLegendData = (widgetData: unknown, visualization: string) => {
     }, []);
   }
   if (visualization === 'pie') {
-    legendData = data.map(({ name }) => name);
+    const legendKeys = data.map(({ name }) => name) as string[];
+    legendData = legendKeys.length > 1 ? legendKeys.filter((l) => l.toLowerCase() !== 'total' && l !== '总量' && l !== '总计') : legendKeys;
   }
 
-  return legendData.sort((a) => (a === 'Total' || a === '总量' ? -1 : 0));
+  return legendData.sort((a) => (a.toLowerCase() === 'total' || a === '总量' || a === '总计' ? -1 : 0));
 };

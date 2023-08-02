@@ -23,9 +23,9 @@ export interface Data {
 }
 
 export interface ChartLine {
-  year: number,
   // visualizationTypes: string[],
-  [key: string]: string | number | string[] | Data,
+  [key: string]: string | number | string[] | Data;
+  year?: number;
 }
 
 export interface ChartBar {

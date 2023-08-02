@@ -115,6 +115,7 @@ export const resources = {
       resetLink: 'Request reset link',
       China: 'China',
       noDataMap: "There is no data for current filter's selection",
+      columns: "Columns",
     },
   },
   cn: {
@@ -233,6 +234,7 @@ export const resources = {
       resetLink: '请求重置链接',
       China: '中国',
       noDataMap: '当前过滤器的选择没有数据',
+      columns: '柱状图',
     },
   },
 };

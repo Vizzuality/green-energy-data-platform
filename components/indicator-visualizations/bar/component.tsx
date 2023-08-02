@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -15,7 +15,7 @@ import {
 
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import { format } from 'd3-format';
-import { orderBy } from 'lodash';
+import { flatten } from 'lodash';
 
 type Object = {
   [key: string]: string | number | (() => void),
@@ -39,7 +39,7 @@ interface ConfigProps {
   cartesianAxis?: Object,
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
-  yAxis?: YAxisProps,
+  yAxis?: YAxisProps & { isPercentage: boolean },
   tooltip?: Object,
 }
 
@@ -69,6 +69,7 @@ const Chart: FC<ChartProps> = ({
     tooltip,
     ...rest
   } = widgetConfig;
+  const { isPercentage } = yAxis;
 
   return (
     <ResponsiveContainer width="100%" height={height} {...rest}>
@@ -76,7 +77,7 @@ const Chart: FC<ChartProps> = ({
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
-        {yAxis && (<YAxis {...yAxis} interval={0} tickFormatter={format('.3s')} />)}
+        {yAxis && (<YAxis {...yAxis} interval={0} tickFormatter={isPercentage ? format(".0%") : format(',.3s')} />)}
         {bars && (
           Object.keys(bars)
             .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={color || colors[index]} />

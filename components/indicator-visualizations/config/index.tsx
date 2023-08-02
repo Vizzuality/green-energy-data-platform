@@ -84,9 +84,14 @@ const TooltipContent: FC<TooltipProps> = ({
   payload,
 }: TooltipProps) => <Tooltip label={label} payload={payload} />;
 
-const ChartConfig = (categories, language, data) => {
-  const unitId = uniq(data.map(({ unit }) => unit?.id))[0];
-  const isPercentage = unitId === '542351b7-2813-4856-a7d8-1ceadd1f4a03';
+type Data = {
+  unit: { id: string, name: string };
+
+}
+
+const ChartConfig = (categories, language, data: Data[]) => {
+  const unit = uniq(data.map((d) => d.unit))[0] satisfies { id: string, name: string };
+  const isPercentage = unit?.id === '542351b7-2813-4856-a7d8-1ceadd1f4a03' || unit?.name.includes('%');
   // const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China')
   // .map((d) => d.value), [data]);
   // const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
@@ -127,6 +132,7 @@ const ChartConfig = (categories, language, data) => {
     opacity: 0.5,
     fontSize: '14px',
   };
+  
   return {
     line: {
       margin: {
@@ -204,6 +210,7 @@ const ChartConfig = (categories, language, data) => {
       bars: getBars(),
       yAxis: {
         tick: DefaultTick,
+        isPercentage,
         // domain: [MINVALUE, MAXVALUE],
         tickCount: 7,
         interval: 'preserveEnd',

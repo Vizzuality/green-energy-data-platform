@@ -1,8 +1,10 @@
 import React, {
   FC,
+  useMemo,
 } from 'react';
 
 import orderBy from 'lodash/orderBy';
+import { flatten } from 'lodash';
 import {
   ResponsiveContainer,
   CartesianGrid,
@@ -36,6 +38,7 @@ interface Data {
 interface LineData {
   // visualizationTypes: string[],
   [key: string]: string | number | string[] | Data[] | Data,
+  year?: number;
 }
 
 interface ConfigProps {
@@ -70,6 +73,20 @@ const Chart: FC<ChartProps> = ({
   } = widgetConfig;
 
   const { isPercentage } = yAxis;
+  const data = flatten(widgetData.map((d) => {
+   const { year, ...rest } = d;
+    return flatten(Object.values(rest))
+  })) as number[];
+
+
+  const maxValue = Math.max(...data);
+
+  const getFormat = useMemo(() => {
+    if (maxValue > 1000000)    {
+      return     format(',.3s')};
+      if (maxValue < 1000000 && maxValue > 1000) return format(',.0f');
+      else return format(',.2f');
+    }, [maxValue]);
 
   return (
     <ResponsiveContainer height={height || 400}>
@@ -80,7 +97,7 @@ const Chart: FC<ChartProps> = ({
         {yAxis && (
           <YAxis
             {...yAxis}
-            tickFormatter={isPercentage ? format('.0f') : format(',.3s')}
+            tickFormatter={isPercentage ? format('.0f') : getFormat}
           />
         )}
         {lines && Object.keys(lines).map((line, index) => (

@@ -44,6 +44,30 @@ export const GeneralVisualizationsOptionsInternational = [
   },
 ];
 
+export const ScenariosVisualizationsOptions = [
+  {
+    id: 'line',
+    icon: 'line',
+    label: 'trend',
+  },
+  {
+    id: 'pie',
+    icon: 'pie',
+    label: 'distribution',
+  },
+  {
+    id: 'choropleth',
+    icon: 'map',
+    label: 'map',
+  },
+  {
+    id: 'bar',
+    icon: 'bar',
+    label: 'columns',
+  },
+];
+
+
 export const ModelIntercomparisonVisualizationsOptions = [
   {
     id: 'line',

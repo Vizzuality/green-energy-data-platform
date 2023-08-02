@@ -82,9 +82,23 @@ const Filters: FC<FiltersProps> = ({
     dispatch(onClick({ category: { label: 'category_1' }, uiCategory: { label: 'category_1' } }));
   };
 
+  const sortingByTotals = (arr: string[]): string[] => {
+      const totalElementIndex = arr.findIndex((s) => s.toLowerCase() === "total" || s === '总计' )
+      
+      const totalElement = totalElementIndex !== -1 ? arr.splice(totalElementIndex, 1)[0] : "Total";
+          const sortedArr = arr.slice().sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+    
+      if (totalElementIndex !== -1) {
+        sortedArr.push(totalElement);
+      }
+    
+      return sortedArr;
+  }
+
   const categoriesHeight = categories.length * 50;
   const maxHeight = categoriesHeight + 110;
 
+  const categoriesSorted = sortingByTotals(categories);
   return (
     <div
       className={cx(
@@ -107,7 +121,7 @@ const Filters: FC<FiltersProps> = ({
           'max-h-36': !height,
         })}
       >
-        {categories.map((category) => (
+        {categoriesSorted.map((category) => (
           <div
             key={category}
             className={cx(
