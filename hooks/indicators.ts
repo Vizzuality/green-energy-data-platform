@@ -3,6 +3,7 @@ import {
   useQueryClient,
 } from 'react-query';
 
+import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
 import {
@@ -353,13 +354,16 @@ export function useSankeyData(
 ) {
   const {
     visualization,
-    // region,
+    region,
     // unit,
+    uiCategory,
     ...restParams
   } = params;
-
-  const query = useQuery<SankeyData, Error>(['sankey-data', id, params],
-    () => fetchSankeyData(id, { ...restParams }), {
+  const router = useRouter();
+  const { query: { locale } } = router;
+console.log('sankey-data', id, params)
+  const query = useQuery<SankeyData, Error>(['sankey-data', id, params, locale],
+    () => fetchSankeyData(id, { locale, ...restParams }), {
       placeholderData: {
         links: [],
         nodes: [],
