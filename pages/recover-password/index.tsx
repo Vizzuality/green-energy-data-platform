@@ -92,7 +92,7 @@ const NewPasswordPage: FC = () => {
   return (
     <LayoutPage className="m-auto bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
-      <main className="flex flex-col w-full h-full min-h-screen pb-20 m-auto">
+      <main className="flex flex-col w-full h-full min-h-screen pb-[300px] m-auto">
         <Header />
         <div className="m-auto max-w-2xl flex flex-col flex-1 w-full justify-start  my-20 py-20 md:py-10 bg-white rounded-2.5xl lg:px-32 md:px-24 px-16 min-w-70 shadow-sm">
           <form onSubmit={handleSubmit} className="flex flex-col items-start">

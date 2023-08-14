@@ -85,7 +85,7 @@ const SignupPage: FC<Language> = ({ locale }: Language) => {
   return (
     <LayoutPage className="bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
-      <main className="flex flex-col w-full h-full min-h-screen pb-20 m-auto">
+      <main className="flex flex-col w-full h-full min-h-screen pb-[300px] m-auto">
         <Header />
         <div className="flex items-center justify-center flex-grow h-full max-w-5xl p-12 m-auto overflow-y-auto md:p-4">
           <section className="flex flex-col justify-start max-w-xs mx-20 text-white">

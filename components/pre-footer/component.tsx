@@ -28,7 +28,7 @@ const PreFooter: FC<PreFooterProps> = ({
 
   return (
     <div className="flex">
-      <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10 w-full relative mb-[4.65rem]',
+      <div className={cx('bg-gray1 text-white border-b border-white border-opacity-10 w-full absolute bottom-0 mb-[4.65rem]',
         { [className]: className })}
       >
         <div className="flex w-full p-12 px-16 space-x-2 justify-evenly xlg:text-xl lg:text-lg md:text-base lg:px-32 md:px-24 ">

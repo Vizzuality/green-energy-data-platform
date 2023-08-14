@@ -6,7 +6,7 @@ import Head from 'components/head';
 import Hero from 'layout/hero';
 import i18next from 'i18next';
 
-const TermsAndConditionsPage: FC = () => {
+const TermsAndConditionsPage: FC = ({ locale }: { locale: 'cn' | 'en' }) => {
   // language keys
   const terms = i18next.t('terms');
   const termsTitle = i18next.t('termsTitle');
@@ -57,6 +57,7 @@ const TermsAndConditionsPage: FC = () => {
   const terms10Text1 = i18next.t('terms10Text1');
   const terms11Title = i18next.t('terms11Title');
   const terms11Text1 = i18next.t('terms11Text1');
+  const downloadDocument = i18next.t('downloadDocument');
 
   return (
     <LayoutPage className="pb-48 text-white bg-gradient-gray1">
@@ -64,7 +65,7 @@ const TermsAndConditionsPage: FC = () => {
       <Hero className="px-8 lg:px-32 md:px-24 sm:px-16">
         <h1 className="text-5.5xl pt-3 text-left">{terms}</h1>
       </Hero>
-      <div className="container m-auto bg-white rounded-2.5xl text-grayProfile divide-grayProfile divide-opacity-50 shadow -mt-40 divide-x flex px-10">
+      <div className="container m-auto bg-white rounded-2.5xl text-grayProfile shadow -mt-40 flex flex-col px-10">
         <section className="my-3 text-justify lg:mx-28 md:mx-16 md:my-14">
           <div className="py-1 space-y-6">
             <h2 className="text-3.5xl mt-3 font-bold">
@@ -197,8 +198,8 @@ const TermsAndConditionsPage: FC = () => {
               </div>
             </div>
           </div>
-
         </section>
+        <a className="w-full text-right text-color1 py-4 underline" href={`/terms-and-conditions/${locale === 'cn' ? 'terms_cn' : 'terms_en'}.pdf`} target="_blank">{downloadDocument} {terms}</a>
       </div>
     </LayoutPage>
   );

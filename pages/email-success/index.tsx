@@ -14,7 +14,7 @@ const SuccessEmailPage: FC<{ locale: 'en' | 'cn' }> = ({ locale }) => (
     <Head title="Welcome to Green Energy Data Platform" />
     <main className="flex flex-col w-full h-full min-h-screen m-auto">
       <Header />
-      <div className="flex flex-col items-center max-w-md pb-20 m-auto text-center text-white">
+      <div className="flex flex-col items-center max-w-md pb-[300px] m-auto text-center text-white">
         <h2>Check your email</h2>
         <div className="my-20 bg-transparent border-2 border-white rounded-full">
 

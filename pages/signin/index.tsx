@@ -102,7 +102,7 @@ const SigninPage: FC<SigninProps & Language> = ({
   return (
     <LayoutPage className="bg-gradient-color1">
       <Head title="Welcome to Green Energy Data Platform" />
-      <main className="flex flex-col w-full h-full min-h-screen pb-20 m-auto">
+      <main className="flex flex-col w-full h-full min-h-screen pb-[300px] m-auto">
         <Header />
         <div className="flex items-center justify-center flex-1 h-full max-w-6xl p-12 m-auto">
           <section className="flex flex-col justify-between flex-1 w-full h-full max-w-xs mx-20 text-white">

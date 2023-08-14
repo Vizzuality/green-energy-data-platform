@@ -355,14 +355,16 @@ export function useSankeyData(
   const {
     visualization,
     region,
-    // unit,
+    unit,
+    category,
+    scenario,
     uiCategory,
     ...restParams
   } = params;
   const router = useRouter();
   const { query: { locale } } = router;
-console.log('sankey-data', id, params)
-  const query = useQuery<SankeyData, Error>(['sankey-data', id, params, locale],
+
+  const query = useQuery<SankeyData, Error>(['sankey-data', id, restParams, locale],
     () => fetchSankeyData(id, { locale, ...restParams }), {
       placeholderData: {
         links: [],

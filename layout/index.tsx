@@ -5,6 +5,7 @@ import React, {
 import cx from 'classnames';
 
 import Footer from 'components/footer';
+import PreFooter from 'components/pre-footer/component';
 
 interface LayoutPageProps {
   className?: string,
@@ -22,6 +23,7 @@ const LayoutPage: FC<LayoutPageProps> = ({
     <>
       {children}
     </>
+    <PreFooter />
     <Footer />
   </div>
 );

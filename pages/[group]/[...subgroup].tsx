@@ -89,7 +89,7 @@ const GroupPage: FC<GroupPageTypes> = ({ groupSlug }: GroupPageTypes) => {
         <Nav className="mt-6" />
         <SubgroupsDropdown group={group} data={data} subgroup={subgroup} />
       </Hero>
-      <div className="container pb-20 m-auto">
+      <div className="container pb-[300px] m-auto">
         <section className="z-10 max-w-6xl m-auto -mt-40">
           {groupSlug !== 'energy-balance' && <IndicatorData />}
           {groupSlug === 'energy-balance' && <EnergyBalanceIndicatorData />}
