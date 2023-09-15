@@ -74,8 +74,8 @@ const Chart: FC<ChartProps> = ({
 
   const { isPercentage } = yAxis;
   const data = flatten(widgetData.map((d) => {
-   const { year, ...rest } = d;
-    return flatten(Object.values(rest))
+    const { year, ...rest } = d;
+    return flatten(Object.values(rest));
   })) as number[];
 
 
@@ -83,10 +83,11 @@ const Chart: FC<ChartProps> = ({
 
   const getFormat = useMemo(() => {
     if (maxValue > 1000000)    {
-      return     format(',.3s')};
-      if (maxValue < 1000000 && maxValue > 1000) return format(',.0f');
-      else return format(',.2f');
-    }, [maxValue]);
+      return     format(',.3s');
+    }
+    if (maxValue < 1000000 && maxValue > 1000) return format(',.0f');
+    else return format(',.2f');
+  }, [maxValue]);
 
   return (
     <ResponsiveContainer height={height || 400}>
@@ -96,8 +97,8 @@ const Chart: FC<ChartProps> = ({
         {xAxis && (<XAxis {...xAxis} />)}
         {yAxis && (
           <YAxis
+          tickFormatter={isPercentage ? format('.0f') : getFormat}
             {...yAxis}
-            tickFormatter={isPercentage ? format('.0f') : getFormat}
           />
         )}
         {lines && Object.keys(lines).map((line, index) => (

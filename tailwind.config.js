@@ -74,6 +74,8 @@ module.exports = {
         sm: ' 0px 14px 20px rgba(14, 48, 114, 0.1)',
         'md-right': '110px 65px 5px 0px rgba(234,239,243,1)',
         'md-left': '-110px 65px 5px 0px rgba(234,239,243,1)',
+        'sm-right': '40px 25px 5px 0px rgba(234,239,243,1)',
+        'sm-left': '-40px 25px 5px 0px rgba(234,239,243,1)',
       },
       backgroundImage: {
         'gradient-color1': 'linear-gradient(119.21deg, #45CBF4 1.52%, #009DCD 56.4%, #2A8FAF 100%)',

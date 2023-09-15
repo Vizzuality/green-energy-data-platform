@@ -29,6 +29,7 @@ import Icon from 'components/icon';
 import Tooltip from 'components/tooltip';
 import LoadingSpinner from 'components/loading-spinner';
 import Sankey from 'components/indicator-visualizations/sankey';
+import Disclaimer from 'components/disclaimer';
 
 import CONFIG from 'components/indicator-visualizations/sankey/config';
 
@@ -334,6 +335,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
             </div>
             )}
           </div>
+          <Disclaimer />
         </section>
       </div>
     </div>

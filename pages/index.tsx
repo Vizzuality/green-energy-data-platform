@@ -33,13 +33,13 @@ const HomePage: FC = () => {
   const landingTitle = i18next.t('landingTitle');
   const landingDescription = i18next.t('landingDescription');
   return (
-    <LayoutPage className="h-full">
+    <LayoutPage>
       <Head title="Welcome to Green Energy Data Platform" />
-      <Hero className="flex flex-col px-8 py-24 text-center lg:px-32 md:px-24 sm:px-16">
+      <Hero className="flex flex-col px-8 py-24 text-center lg:px-32 md:px-16 sm:px-8">
         <h1 className="text-5.5xl pb-14">{landingTitle}</h1>
         <h3 className="text-lg">{landingDescription}</h3>
       </Hero>
-      <div className="container px-14 m-auto -mt-11 lg:px-24 md:px-16 sm:px-4">
+      <div className="container px-14 m-auto -mt-11 lg:px-24 sm:px-4">
         <Search
           items={groups}
           className="h-24 p-4 -mt-4 bg-white shadow-sm"
@@ -52,7 +52,7 @@ const HomePage: FC = () => {
           </Link>
         </Search>
       </div>
-      <div className="space-y-10 py-10">
+      <div className="space-y-10 py-10 pb-[300px]">
       {isLoading
         ? <LoadingSpinner />
         : groups?.map((group, index) => {
@@ -60,7 +60,7 @@ const HomePage: FC = () => {
           return (
             <InView key={group.id} triggerOnce>
               {({ ref, inView }) => (
-                <div ref={ref} key={group.id} className="container p-8 m-auto lg:px-32 md:px-24 sm:px-16 flex space-x-10 w-full">
+                <div ref={ref} key={group.id} className="container p-8 m-auto lg:px-24 sm:px-4 flex space-x-10 w-full">
                   {inView && <GroupCard textPosition={textPosition} group={group} className={cx('flex justify-between items-start', { 'flex-row-reverse': textPosition === 'left' })} />}
                 </div>
               )}

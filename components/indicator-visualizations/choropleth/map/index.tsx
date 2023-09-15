@@ -12,7 +12,6 @@ import ReactMapGL, {
   TRANSITION_EVENTS,
   ViewportProps,
   InteractiveMapProps,
-  FullscreenControl,
 } from 'react-map-gl';
 
 import { fitBounds } from '@math.gl/web-mercator';
@@ -234,10 +233,6 @@ const Map = ({
           && !!mapRef.current
           && typeof children === 'function'
           && children(mapRef.current)}
-        {hasInteraction && (
-          <FullscreenControl className="text-white" />
-        )}
-
       </ReactMapGL>
     </div>
   );

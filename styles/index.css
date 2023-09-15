@@ -93,7 +93,7 @@ button.mapboxgl-ctrl-icon.mapboxgl-ctrl-fullscreen {
   color: white;
 }
 
-.mapboxgl-ctrl.mapboxgl-ctrl-group {
+.mapboxgl-ctrl.mapboxgl-ctrl-group, button.maplibregl-control-container {
   border-radius: 2px !important;
   border: none;
   width: 24px !important;

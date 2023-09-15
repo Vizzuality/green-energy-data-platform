@@ -6,6 +6,7 @@ import cx from 'classnames';
 
 import Footer from 'components/footer';
 import PreFooter from 'components/pre-footer/component';
+import Disclaimer from 'components/disclaimer';
 
 interface LayoutPageProps {
   className?: string,

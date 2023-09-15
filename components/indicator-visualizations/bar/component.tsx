@@ -77,7 +77,7 @@ const Chart: FC<ChartProps> = ({
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
-        {yAxis && (<YAxis {...yAxis} interval={0} tickFormatter={isPercentage ? format(".0%") : format(',.3s')} />)}
+        {yAxis && (<YAxis {...yAxis} interval={0} tickFormatter={isPercentage ? format('.0f') : format(',.3s')} />)}
         {bars && (
           Object.keys(bars)
             .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={color || colors[index]} />

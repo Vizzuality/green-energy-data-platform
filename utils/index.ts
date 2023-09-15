@@ -26,7 +26,7 @@ const numberFormat = ValueFormat('.2s');
 
 export const initializeLanguage = (lng = 'en') => i18next.use(LanguageDetector).init({
   resources,
-  lng
+  lng,
 });
 
 export const getMostFrequent = (array) => {
@@ -57,9 +57,9 @@ export const getCategoriesFromRecords = (
   const categories = visualization !== 'sankey'
     ? compact(
       sortedUniq(
-            records
-              ?.map((d) => (d.category_1 === null ? 'Total' : d.category_1))
-              .sort(),
+        records
+          ?.map((d) => (d.category_1 === null ? 'Total' : d.category_1))
+          .sort(),
       ),
     )
     : [];
@@ -69,7 +69,7 @@ export const getCategoriesFromRecords = (
   }
 
   if (visualization === 'pie') {
-    return categories.filter((d) => d.toLowerCase() !== 'total' && d !== '总计' )
+    return categories.filter((d) => d.toLowerCase() !== 'total' && d !== '总计' );
   }
 
   if (visualization !== 'choropleth') {
@@ -241,7 +241,7 @@ export const getGroupedValues = (
   const { category, unit, visualization } = filters;
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
-  const mapCategorySelected = category?.label === 'category_1' ? categories[0] : category?.value;
+  const mapCategorySelected = category?.label === 'category_1' ? categories[0] : category?.value || categorySelected;
   const filteredData = label === 'category_2' && categorySelected !== 'Total'
     ? records.filter((record) => record.category_1 === categorySelected)
     : records;
@@ -402,7 +402,7 @@ export const getGroupedValues = (
       const geometry = filteredRegions?.find(
         // id === '88ff1d74-d37a-437b-998c-316f15a4b91a' is China, please remove is case you want to show it
         (r): boolean => 
-        ((d.region.name === r.name) || (d.region_id === r.id) || (d.region.id === r.id)) && d.region.id !== '88ff1d74-d37a-437b-998c-316f15a4b91a'
+          ((d.region.name === r.name) || (d.region_id === r.id) || (d.region.id === r.id)) && d.region.id !== '88ff1d74-d37a-437b-998c-316f15a4b91a',
       );
       return {
         geometry,
@@ -411,7 +411,7 @@ export const getGroupedValues = (
       };
     }).filter((d) => d.geometry);
     const geometryTypes = dataWithGeometries
-    ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
+      ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
 
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries
@@ -419,7 +419,7 @@ export const getGroupedValues = (
       .map((r) => r[mapCategorySelected]) as number[];
     const minValue = Math.min(...mapValues);
     const maxValue = Math.max(...mapValues);
-    const colors = chroma.scale(minValue < 0 ? ['#1B5183', '#C9E6E8', '#e7b092', '#dd96ab'] : ['#e7b092', '#dd96ab']).colors(8);
+    const colors = chroma.scale((layerType === 'multipolygon' || layerType === 'polygon') ? ['#1B5183', '#C9E6E8', '#e7b092', '#dd96ab'] : ['#e7b092', '#dd96ab']).colors(8);
 
     const ITEMS = colors.map((d, index) => {
       let value = 0;
@@ -442,7 +442,7 @@ export const getGroupedValues = (
     const visualizations = dataWithGeometries[0]
       ?.visualizationTypes as string[];
 
-      const getTooltipProperties = (tooltipData) => {
+    const getTooltipProperties = (tooltipData) => {
       if (!tooltipData) return null;
       const properties = tooltipData?.map(
         ({
@@ -470,12 +470,13 @@ export const getGroupedValues = (
                   features: dataWithGeometries.map(
                     ({ geometry, visualizationTypes, ...cat }) => {
                       return ({
-                      type: 'Feature',
-                      geometry: geometry?.geometry,
-                      properties: cat,
-                      Total: Object.values(cat),
-                      ...cat,
-                    })},
+                        type: 'Feature',
+                        geometry: geometry?.geometry,
+                        properties: cat,
+                        Total: Object.values(cat),
+                        ...cat,
+                      });
+                    },
                   ),
                 },
               },
@@ -578,7 +579,7 @@ export const getGroupedValues = (
                   ),
                 },
                 cluster: true,
-                clusterMaxZoom: 20,
+                clusterMaxZoom: 30,
                 clusterRadius: 30,
                 clusterProperties: {
                   total: ['max', ['get', mapCategorySelected]],
@@ -755,7 +756,7 @@ export const getGroupedValues = (
         },
       ];
     }
-    return data;
+    return orderBy(data, 'name');
   };
   switch (visualization) {
     case 'line':
@@ -774,6 +775,7 @@ export const getGroupedValues = (
       data = [];
   }
   return orderBy(data, ['year', 'province'], ['asc']);
+
 };
 
 export const getModelIntercomparisonData = (

@@ -6,6 +6,8 @@ import cx from 'classnames';
 import { useRouter } from 'next/router';
 import { useGroups, useGroupsDefaults } from 'hooks/groups';
 
+import { AnimatePresence, motion } from 'framer-motion';
+import Icon from 'components/icon';
 export interface NavProps {
   className?: string;
 }
@@ -44,7 +46,7 @@ export const Nav: React.FC<NavProps> = ({
               { 'font-bold': groupSlug === group })}
           >
             <Link
-              href={{ pathname: '/[group]/[...subgroup]', query: { locale: locale || 'en' }}}
+              href={{ pathname: '/[group]/[...subgroup]', query: { locale: locale || 'en' } }}
               as={`/${groupSlug}/${subgroupSlug}/${indicatorSlug}?locale=${locale || 'en'}`}
               className={cx('text-white',
                 { 'before:-bottom-4 before:absolute before:left-0 before:w-full before:block before:h-1 before:rounded-2xl before:bg-white': groupSlug === group })}
@@ -53,7 +55,15 @@ export const Nav: React.FC<NavProps> = ({
             </Link>
           </li>
         ))}
+        
+
       </ul>
+      <AnimatePresence>
+        <motion.div className="absolute bottom-10 -right-10" whileHover={{ x: 5 }}>
+
+        <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="-rotate-90" />
+        </motion.div>
+        </AnimatePresence>
     </nav>
   );
 };

@@ -4,9 +4,22 @@ import { useQuery } from 'react-query';
 import { fetchGroups, fetchGroup } from 'services/groups';
 import { GroupProps } from 'types/data';
 
+const groupsOrder = ['socioeconomic', 'energy', 'energy-related-co2-emissions', 'energy-balance', 'energy-flows', 'coal-power-plants', 'scenarios'];
+const slugIndexMap = new Map();
+groupsOrder.forEach((slug, index) => {
+  slugIndexMap.set(slug, index);
+});
 export const useGroups = (params = {}, queryConfig = {}) => useQuery(['fetch-groups', JSON.stringify(params)],
   () => fetchGroups('', params).then(({ data }) => {
-    return data} ), {
+    return data.sort((a, b) => {
+      const indexA = slugIndexMap.get(a.slug);
+      const indexB = slugIndexMap.get(b.slug);
+      
+      if (indexA === undefined) return 1; // If not found, move to the end
+      if (indexB === undefined) return -1; // If not found, move to the end
+      
+      return indexA - indexB; // Compare indexes
+    });} ), {
     ...queryConfig,
   })
 

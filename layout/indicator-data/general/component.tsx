@@ -9,7 +9,7 @@ import cx from 'classnames';
 import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-
+import { orderBy, filter } from 'lodash';
 // hooks
 import {
   useIndicator,
@@ -27,6 +27,7 @@ import DataSource from 'components/data-source';
 import MapContainer from 'components/indicator-visualizations/choropleth';
 import LoadingSpinner from 'components/loading-spinner';
 import PaginatedDynamicChart from 'components/paginated-dynamic-chart/component';
+import Disclaimer from 'components/disclaimer';
 
 // utils
 import {
@@ -53,7 +54,6 @@ import { DROPDOWN_BUTTON_STYLES } from 'layout/indicator-data/constants';
 import type { ComponentTypes } from 'types/data';
 
 import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
-import { filter } from 'lodash';
 
 type ChartProps = {
   widgetData: unknown;
@@ -331,7 +331,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     if (category?.label === 'category_2' && category?.value && !categories?.includes(category?.value)) {
       dispatch(setFilters({
         ...filters,
-        category: defaultCategory
+        category: defaultCategory,
       }));
       return defaultCategory;
     }
@@ -368,7 +368,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   const LegendPayload = useMemo(() => {
     let legendData;
     if (visualization === 'pie' && (category?.label === 'category_1' || subcategories.length <= 1)) {
-      legendData = widgetDataKeys
+      legendData = widgetDataKeys;
     } else if (category?.label === 'category_1') {
       legendData = categories;
     } else if (visualization === 'bar') {
@@ -416,6 +416,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   );
 
   return (
+    <>
     <div className={`grid grid-cols-12 ${className}`}>
       <div className="w-full h-full col-span-8">
         <section className="flex flex-col w-full">
@@ -740,6 +741,8 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
         </section>
       </div>
     </div>
+          <Disclaimer />
+          </>
   );
 };
 

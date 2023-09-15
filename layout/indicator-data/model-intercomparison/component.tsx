@@ -58,6 +58,7 @@ import { CLASS_DOM_DOWNLOAD_IMAGE } from 'utils/constants';
 // types
 import type { ChartLine, ChartBar } from 'types/model-intercomparison';
 import type { ComponentTypes } from 'types/data';
+import Disclaimer from 'components/disclaimer';
 
 const ModelIntercomparison: FC<ComponentTypes> = ({
   className,
@@ -596,6 +597,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               </div>
             )}
           </div>
+          <Disclaimer />
         </section>
       </div>
     </section>

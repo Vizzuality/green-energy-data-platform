@@ -26,7 +26,9 @@ import { withAuthentication } from 'hoc/auth';
 
 import i18next from 'i18next';
 import { format } from 'd3-format';
-
+import {
+  FullscreenControl,
+} from 'react-map-gl';
 import { RootState } from 'store/store';
 // Controls
 import { useAppSelector } from 'store/hooks';
@@ -120,7 +122,7 @@ const MapContainer: FC<MapContainerProps> = ({
   const { tooltipInfo, tooltipInfoHeaders } = useCoalPowerPlantTooltip(
     hoverInteractions?.['coal-power-plants'],
   );
-
+console.log({spiderInfo})
   const {
     tooltipInfo: spiderTooltipInfo,
     tooltipInfoHeaders: spiderTooltipInfoHeaders,
@@ -129,8 +131,24 @@ const MapContainer: FC<MapContainerProps> = ({
   const mapRefCurrent = mapRef.current;
   const spiderifier = useMemo(() => {
     if (mapRefCurrent !== null) {
+      console.log({mapRefCurrent})
       return new MapboxglSpiderifier(mapRefCurrent, {
         onClick(e, spiderLeg) {
+          const {
+            elements: { container },
+          } = spiderLeg;
+          // container.onmouseleave = () => {
+          //   setSpiderInfo(null);
+          // };
+
+          const { lat, lng } = spiderLeg.mapboxMarker.getLngLat();
+          setLngLat([lng, lat]);
+          console.log('aqui ******************************************')
+          setSpiderInfo(spiderLeg.feature);
+        },
+        markerWidth: 70,
+        markerHeight: 70,
+        onHover(e, spiderLeg) {
           const {
             elements: { container },
           } = spiderLeg;
@@ -140,10 +158,9 @@ const MapContainer: FC<MapContainerProps> = ({
 
           const { lat, lng } = spiderLeg.mapboxMarker.getLngLat();
           setLngLat([lng, lat]);
+          console.log('aqui')
           setSpiderInfo(spiderLeg.feature);
-        },
-        markerWidth: 70,
-        markerHeight: 40,
+        }
       });
     }
     return null;
@@ -341,7 +358,6 @@ const MapContainer: FC<MapContainerProps> = ({
                   <span className="mr-4 text-xs">{infoPlant}</span>
                 </Popup>
             )}
-
             {spiderTooltipInfoHeaders.length > 0 && (
               <Popup
                 latitude={lngLat[1]}
@@ -400,8 +416,13 @@ const MapContainer: FC<MapContainerProps> = ({
         )}}
       </Map>
       {hasInteraction && (
-        <ZoomControl viewport={viewport} onZoomChange={handleZoomChange} />
+        <>
+          <ZoomControl viewport={viewport} onZoomChange={handleZoomChange} />
+          <FullscreenControl className="top-0 right-0 z-10" />
+        </>
       )}
+
+
       {hasInteraction && disclaimerVisibility && (
         <Disclaimer
           className="transform -translate-x-1/2 top-4 left-1/2"
@@ -409,6 +430,7 @@ const MapContainer: FC<MapContainerProps> = ({
           onDisclaimerClose={setDisclaimerVisibility}
         />
       )}
+
       {hasInteraction && (
 
         <Legend>

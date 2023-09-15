@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 
 import Tooltip from 'components/widgets/tooltip';
 import i18next from 'i18next';
 
-import { uniq } from 'lodash';
+import { uniq, range } from 'lodash';
 
 type PayloadObject = {
   name: string,
@@ -86,16 +86,20 @@ const TooltipContent: FC<TooltipProps> = ({
 
 type Data = {
   unit: { id: string, name: string };
+  value: number;
+  region: { name: string };
 
-}
+};
 
 const ChartConfig = (categories, language, data: Data[]) => {
   const unit = uniq(data.map((d) => d.unit))[0] satisfies { id: string, name: string };
   const isPercentage = unit?.id === '542351b7-2813-4856-a7d8-1ceadd1f4a03' || unit?.name.includes('%');
-  // const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China')
-  // .map((d) => d.value), [data]);
-  // const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
-  // const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
+  const hasNegativeValues = data.some((d) => d.value < 0);
+  
+  const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China')
+    .map((d) => d.value), [data]);
+  const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
+  const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
   const KEY = language === 'cn' ? '总量' : 'Total';
   const getLines = () => {
     if (categories.length) {
@@ -169,8 +173,10 @@ const ChartConfig = (categories, language, data: Data[]) => {
       yAxis: {
         type: 'number',
         tick: DefaultTick,
-        ...(isPercentage && { domain: [0, 100] }),
-        ...(isPercentage && { ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] }),
+        ...(isPercentage && hasNegativeValues && { domain: [-100, 100] }),
+        ...(isPercentage && hasNegativeValues && { ticks: range(-100, 101, 10) }),
+        ...(isPercentage && !hasNegativeValues && { domain: [0, 100] }),
+        ...(isPercentage && ! hasNegativeValues && { ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] }),
         interval: 0,
         isPercentage,
       },
