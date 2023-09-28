@@ -42,7 +42,17 @@ const Indicator: FC = () => {
   },
   { locale: lang });
 
+  const { data: dataEnglish } = useGroup(groupSlug, {
+    placeholderData: queryClient.getQueryData(['group', indicatorSlug]) || [],
+    refetchOnWindowFocus: false,
+    enabled: !!groupSlug,
+    keepPreviousData: true,
+  },
+  { locale: 'en' });
+
   const dataBySubgroup = useEnergyBalanceSelectedSubgroup(data, subgroupSlug);
+  const dataBySubgroupEnglish = useEnergyBalanceSelectedSubgroup(dataEnglish, subgroupSlug);
+
   const dataByIndicator = groupBy(dataBySubgroup, 'indicator_en');
   const indicatorsDropdownInitialState = Object.keys(dataByIndicator).reduce((acc, indicator) => ({
     ...acc,
@@ -66,7 +76,7 @@ const Indicator: FC = () => {
       <div className="flex flex-col space-y-3">
         {dataBySubgroup?.indicators.map((indicator) => {
           if (indicator.records.length === 1) {
-            const href = `https://gefc-public-data.s3.ap-southeast-1.amazonaws.com/${dataBySubgroup.name}/${indicator.records[0].file}`;
+            const href = `https://gefc-public-data.s3.ap-southeast-1.amazonaws.com/${dataBySubgroupEnglish.name}/${indicator.records[0].file}`;
             return (
               <a target="_blank" href={decodeURIComponent(href)} rel="noreferrer">
                 <span className="pl-6 underline text-color1">{indicator.name}</span>
@@ -91,7 +101,7 @@ const Indicator: FC = () => {
                 {indicator.records.map(({ category_1, file }) => (
                   dropdownVisibility[indicator.name] && (
                   <li key={category_1} className="pl-6 my-4 space-y-3 underline text-color1">
-                    <a href={decodeURIComponent(`https://gefc-public-data.s3.ap-southeast-1.amazonaws.com/${dataBySubgroup.name}/${file}`.replaceAll(' ', '+'))}>
+                    <a href={decodeURIComponent(`https://gefc-public-data.s3.ap-southeast-1.amazonaws.com/${dataBySubgroupEnglish.name}/${file}`.replaceAll(' ', '+'))}>
                       <span>
                         {category_1}
                       </span>

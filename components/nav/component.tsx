@@ -6,8 +6,6 @@ import cx from 'classnames';
 import { useRouter } from 'next/router';
 import { useGroups, useGroupsDefaults } from 'hooks/groups';
 
-import { AnimatePresence, motion } from 'framer-motion';
-import Icon from 'components/icon';
 export interface NavProps {
   className?: string;
 }
@@ -58,12 +56,6 @@ export const Nav: React.FC<NavProps> = ({
         
 
       </ul>
-      <AnimatePresence>
-        <motion.div className="absolute bottom-10 -right-10" whileHover={{ x: 5 }}>
-
-        <Icon ariaLabel="units dropdown" name="triangle_border" size="sm" className="-rotate-90" />
-        </motion.div>
-        </AnimatePresence>
     </nav>
   );
 };

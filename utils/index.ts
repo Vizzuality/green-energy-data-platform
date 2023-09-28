@@ -221,6 +221,7 @@ interface Data {
 }
 
 interface ChartYear {
+  province?: string;
   year: number;
   [Key: string]: string | number | string[] | Data[] | Data;
 }

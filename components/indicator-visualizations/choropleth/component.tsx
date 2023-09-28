@@ -408,15 +408,14 @@ const MapContainer: FC<MapContainerProps> = ({
                   </div>
                 </Popup>
             )}
+              <FullscreenControl className="top-0 right-0 z-10" />
           </>
           );
         }}
+
       </Map>
       {hasInteraction && (
-        <>
           <ZoomControl viewport={viewport} onZoomChange={handleZoomChange} />
-          <FullscreenControl className="top-0 right-0 z-10" />
-        </>
       )}
 
 

@@ -15,7 +15,6 @@ import {
 
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import { format } from 'd3-format';
-import { flatten } from 'lodash';
 
 type Object = {
   [key: string]: string | number | (() => void),
@@ -29,9 +28,10 @@ interface Data {
 }
 
 interface BarData {
-  year: number,
   // visualizationTypes: string[],
   [key: string]: string | number | string[] | Data[] | Data,
+  province?: string,
+  visualizationTypes?: string[],
 }
 
 interface ConfigProps {
@@ -39,7 +39,7 @@ interface ConfigProps {
   cartesianAxis?: Object,
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
-  yAxis?: YAxisProps & { isPercentage: boolean, areSmallValues: boolean },
+  yAxis?: YAxisProps & { isPercentage: boolean, areSmallValues: boolean, maxValue: number },
   tooltip?: Object,
 }
 
@@ -70,14 +70,7 @@ const Chart: FC<ChartProps> = ({
     tooltip,
     ...rest
   } = widgetConfig;
-  const { isPercentage, areSmallValues } = yAxis;
-  const data = flatten(widgetData.map((d) => {
-    const { year, ...rest } = d;
-    return flatten(Object.values(rest));
-  })) as number[];
-
-
-  const maxValue = Math.max(...data);
+  const { isPercentage, areSmallValues, maxValue } = yAxis;
 
   const getFormat = useMemo(() => {
     if (maxValue > 1000000)    {

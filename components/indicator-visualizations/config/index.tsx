@@ -231,6 +231,7 @@ const ChartConfig = (categories, language, data: Data[]) => {
         isPercentage,
         areSmallValues,
         scale,
+        maxValue: MAXVALUE,
       },
       xAxis: {
         type: 'category',
