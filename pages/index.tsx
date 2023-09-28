@@ -6,6 +6,7 @@ import cx from 'classnames';
 
 import Link from 'next/link';
 
+import i18next from 'i18next';
 import { useGroups } from 'hooks/groups';
 import { useRouter } from 'next/router';
 
@@ -18,7 +19,6 @@ import GroupCard from 'components/group-cards';
 import LoadingSpinner from 'components/loading-spinner';
 import Search from 'components/search';
 
-import i18next from 'i18next';
 
 import { InView } from 'react-intersection-observer';
 import CookieBanner from 'components/cookie-banner';
@@ -35,9 +35,10 @@ const HomePage: FC = () => {
   return (
     <LayoutPage>
       <Head title="Welcome to Green Energy Data Platform" />
-      <Hero className="flex flex-col px-8 py-24 text-center lg:px-32 md:px-16 sm:px-8">
+      <Hero className="flex flex-col px-8 py-24 text-center md:px-16 sm:px-8">
         <h1 className="text-5.5xl pb-14">{landingTitle}</h1>
         <h3 className="text-lg">{landingDescription}</h3>
+        <h4 className="py-6">{i18next.t('attributionText')}</h4>
       </Hero>
       <div className="container px-14 m-auto -mt-11 lg:px-24 sm:px-4">
         <Search
@@ -45,7 +46,7 @@ const HomePage: FC = () => {
           className="h-24 p-4 -mt-4 bg-white shadow-sm"
         >
           <Link
-            href={{ pathname: "/indicators", query: { locale } }}
+            href={{ pathname: '/indicators', query: { locale } }}
             className="items-center justify-center py-5 ml-3 text-sm text-center text-white border rounded bg-gray1 border-gray1 focus-within:flex hover:bg-opacity-90 active:bg-white active:text-gray1 focus:outline-none px-11"
           >
             {browse}

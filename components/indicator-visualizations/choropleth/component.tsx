@@ -15,7 +15,9 @@ import React, {
 // Layer manager
 import { LayerManager, Layer } from '@vizzuality/layer-manager-react';
 import PluginMapboxGl from '@vizzuality/layer-manager-plugin-mapboxgl';
-import { Popup } from 'react-map-gl';
+import { Popup,
+  FullscreenControl,
+} from 'react-map-gl';
 
 // hooks
 import { useCoalPowerPlantTooltip } from 'hooks/map';
@@ -26,9 +28,6 @@ import { withAuthentication } from 'hoc/auth';
 
 import i18next from 'i18next';
 import { format } from 'd3-format';
-import {
-  FullscreenControl,
-} from 'react-map-gl';
 import { RootState } from 'store/store';
 // Controls
 import { useAppSelector } from 'store/hooks';
@@ -122,7 +121,7 @@ const MapContainer: FC<MapContainerProps> = ({
   const { tooltipInfo, tooltipInfoHeaders } = useCoalPowerPlantTooltip(
     hoverInteractions?.['coal-power-plants'],
   );
-console.log({spiderInfo})
+
   const {
     tooltipInfo: spiderTooltipInfo,
     tooltipInfoHeaders: spiderTooltipInfoHeaders,
@@ -131,7 +130,6 @@ console.log({spiderInfo})
   const mapRefCurrent = mapRef.current;
   const spiderifier = useMemo(() => {
     if (mapRefCurrent !== null) {
-      console.log({mapRefCurrent})
       return new MapboxglSpiderifier(mapRefCurrent, {
         onClick(e, spiderLeg) {
           const {
@@ -143,7 +141,6 @@ console.log({spiderInfo})
 
           const { lat, lng } = spiderLeg.mapboxMarker.getLngLat();
           setLngLat([lng, lat]);
-          console.log('aqui ******************************************')
           setSpiderInfo(spiderLeg.feature);
         },
         markerWidth: 70,
@@ -158,9 +155,8 @@ console.log({spiderInfo})
 
           const { lat, lng } = spiderLeg.mapboxMarker.getLngLat();
           setLngLat([lng, lat]);
-          console.log('aqui')
           setSpiderInfo(spiderLeg.feature);
-        }
+        },
       });
     }
     return null;
@@ -413,7 +409,8 @@ console.log({spiderInfo})
                 </Popup>
             )}
           </>
-        )}}
+          );
+        }}
       </Map>
       {hasInteraction && (
         <>

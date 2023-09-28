@@ -46,7 +46,7 @@ interface ConfigProps {
   cartesianAxis?: Object,
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
-  yAxis?: YAxisProps & { isPercentage: boolean },
+  yAxis?: YAxisProps & { isPercentage: boolean, areSmallValues: boolean },
   tooltip?: Object,
   height: number,
 }
@@ -72,7 +72,7 @@ const Chart: FC<ChartProps> = ({
     ...rest
   } = widgetConfig;
 
-  const { isPercentage } = yAxis;
+  const { isPercentage, areSmallValues } = yAxis;
   const data = flatten(widgetData.map((d) => {
     const { year, ...rest } = d;
     return flatten(Object.values(rest));
@@ -97,7 +97,7 @@ const Chart: FC<ChartProps> = ({
         {xAxis && (<XAxis {...xAxis} />)}
         {yAxis && (
           <YAxis
-          tickFormatter={isPercentage ? format('.0f') : getFormat}
+            tickFormatter={ areSmallValues ? false : (isPercentage ? format('.0f') : getFormat  )}
             {...yAxis}
           />
         )}

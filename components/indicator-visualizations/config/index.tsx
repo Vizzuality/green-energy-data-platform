@@ -4,6 +4,7 @@ import Tooltip from 'components/widgets/tooltip';
 import i18next from 'i18next';
 
 import { uniq, range } from 'lodash';
+import { scaleLinear } from 'd3-scale';
 
 type PayloadObject = {
   name: string,
@@ -90,16 +91,19 @@ type Data = {
   region: { name: string };
 
 };
-
 const ChartConfig = (categories, language, data: Data[]) => {
   const unit = uniq(data.map((d) => d.unit))[0] satisfies { id: string, name: string };
   const isPercentage = unit?.id === '542351b7-2813-4856-a7d8-1ceadd1f4a03' || unit?.name.includes('%');
-  const hasNegativeValues = data.some((d) => d.value < 0);
   
   const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China')
     .map((d) => d.value), [data]);
   const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
   const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
+
+  const areSmallValues = useMemo(() => (MAXVALUE - MINVALUE) < 10, [MAXVALUE, MINVALUE]);
+  const step = (2 * Math.ceil(MAXVALUE / 2) - MINVALUE) / 10;
+  const maxValueDomain = step * 10 + MINVALUE;
+  const scale = scaleLinear().domain([MINVALUE, maxValueDomain]).nice();
   const KEY = language === 'cn' ? '总量' : 'Total';
   const getLines = () => {
     if (categories.length) {
@@ -135,6 +139,7 @@ const ChartConfig = (categories, language, data: Data[]) => {
     fill: '#3A3F59',
     opacity: 0.5,
     fontSize: '14px',
+    // tickCount: 7,
   };
   
   return {
@@ -172,13 +177,20 @@ const ChartConfig = (categories, language, data: Data[]) => {
       },
       yAxis: {
         type: 'number',
-        tick: DefaultTick,
-        ...(isPercentage && hasNegativeValues && { domain: [-100, 100] }),
-        ...(isPercentage && hasNegativeValues && { ticks: range(-100, 101, 10) }),
-        ...(isPercentage && !hasNegativeValues && { domain: [0, 100] }),
-        ...(isPercentage && ! hasNegativeValues && { ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] }),
-        interval: 0,
+        tick: {
+          ...DefaultTick,
+
+        },
+        ticks: scale.ticks(10),
+        // domain: [MINVALUE, MAXVALUE],
+        // ...(isPercentage && hasNegativeValues && { domain: [-100, 100] }),
+        // ...(isPercentage && hasNegativeValues && { ticks: range(-100, 101, 10) }),
+        // ...(isPercentage && !hasNegativeValues && { domain: [0, 100] }),
+        // ...(isPercentage && ! hasNegativeValues && { ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] }),
+        // interval: 'preserveStart',
         isPercentage,
+        areSmallValues,
+        scale,
       },
       tooltip: {
         isAnimationActive: true,
@@ -217,9 +229,8 @@ const ChartConfig = (categories, language, data: Data[]) => {
       yAxis: {
         tick: DefaultTick,
         isPercentage,
-        // domain: [MINVALUE, MAXVALUE],
-        tickCount: 7,
-        interval: 'preserveEnd',
+        areSmallValues,
+        scale,
       },
       xAxis: {
         type: 'category',

@@ -90,7 +90,7 @@ const IndicatorData: FC<Component> = ({
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   }, {
-    locale
+    locale,
   });
 
   const {
@@ -163,7 +163,7 @@ const IndicatorData: FC<Component> = ({
                       <li key={id} className="px-5 text-white divide-y divide-white first:rounded-t-xl last:rounded-b-xl hover:bg-white hover:text-gray3 first:hover:rounded-t-xl divide-opacity-10 bg-gray3">
                         <button
                           type="button"
-                          className="text-start flex items-center w-full py-2 last:border-b-0"
+                          className="text-left flex items-center w-full py-2 last:border-b-0"
                           onClick={() => handleIndicatorChange(`/${groupSlug}/${subgroupSlug}/${encodeURIComponent(slug)}?locale=${lang}`)}
                         >
                           {groupName}
@@ -183,7 +183,7 @@ const IndicatorData: FC<Component> = ({
                 <Icon ariaLabel="change indicator" name="triangle_border" className="ml-4" size="sm" />
               </button>
             </Tooltip>
-)}
+            )}
 
             <Tooltip
               trigger="click"

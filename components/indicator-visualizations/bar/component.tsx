@@ -39,7 +39,7 @@ interface ConfigProps {
   cartesianAxis?: Object,
   cartesianGrid?: Object,
   xAxis?: XAxisProps,
-  yAxis?: YAxisProps & { isPercentage: boolean },
+  yAxis?: YAxisProps & { isPercentage: boolean, areSmallValues: boolean },
   tooltip?: Object,
 }
 
@@ -51,6 +51,7 @@ interface ChartProps {
   color?: string,
   colors: string[],
 }
+
 
 const Chart: FC<ChartProps> = ({
   widgetData,
@@ -69,7 +70,22 @@ const Chart: FC<ChartProps> = ({
     tooltip,
     ...rest
   } = widgetConfig;
-  const { isPercentage } = yAxis;
+  const { isPercentage, areSmallValues } = yAxis;
+  const data = flatten(widgetData.map((d) => {
+    const { year, ...rest } = d;
+    return flatten(Object.values(rest));
+  })) as number[];
+
+
+  const maxValue = Math.max(...data);
+
+  const getFormat = useMemo(() => {
+    if (maxValue > 1000000)    {
+      return     format(',.3s');
+    }
+    if (maxValue < 1000000 && maxValue > 1000) return format(',.0f');
+    else return format(',.2f');
+  }, [maxValue]);
 
   return (
     <ResponsiveContainer width="100%" height={height} {...rest}>
@@ -77,7 +93,10 @@ const Chart: FC<ChartProps> = ({
         {cartesianGrid && (<CartesianGrid {...cartesianGrid} />)}
         {cartesianAxis && (<CartesianAxis {...cartesianAxis} />)}
         {xAxis && (<XAxis {...xAxis} />)}
-        {yAxis && (<YAxis {...yAxis} interval={0} tickFormatter={isPercentage ? format('.0f') : format(',.3s')} />)}
+        {yAxis && (<YAxis 
+          {...yAxis} 
+          interval={0} 
+          tickFormatter={ areSmallValues ? false : (isPercentage ? format('.0f') : getFormat  )} />)}
         {bars && (
           Object.keys(bars)
             .map((bar, index) => (<Bar key={bar} {...bars[bar]} fill={color || colors[index]} />
