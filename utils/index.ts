@@ -413,7 +413,7 @@ export const getGroupedValues = (
       };
     }).filter((d) => d.geometry);
     const geometryTypes = dataWithGeometries
-      ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
+      ?.map((d) => d.geometry?.geometry?.type?.toLowerCase()) || [];
 
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
     const mapValues = dataWithGeometries
@@ -1038,7 +1038,7 @@ export const getGroupedValuesRelatedIndicators = (
     });
   
     const geometryTypes = dataWithGeometries
-      ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
+      ?.map((d) => d.geometry?.geometry?.type?.toLowerCase()) || [];
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
 
     const mapValues = dataWithGeometries

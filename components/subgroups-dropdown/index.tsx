@@ -41,6 +41,7 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
   subgroup,
 }: SubgroupsDropdownTypes) => {
   const router = useRouter();
+  const { locale } = router;
   const subgroups = useMemo(() => orderBy(group?.subgroups, 'name'), [group]);
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
   const handleSubgroupChange = useCallback(
@@ -88,7 +89,7 @@ const SubgroupsDropdown: FC<SubgroupsDropdownTypes> = ({
                     type="button"
                     className="flex w-full px-5 py-2 cursor-pointer"
                     onClick={() => handleSubgroupChange(
-                      `/${group.slug}/${sgSlug}/${indSlug}`,
+                      `/${group.slug}/${sgSlug}/${indSlug}?locale=${locale}`,
                     )}
                   >
                     {name}

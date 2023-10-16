@@ -19,7 +19,7 @@ export const useRegions = (params = {}, queryConfig = {}) => {
 
   const { query } = useRouter();
   const lang = query.locale || 'en';
-  const queryParams = { ...params, locale: lang };
+  const queryParams = { ...params, locale: lang as string };
   return useQuery<Region[], Error>(['fetch-regions', current, lang], () => fetchRegions(queryParams), { ...queryConfig });
 };
 
