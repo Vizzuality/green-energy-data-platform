@@ -10,7 +10,8 @@ const tooltipRestricted = [
 ];
 
 export function useCoalPowerPlantTooltip(info) {
-  const tooltipInfo = useMemo(() => info || [], [info]);
+  const tooltipInfo = info || [];
+  console.log(tooltipInfo, info);
   const tooltipInfoHeaders = useMemo(
     () => Object.keys(tooltipInfo).filter(
       (tooltip) => !tooltipRestricted.includes(tooltip),

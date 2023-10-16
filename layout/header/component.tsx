@@ -7,6 +7,7 @@ import React, {
 import Link from 'next/link';
 import cx from 'classnames';
 import { useRouter } from 'next/router';
+import i18next from 'i18next';
 
 interface HeaderProps {
   children?: ReactChildren | ReactElement<any, string> & ReactNode | ReactElement,
@@ -33,6 +34,7 @@ const Header: FC<HeaderProps> = ({ children, className, theme = 'light' }: Heade
             className="w-36"
           />
         </Link>
+        <h2>{i18next.t('databaseName')}</h2>
 
         { children }
       </>

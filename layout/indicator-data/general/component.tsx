@@ -287,7 +287,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   }, [unit, units, defaultUnit]);
 
   const currentRegion = useMemo<string>(() => {
-    if (regions.find(({ value }) => value === region)) {
+    if (regions?.find(({ value }) => value === region)) {
       return region;
     }
     return defaultRegion?.value;
@@ -303,7 +303,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     [years, year],
   ) || '';
   const displayRegion = useMemo(
-    () => regions.find(({ value }) => value === region)?.label,
+    () => regions?.find(({ value }) => value === region)?.label,
     [regions, region],
   ) || '';
   const displayUnit = useMemo(
@@ -741,7 +741,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
         </section>
       </div>
     </div>
-          <Disclaimer />
+          {/* <Disclaimer /> */}
           </>
   );
 };

@@ -83,17 +83,17 @@ const Filters: FC<FiltersProps> = ({
   };
 
   const sortingByTotals = (arr: string[]): string[] => {
-      const totalElementIndex = arr.findIndex((s) => s.toLowerCase() === "total" || s === '总计' )
+    const totalElementIndex = arr.findIndex((s) => s.toLowerCase() === 'total' || s === '总计' );
       
-      const totalElement = totalElementIndex !== -1 ? arr.splice(totalElementIndex, 1)[0] : "Total";
-          const sortedArr = arr.slice().sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+    const totalElement = totalElementIndex !== -1 ? arr.splice(totalElementIndex, 1)[0] : 'Total';
+    const sortedArr = arr.slice().sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     
-      if (totalElementIndex !== -1) {
-        sortedArr.push(totalElement);
-      }
+    if (totalElementIndex !== -1) {
+      sortedArr.push(totalElement);
+    }
     
-      return sortedArr;
-  }
+    return sortedArr;
+  };
 
   const categoriesHeight = categories.length * 50;
   const maxHeight = categoriesHeight + 110;

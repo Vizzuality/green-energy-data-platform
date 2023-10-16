@@ -256,7 +256,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
 
   const currentRegion = useMemo<string>(
     () => {
-      if (regions.find(({ value }) => value === region)) {
+      if (regions?.find(({ value }) => value === region)) {
         return region;
       }
       return defaultRegion?.value;
@@ -269,7 +269,7 @@ const ModelIntercomparison: FC<IndicatorCompareDataProps> = ({
     [scenario, defaultScenario],
   );
 
-  const displayRegion = useMemo(() => regions.find(({ value }) => value === region)?.label, [regions, region]) || '';
+  const displayRegion = useMemo(() => regions?.find(({ value }) => value === region)?.label, [regions, region]) || '';
   const displayUnit = useMemo(() => units.find(({ value }) => value === unit)?.label, [units, unit]) || '';
   const displayScenario = useMemo(() => scenarios.find(({ value }) => value === scenario)?.label, [scenarios, scenario]) || '';
 

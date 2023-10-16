@@ -19,7 +19,7 @@ export const useRegions = (params = {}, queryConfig = {}) => {
 
   const { query } = useRouter();
   const lang = query.locale || 'en';
-  const queryParams = { ...params, locale: lang };
+  const queryParams = { ...params, locale: lang as string };
   return useQuery<Region[], Error>(['fetch-regions', current, lang], () => fetchRegions(queryParams), { ...queryConfig });
 };
 
@@ -35,7 +35,7 @@ export const useRegion = (id, params = {}, queryConfig = {}) => {
   return useQuery(['fetch-region', id, queryParams, lang], () => fetchRegion(id, queryParams), { ...queryConfig });
 };
 
-export const useRegionIdFromName = (regions, name) => regions.find((region) => name === region);
+export const useRegionIdFromName = (regions, name) => regions?.find((region) => name === region);
 
 export default {
   useRegions,

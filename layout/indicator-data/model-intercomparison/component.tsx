@@ -356,7 +356,6 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
 
   const hasDownloadPermissions = useMemo(() => user && user.role && (!onlyAdminsCanDownload || user.role === 'admin'),
     [onlyAdminsCanDownload, user]);
-
   return (
     <section className={`flex flex-col  ${className}`}>
 
@@ -597,7 +596,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               </div>
             )}
           </div>
-          <Disclaimer />
+          {/* <Disclaimer /> */}
         </section>
       </div>
     </section>

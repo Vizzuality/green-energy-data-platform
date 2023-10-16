@@ -28,6 +28,7 @@ const Menu: FC<MenuProps> = ({
     (state: RootState) => (state.search),
   );
 
+  const lang = locale || 'en';
   const searchResults = useSearch(items, searchValue);
   const results = searchValue === '' ? items : searchResults;
   return (
@@ -64,7 +65,7 @@ const Menu: FC<MenuProps> = ({
                 >
                   <Link
                     key={sgId}
-                    href={{ pathname: `/${slug}/${sgSlug}/${defIndicatorSlug}`, query: { locale } }}
+                    href={{ pathname: `/${slug}/${sgSlug}/${defIndicatorSlug}`, query: { locale: lang } }}
                     className="text-gray1"
                     onMouseEnter={() => { setSelectedIndex({ index, subIndex }); }}
                   >

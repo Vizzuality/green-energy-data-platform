@@ -1,5 +1,5 @@
 import {
-  compact, sortedUniq, chain, flatten, groupBy, orderBy, uniqWith, isEqual,
+  compact, sortedUniq, chain, flatten, groupBy, orderBy, sortBy,
 } from 'lodash';
 
 import chroma from 'chroma-js';
@@ -243,10 +243,12 @@ export const getGroupedValues = (
   const label = category?.label;
   const categorySelected = category?.value || 'Total';
   const mapCategorySelected = category?.label === 'category_1' ? categories[0] : category?.value || categorySelected;
+
   const filteredData = label === 'category_2' && categorySelected !== 'Total'
     ? records.filter((record) => record.category_1 === categorySelected)
     : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
+
   let data = [];
 
   const getLineData = (): ChartYear[] => {
@@ -315,7 +317,7 @@ export const getGroupedValues = (
     )), ['year'], ['asc']);
   };
 
-  const getPieData = () => chain(filteredData)
+  const getPieData = () => sortBy(chain(filteredData)
     .groupBy(label)
     .map((value, key) => ({
       name: key,
@@ -327,7 +329,7 @@ export const getGroupedValues = (
       year: value[0].year,
       visualizationTypes: value[0].visualization_types,
     }))
-    .value();
+    .value(), [(item) => (item.name !== 'total' && item.name !== '总计'), (item) => item]);
 
   const getBarData = () => {
     if (groupSlug !== 'scenarios') {
@@ -411,7 +413,8 @@ export const getGroupedValues = (
         [mapCategorySelected]: d.value,
       };
     }).filter((d) => d.geometry);
-    const geometryTypes = dataWithGeometries
+
+    const geometryTypes = !!dataWithGeometries.length && dataWithGeometries
       ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
 
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
@@ -446,11 +449,10 @@ export const getGroupedValues = (
     const getTooltipProperties = (tooltipData) => {
       if (!tooltipData) return null;
       const properties = tooltipData?.map(
-        ({
-          name_en, name_cn, value_en, value_cn,
-        }) => ({
-          [name_en || name_cn]: value_en || value_cn,
+        (t) => ({
+          [t?.name]: t?.value,
         }),
+     
       );
       return Object.assign({}, ...properties);
     };
@@ -938,7 +940,6 @@ export const getGroupedValuesRelatedIndicators = (
   const categorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const mapCategorySelected = category?.value || categories.includes('Total') ? 'Total' : categories[0];
   const filteredRegions: Region[] = regions?.filter((r) => r.geometry !== null);
-
   if (visualization === 'pie') {
     data = chain(records)
       .groupBy('category_1')
@@ -1036,7 +1037,7 @@ export const getGroupedValuesRelatedIndicators = (
         [d.category_1]: d.value,
       };
     });
-
+  
     const geometryTypes = dataWithGeometries
       ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);

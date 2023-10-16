@@ -126,7 +126,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
 
   const currentRegion = useMemo<string>(
     () => {
-      if (regions.find(({ label }) => label === region)) {
+      if (regions?.find(({ label }) => label === region)) {
         return region;
       }
       return defaultRegion?.label;
@@ -135,7 +135,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
   );
 
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
-  const displayRegion = useMemo(() => regions.find(({ label }) => label === region)?.label, [regions, region]) || '';
+  const displayRegion = useMemo(() => regions?.find(({ label }) => label === region)?.label, [regions, region]) || '';
 
   const {
     data,
@@ -335,7 +335,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
             </div>
             )}
           </div>
-          <Disclaimer />
+          {/* <Disclaimer /> */}
         </section>
       </div>
     </div>

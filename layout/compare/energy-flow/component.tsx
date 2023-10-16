@@ -170,7 +170,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
 
   const currentRegion = useMemo<string>(
     () => {
-      if (regions.find(({ label }) => label === region)) {
+      if (regions?.find(({ label }) => label === region)) {
         return region;
       }
       return defaultRegion?.label;
@@ -179,7 +179,7 @@ const SankeyChart: FC<IndicatorCompareDataProps> = ({
   );
 
   const displayYear = useMemo(() => years.find(({ value }) => value === year)?.label, [years, year]) || '';
-  const displayRegion = useMemo(() => regions.find(({ label }) => label === region)?.label, [regions, region]) || '';
+  const displayRegion = useMemo(() => regions?.find(({ label }) => label === region)?.label, [regions, region]) || '';
   const displayUnit = useMemo(() => units.find(({ label }) => label === unit)?.label, [units, unit]) || '';
 
   const currentVisualization = useMemo<string>(

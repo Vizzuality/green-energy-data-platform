@@ -124,7 +124,7 @@ export function useIndicatorMetadata(
   );
 
   const defaultRegion = useMemo<{ label: string, value: string }>(
-    () => regions.find(({ value }) => value === ID_CHINA || regions[0]),
+    () => regions?.find(({ value }) => value === ID_CHINA || regions[0]),
     [regions],
   );
 
@@ -232,7 +232,7 @@ export function useSankeyIndicatorMetadata(
   );
 
   const defaultRegion = useMemo<{ label: string, value: string }>(
-    () => regions.find(({ value }) => value === ID_CHINA || regions[0]),
+    () => regions?.find(({ value }) => value === ID_CHINA || regions[0]),
     [regions],
   );
 
@@ -341,7 +341,7 @@ export function useIndicatorRecords(
       category_2: d.category_2 === null ? KEY : d.category_2,
       region: {
         id: d.region_id,
-        name: (regions.find(({ id }) => d.region_id === id) || {}).name || '-',
+        name: (regions?.find(({ id }) => d.region_id === id) || {}).name || '-',
       },
     })),
   }), [data, regions, query, KEY]);
