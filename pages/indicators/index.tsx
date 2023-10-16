@@ -106,7 +106,7 @@ const IndicatorsPage: FC<IndicatorsPageProps & Language> = ({ groups, locale }: 
                 return (
                   <Link
                     key={subgroupId}
-                    href={{ pathname: `/${groupSlug}/${subgroupSlug}/${indicatorSlug}`, query: { locale: lang }}}
+                    href={{ pathname: `/${groupSlug}/${subgroupSlug}/${indicatorSlug}`, query: { locale: lang } }}
                   >
                     {subgroupName}
                   </Link>

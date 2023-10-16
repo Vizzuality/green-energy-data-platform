@@ -335,7 +335,7 @@ const SankeyChart: FC<SankeyWrapper> = ({
             </div>
             )}
           </div>
-          <Disclaimer />
+          {/* <Disclaimer /> */}
         </section>
       </div>
     </div>

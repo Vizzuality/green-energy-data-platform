@@ -77,8 +77,7 @@ const Chart: FC<ChartProps> = ({
     const { year, ...rest } = d;
     return flatten(Object.values(rest));
   })) as number[];
-  console.log(widgetData);
-
+  
   const maxValue = Math.max(...data);
 
   const getFormat = useMemo(() => {
