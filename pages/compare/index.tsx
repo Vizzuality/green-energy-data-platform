@@ -51,7 +51,7 @@ const ComparePage: FC<ComparePageProps> = ({
             />
           </div>
         </section>
-        <Disclaimer />
+        {/* <Disclaimer /> */}
       </div>
       <PreFooter />
 

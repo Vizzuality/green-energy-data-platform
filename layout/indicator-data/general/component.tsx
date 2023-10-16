@@ -741,7 +741,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
         </section>
       </div>
     </div>
-          <Disclaimer />
+          {/* <Disclaimer /> */}
           </>
   );
 };

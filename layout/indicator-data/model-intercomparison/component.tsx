@@ -597,7 +597,7 @@ const ModelIntercomparison: FC<ComponentTypes> = ({
               </div>
             )}
           </div>
-          <Disclaimer />
+          {/* <Disclaimer /> */}
         </section>
       </div>
     </section>

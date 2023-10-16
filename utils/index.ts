@@ -247,6 +247,7 @@ export const getGroupedValues = (
     ? records.filter((record) => record.category_1 === categorySelected)
     : records;
   const filteredRegions = regions?.filter((r) => r.geometry !== null);
+
   let data = [];
 
   const getLineData = (): ChartYear[] => {
@@ -446,11 +447,10 @@ export const getGroupedValues = (
     const getTooltipProperties = (tooltipData) => {
       if (!tooltipData) return null;
       const properties = tooltipData?.map(
-        ({
-          name_en, name_cn, value_en, value_cn,
-        }) => ({
-          [name_en || name_cn]: value_en || value_cn,
+        (t) => ({
+          [t?.name]: t?.value,
         }),
+     
       );
       return Object.assign({}, ...properties);
     };
@@ -1036,7 +1036,7 @@ export const getGroupedValuesRelatedIndicators = (
         [d.category_1]: d.value,
       };
     });
-
+  
     const geometryTypes = dataWithGeometries
       ?.map((d) => d.geometry?.geometry?.type.toLowerCase()) || [];
     const layerType = !!geometryTypes.length && getMostFrequent(geometryTypes);
