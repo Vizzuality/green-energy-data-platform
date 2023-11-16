@@ -34,7 +34,7 @@ const Header: FC<HeaderProps> = ({ children, className, theme = 'light' }: Heade
             className="w-36"
           />
         </Link>
-        <h2>{i18next.t('databaseName')}</h2>
+        <h2 className="text-xl">{i18next.t('databaseText')}</h2>
 
         { children }
       </>

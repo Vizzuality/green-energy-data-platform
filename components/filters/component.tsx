@@ -32,8 +32,7 @@ const Filters: FC<FiltersProps> = ({
 }: FiltersProps) => {
   // language keys
   const filtersLang = i18next.t('filters');
-  const valueLang = i18next.t('value');
-  const total = i18next.t('value');
+  const total = i18next.t('total');
 
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.indicator);
@@ -99,6 +98,7 @@ const Filters: FC<FiltersProps> = ({
   const maxHeight = categoriesHeight + 110;
 
   const categoriesSorted = sortingByTotals(categories);
+
   return (
     <div
       className={cx(
@@ -142,11 +142,9 @@ const Filters: FC<FiltersProps> = ({
               onClick={() => handleCategories(category)}
               disabled={(!hasSubcategories || categories.length === 1) && visualization !== 'choropleth'}
             >
-              {visualization === 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{valueLang}</span>}
-              {visualization === 'choropleth' && category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
-
-              {visualization !== 'choropleth' && (category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{total}</span>}
-              {visualization !== 'choropleth' && category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
+            
+              {(category.toLowerCase() === 'total' || category === '总量') && <span className="flex flex-1 pr-2 text-left">{total}</span>}
+              {category.toLowerCase() !== 'total' && category !== '总量' && <span className="flex flex-1 pr-2 text-left">{category}</span>}
             </button>
             {categorySelected === category && hasSubcategories && categories.length > 1 && (
               <div className="flex items-center justify-center h-full py-3 border-l border-l-white">

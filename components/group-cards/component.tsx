@@ -26,13 +26,6 @@ interface GroupCardProps {
   textPosition: string,
 }
 
-const subtitles = {
-  'coal-power-plants': {
-    en: 'Capacity power plants in China',
-    cn: '中国容量电厂',
-  },
-};
-
 const GroupCard: FC<GroupCardProps> = ({
   group,
   className,
@@ -51,29 +44,23 @@ const GroupCard: FC<GroupCardProps> = ({
     header_image: headerImage,
   } = group;
 
-  const {
-    current,
-  } = useSelector(
-    (state: RootState) => (state.language),
-  );
-
   const defaultData = useDefaultIndicator(group);
 
   const { default_indicator: defaultIndicator, slug: subgroupSlug } = defaultData;
   const { data: subgroup } = useSubgroup(group.slug, subgroupSlug, {
     refetchOnWindowFocus: false,
   }, {
-    locale
+    locale,
   });
 
   const indicatorSlug = defaultIndicator?.slug || subgroup?.indicators[0]?.slug;
   const groupSlugDescription  = i18next.t(slug);
   return (
     <div className={cx('flex w-full items-center justify-between space-x-14', { [className]: className })}>
-      <div className={cx({"flex-1 w-full": true, 'ml-10': textPosition === 'left', 'mr-10': textPosition === 'right'})}>
+      <div className={cx({ 'flex-1 w-full': true, 'ml-10': textPosition === 'left', 'mr-10': textPosition === 'right' })}>
         <h3 className="text-3.5xl text-gray3">{name}</h3>
-        <h4 className="text-2.5xl text-color1 pb-2 font-bold leading-loose">{subtitle || subtitles[slug]?.[current]}</h4>
-        <div className="text-sm leading-7 my-9" dangerouslySetInnerHTML={{__html: groupSlugDescription}} />
+        <h4 className="text-2.5xl text-color1 pb-2 font-bold leading-loose">{subtitle}</h4>
+        <div className="text-sm leading-7 my-9" dangerouslySetInnerHTML={{ __html: groupSlugDescription }} />
         <Link
           href={{ pathname: `/${slug}/${subgroupSlug}/${indicatorSlug}`, query: { locale: lang } }}
           className="px-6 py-3 text-sm text-white rounded-full bg-gradient-color1 hover:shadow-sm active:bg-gradient-color1-reverse active:shadow-sm"

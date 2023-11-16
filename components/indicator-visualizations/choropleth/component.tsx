@@ -212,7 +212,7 @@ const MapContainer: FC<MapContainerProps> = ({
   //     setBounds([bbox]);
   //   }
   // }, [layers, features]);
-  console.log(spiderTooltipInfoHeaders, 'spiderTooltipInfoHeaders', tooltipInfoHeaders, 'tooltipInfoHeaders');
+
   return (
     <div
       className="relative h-full border-4 rounded border-gray5"

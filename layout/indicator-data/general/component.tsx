@@ -251,7 +251,8 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     [name, categories, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
 
-  const widgetDataKeys = category?.label === 'category_1' ? categories : getLegendData(widgetData, visualization);
+  const widgetDataOrderedByName = orderBy(widgetData as Object[], ['name'], ['asc']);
+  const widgetDataKeys = category?.label === 'category_1' ? categories : getLegendData(widgetDataOrderedByName, visualization);
   const mainColors = useColors(widgetDataKeys.length);
   const colorsOpacity = useOpacityColors(mainColors);
   const colors = category?.label === 'category_1' ? mainColors : colorsOpacity;
@@ -374,7 +375,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
     } else if (visualization === 'bar') {
       legendData = subcategories;
     } else {
-      legendData = getLegendData(widgetData, visualization);
+      legendData = getLegendData(widgetDataOrderedByName, visualization);
     }
 
     return legendData
@@ -385,7 +386,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
           color: legendColor,
         };
       });
-  }, [colors, widgetData, categories, category, subcategories, visualization]);
+  }, [colors, widgetDataOrderedByName, categories, category, subcategories, visualization]);
 
   const DynamicChart = useMemo(() => {
     if (visualization && visualization !== 'choropleth') {
@@ -694,7 +695,7 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
                           )
                             : (
                               <DynamicChart
-                                widgetData={widgetData}
+                              widgetData={visualization === 'pie' ? widgetDataOrderedByName : widgetData}
                                 widgetConfig={widgetConfig}
                                 colors={colors}
                                 color={singleValueLegendColor}
