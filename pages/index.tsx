@@ -21,7 +21,7 @@ import Search from 'components/search';
 
 
 import { InView } from 'react-intersection-observer';
-import CookieBanner from 'components/cookie-banner';
+import Cookies from 'components/cookie-banner';
 
 const HomePage: FC = () => {
   const { query: { locale } } = useRouter();
@@ -69,7 +69,17 @@ const HomePage: FC = () => {
           );
         })}
 </div>
-      <CookieBanner />
+<div className="relative h-96">
+  <Cookies
+    open
+    onAccept={() => {
+      console.info('Accepted');
+    }}
+    onReject={() => {
+      console.info('Rejected');
+    }}
+  />
+</div>
       <PreFooter />
     </LayoutPage>
   );

@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react';
 import Tooltip from 'components/widgets/tooltip';
 import i18next from 'i18next';
 
-import { uniq, range } from 'lodash';
+import { uniq } from 'lodash';
 import { scaleLinear } from 'd3-scale';
 
 type PayloadObject = {
@@ -91,20 +91,55 @@ type Data = {
   region: { name: string };
 
 };
+
+
+const findMaxMin = (data: Data[]): { maxValue: number, minValue: number } => {
+  const initial = { maxValue: -Infinity, minValue: Infinity };
+
+  return data.reduce((acc, obj) => {
+    Object.keys(obj).forEach(key => {
+      if (key !== 'year' && typeof obj[key] === 'number') {
+        acc.maxValue = Math.max(acc.maxValue, obj[key]);
+        acc.minValue = Math.min(acc.minValue, obj[key]);
+      }
+    });
+    return acc;
+  }, initial);
+};
+
 const ChartConfig = (categories, language, data: Data[]) => {
   const unit = uniq(data.map((d) => d.unit))[0] satisfies { id: string, name: string };
   const isPercentage = unit?.id === '542351b7-2813-4856-a7d8-1ceadd1f4a03' || unit?.name.includes('%');
   
-  const values = useMemo(() => data.filter((v) => v?.region?.name !== 'China')
-    .map((d) => d.value), [data]);
-  const MINVALUE = useMemo(() => (Math.min(...values)), [values]);
-  const MAXVALUE = useMemo(() => (Math.max(...values)), [values]);
+  let minSum = 0;
+  let maxSum = 0;
 
-  const areSmallValues = useMemo(() => (MAXVALUE - MINVALUE) < 10, [MAXVALUE, MINVALUE]);
-  const step = (2 * Math.ceil(MAXVALUE / 2) - MINVALUE) / 10;
-  const maxValueDomain = step * 10 + MINVALUE;
-  const scale = scaleLinear().domain([MINVALUE, maxValueDomain]).nice();
+  data.forEach(obj => {
+    let sum = 0;
+    Object.keys(obj).forEach(key => {
+      if (key !== 'province' && key !== 'visualizationTypes' && typeof obj[key] === 'number') {
+        sum += obj[key];
+      }
+    });
+
+    if (sum > maxSum) maxSum = sum;
+    if (sum < minSum) minSum = sum;
+
+  });
+
+  const MaxMinValueUnstacked = findMaxMin(data);
+  const areSmallValues = useMemo(() => (minSum - maxSum) < 10, [minSum, maxSum]);
+  const step = (2 * Math.ceil(maxSum / 2) - minSum) / 10;
+  const maxValueDomain = step * 10 + minSum;
+  const scale = scaleLinear().domain([minSum, maxValueDomain]).nice();
   const KEY = language === 'cn' ? '总量' : 'Total';
+  const getTicks =  (val1: number, val2: number) => {
+    const max = Math.ceil(Math.max(val1, val2));
+    const min = Math.floor(Math.min(val1, val2));
+    const steps = 6; // For 9 elements, there are 8 intervals
+    const stepSize = (max - min) / steps;
+    return Array.from({ length: steps + 1 }, (_, index) => min + stepSize * index);
+  };
   const getLines = () => {
     if (categories.length) {
       return categories.map((category) => ({
@@ -141,7 +176,11 @@ const ChartConfig = (categories, language, data: Data[]) => {
     fontSize: '14px',
     // tickCount: 7,
   };
-  
+
+  const TICKS = useMemo(() => getTicks(minSum, maxSum), [minSum, maxSum]);
+  const minValueUnstacked = MaxMinValueUnstacked.minValue > 0 ? 0 : MaxMinValueUnstacked.minValue;
+  const TICKS_UNSTACKED = useMemo(() => getTicks(minValueUnstacked, MaxMinValueUnstacked.maxValue), [MaxMinValueUnstacked]);
+
   return {
     line: {
       margin: {
@@ -181,7 +220,7 @@ const ChartConfig = (categories, language, data: Data[]) => {
           ...DefaultTick,
 
         },
-        ticks: scale.ticks(10),
+        ticks: TICKS_UNSTACKED,
         // domain: [MINVALUE, MAXVALUE],
         // ...(isPercentage && hasNegativeValues && { domain: [-100, 100] }),
         // ...(isPercentage && hasNegativeValues && { ticks: range(-100, 101, 10) }),
@@ -231,7 +270,11 @@ const ChartConfig = (categories, language, data: Data[]) => {
         isPercentage,
         areSmallValues,
         scale,
-        maxValue: MAXVALUE,
+        maxValue: maxSum,
+        minValue: minSum,
+        ticks: TICKS,
+        interval: 0,
+
       },
       xAxis: {
         type: 'category',

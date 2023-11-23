@@ -446,6 +446,15 @@ export const getGroupedValues = (
     const visualizations = dataWithGeometries[0]
       ?.visualizationTypes as string[];
 
+    const clusterRadioSteps = (start: number, end: number): number[] => {
+      const steps = 5; // For 6 numbers, there are 5 steps
+      const stepSize = (end - start) / steps;
+  
+      return Array.from({ length: steps + 1 }, (_, index) => start + stepSize * index);  
+    };
+
+    const clusterRadius = clusterRadioSteps(minValue, maxValue);
+
     const getTooltipProperties = (tooltipData) => {
       if (!tooltipData) return null;
       const properties = tooltipData?.map(
@@ -621,15 +630,21 @@ export const getGroupedValues = (
                         '#ca184a',
                       ],
                       'circle-radius': [
-                        'interpolate',
-                        ['linear'],
-                        ['get', 'total'],
-                        minValue,
+                        'step',
+                        ['get', 'point_count'],
                         5,
-                        media,
+                        clusterRadius[0],
                         15,
-                        maxValue,
+                        clusterRadius[1],
+                        10,
+                        clusterRadius[2],
+                        20,
+                        clusterRadius[3],
+                        25,
+                        clusterRadius[4],
                         30,
+                        clusterRadius[5],
+                        50,
                       ],
                     },
                   },

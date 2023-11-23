@@ -232,7 +232,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
       name, categories, groupSlug, filters, filteredRecords, regionsGeometries, units,
     ), [name, categories, groupSlug, filters, filteredRecords, regionsGeometries, units],
   );
-
+  
   const currentVisualization = useMemo<string>(
     // if the current visualization is not allowed when the user changes the indicator,
     // it will fallback into the default one. If it is, it will remain.

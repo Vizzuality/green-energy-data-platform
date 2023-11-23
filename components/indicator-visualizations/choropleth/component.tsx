@@ -71,7 +71,6 @@ interface MapContainerProps {
 
 const numberFormat = format(',.2f');
 
-
 const MapContainer: FC<MapContainerProps> = ({
   layers,
   hasInteraction = true,
@@ -354,6 +353,7 @@ const MapContainer: FC<MapContainerProps> = ({
                   <span className="mr-4 text-xs">{infoPlant}</span>
                 </Popup>
             )}
+            {console.log(spiderTooltipInfoHeaders)}
             {spiderTooltipInfoHeaders.length > 0 && (
               <Popup
                 latitude={lngLat[1]}

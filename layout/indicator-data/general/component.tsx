@@ -9,7 +9,7 @@ import cx from 'classnames';
 import dynamic from 'next/dynamic';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { orderBy, filter } from 'lodash';
+import { orderBy } from 'lodash';
 // hooks
 import {
   useIndicator,
@@ -27,7 +27,6 @@ import DataSource from 'components/data-source';
 import MapContainer from 'components/indicator-visualizations/choropleth';
 import LoadingSpinner from 'components/loading-spinner';
 import PaginatedDynamicChart from 'components/paginated-dynamic-chart/component';
-import Disclaimer from 'components/disclaimer';
 
 // utils
 import {
@@ -38,6 +37,7 @@ import {
   getStrokeColor,
   getLegendData,
 } from 'utils';
+
 
 import { RootState } from 'store/store';
 
@@ -60,6 +60,12 @@ type ChartProps = {
   widgetConfig: unknown;
   colors: string[];
   color?: string;
+};
+
+type DATA = {
+  unit: { id: string, name: string };
+  value: number;
+  region: { name: string };
 };
 
 const BUTTON_STYLES = 'text-sm mb-2 flex items-center border text-color1 border-gray1 border-opacity-20 py-0.5 px-4 rounded-full mr-4 whitespace-nowrap';
@@ -260,8 +266,8 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
   // +  const colorsOpacity = useOpacityColors(mainColorsKeys);
   // +  const colors = category?.label === 'category_1' ? mainColorsKeys : colorsOpacity;
   const widgetConfig = useMemo(
-    () => ChartConfig(widgetDataKeys, lang, records)[visualization],
-    [visualization, widgetDataKeys, records, lang],
+    () => ChartConfig(widgetDataKeys, lang, widgetData as DATA[])[visualization],
+    [visualization, widgetDataKeys, widgetData, lang],
   );
 
   const currentVisualization = useMemo<string>(

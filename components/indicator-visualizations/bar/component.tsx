@@ -12,7 +12,6 @@ import {
   XAxisProps,
   YAxisProps,
 } from 'recharts';
-
 import { MapLayersProps } from 'components/indicator-visualizations/choropleth/component';
 import { format } from 'd3-format';
 
@@ -88,7 +87,6 @@ const Chart: FC<ChartProps> = ({
         {xAxis && (<XAxis {...xAxis} />)}
         {yAxis && (<YAxis 
           {...yAxis} 
-          interval={0} 
           tickFormatter={ areSmallValues ? false : (isPercentage ? format('.0f') : getFormat  )} />)}
         {bars && (
           Object.keys(bars)

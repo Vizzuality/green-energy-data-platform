@@ -72,7 +72,7 @@ const Chart: FC<ChartProps> = ({
     ...rest
   } = widgetConfig;
 
-  const { isPercentage, areSmallValues } = yAxis;
+  const { isPercentage } = yAxis;
   const data = flatten(widgetData.map((d) => {
     const { year, ...rest } = d;
     return flatten(Object.values(rest));
@@ -96,7 +96,7 @@ const Chart: FC<ChartProps> = ({
         {xAxis && (<XAxis {...xAxis} />)}
         {yAxis && (
           <YAxis
-            tickFormatter={ areSmallValues ? false : (isPercentage ? format('.0f') : getFormat  )}
+            tickFormatter={(isPercentage ? format('.0f') : getFormat  )}
             {...yAxis}
           />
         )}
