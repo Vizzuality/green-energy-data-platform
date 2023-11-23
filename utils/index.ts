@@ -238,6 +238,7 @@ export const getGroupedValues = (
   records: Record[],
   regions: Region[],
   units: { label: string; value: string }[],
+  lang: string | string[],
 ): unknown => {
   const { category, unit, visualization } = filters;
   const label = category?.label;
@@ -457,12 +458,13 @@ export const getGroupedValues = (
 
     const getTooltipProperties = (tooltipData) => {
       if (!tooltipData) return null;
-      const properties = tooltipData?.map(
-        (t) => ({
-          [t?.name]: t?.value,
-        }),
-     
-      );
+
+      const properties = tooltipData.map(t => {
+        const nameKey = `name_${lang}`;
+        const valueKey = `value_${lang}`;
+        return { [t[nameKey]]: t[valueKey] };
+      });
+  
       return Object.assign({}, ...properties);
     };
     if (layerType === 'multipolygon' || layerType === 'polygon') {
@@ -559,6 +561,7 @@ export const getGroupedValues = (
         },
       ];
     }
+
     if (layerType === 'point') {
       data = [
         {

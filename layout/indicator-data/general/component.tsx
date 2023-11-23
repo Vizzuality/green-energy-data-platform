@@ -253,8 +253,9 @@ const IndicatorChart: FC<ComponentTypes> = ({ className }: ComponentTypes) => {
       filteredRecords,
       regionsGeometries,
       units,
+      lang,
     ),
-    [name, categories, groupSlug, filters, filteredRecords, regionsGeometries, units],
+    [name, categories, groupSlug, filters, filteredRecords, regionsGeometries, units, lang],
   );
 
   const widgetDataOrderedByName = orderBy(widgetData as Object[], ['name'], ['asc']);

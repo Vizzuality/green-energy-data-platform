@@ -44,6 +44,7 @@ import { DEFAULT_VIEWPORT } from './constants';
 
 // components
 import Map from './map';
+import classNames from 'classnames';
 
 type ItemProps = {
   value: string;
@@ -233,7 +234,6 @@ const MapContainer: FC<MapContainerProps> = ({
           e.stopPropagation();
           const clusterProperties = e?.features[0]?.properties;
           const count = clusterProperties?.point_count;
-
           if (!count || count < 1) {
             spiderifier.unspiderfy();
           }
@@ -353,7 +353,6 @@ const MapContainer: FC<MapContainerProps> = ({
                   <span className="mr-4 text-xs">{infoPlant}</span>
                 </Popup>
             )}
-            {console.log(spiderTooltipInfoHeaders)}
             {spiderTooltipInfoHeaders.length > 0 && (
               <Popup
                 latitude={lngLat[1]}
@@ -365,9 +364,9 @@ const MapContainer: FC<MapContainerProps> = ({
                 <ul>
                   {spiderTooltipInfoHeaders.map((t) => (
                     <li key={`${t}-${spiderTooltipInfo[t]}`}>
-                      <span className="mr-4 text-xs">
+                      {t !== 'name' && <span className="mr-4 text-xs">
                         {t.charAt(0).toUpperCase() + t.slice(1)}
-                      </span>
+                      </span>}
                       {t === 'Total' || t === 'total' ? (
                         <span className="text-xs">
                           {numberFormat(spiderTooltipInfo[t])}
