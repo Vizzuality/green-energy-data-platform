@@ -21,7 +21,6 @@ export interface CookiesProps {
   onReject: () => void;
 }
 
-const siteCookies = i18next.t('siteCookies');
 
 const Cookies: React.FC<CookiesProps> = ({
   open,
@@ -29,6 +28,8 @@ const Cookies: React.FC<CookiesProps> = ({
   onReject,
 }: CookiesProps) => {
   const [loadBanner, setLoadBanner] = useState(true);
+  const siteCookiesTranslation = i18next.t('siteCookies');
+
   return (
     <>{
       loadBanner && (
@@ -56,7 +57,7 @@ const Cookies: React.FC<CookiesProps> = ({
           >
             <div className="flex mx-11">
               <div className="inline flex-wrap h-full items-center justify-center m-auto w-full text-sm text-white pr-3">
-              <p  dangerouslySetInnerHTML={{ __html: siteCookies }} />
+              <div dangerouslySetInnerHTML={{ __html:   siteCookiesTranslation }} />
               </div>
               {/* <div className="flex justify-between items-center space-x-2">
                 <Button
