@@ -547,7 +547,7 @@ export const resources = {
       policy12Text1: '本政策制定于 2023 年【7】月【20】日,将于 2023 年【10】月【1】日正 式生效。',
       downloadDocument: '下载我们的',
       database: '数据库',
-      databaseText: '中文可持续能源知识交流中心',
+      databaseText: '可持续能源知识交流中心',
       attributionText: '建议引用：能源基金会. 2023.中文可持续能源知识交流中心. 检索自https://dataplatform.efchina.org/.',
       databaseDisclaimer: '免责声明',
       databaseDisclaimerText: '免责声明 本网站内容及数据均来源于公开的信息资料，若无特别声明，网站所展示的内容不代表能源基金会的观点。能源基金会不对网站内容的真实性、准确性、完整性和时效性负责。对于用户因使用本网站而遭受的任何直接或间接的损失, 能源基金会不承担任何责任。',

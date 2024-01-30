@@ -8,6 +8,7 @@ import { useSubgroup } from 'hooks/subgroups';
 
 import Icon from 'components/icon';
 import { useRouter } from 'next/router';
+import LoadingSpinner from 'components/loading-spinner';
 
 type CompareDropdownContentProps = Readonly <{
   compareGroupSlug,
@@ -43,7 +44,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
     enabled: !!groupSlug,
     keepPreviousData: true,
   }, {
-    locale: lang
+    locale: lang,
   });
 
   const { data: indicators } = useIndicators(groupSlug, subgroupSlug, {
@@ -71,12 +72,12 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
     refetchOnWindowFocus: false,
   },
   {
-    locale: lang
+    locale: lang,
   });
 
   const groupName = groupData?.name;
   const { data: subgroupData } = useSubgroup(groupSlug, subgroupSlug, {}, {
-    locale
+    locale,
   });
   const subgroupName = subgroupData?.name;
 
@@ -85,6 +86,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
   return (
     <div className="z-10 flex flex-col justify-center w-full text-white shadow-sm rounded-xl bg-gray3 first:pt-2 last:pb-2">
       {step === 1 && (
+        !groupsToCompare.length ?  <LoadingSpinner /> :
         <ul>
           {groupsToCompare?.map(({
             name, id, slug,
@@ -98,7 +100,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
                 id="exp_button"
                 onClick={() => handleClick('groupSlug', slug, 'forward')}
               >
-                <span className="text-left">{name}</span>
+                <span className="text-left hover:font-bold">{name}</span>
                 {' '}
                 <Icon
                   ariaLabel="arrow"
@@ -120,19 +122,19 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
             className="mr-2 transform rotate-180 cursor-pointer"
             onClick={() => setStep(1)}
           />
-          <span className="text-left">{groupName}</span>
+          <span className="text-left hover:font-bold">{groupName}</span>
           <Icon
             ariaLabel="arrow"
             name="arrow"
             className="ml-2"
           />
         </div>
-
+        {!subgroups.length ? <LoadingSpinner /> :
         <ul className="items-center max-w-sm px-9">
           {subgroups?.map(({
             name, id, slug,
           }) => (
-            <li key={id} className="first:rounded-t-xl last:rounded-b-xl">
+            <li key={id} className="first:rounded-t-xl last:rounded-b-xl hover:font-bold">
               <button
                 className="flex items-center flex-1 w-full h-full py-2"
                 type="button"
@@ -141,11 +143,11 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
                 id="exp_button"
                 onClick={() => handleClick('subgroupSlug', slug, 'forward')}
               >
-                <span className="text-left">{name}</span>
+                <span className="text-left hover:font-bold">{name}</span>
               </button>
             </li>
           ))}
-        </ul>
+        </ul>}
       </div>
       )}
 
@@ -160,6 +162,7 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
           />
           <span>{subgroupName}</span>
         </div>
+        {!indicators.length ? <LoadingSpinner /> :
         <ul className="items-center max-w-sm px-9">
           {indicators?.map(({
             name, id, slug,
@@ -178,13 +181,13 @@ const CompareDropdownContent: FC<CompareDropdownContentProps> = ({
                     locale,
                   },
                 }}
-                className="flex items-center flex-1 h-full py-2"
+                className="flex items-center flex-1 h-full py-2 hover:font-bold"
               >
                 {name}
               </Link>
             </li>
           ))}
-        </ul>
+        </ul>}
       </div>
       )}
     </div>

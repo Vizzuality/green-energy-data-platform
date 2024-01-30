@@ -551,7 +551,7 @@ const CompareIndicatorChart: FC<IndicatorCompareDataProps> = ({
                         widgetConfig={widgetConfig}
                         color={singleValueLegendColor}
                         colors={colors}
-                      />
+                      />                    
                     </div>
                   )}
                 {visualization === 'choropleth' && (

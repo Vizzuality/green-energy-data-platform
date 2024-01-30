@@ -464,9 +464,9 @@ export const getGroupedValues = (
         const valueKey = `value_${lang}`;
         return { [t[nameKey]]: t[valueKey] };
       });
-  
       return Object.assign({}, ...properties);
     };
+
     if (layerType === 'multipolygon' || layerType === 'polygon') {
       data = [
         {
@@ -561,7 +561,6 @@ export const getGroupedValues = (
         },
       ];
     }
-
     if (layerType === 'point') {
       data = [
         {

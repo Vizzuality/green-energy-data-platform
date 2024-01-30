@@ -20,6 +20,11 @@ const THEME = {
   dark: 'logo_GEDP_dark.svg',
 };
 
+const TITLE_THEME = {
+  light: 'text-white',
+  dark: 'text-gray-900',
+};
+
 const Header: FC<HeaderProps> = ({ children, className, theme = 'light' }: HeaderProps) => {
   const { query: { locale } } = useRouter();
   return (
@@ -34,7 +39,7 @@ const Header: FC<HeaderProps> = ({ children, className, theme = 'light' }: Heade
             className="w-36"
           />
         </Link>
-        <h2 className="text-xl">{i18next.t('databaseText')}</h2>
+        <h2 className={cx({ 'text-sm': true, [TITLE_THEME[theme]]: true })}>{i18next.t('databaseText')}</h2>
 
         { children }
       </>

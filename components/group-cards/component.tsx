@@ -63,7 +63,7 @@ const GroupCard: FC<GroupCardProps> = ({
         <div className="text-sm leading-7 my-9" dangerouslySetInnerHTML={{ __html: groupSlugDescription }} />
         <Link
           href={{ pathname: `/${slug}/${subgroupSlug}/${indicatorSlug}`, query: { locale: lang } }}
-          className="px-6 py-3 text-sm text-white rounded-full bg-gradient-color1 hover:shadow-sm active:bg-gradient-color1-reverse active:shadow-sm"
+          className="px-6 py-3 text-sm text-white rounded-full bg-gradient-color1 hover:shadow-sm hover:font-bold hover:bg-gradient-color1-reverse active:bg-gradient-color1-reverse active:shadow-sm active:font-bold"
           >
           {discover}
         </Link>

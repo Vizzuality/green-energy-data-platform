@@ -18,7 +18,7 @@ const THEME = {
   secondary:
     'border border-gray2 hover:bg-gray2 hover:text-white',
   'secondary-background-dark': 'bg-gray1 text-white',
-  'secondary-background-light': 'bg-white',
+  'secondary-background-light': 'bg-white hover:border-white hover:bg-transparent',
 
   // border
   warning: 'border border-warning text-warning',

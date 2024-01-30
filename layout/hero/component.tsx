@@ -61,7 +61,7 @@ const Hero: FC<HeroProps> = ({
               className={cx('ml-3 flex items-center justify-center text-center rounded-full focus:outline-none py-2.5 px-6 text-sm active:font-bold',
                 {
                   'bg-gray1 text-white': theme === 'transparent',
-                  'bg-white text-gray1': theme !== 'transparent',
+                  'bg-white text-gray1 hover:border-white hover:border-2 hover:bg-transparent hover:text-white hover:font-bold': theme !== 'transparent',
                 })}
             >
              {browse}

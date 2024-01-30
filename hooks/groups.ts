@@ -19,9 +19,10 @@ export const useGroups = (params = {}, queryConfig = {}) => useQuery(['fetch-gro
       if (indexB === undefined) return -1; // If not found, move to the end
       
       return indexA - indexB; // Compare indexes
-    });} ), {
+    });
+  } ), {
     ...queryConfig,
-  })
+  });
 
 
 export const useGroup = (id: string | string[], queryConfig = {}, params = {}) => useQuery(['fetch-group', id, params],
@@ -36,13 +37,14 @@ export const useEnergyBalanceSelectedSubgroup = (data, slug) => data?.subgroups?
 
 export const useGroupsDefaults = (groups: GroupProps[]) => groups?.map((group) => {
   const { default_subgroup: subgroupSlug, subgroups } = group;
+  const defaultSubgroup = subgroupSlug || subgroups[0].slug;
   const indicatorSlug = group?.subgroups?.find(
     ({ slug }) => slug === subgroupSlug,
   )?.default_indicator?.slug || subgroups[0].slug;
   return ({
     name: group.name,
     groupSlug: group.slug,
-    subgroupSlug,
+    subgroupSlug: defaultSubgroup,
     indicatorSlug,
   });
 });
